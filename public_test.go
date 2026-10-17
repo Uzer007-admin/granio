@@ -6,7 +6,7 @@ import (
 	"image"
 	"testing"
 
-	. "github.com/fyne-io/oksvg"
+	. "github.com/Uzer007-admin/granio-oksvg"
 	. "github.com/srwiley/rasterx"
 	// . "github.com/srwiley/scanFT"
 )
