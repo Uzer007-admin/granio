@@ -68,9 +68,9 @@ func parseXPMConfig(data io.Reader) (image.Config, error) {
 	if err != nil {
 		return image.Config{}, err
 	}
-	
+
 	return image.Config{
-		Width: p.Bounds().Dx(),
+		Width:  p.Bounds().Dx(),
 		Height: p.Bounds().Dy(),
 	}, nil
 }

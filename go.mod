@@ -1,6 +1,6 @@
-module github.com/fyne-io/image
+module github.com/Uzer007-admin/granio-image
 
-go 1.19
+go 1.27.1
 
 require (
 	github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25

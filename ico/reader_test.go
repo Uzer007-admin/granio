@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fyne-io/image/ico"
+	"github.com/Uzer007-admin/granio-image/ico"
 	"github.com/stretchr/testify/assert"
 )
 

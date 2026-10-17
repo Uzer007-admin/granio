@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	_ "github.com/fyne-io/image/xpm" // xpm image parser
+	_ "github.com/Uzer007-admin/granio-image/xpm" // xpm image parser
 
 	"github.com/stretchr/testify/assert"
 )
