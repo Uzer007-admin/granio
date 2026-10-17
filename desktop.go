@@ -7,7 +7,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/go-gl/glfw/v3.4/glfw"
+	"github.com/Uzer007-admin/glfw/v3.4/glfw"
 )
 
 const (
