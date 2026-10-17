@@ -5,7 +5,7 @@ package systray
 import (
 	"testing"
 
-	"fyne.io/systray/internal/generated/notifier"
+	"github.com/Uzer007-admin/granio-systray/internal/generated/notifier"
 )
 
 func TestPropSpecCoversIntrospection(t *testing.T) {

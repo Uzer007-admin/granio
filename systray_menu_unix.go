@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/godbus/dbus/v5"
-	"github.com/godbus/dbus/v5/prop"
+	"github.com/Uzer007-admin/dbus/v5"
+	"github.com/Uzer007-admin/dbus/v5/prop"
 
-	"fyne.io/systray/internal/generated/menu"
+	"github.com/Uzer007-admin/granio-systray/internal/generated/menu"
 )
 
 // SetIcon sets the icon of a menu item.
