@@ -493,13 +493,15 @@ func PolygonOffset(factor, units float32) {
 }
 
 func ReadPixels(dst []byte, x, y, width, height int, format, ty Enum) {
-	println("ReadPixels: not yet tested (TODO: remove this after it's confirmed to work. Your feedback is welcome.)")
 	if ty == Enum(UNSIGNED_BYTE) {
-		c.Call("readPixels", x, y, width, height, int(format), int(ty), dst)
+		array := js.Global().Get("Uint8Array").New(len(dst))
+		c.Call("readPixels", x, y, width, height, int(format), int(ty), array)
+		js.CopyBytesToGo(dst, array)
 	} else {
-		tmpDst := make([]float32, len(dst)/4)
-		c.Call("readPixels", x, y, width, height, int(format), int(ty), tmpDst)
-		for i, f := range tmpDst {
+		array := js.Global().Get("Float32Array").New(len(dst) / 4)
+		c.Call("readPixels", x, y, width, height, int(format), int(ty), array)
+		for i := 0; i < len(dst)/4; i++ {
+			f := float32(array.Index(i).Float())
 			binary.LittleEndian.PutUint32(dst[i*4:], math.Float32bits(f))
 		}
 	}
@@ -558,7 +560,7 @@ func TexImage2DMultisample(target Enum, samples int, internalformat Enum, width,
 }
 
 func TexSubImage2D(target Enum, level int, x, y, width, height int, format, ty Enum, data any) {
-	c.Call("texSubImage2D", int(target), level, x, y, width, height, format, int(ty), SliceToTypedArray(data))
+	c.Call("texSubImage2D", int(target), level, x, y, width, height, int(format), int(ty), SliceToTypedArray(data))
 }
 
 func TexParameterf(target, pname Enum, param float32) {

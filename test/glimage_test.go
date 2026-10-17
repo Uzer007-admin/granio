@@ -19,8 +19,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/fyne-io/gl-js"
-	"github.com/fyne-io/gl-js/glutil"
+	"github.com/Uzer007-admin/granio-gl-js"
+	"github.com/Uzer007-admin/granio-gl-js/glutil"
 	"golang.org/x/mobile/event/size"
 	"golang.org/x/mobile/exp/f32"
 	"golang.org/x/mobile/geom"

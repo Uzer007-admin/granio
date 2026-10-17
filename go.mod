@@ -1,8 +1,8 @@
-module github.com/fyne-io/gl-js
+module github.com/Uzer007-admin/granio-gl-js
 
-go 1.19
+go 1.27.1
 
 require (
-	github.com/go-gl/gl v0.0.0-20231021071112-07e5d0ea2e71
-	golang.org/x/mobile v0.0.0-20231127183840-76ac6878050a
+	github.com/Uzer007-admin/gl v0.0.0-20261017234122-3756695c6558
+	golang.org/x/mobile v0.0.0-20261011034528-197770444867
 )

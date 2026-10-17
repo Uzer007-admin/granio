@@ -85,7 +85,7 @@ import "C"
 import (
 	"runtime"
 
-	"github.com/fyne-io/gl-js"
+	"github.com/Uzer007-admin/granio-gl-js"
 )
 
 type contextGL struct {
