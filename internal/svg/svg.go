@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Uzer007-admin/granio-oksvg"
+	"github.com/Uzer007-admin/granio/deps/oksvg"
 	"github.com/srwiley/rasterx"
 
 	"github.com/Uzer007-admin/granio/v2"

@@ -12,7 +12,7 @@ import (
 	"runtime"
 	"sync/atomic"
 
-	"github.com/Uzer007-admin/granio-image/ico"
+	"github.com/Uzer007-admin/granio/deps/image/ico"
 
 	"github.com/Uzer007-admin/granio/v2"
 	"github.com/Uzer007-admin/granio/v2/internal/animation"

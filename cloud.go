@@ -1,7 +1,7 @@
 package granio
 
 // CloudProvider specifies the identifying information of a cloud provider.
-// This information is mostly used by the [github.com/Uzer007-admin/granio-cloud.ShowSettings] user flow.
+// This information is mostly used by the [github.com/Uzer007-admin/granio-x/cloud.ShowSettings] user flow.
 //
 // Since: 2.3
 type CloudProvider interface {

@@ -3,7 +3,7 @@
 package glfw
 
 import (
-	"github.com/Uzer007-admin/granio-glfw-js"
+	"github.com/Uzer007-admin/granio/deps/glfw-js"
 	"github.com/Uzer007-admin/granio/v2"
 )
 

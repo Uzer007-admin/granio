@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	_ "github.com/Uzer007-admin/granio-image/ico" // import image encodings
+	_ "github.com/Uzer007-admin/granio/deps/image/ico" // import image encodings
 	"github.com/urfave/cli/v2"
 	"golang.org/x/mod/modfile"
 	"golang.org/x/mod/module"

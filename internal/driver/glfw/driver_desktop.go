@@ -11,7 +11,7 @@ import (
 	"syscall"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio-systray"
+	"github.com/Uzer007-admin/granio/deps/systray"
 
 	"github.com/Uzer007-admin/granio/v2"
 	"github.com/Uzer007-admin/granio/v2/canvas"

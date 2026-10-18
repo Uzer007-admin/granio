@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Uzer007-admin/granio-image/ico"
+	"github.com/Uzer007-admin/granio/deps/image/ico"
 	"github.com/josephspurrier/goversioninfo"
 	"golang.org/x/sys/execabs"
 

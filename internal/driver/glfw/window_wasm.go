@@ -16,7 +16,7 @@ import (
 	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
 	"github.com/Uzer007-admin/granio/v2/internal/scale"
 
-	"github.com/Uzer007-admin/granio-glfw-js"
+	"github.com/Uzer007-admin/granio/deps/glfw-js"
 )
 
 type Cursor struct {

@@ -2,7 +2,7 @@
 
 package cache
 
-import "github.com/Uzer007-admin/granio-gl-js"
+import "github.com/Uzer007-admin/granio/deps/gl-js"
 
 // TextureType represents an uploaded GL texture
 type TextureType = gl.Texture

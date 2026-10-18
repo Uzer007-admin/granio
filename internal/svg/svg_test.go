@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Uzer007-admin/granio-oksvg"
+	"github.com/Uzer007-admin/granio/deps/oksvg"
 	"github.com/srwiley/rasterx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

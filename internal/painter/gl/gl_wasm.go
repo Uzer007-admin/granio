@@ -5,7 +5,7 @@ package gl
 import (
 	"math"
 
-	"github.com/Uzer007-admin/granio-gl-js"
+	"github.com/Uzer007-admin/granio/deps/gl-js"
 )
 
 const (

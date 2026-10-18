@@ -7,11 +7,11 @@ require (
 	github.com/Uzer007-admin/dbus/v5 v5.3.0
 	github.com/Uzer007-admin/gl v0.0.0-20261017234122-3756695c6558
 	github.com/Uzer007-admin/glfw/v3.5/glfw v0.0.0-20261017234256-57a5925f8166
-	github.com/Uzer007-admin/granio-gl-js v0.2.1-0.20261017234923-9e3b07127717
-	github.com/Uzer007-admin/granio-glfw-js v0.4.1-0.20261017234950-9e15a5515cc9
-	github.com/Uzer007-admin/granio-image v0.1.2-0.20261017234830-b1607a79c1eb
-	github.com/Uzer007-admin/granio-oksvg v0.2.1-0.20261017234852-ddb3049db67c
-	github.com/Uzer007-admin/granio-systray v1.12.3-0.20261017235015-fd45fbf4dbbd
+	github.com/Uzer007-admin/granio/deps/gl-js v0.0.0-20261018062049-d56bde3dff7f
+	github.com/Uzer007-admin/granio/deps/glfw-js v0.0.0-20261018062049-d56bde3dff7f
+	github.com/Uzer007-admin/granio/deps/image v0.0.0-20261018062049-d56bde3dff7f
+	github.com/Uzer007-admin/granio/deps/oksvg v0.0.0-20261018062049-d56bde3dff7f
+	github.com/Uzer007-admin/granio/deps/systray v0.0.0-20261018062049-d56bde3dff7f
 	github.com/anthonynsimon/bild v0.17.1
 	github.com/fogleman/gg v1.3.0
 	github.com/fsnotify/fsnotify v1.10.1
