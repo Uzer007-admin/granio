@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 import subprocess
+import time
 import urllib.error
 import urllib.request
 
@@ -42,6 +43,7 @@ def main():
         if not path.is_relative_to(ROOT) or not path.is_dir():
             raise SystemExit("Рабочая копия отсутствует внутри проекта: " + item["path"])
         upstream = item["upstream"].removeprefix("https://github.com/")
+        created = False
         try:
             repo = api(f"repos/{owner}/{name}")
         except urllib.error.HTTPError as error:
@@ -52,11 +54,24 @@ def main():
                 continue
             # После неопределённого результата повторный запуск сначала выполнит GET.
             api(f"repos/{upstream}/forks", {"name": name, "default_branch_only": False}, "POST")
-            print(f"{name}: форк создан; повторный запуск проверит его готовность")
-            continue
+            created = True
+            for attempt in range(6):
+                try:
+                    repo = api(f"repos/{owner}/{name}")
+                    break
+                except urllib.error.HTTPError as pending:
+                    if pending.code not in (404, 409):
+                        raise
+                    time.sleep(2)
+            else:
+                raise SystemExit(f"{name}: GitHub ещё готовит форк; повторный запуск продолжит проверку")
         source = (repo.get("parent") or {}).get("html_url")
         if source != item["upstream"]:
             raise SystemExit(f"Неожиданный исходный репозиторий для {name}: {source}")
+        if not item["remote_created"] and (args.create or args.push or args.set_default):
+            item["remote_created"] = True
+            (ROOT / "ecosystem/repositories.json").write_bytes(
+                (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
         if args.create or args.push:
             api(f"repos/{owner}/{name}", {"description": "Форк " + item["upstream"] + ". Цель: " + item["purpose"],
                                         "homepage": item["upstream"]}, "PATCH")
@@ -72,7 +87,9 @@ def main():
         if args.set_default:
             api(f"repos/{owner}/{name}/git/ref/heads/dev/granio")
             api(f"repos/{owner}/{name}", {"default_branch": "dev/granio"}, "PATCH")
-        print(f"{name}: {repo['html_url']}")
+        print(f"{name}: {repo['html_url']}", flush=True)
+        if created:
+            time.sleep(20)  # Пауза между созданием репозиториев; POST не повторяется.
 
 
 if __name__ == "__main__":

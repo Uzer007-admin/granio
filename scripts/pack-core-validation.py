@@ -1,4 +1,4 @@
-"""Pack the current public Fyne workspace and selected module versions for offline Linux tests."""
+"""Подготовка исходников Granio и публичных модулей для автономных проверок Linux."""
 
 import argparse
 import json

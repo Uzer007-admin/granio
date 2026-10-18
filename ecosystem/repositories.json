@@ -12,7 +12,7 @@
       "purpose": "Ядро независимого GUI-фреймворка Granio: системная тема, Wayland/X11 и виртуализированные компоненты.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "granio-apps",
@@ -21,7 +21,8 @@
       "purpose": "Каталог приложений Granio и проверка совместимости ядра.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "cd4e572f89158a374abaa717d4bfca8ba511c50d"
     },
     {
       "name": "granio-gl-js",
@@ -30,7 +31,7 @@
       "purpose": "OpenGL, GLES и WebGL для графического драйвера Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "granio-glfw-js",
@@ -39,7 +40,7 @@
       "purpose": "Браузерные окна и ввод для Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "granio-systray",
@@ -48,7 +49,7 @@
       "purpose": "Системный трей и меню приложений Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "granio-image",
@@ -57,7 +58,7 @@
       "purpose": "Кодеки изображений для интерфейса и упаковки приложений Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "granio-oksvg",
@@ -66,43 +67,47 @@
       "purpose": "Отрисовка SVG для значков и ресурсов Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "granio-locale",
       "path": "ecosystem/work/granio-locale",
       "upstream": "https://github.com/fyne-io/go-locale",
       "purpose": "Определение системного языка и локали для Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "f28f8175f09fceba681537562ed44ecbcbe0d2a3"
     },
     {
       "name": "granio-xgb",
       "path": "ecosystem/work/granio-xgb",
       "upstream": "https://github.com/fyne-io/xgb",
       "purpose": "Низкоуровневый протокол X11 для Linux-интеграции Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "7f28d74f76cf3f701cbbaeeb3d406966665131b7"
     },
     {
       "name": "granio-xgbutil",
       "path": "ecosystem/work/granio-xgbutil",
       "upstream": "https://github.com/fyne-io/xgbutil",
       "purpose": "EWMH, ICCCM и вспомогательные средства X11 для Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "5c1edd265a02b49426fddbd423b8246d983143fc"
     },
     {
       "name": "granio-mobile-bridge",
       "path": "ecosystem/work/granio-mobile-bridge",
       "upstream": "https://github.com/fyne-io/gomobile-bridge",
       "purpose": "Мост мобильных библиотек и приложений Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "ffcc419abe1dcdf551a6313e511a2d8885cc4c84"
     },
     {
       "name": "granio-x",
@@ -111,7 +116,8 @@
       "purpose": "Дополнительные компоненты и интеграции Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "c5b034111a1801306b02518af866c8753027a89a"
     },
     {
       "name": "granio-tools",
@@ -120,7 +126,8 @@
       "purpose": "Сборка, упаковка и обслуживание приложений Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "f078fb2d381a74d8e93b202a19df9e12ca676e52"
     },
     {
       "name": "granio-cross",
@@ -129,7 +136,8 @@
       "purpose": "Кросс-компиляция приложений Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "31df9a655fbdd6ef62f61dc7f39f00e57537ff5e"
     },
     {
       "name": "granio-cross-images",
@@ -138,7 +146,8 @@
       "purpose": "Рецепты контейнеров кросс-компиляции Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "ae4beedb31fcb026052e4426eb9c4ecdeab67a2b"
     },
     {
       "name": "granio-setup",
@@ -147,7 +156,8 @@
       "purpose": "Подготовка окружения разработчика Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "683d1f108126c6ea51bc7052cf5208e4ce55ea6f"
     },
     {
       "name": "granio-ui",
@@ -156,16 +166,18 @@
       "purpose": "Сериализация и чтение описаний интерфейса Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "c66cdcecc0d58a5b58b32e3c0b81dfe3dbfbc205"
     },
     {
       "name": "granio-cloud",
       "path": "ecosystem/work/granio-cloud",
       "upstream": "https://github.com/fyne-io/cloud",
       "purpose": "Провайдеры синхронизации и облачных данных Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "3d634a4219c9164bfb605a423a3ba8b773c6ab2a"
     },
     {
       "name": "granio-examples",
@@ -174,34 +186,38 @@
       "purpose": "Рабочие примеры приложений Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "b1ad451181bf47072c3177d5a1c7d856587bce7a"
     },
     {
       "name": "granio-7guis",
       "path": "ecosystem/work/granio-7guis",
       "upstream": "https://github.com/fyne-io/7guis",
       "purpose": "Семь базовых сценариев интерфейса на Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "49433f460fbcc4d826e5889038f3cbd2b1695aad"
     },
     {
       "name": "granio-flatpak-demo",
       "path": "ecosystem/work/granio-flatpak-demo",
       "upstream": "https://github.com/fyne-io/flatpak_demo",
       "purpose": "Пример упаковки приложения Granio в Flatpak.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "7f9c83bafadda1f8e0aed06610eb4a3a755ebd8d"
     },
     {
       "name": "granio-tutorials",
       "path": "ecosystem/work/granio-tutorials",
       "upstream": "https://github.com/fyne-io/tutorials",
       "purpose": "Адаптация учебных примеров к Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "e3999d5eae60bb8ed1568937491e2c9a184958fb"
     },
     {
       "name": "granio-workshops",
@@ -210,7 +226,8 @@
       "purpose": "Практические занятия и учебные проекты Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "90fae103b216034f2b5446673a7f928bd51c17db"
     },
     {
       "name": "granio-demo",
@@ -219,7 +236,8 @@
       "purpose": "Демонстрационное приложение компонентов Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "53f190115906cc856870e4e3fae5c7f4efdd95ad"
     },
     {
       "name": "granio-pixeledit",
@@ -228,25 +246,28 @@
       "purpose": "Редактор пиксельных изображений на Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "0189edbbe102cd4dba86557d90983d75bc85e85f"
     },
     {
       "name": "granio-terminal",
       "path": "ecosystem/work/granio-terminal",
       "upstream": "https://github.com/fyne-io/terminal",
       "purpose": "Графический терминал на Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "574c4ff0f8e6c69c4abfe184a1393bd42720ac20"
     },
     {
       "name": "granio-calculator",
       "path": "ecosystem/work/granio-calculator",
       "upstream": "https://github.com/fyne-io/calculator",
       "purpose": "Калькулятор на Granio.",
-      "remote_created": false,
+      "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "cdc5ca53442c3ab3d1bd47127e566ab2575e917e"
     },
     {
       "name": "granio-life",
@@ -255,7 +276,8 @@
       "purpose": "Клеточный автомат «Жизнь» на Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "2c99ce0d0fe73d480a6e367e3e16ffba6eb622b8"
     },
     {
       "name": "granio-solitaire",
@@ -264,7 +286,8 @@
       "purpose": "Пасьянс на Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "385e96ef6a1d7909dd95a7fad4c64c3a386d1cbd"
     },
     {
       "name": "granio-studio",
@@ -273,7 +296,8 @@
       "purpose": "Среда разработки приложений Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "abd126eaf242ab9f88d20cfd2f975f435d10ca1a"
     },
     {
       "name": "granio-docs",
@@ -282,7 +306,8 @@
       "purpose": "Документация независимого проекта Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "b11e8de5f95b3a59da51604fe010970a986b7909"
     },
     {
       "name": "granio-catalog",
@@ -291,7 +316,8 @@
       "purpose": "Исходники каталога приложений для экосистемы Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "1daf3632ff92152d2c6bc1b885a5c917af5b1a02"
     },
     {
       "name": "granio-addons",
@@ -300,7 +326,8 @@
       "purpose": "Исходники каталога расширений Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "b298944fa36a122d5b48877126fac69a29bd8df8"
     },
     {
       "name": "granio-web-demo",
@@ -309,7 +336,8 @@
       "purpose": "Браузерная демонстрация Granio.",
       "remote_created": false,
       "branch": "dev/granio",
-      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md",
+      "prepared_commit": "54b902587230e44e130248e9ff8058df7d56b684"
     },
     {
       "name": "gl",
@@ -318,7 +346,7 @@
       "purpose": "Обёртки OpenGL/GLES, диагностика функций и управление ресурсами Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "glfw",
@@ -327,7 +355,7 @@
       "purpose": "GLFW 3.5.1, окна, ввод, Wayland/X11 и оконные материалы Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "glow",
@@ -336,7 +364,7 @@
       "purpose": "Воспроизводимая генерация согласованных обёрток OpenGL/GLES Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     },
     {
       "name": "dbus",
@@ -345,7 +373,7 @@
       "purpose": "D-Bus, системные порталы, наблюдение за темой и палитрой KDE для Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+      "validation": "Перенос исходников; режим и пределы проверки — docs/GRANIO_DEVELOPMENT.md"
     }
   ],
   "excluded": [

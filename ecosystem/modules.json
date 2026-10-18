@@ -55,8 +55,8 @@
     "directory": "deps/systray"
   },
   "github.com/Uzer007-admin/granio/v2": {
-    "version": "v2.8.2-0.20261018000600-86cc66cfefa1",
-    "commit": "86cc66cfefa1bf68498c368cd51402e85bbae6c8",
+    "version": "v2.8.2-0.20261018003528-057d685c0778",
+    "commit": "057d685c0778fe68047feffffd3f611375beddd8",
     "directory": "."
   },
   "github.com/Uzer007-admin/granio-x": {
@@ -98,5 +98,50 @@
     "version": "v0.0.0-20261018002111-cd4e572f8915",
     "commit": "cd4e572f89158a374abaa717d4bfca8ba511c50d",
     "directory": "extras/apps"
+  },
+  "github.com/Uzer007-admin/granio-terminal": {
+    "version": "v0.0.0-20261018002701-574c4ff0f8e6",
+    "commit": "574c4ff0f8e6c69c4abfe184a1393bd42720ac20",
+    "directory": "ecosystem/work/granio-terminal"
+  },
+  "github.com/Uzer007-admin/granio-locale": {
+    "version": "v0.0.0-20261018004045-f28f8175f09f",
+    "commit": "f28f8175f09fceba681537562ed44ecbcbe0d2a3",
+    "directory": "ecosystem/work/granio-locale"
+  },
+  "github.com/Uzer007-admin/granio-xgb": {
+    "version": "v0.0.0-20261018002341-7f28d74f76cf",
+    "commit": "7f28d74f76cf3f701cbbaeeb3d406966665131b7",
+    "directory": "ecosystem/work/granio-xgb"
+  },
+  "github.com/Uzer007-admin/granio-xgbutil": {
+    "version": "v0.0.0-20261018004154-5c1edd265a02",
+    "commit": "5c1edd265a02b49426fddbd423b8246d983143fc",
+    "directory": "ecosystem/work/granio-xgbutil"
+  },
+  "github.com/Uzer007-admin/granio-mobile-bridge": {
+    "version": "v0.1.1-0.20261018004219-ffcc419abe1d",
+    "commit": "ffcc419abe1dcdf551a6313e511a2d8885cc4c84",
+    "directory": "ecosystem/work/granio-mobile-bridge"
+  },
+  "github.com/Uzer007-admin/granio-cloud": {
+    "version": "v0.0.0-20261018004253-3d634a4219c9",
+    "commit": "3d634a4219c9164bfb605a423a3ba8b773c6ab2a",
+    "directory": "ecosystem/work/granio-cloud"
+  },
+  "github.com/Uzer007-admin/granio-7guis": {
+    "version": "v0.0.0-20261018004319-49433f460fbc",
+    "commit": "49433f460fbcc4d826e5889038f3cbd2b1695aad",
+    "directory": "ecosystem/work/granio-7guis"
+  },
+  "github.com/Uzer007-admin/granio-flatpak-demo": {
+    "version": "v1.3.1-0.20261018004357-7f9c83bafadd",
+    "commit": "7f9c83bafadda1f8e0aed06610eb4a3a755ebd8d",
+    "directory": "ecosystem/work/granio-flatpak-demo"
+  },
+  "github.com/Uzer007-admin/granio-calculator": {
+    "version": "v1.0.2-0.20261018004616-cdc5ca53442c",
+    "commit": "cdc5ca53442c3ab3d1bd47127e566ab2575e917e",
+    "directory": "ecosystem/work/granio-calculator"
   }
 }

@@ -1,0 +1,286 @@
+{
+  "checked_at": "2026-10-18T00:50:53.798482+00:00",
+  "published": 30,
+  "pending_creation": [
+    "granio-workshops",
+    "granio-pixeledit",
+    "granio-life",
+    "granio-solitaire",
+    "granio-studio",
+    "granio-catalog",
+    "granio-addons",
+    "granio-web-demo"
+  ],
+  "repositories": [
+    {
+      "name": "granio",
+      "url": "https://github.com/Uzer007-admin/granio",
+      "upstream": "https://github.com/fyne-io/fyne",
+      "description": "Форк https://github.com/fyne-io/fyne. Цель: Ядро независимого GUI-фреймворка Granio: системная тема, Wayland/X11 и виртуализированные компоненты.",
+      "default_branch": "dev/granio",
+      "commit": "057d685c0778fe68047feffffd3f611375beddd8",
+      "verified": true
+    },
+    {
+      "name": "granio-apps",
+      "url": "https://github.com/Uzer007-admin/granio-apps",
+      "upstream": "https://github.com/fyne-io/apps",
+      "description": "Форк https://github.com/fyne-io/apps. Цель: Каталог приложений Granio и проверка совместимости ядра.",
+      "default_branch": "dev/granio",
+      "commit": "cd4e572f89158a374abaa717d4bfca8ba511c50d",
+      "verified": true
+    },
+    {
+      "name": "granio-gl-js",
+      "url": "https://github.com/Uzer007-admin/granio-gl-js",
+      "upstream": "https://github.com/fyne-io/gl-js",
+      "description": "Форк https://github.com/fyne-io/gl-js. Цель: OpenGL, GLES и WebGL для графического драйвера Granio.",
+      "default_branch": "dev/granio",
+      "commit": "9e3b07127717faca7c69b5d215a7184317a41b41",
+      "verified": true
+    },
+    {
+      "name": "granio-glfw-js",
+      "url": "https://github.com/Uzer007-admin/granio-glfw-js",
+      "upstream": "https://github.com/fyne-io/glfw-js",
+      "description": "Форк https://github.com/fyne-io/glfw-js. Цель: Браузерные окна и ввод для Granio.",
+      "default_branch": "dev/granio",
+      "commit": "9e15a5515cc9406ee996e3086a0a9b979df6b017",
+      "verified": true
+    },
+    {
+      "name": "granio-systray",
+      "url": "https://github.com/Uzer007-admin/granio-systray",
+      "upstream": "https://github.com/fyne-io/systray",
+      "description": "Форк https://github.com/fyne-io/systray. Цель: Системный трей и меню приложений Granio.",
+      "default_branch": "dev/granio",
+      "commit": "fd45fbf4dbbd8124eec16765ed71bb2c72ca7817",
+      "verified": true
+    },
+    {
+      "name": "granio-image",
+      "url": "https://github.com/Uzer007-admin/granio-image",
+      "upstream": "https://github.com/fyne-io/image",
+      "description": "Форк https://github.com/fyne-io/image. Цель: Кодеки изображений для интерфейса и упаковки приложений Granio.",
+      "default_branch": "dev/granio",
+      "commit": "b1607a79c1ebffe894310f02c81bf19357e3c80d",
+      "verified": true
+    },
+    {
+      "name": "granio-oksvg",
+      "url": "https://github.com/Uzer007-admin/granio-oksvg",
+      "upstream": "https://github.com/fyne-io/oksvg",
+      "description": "Форк https://github.com/fyne-io/oksvg. Цель: Отрисовка SVG для значков и ресурсов Granio.",
+      "default_branch": "dev/granio",
+      "commit": "ddb3049db67ca590393977442a37227d944cd61a",
+      "verified": true
+    },
+    {
+      "name": "granio-locale",
+      "url": "https://github.com/Uzer007-admin/granio-locale",
+      "upstream": "https://github.com/fyne-io/go-locale",
+      "description": "Форк https://github.com/fyne-io/go-locale. Цель: Определение системного языка и локали для Granio.",
+      "default_branch": "dev/granio",
+      "commit": "f28f8175f09fceba681537562ed44ecbcbe0d2a3",
+      "verified": true
+    },
+    {
+      "name": "granio-xgb",
+      "url": "https://github.com/Uzer007-admin/granio-xgb",
+      "upstream": "https://github.com/fyne-io/xgb",
+      "description": "Форк https://github.com/fyne-io/xgb. Цель: Низкоуровневый протокол X11 для Linux-интеграции Granio.",
+      "default_branch": "dev/granio",
+      "commit": "7f28d74f76cf3f701cbbaeeb3d406966665131b7",
+      "verified": true
+    },
+    {
+      "name": "granio-xgbutil",
+      "url": "https://github.com/Uzer007-admin/granio-xgbutil",
+      "upstream": "https://github.com/fyne-io/xgbutil",
+      "description": "Форк https://github.com/fyne-io/xgbutil. Цель: EWMH, ICCCM и вспомогательные средства X11 для Granio.",
+      "default_branch": "dev/granio",
+      "commit": "5c1edd265a02b49426fddbd423b8246d983143fc",
+      "verified": true
+    },
+    {
+      "name": "granio-mobile-bridge",
+      "url": "https://github.com/Uzer007-admin/granio-mobile-bridge",
+      "upstream": "https://github.com/fyne-io/gomobile-bridge",
+      "description": "Форк https://github.com/fyne-io/gomobile-bridge. Цель: Мост мобильных библиотек и приложений Granio.",
+      "default_branch": "dev/granio",
+      "commit": "ffcc419abe1dcdf551a6313e511a2d8885cc4c84",
+      "verified": true
+    },
+    {
+      "name": "granio-x",
+      "url": "https://github.com/Uzer007-admin/granio-x",
+      "upstream": "https://github.com/fyne-io/fyne-x",
+      "description": "Форк https://github.com/fyne-io/fyne-x. Цель: Дополнительные компоненты и интеграции Granio.",
+      "default_branch": "dev/granio",
+      "commit": "c5b034111a1801306b02518af866c8753027a89a",
+      "verified": true
+    },
+    {
+      "name": "granio-tools",
+      "url": "https://github.com/Uzer007-admin/granio-tools",
+      "upstream": "https://github.com/fyne-io/tools",
+      "description": "Форк https://github.com/fyne-io/tools. Цель: Сборка, упаковка и обслуживание приложений Granio.",
+      "default_branch": "dev/granio",
+      "commit": "f078fb2d381a74d8e93b202a19df9e12ca676e52",
+      "verified": true
+    },
+    {
+      "name": "granio-cross",
+      "url": "https://github.com/Uzer007-admin/granio-cross",
+      "upstream": "https://github.com/fyne-io/fyne-cross",
+      "description": "Форк https://github.com/fyne-io/fyne-cross. Цель: Кросс-компиляция приложений Granio.",
+      "default_branch": "dev/granio",
+      "commit": "31df9a655fbdd6ef62f61dc7f39f00e57537ff5e",
+      "verified": true
+    },
+    {
+      "name": "granio-cross-images",
+      "url": "https://github.com/Uzer007-admin/granio-cross-images",
+      "upstream": "https://github.com/fyne-io/fyne-cross-images",
+      "description": "Форк https://github.com/fyne-io/fyne-cross-images. Цель: Рецепты контейнеров кросс-компиляции Granio.",
+      "default_branch": "dev/granio",
+      "commit": "ae4beedb31fcb026052e4426eb9c4ecdeab67a2b",
+      "verified": true
+    },
+    {
+      "name": "granio-setup",
+      "url": "https://github.com/Uzer007-admin/granio-setup",
+      "upstream": "https://github.com/fyne-io/setup",
+      "description": "Форк https://github.com/fyne-io/setup. Цель: Подготовка окружения разработчика Granio.",
+      "default_branch": "dev/granio",
+      "commit": "683d1f108126c6ea51bc7052cf5208e4ce55ea6f",
+      "verified": true
+    },
+    {
+      "name": "granio-ui",
+      "url": "https://github.com/Uzer007-admin/granio-ui",
+      "upstream": "https://github.com/fyne-io/refyne",
+      "description": "Форк https://github.com/fyne-io/refyne. Цель: Сериализация и чтение описаний интерфейса Granio.",
+      "default_branch": "dev/granio",
+      "commit": "c66cdcecc0d58a5b58b32e3c0b81dfe3dbfbc205",
+      "verified": true
+    },
+    {
+      "name": "granio-cloud",
+      "url": "https://github.com/Uzer007-admin/granio-cloud",
+      "upstream": "https://github.com/fyne-io/cloud",
+      "description": "Форк https://github.com/fyne-io/cloud. Цель: Провайдеры синхронизации и облачных данных Granio.",
+      "default_branch": "dev/granio",
+      "commit": "3d634a4219c9164bfb605a423a3ba8b773c6ab2a",
+      "verified": true
+    },
+    {
+      "name": "granio-examples",
+      "url": "https://github.com/Uzer007-admin/granio-examples",
+      "upstream": "https://github.com/fyne-io/examples",
+      "description": "Форк https://github.com/fyne-io/examples. Цель: Рабочие примеры приложений Granio.",
+      "default_branch": "dev/granio",
+      "commit": "b1ad451181bf47072c3177d5a1c7d856587bce7a",
+      "verified": true
+    },
+    {
+      "name": "granio-7guis",
+      "url": "https://github.com/Uzer007-admin/granio-7guis",
+      "upstream": "https://github.com/fyne-io/7guis",
+      "description": "Форк https://github.com/fyne-io/7guis. Цель: Семь базовых сценариев интерфейса на Granio.",
+      "default_branch": "dev/granio",
+      "commit": "49433f460fbcc4d826e5889038f3cbd2b1695aad",
+      "verified": true
+    },
+    {
+      "name": "granio-flatpak-demo",
+      "url": "https://github.com/Uzer007-admin/granio-flatpak-demo",
+      "upstream": "https://github.com/fyne-io/flatpak_demo",
+      "description": "Форк https://github.com/fyne-io/flatpak_demo. Цель: Пример упаковки приложения Granio в Flatpak.",
+      "default_branch": "dev/granio",
+      "commit": "7f9c83bafadda1f8e0aed06610eb4a3a755ebd8d",
+      "verified": true
+    },
+    {
+      "name": "granio-tutorials",
+      "url": "https://github.com/Uzer007-admin/granio-tutorials",
+      "upstream": "https://github.com/fyne-io/tutorials",
+      "description": "Форк https://github.com/fyne-io/tutorials. Цель: Адаптация учебных примеров к Granio.",
+      "default_branch": "dev/granio",
+      "commit": "e3999d5eae60bb8ed1568937491e2c9a184958fb",
+      "verified": true
+    },
+    {
+      "name": "granio-demo",
+      "url": "https://github.com/Uzer007-admin/granio-demo",
+      "upstream": "https://github.com/fyne-io/demo",
+      "description": "Форк https://github.com/fyne-io/demo. Цель: Демонстрационное приложение компонентов Granio.",
+      "default_branch": "dev/granio",
+      "commit": "53f190115906cc856870e4e3fae5c7f4efdd95ad",
+      "verified": true
+    },
+    {
+      "name": "granio-terminal",
+      "url": "https://github.com/Uzer007-admin/granio-terminal",
+      "upstream": "https://github.com/fyne-io/terminal",
+      "description": "Форк https://github.com/fyne-io/terminal. Цель: Графический терминал на Granio.",
+      "default_branch": "dev/granio",
+      "commit": "574c4ff0f8e6c69c4abfe184a1393bd42720ac20",
+      "verified": true
+    },
+    {
+      "name": "granio-calculator",
+      "url": "https://github.com/Uzer007-admin/granio-calculator",
+      "upstream": "https://github.com/fyne-io/calculator",
+      "description": "Форк https://github.com/fyne-io/calculator. Цель: Калькулятор на Granio.",
+      "default_branch": "dev/granio",
+      "commit": "cdc5ca53442c3ab3d1bd47127e566ab2575e917e",
+      "verified": true
+    },
+    {
+      "name": "granio-docs",
+      "url": "https://github.com/Uzer007-admin/granio-docs",
+      "upstream": "https://github.com/fyne-io/docs.fyne.io",
+      "description": "Форк https://github.com/fyne-io/docs.fyne.io. Цель: Документация независимого проекта Granio.",
+      "default_branch": "dev/granio",
+      "commit": "b11e8de5f95b3a59da51604fe010970a986b7909",
+      "verified": true
+    },
+    {
+      "name": "gl",
+      "url": "https://github.com/Uzer007-admin/gl",
+      "upstream": "https://github.com/go-gl/gl",
+      "description": "Форк https://github.com/go-gl/gl. Цель: Обёртки OpenGL/GLES, диагностика функций и управление ресурсами Granio.",
+      "default_branch": "dev/granio",
+      "commit": "3756695c655823cb1c7ceb3bc8c7ff068838f855",
+      "verified": true
+    },
+    {
+      "name": "glfw",
+      "url": "https://github.com/Uzer007-admin/glfw",
+      "upstream": "https://github.com/go-gl/glfw",
+      "description": "Форк https://github.com/go-gl/glfw. Цель: GLFW 3.5.1, окна, ввод, Wayland/X11 и оконные материалы Granio.",
+      "default_branch": "dev/granio",
+      "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+      "verified": true
+    },
+    {
+      "name": "glow",
+      "url": "https://github.com/Uzer007-admin/glow",
+      "upstream": "https://github.com/go-gl/glow",
+      "description": "Форк https://github.com/go-gl/glow. Цель: Воспроизводимая генерация согласованных обёрток OpenGL/GLES Granio.",
+      "default_branch": "dev/granio",
+      "commit": "3169226de4e23d221876255a099c0603000dfc39",
+      "verified": true
+    },
+    {
+      "name": "dbus",
+      "url": "https://github.com/Uzer007-admin/dbus",
+      "upstream": "https://github.com/godbus/dbus",
+      "description": "Форк https://github.com/godbus/dbus. Цель: D-Bus, системные порталы, наблюдение за темой и палитрой KDE для Granio.",
+      "default_branch": "dev/granio",
+      "commit": "2eb3d0dba943ea7c2df845285aea69db9fb4712a",
+      "verified": true
+    }
+  ]
+}

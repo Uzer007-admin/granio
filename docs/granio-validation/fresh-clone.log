@@ -1,0 +1,61 @@
+Cloning into '.build-razvitie-20261018-7a2f/fresh-clone'...
+Updating files:  72% (2170/2978)
+Updating files:  73% (2174/2978)
+Updating files:  74% (2204/2978)
+Updating files:  75% (2234/2978)
+Updating files:  76% (2264/2978)
+Updating files:  77% (2294/2978)
+Updating files:  78% (2323/2978)
+Updating files:  79% (2353/2978)
+Updating files:  80% (2383/2978)
+Updating files:  81% (2413/2978)
+Updating files:  82% (2442/2978)
+Updating files:  83% (2472/2978)
+Updating files:  84% (2502/2978)
+Updating files:  85% (2532/2978)
+Updating files:  86% (2562/2978)
+Updating files:  87% (2591/2978)
+Updating files:  88% (2621/2978)
+Updating files:  89% (2651/2978)
+Updating files:  90% (2681/2978)
+Updating files:  91% (2710/2978)
+Updating files:  92% (2740/2978)
+Updating files:  93% (2770/2978)
+Updating files:  94% (2800/2978)
+Updating files:  95% (2830/2978)
+Updating files:  96% (2859/2978)
+Updating files:  97% (2889/2978)
+Updating files:  98% (2919/2978)
+Updating files:  99% (2949/2978)
+Updating files: 100% (2978/2978)
+Updating files: 100% (2978/2978), done.
+Submodule 'deps/dbus' (https://github.com/Uzer007-admin/dbus.git) registered for path 'deps/dbus'
+Submodule 'deps/gl' (https://github.com/Uzer007-admin/gl.git) registered for path 'deps/gl'
+Submodule 'deps/gl-js' (https://github.com/Uzer007-admin/granio-gl-js.git) registered for path 'deps/gl-js'
+Submodule 'deps/glfw' (https://github.com/Uzer007-admin/glfw.git) registered for path 'deps/glfw'
+Submodule 'deps/glfw-js' (https://github.com/Uzer007-admin/granio-glfw-js.git) registered for path 'deps/glfw-js'
+Submodule 'deps/glow' (https://github.com/Uzer007-admin/glow.git) registered for path 'deps/glow'
+Submodule 'deps/image' (https://github.com/Uzer007-admin/granio-image.git) registered for path 'deps/image'
+Submodule 'deps/oksvg' (https://github.com/Uzer007-admin/granio-oksvg.git) registered for path 'deps/oksvg'
+Submodule 'deps/systray' (https://github.com/Uzer007-admin/granio-systray.git) registered for path 'deps/systray'
+Submodule 'extras/apps' (https://github.com/Uzer007-admin/granio-apps.git) registered for path 'extras/apps'
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/dbus'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/gl'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/gl-js'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/glfw'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/glfw-js'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/glow'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/image'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/oksvg'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/deps/systray'...
+Cloning into 'D:/fyne/.build-razvitie-20261018-7a2f/fresh-clone/extras/apps'...
+Submodule path 'deps/dbus': checked out '2eb3d0dba943ea7c2df845285aea69db9fb4712a'
+Submodule path 'deps/gl': checked out '3756695c655823cb1c7ceb3bc8c7ff068838f855'
+Submodule path 'deps/gl-js': checked out '9e3b07127717faca7c69b5d215a7184317a41b41'
+Submodule path 'deps/glfw': checked out '57a5925f8166dd29ea32f83ef5155f10066db8ff'
+Submodule path 'deps/glfw-js': checked out '9e15a5515cc9406ee996e3086a0a9b979df6b017'
+Submodule path 'deps/glow': checked out '3169226de4e23d221876255a099c0603000dfc39'
+Submodule path 'deps/image': checked out 'b1607a79c1ebffe894310f02c81bf19357e3c80d'
+Submodule path 'deps/oksvg': checked out 'ddb3049db67ca590393977442a37227d944cd61a'
+Submodule path 'deps/systray': checked out 'fd45fbf4dbbd8124eec16765ed71bb2c72ca7817'
+Submodule path 'extras/apps': checked out 'cd4e572f89158a374abaa717d4bfca8ba511c50d'

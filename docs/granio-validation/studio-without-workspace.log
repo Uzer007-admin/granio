@@ -1,0 +1,5 @@
+go: downloading github.com/Uzer007-admin/granio-ui v0.0.8-0.20261018002026-c66cdcecc0d5
+go: downloading github.com/Uzer007-admin/granio-setup v0.0.0-20261018002508-683d1f108126
+go: downloading github.com/Uzer007-admin/granio-terminal v0.0.0-20261018002701-574c4ff0f8e6
+?   	github.com/Uzer007-admin/granio-studio	[no test files]
+?   	github.com/Uzer007-admin/granio-studio/internal/guibuilder	[no test files]
