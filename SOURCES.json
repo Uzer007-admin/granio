@@ -1,0 +1,65 @@
+{
+  "base_source": "https://github.com/fyne-io/fyne",
+  "sources": [
+    {
+      "source": "https://github.com/fyne-io/gl-js",
+      "prepared_commit": "9e3b07127717faca7c69b5d215a7184317a41b41",
+      "path": "deps/gl-js",
+      "history_merged": true,
+      "previous_repository": "https://github.com/Uzer007-admin/granio-gl-js",
+      "previous_repository_deleted": false,
+      "module": "github.com/Uzer007-admin/granio/deps/gl-js",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "source": "https://github.com/fyne-io/glfw-js",
+      "prepared_commit": "9e15a5515cc9406ee996e3086a0a9b979df6b017",
+      "path": "deps/glfw-js",
+      "history_merged": true,
+      "previous_repository": "https://github.com/Uzer007-admin/granio-glfw-js",
+      "previous_repository_deleted": false,
+      "module": "github.com/Uzer007-admin/granio/deps/glfw-js",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "source": "https://github.com/fyne-io/systray",
+      "prepared_commit": "fd45fbf4dbbd8124eec16765ed71bb2c72ca7817",
+      "path": "deps/systray",
+      "history_merged": true,
+      "previous_repository": "https://github.com/Uzer007-admin/granio-systray",
+      "previous_repository_deleted": false,
+      "module": "github.com/Uzer007-admin/granio/deps/systray",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "source": "https://github.com/fyne-io/image",
+      "prepared_commit": "b1607a79c1ebffe894310f02c81bf19357e3c80d",
+      "path": "deps/image",
+      "history_merged": true,
+      "previous_repository": "https://github.com/Uzer007-admin/granio-image",
+      "previous_repository_deleted": false,
+      "module": "github.com/Uzer007-admin/granio/deps/image",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "source": "https://github.com/fyne-io/oksvg",
+      "prepared_commit": "ddb3049db67ca590393977442a37227d944cd61a",
+      "path": "deps/oksvg",
+      "history_merged": true,
+      "previous_repository": "https://github.com/Uzer007-admin/granio-oksvg",
+      "previous_repository_deleted": false,
+      "module": "github.com/Uzer007-admin/granio/deps/oksvg",
+      "license_files": [
+        "LICENSE"
+      ]
+    }
+  ]
+}
