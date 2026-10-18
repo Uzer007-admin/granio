@@ -1,10 +1,10 @@
 # Экосистема Granio
 
-Источник отбора — [44 репозитория fyne-io](https://github.com/fyne-io). В рабочий набор включены 34 из них и четыре библиотеки графического и системного стека.
+Источник отбора — [fyne-io](https://github.com/fyne-io). Исходный набор включает 34 компонента этой организации и четыре библиотеки графического и системного стека. После объединения примеров он сопровождается в **28 активных репозиториях вместо 38**.
 
-На 18 октября 2026 года созданы 30 из 38 репозиториев; в каждом опубликована основная ветка `dev/granio`. Создание оставшихся восьми временно ограничено GitHub. Их адаптированные исходники сохранены в локальных коммитах.
+Демонстрации, учебные проекты и небольшие приложения собраны в [granio-examples](https://github.com/Uzer007-admin/granio-examples) с одним Go-модулем. История девяти наборов, лицензии и авторские сведения сохранены; веб-пример представлен рецептом воспроизводимой сборки. Подробности — [в отчёте об объединении](EXAMPLES_CONSOLIDATION.md).
 
-Пути Go-модулей и импорты переведены на Granio. Сборка и проверка функций отмечены отдельно в [отчёте](GRANIO_DEVELOPMENT.md). Контейнеры, мобильные SDK, сайты и среды разработки требуют собственной приёмки.
+Пути Go-модулей и импорты переведены на Granio. Результаты проверки функций описаны в [отчёте развития](GRANIO_DEVELOPMENT.md). Контейнеры, мобильные SDK, сайты и среды разработки требуют собственной приёмки.
 
 | Компонент | Исходник | Назначение | Публикация |
 | --- | --- | --- | --- |
@@ -26,34 +26,43 @@
 | [granio-setup](https://github.com/Uzer007-admin/granio-setup) | [setup](https://github.com/fyne-io/setup) | Подготовка окружения разработчика Granio. | Ветка `dev/granio` опубликована |
 | [granio-ui](https://github.com/Uzer007-admin/granio-ui) | [refyne](https://github.com/fyne-io/refyne) | Сериализация и чтение описаний интерфейса Granio. | Ветка `dev/granio` опубликована |
 | [granio-cloud](https://github.com/Uzer007-admin/granio-cloud) | [cloud](https://github.com/fyne-io/cloud) | Провайдеры синхронизации и облачных данных Granio. | Ветка `dev/granio` опубликована |
-| [granio-examples](https://github.com/Uzer007-admin/granio-examples) | [examples](https://github.com/fyne-io/examples) | Рабочие примеры приложений Granio. | Ветка `dev/granio` опубликована |
-| [granio-7guis](https://github.com/Uzer007-admin/granio-7guis) | [7guis](https://github.com/fyne-io/7guis) | Семь базовых сценариев интерфейса на Granio. | Ветка `dev/granio` опубликована |
-| [granio-flatpak-demo](https://github.com/Uzer007-admin/granio-flatpak-demo) | [flatpak_demo](https://github.com/fyne-io/flatpak_demo) | Пример упаковки приложения Granio в Flatpak. | Ветка `dev/granio` опубликована |
-| [granio-tutorials](https://github.com/Uzer007-admin/granio-tutorials) | [tutorials](https://github.com/fyne-io/tutorials) | Адаптация учебных примеров к Granio. | Ветка `dev/granio` опубликована |
-| granio-workshops | [workshops](https://github.com/fyne-io/workshops) | Практические занятия и учебные проекты Granio. | Коммит сохранён локально; создание ограничено GitHub |
-| [granio-demo](https://github.com/Uzer007-admin/granio-demo) | [demo](https://github.com/fyne-io/demo) | Демонстрационное приложение компонентов Granio. | Ветка `dev/granio` опубликована |
-| granio-pixeledit | [pixeledit](https://github.com/fyne-io/pixeledit) | Редактор пиксельных изображений на Granio. | Коммит сохранён локально; создание ограничено GitHub |
+| [granio-examples](https://github.com/Uzer007-admin/granio-examples) | [examples](https://github.com/fyne-io/examples) | Общий модуль демонстраций, учебных проектов, игр и примеров упаковки Granio. | Ветка `dev/granio` опубликована |
 | [granio-terminal](https://github.com/Uzer007-admin/granio-terminal) | [terminal](https://github.com/fyne-io/terminal) | Графический терминал на Granio. | Ветка `dev/granio` опубликована |
-| [granio-calculator](https://github.com/Uzer007-admin/granio-calculator) | [calculator](https://github.com/fyne-io/calculator) | Калькулятор на Granio. | Ветка `dev/granio` опубликована |
-| granio-life | [life](https://github.com/fyne-io/life) | Клеточный автомат «Жизнь» на Granio. | Коммит сохранён локально; создание ограничено GitHub |
-| granio-solitaire | [solitaire](https://github.com/fyne-io/solitaire) | Пасьянс на Granio. | Коммит сохранён локально; создание ограничено GitHub |
-| granio-studio | [defyne](https://github.com/fyne-io/defyne) | Среда разработки приложений Granio. | Коммит сохранён локально; создание ограничено GitHub |
+| granio-studio | [defyne](https://github.com/fyne-io/defyne) | Среда разработки приложений Granio. | Подготовлен локально; создание ограничено GitHub |
 | [granio-docs](https://github.com/Uzer007-admin/granio-docs) | [docs.fyne.io](https://github.com/fyne-io/docs.fyne.io) | Документация независимого проекта Granio. | Ветка `dev/granio` опубликована |
-| granio-catalog | [apps.fyne.io](https://github.com/fyne-io/apps.fyne.io) | Исходники каталога приложений для экосистемы Granio. | Коммит сохранён локально; создание ограничено GitHub |
-| granio-addons | [addons.fyne.io](https://github.com/fyne-io/addons.fyne.io) | Исходники каталога расширений Granio. | Коммит сохранён локально; создание ограничено GitHub |
-| granio-web-demo | [demo.fyne.io](https://github.com/fyne-io/demo.fyne.io) | Браузерная демонстрация Granio. | Коммит сохранён локально; создание ограничено GitHub |
+| granio-catalog | [apps.fyne.io](https://github.com/fyne-io/apps.fyne.io) | Исходники каталога приложений для экосистемы Granio. | Подготовлен локально; создание ограничено GitHub |
+| granio-addons | [addons.fyne.io](https://github.com/fyne-io/addons.fyne.io) | Исходники каталога расширений Granio. | Подготовлен локально; создание ограничено GitHub |
 | [gl](https://github.com/Uzer007-admin/gl) | [gl](https://github.com/go-gl/gl) | Обёртки OpenGL/GLES, диагностика функций и управление ресурсами Granio. | Ветка `dev/granio` опубликована |
 | [glfw](https://github.com/Uzer007-admin/glfw) | [glfw](https://github.com/go-gl/glfw) | GLFW 3.5.1, окна, ввод, Wayland/X11 и оконные материалы Granio. | Ветка `dev/granio` опубликована |
 | [glow](https://github.com/Uzer007-admin/glow) | [glow](https://github.com/go-gl/glow) | Воспроизводимая генерация согласованных обёрток OpenGL/GLES Granio. | Ветка `dev/granio` опубликована |
 | [dbus](https://github.com/Uzer007-admin/dbus) | [dbus](https://github.com/godbus/dbus) | D-Bus, системные порталы, наблюдение за темой и палитрой KDE для Granio. | Ветка `dev/granio` опубликована |
 
+## Примеры в общем репозитории
+
+| Прежнее имя | Каталог в granio-examples | Исходник |
+| --- | --- | --- |
+| `granio-7guis` | [7guis](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/7guis) | [7guis](https://github.com/fyne-io/7guis) |
+| `granio-flatpak-demo` | [packaging/flatpak](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/packaging/flatpak) | [flatpak_demo](https://github.com/fyne-io/flatpak_demo) |
+| `granio-tutorials` | [tutorials](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/tutorials) | [tutorials](https://github.com/fyne-io/tutorials) |
+| `granio-workshops` | [workshops](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/workshops) | [workshops](https://github.com/fyne-io/workshops) |
+| `granio-demo` | [demo](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/demo) | [demo](https://github.com/fyne-io/demo) |
+| `granio-pixeledit` | [pixeledit](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/pixeledit) | [pixeledit](https://github.com/fyne-io/pixeledit) |
+| `granio-calculator` | [calculator](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/calculator) | [calculator](https://github.com/fyne-io/calculator) |
+| `granio-life` | [life](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/life) | [life](https://github.com/fyne-io/life) |
+| `granio-solitaire` | [solitaire](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/solitaire) | [solitaire](https://github.com/fyne-io/solitaire) |
+| `granio-web-demo` | [packaging/web](https://github.com/Uzer007-admin/granio-examples/tree/dev/granio/packaging/web) | [demo.fyne.io](https://github.com/fyne-io/demo.fyne.io) |
+
+Отдельные репозитории для этих десяти наборов исключены из плана создания. Пять ранее опубликованных форков удалены после проверки переноса кода и истории в общий репозиторий. Ещё пять отдельных форков создавать не требуется. Подтверждения удаления сохранены в [отчёте](examples-consolidation/deleted-repositories.json).
+
+Библиотека `granio-terminal` остаётся самостоятельной: её компоненты использует среда разработки. Галерея ядра находится в `cmd/granio_gallery` и отдельного репозитория не требует.
+
 ## Локальные копии
 
-Основные библиотеки находятся в `deps/`, каталог приложений — в `extras/apps`. Остальная экосистема сохранена в `ecosystem/work/` отдельными Git-репозиториями. Этот каталог не включается в коммит ядра; изменения каждого компонента сохраняются в его собственной ветке `dev/granio`.
+Основные библиотеки находятся в `deps/`, каталог приложений — в `extras/apps`, остальные рабочие копии — в `ecosystem/work/`. Каталог `work` не включается в коммит ядра. Прежние локальные копии примеров сохранены для истории; активная разработка ведётся в `granio-examples`.
 
-Реестр [repositories.json](../ecosystem/repositories.json) задаёт исходник, цель и путь каждого компонента. Команда `python ecosystem/publish.py` проверяет доступность репозиториев. Флаги `--create`, `--push`, `--set-default` можно объединить для последовательного создания, публикации и выбора основной ветки; `--only ИМЯ` ограничивает выбор. Скрипт не перезаписывает рабочие файлы, не создаёт коммитов и останавливается при ограничении GitHub.
+Реестр [repositories.json](../ecosystem/repositories.json) разделяет активные `repositories` и объединённые `consolidated_sources`. Команда `python ecosystem/publish.py` обрабатывает только активный набор и не создаёт отдельные репозитории примеров. Флаги `--create`, `--push`, `--set-default` управляют публикацией; `--only ИМЯ` ограничивает выбор.
 
-При разработке полного набора используется локальный `ecosystem/work/go.work`. Для независимой установки приложений нужны согласованные опубликованные версии; проверка без workspace фиксируется в отчёте.
+Локальный `ecosystem/work/go.work` подключает общий модуль примеров. Для независимой сборки задаётся `GOWORK=off`; опубликованные версии указаны в [modules.json](../ecosystem/modules.json).
 
 ## Что исключено
 

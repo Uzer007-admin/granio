@@ -1,0 +1,13 @@
+{
+	"Path": "github.com/Uzer007-admin/granio-examples",
+	"Version": "v0.0.0-20261018054757-c44e896c7d4a",
+	"Query": "c44e896c7d4a6a14a806689dc9494f9ccfee3a71",
+	"Time": "2026-10-18T05:47:57Z",
+	"GoMod": "C:\\Users\\night\\go\\pkg\\mod\\cache\\download\\github.com\\!uzer007-admin\\granio-examples\\@v\\v0.0.0-20261018054757-c44e896c7d4a.mod",
+	"GoVersion": "1.27.1",
+	"Origin": {
+		"VCS": "git",
+		"URL": "https://github.com/Uzer007-admin/granio-examples",
+		"Hash": "c44e896c7d4a6a14a806689dc9494f9ccfee3a71"
+	}
+}

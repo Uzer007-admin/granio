@@ -1,0 +1,42 @@
+[
+  {
+    "name": "granio-7guis",
+    "verified_http_status": 404,
+    "source_commit": "49433f460fbcc4d826e5889038f3cbd2b1695aad",
+    "destination_path": "7guis",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T06:00:20.817068+00:00"
+  },
+  {
+    "name": "granio-flatpak-demo",
+    "verified_http_status": 404,
+    "source_commit": "7f9c83bafadda1f8e0aed06610eb4a3a755ebd8d",
+    "destination_path": "packaging/flatpak",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T06:00:21.858026+00:00"
+  },
+  {
+    "name": "granio-tutorials",
+    "verified_http_status": 404,
+    "source_commit": "e3999d5eae60bb8ed1568937491e2c9a184958fb",
+    "destination_path": "tutorials",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T06:00:22.944733+00:00"
+  },
+  {
+    "name": "granio-demo",
+    "verified_http_status": 404,
+    "source_commit": "53f190115906cc856870e4e3fae5c7f4efdd95ad",
+    "destination_path": "demo",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T06:00:24.063543+00:00"
+  },
+  {
+    "name": "granio-calculator",
+    "verified_http_status": 404,
+    "source_commit": "cdc5ca53442c3ab3d1bd47127e566ab2575e917e",
+    "destination_path": "calculator",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T06:00:25.169819+00:00"
+  }
+]

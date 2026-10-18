@@ -1,0 +1,36 @@
+{
+  "source_commit": "c44e896c7d4a6a14a806689dc9494f9ccfee3a71",
+  "minimum_go": "1.27.1",
+  "compiler": "1.27.2",
+  "windows": {
+    "race_packages": 37,
+    "packages_with_tests": 8,
+    "test_command": "go test -p 1 -race -tags migrated_fynedo,ci -timeout 3m ./...",
+    "race_passed": true,
+    "native_build_passed": true,
+    "native_build_command": "go build -p 1 -tags migrated_fynedo ./..."
+  },
+  "linux": {
+    "host": "f-test-bench",
+    "race_packages": 37,
+    "packages_with_tests": 8,
+    "race_passed": true,
+    "native_build_passed": true,
+    "vet_passed": true,
+    "module_mode": "vendor",
+    "network_dependencies": false
+  },
+  "web": {
+    "updater_passed": true,
+    "host": "Windows/Git Bash",
+    "linux_shell_syntax_passed": true,
+    "browser_acceptance": false
+  },
+  "flatpak": {
+    "common_vendor_prepared": true,
+    "linux_offline_native_build_passed": true,
+    "flatpak_builder_installed": false,
+    "installation_acceptance": false
+  },
+  "performance_long_run": false
+}

@@ -19,6 +19,14 @@ def main():
     parser.add_argument("--only", action="append", help="обработать только указанное имя репозитория")
     args = parser.parse_args()
     manifest = json.loads((ROOT / "ecosystem/repositories.json").read_text(encoding="utf-8"))
+    consolidated = {item["name"]: item for item in manifest.get("consolidated_sources", [])}
+    for name in args.only or []:
+        if name in consolidated:
+            item = consolidated[name]
+            print(f"{name}: перенесён в {item['destination_repository']}/{item['destination_path']}; "
+                  "отдельный репозиторий не создаётся", flush=True)
+    if args.only and all(name in consolidated for name in args.only):
+        return
     credential = subprocess.run(["git", "credential", "fill"], input="protocol=https\nhost=github.com\n\n",
                                 capture_output=True, text=True, check=True, timeout=20)
     fields = dict(line.split("=", 1) for line in credential.stdout.splitlines() if "=" in line)
