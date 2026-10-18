@@ -1,0 +1,25 @@
+[dev/granio 9286299] Объединение инструментов, Studio и кросс-сборки
+ 71 files changed, 1197 insertions(+), 883 deletions(-)
+ create mode 100644 SOURCES.json
+ create mode 100644 UPSTREAM.md
+ create mode 100644 cmd/granio_setup/FyneApp.toml
+ create mode 100644 cmd/granio_setup/Icon.png
+ rename {setup => cmd/granio_setup}/main.go (75%)
+ create mode 100644 cross-images/UPSTREAM.md
+ create mode 100644 cross/UPSTREAM.md
+ rename cross/{ => cmd/granio_cross}/main.go (89%)
+ create mode 100644 docs/upstream-ci/fyne-qa-all.yml
+ create mode 100644 docs/upstream-ci/fyne-qa.yml
+ create mode 100644 docs/upstream-ci/platform_tests.yml
+ create mode 100644 docs/upstream-ci/static_analysis.yml
+ create mode 100644 mobile-bridge/UPSTREAM.md
+ create mode 100644 setup/UPSTREAM.md
+ rename setup/{go.mod => go.mod.upstream} (98%)
+ rename setup/{go.sum => go.sum.upstream} (99%)
+ create mode 100644 studio/UPSTREAM.md
+ rename studio/{go.mod => go.mod.upstream} (70%)
+ rename studio/{go.sum => go.sum.upstream} (99%)
+[dev/granio 28ac943] Закрепление версий CLI и рецептов образов
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+To https://github.com/Uzer007-admin/granio-tools.git
+   f078fb2..28ac943  HEAD -> dev/granio

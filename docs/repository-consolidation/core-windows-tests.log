@@ -1,0 +1,99 @@
+ok  	github.com/Uzer007-admin/granio/v2	1.921s
+ok  	github.com/Uzer007-admin/granio/v2/app	24.233s
+?   	github.com/Uzer007-admin/granio/v2/cache	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/canvas	9.409s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/commands	6.576s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/commands	8.341s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile/binres	2.364s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/util	1.866s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_demo	2.145s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_demo/data	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_demo/tutorials	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_gallery	10.817s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_settings	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_settings/data	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_settings/settings	2.527s
+?   	github.com/Uzer007-admin/granio/v2/cmd/hello	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/container	11.793s
+ok  	github.com/Uzer007-admin/granio/v2/data/binding	6.343s
+ok  	github.com/Uzer007-admin/granio/v2/data/validation	4.265s
+ok  	github.com/Uzer007-admin/granio/v2/dialog	36.497s
+ok  	github.com/Uzer007-admin/granio/v2/driver	2.187s
+ok  	github.com/Uzer007-admin/granio/v2/driver/desktop	1.728s
+?   	github.com/Uzer007-admin/granio/v2/driver/embedded	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/driver/mobile	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/driver/software	4.084s
+ok  	github.com/Uzer007-admin/granio/v2/internal	4.556s
+ok  	github.com/Uzer007-admin/granio/v2/internal/animation	4.418s
+ok  	github.com/Uzer007-admin/granio/v2/internal/app	6.787s
+ok  	github.com/Uzer007-admin/granio/v2/internal/async	5.230s
+?   	github.com/Uzer007-admin/granio/v2/internal/build	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/cache	5.121s
+ok  	github.com/Uzer007-admin/granio/v2/internal/color	4.991s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver	9.688s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/common	13.743s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/embedded	6.935s
+# github.com/Uzer007-admin/granio/v2/internal/driver/mobile [github.com/Uzer007-admin/granio/v2/internal/driver/mobile.test]
+internal\driver\mobile\keyboard_test.go:66:7: undefined: d
+internal\driver\mobile\keyboard_test.go:74:2: undefined: d
+internal\driver\mobile\keyboard_test.go:85:3: undefined: d
+internal\driver\mobile\keyboard_test.go:86:4: undefined: d
+internal\driver\mobile\keyboard_test.go:96:3: undefined: d
+internal\driver\mobile\keyboard_test.go:97:4: undefined: d
+internal\driver\mobile\keyboard_test.go:107:3: undefined: d
+internal\driver\mobile\keyboard_test.go:108:4: undefined: d
+internal\driver\mobile\keyboard_test.go:118:3: undefined: d
+internal\driver\mobile\keyboard_test.go:119:4: undefined: d
+internal\driver\mobile\keyboard_test.go:119:4: too many errors
+--- FAIL: TestNativeFrameRates (2.01s)
+    frame_rate_test.go:26: target=120Hz observed=48 animation ticks in 400ms
+    frame_rate_test.go:26: target=144Hz observed=58 animation ticks in 400ms
+    frame_rate_test.go:26: target=160Hz observed=63 animation ticks in 400ms
+    frame_rate_test.go:26: target=180Hz observed=71 animation ticks in 400ms
+    frame_rate_test.go:25: 
+        	Error Trace:	D:/fyne/internal/driver/glfw/frame_rate_test.go:25
+        	Error:      	"24" is not greater than or equal to "72"
+        	Test:       	TestNativeFrameRates
+        	Messages:   	requested 240Hz
+2026/10/18 09:33:33 Ошибка Granio:  Window content is wider or taller than the maximum supported size and has been clamped; consider wrapping, truncation, or scrolling
+2026/10/18 09:33:33   At: D:/fyne/internal/driver/glfw/window.go:69
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	28.188s
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/mobile [build failed]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/foldermeta	3.170s
+?   	github.com/Uzer007-admin/granio/v2/internal/goos	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/metadata	2.727s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter	16.472s
+?   	github.com/Uzer007-admin/granio/v2/internal/painter/geom	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	5.158s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/software	11.848s
+ok  	github.com/Uzer007-admin/granio/v2/internal/repository	38.979s
+ok  	github.com/Uzer007-admin/granio/v2/internal/repository/mime	3.082s
+?   	github.com/Uzer007-admin/granio/v2/internal/scale	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/scheduler	7.014s
+ok  	github.com/Uzer007-admin/granio/v2/internal/svg	3.327s
+ok  	github.com/Uzer007-admin/granio/v2/internal/test	5.957s
+ok  	github.com/Uzer007-admin/granio/v2/internal/theme	3.009s
+ok  	github.com/Uzer007-admin/granio/v2/internal/widget	3.349s
+ok  	github.com/Uzer007-admin/granio/v2/lang	1.869s
+ok  	github.com/Uzer007-admin/granio/v2/layout	2.891s
+ok  	github.com/Uzer007-admin/granio/v2/storage	3.127s
+?   	github.com/Uzer007-admin/granio/v2/storage/foldermeta	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/storage/repository	1.401s
+ok  	github.com/Uzer007-admin/granio/v2/test	4.476s
+ok  	github.com/Uzer007-admin/granio/v2/theme	2.796s
+ok  	github.com/Uzer007-admin/granio/v2/tools/playground	2.686s
+ok  	github.com/Uzer007-admin/granio/v2/widget	52.117s
+FAIL

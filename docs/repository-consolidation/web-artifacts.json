@@ -1,0 +1,38 @@
+{
+  "dark.css": {
+    "bytes": 233,
+    "sha256": "70fd6e0ef669921824b9892758f805b1905691cae020b0402c862d5f1285c710"
+  },
+  "Granio Demo.wasm": {
+    "bytes": 45267222,
+    "sha256": "190e7d22229e04ba64aed4114f43b9e04d7fef44b42dc15cd7123eaae1ebb810"
+  },
+  "icon.png": {
+    "bytes": 19560,
+    "sha256": "d9403acdbae2180754256b9bae8651f51a41a5393e016e72f1c6dcaaccd02a6f"
+  },
+  "index.html": {
+    "bytes": 4119,
+    "sha256": "9b2cdd6ea40537cba79265471fd8c7d0e174b3e4817a5c15df8006b5936650c5"
+  },
+  "light.css": {
+    "bytes": 233,
+    "sha256": "e00441a4e46ba69d0b43cbc223fd8f9ce5c17aad203e605b1a996754e5830b72"
+  },
+  "SOURCE.json": {
+    "bytes": 182,
+    "sha256": "aa44f9ddd27b27c1e0bd291d1f189f7b5dc0e262d068ed7dab913057a51e9070"
+  },
+  "spinner_dark.gif": {
+    "bytes": 273119,
+    "sha256": "31d526c0fffedb0f86146faa3e790ae3518abde8b99c5052119c622500a8eac8"
+  },
+  "spinner_light.gif": {
+    "bytes": 213081,
+    "sha256": "d6a4933c60750c23c533a9d2872871345da83e48d2e697669baad7fafa7b570b"
+  },
+  "wasm_exec.js": {
+    "bytes": 16992,
+    "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14"
+  }
+}

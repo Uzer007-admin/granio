@@ -29,99 +29,69 @@
     "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
     "directory": "deps/glfw"
   },
-  "github.com/Uzer007-admin/granio-image": {
-    "version": "v0.1.2-0.20261017234830-b1607a79c1eb",
-    "commit": "b1607a79c1ebffe894310f02c81bf19357e3c80d",
-    "directory": "deps/image"
-  },
-  "github.com/Uzer007-admin/granio-oksvg": {
-    "version": "v0.2.1-0.20261017234852-ddb3049db67c",
-    "commit": "ddb3049db67ca590393977442a37227d944cd61a",
-    "directory": "deps/oksvg"
-  },
-  "github.com/Uzer007-admin/granio-gl-js": {
-    "version": "v0.2.1-0.20261017234923-9e3b07127717",
-    "commit": "9e3b07127717faca7c69b5d215a7184317a41b41",
-    "directory": "deps/gl-js"
-  },
-  "github.com/Uzer007-admin/granio-glfw-js": {
-    "version": "v0.4.1-0.20261017234950-9e15a5515cc9",
-    "commit": "9e15a5515cc9406ee996e3086a0a9b979df6b017",
-    "directory": "deps/glfw-js"
-  },
-  "github.com/Uzer007-admin/granio-systray": {
-    "version": "v1.12.3-0.20261017235015-fd45fbf4dbbd",
-    "commit": "fd45fbf4dbbd8124eec16765ed71bb2c72ca7817",
-    "directory": "deps/systray"
-  },
   "github.com/Uzer007-admin/granio/v2": {
-    "version": "v2.8.2-0.20261018003528-057d685c0778",
-    "commit": "057d685c0778fe68047feffffd3f611375beddd8",
+    "version": "v2.8.2-0.20261018062539-44c3df9361e7",
+    "commit": "44c3df9361e7c2dc933576717d21ff62e6626f99",
     "directory": "."
   },
   "github.com/Uzer007-admin/granio-x": {
-    "version": "v0.0.0-20261018001545-c5b034111a18",
-    "commit": "c5b034111a1801306b02518af866c8753027a89a",
+    "version": "v0.0.0-20261018072629-9836f4ca6d00",
+    "commit": "9836f4ca6d00090a572b63c3863e17687e3ee433",
     "directory": "ecosystem/work/granio-x"
   },
   "github.com/Uzer007-admin/granio-tools": {
-    "version": "v1.7.4-0.20261018003122-f078fb2d381a",
-    "commit": "f078fb2d381a74d8e93b202a19df9e12ca676e52",
+    "version": "v1.7.4-0.20261018072944-90863175404b",
+    "commit": "90863175404b2ad565a53cc8c16d61b7e222a00a",
     "directory": "ecosystem/work/granio-tools"
   },
   "github.com/Uzer007-admin/granio-examples": {
-    "version": "v0.0.0-20261018054757-c44e896c7d4a",
-    "commit": "c44e896c7d4a6a14a806689dc9494f9ccfee3a71",
+    "version": "v0.0.0-20261018073022-a1540c9916ac",
+    "commit": "a1540c9916acb03dbbfed4fe46c1c7fe3154e9fb",
     "directory": "ecosystem/work/granio-examples"
   },
-  "github.com/Uzer007-admin/granio-cross": {
-    "version": "v1.6.4-0.20261018002423-31df9a655fbd",
-    "commit": "31df9a655fbdd6ef62f61dc7f39f00e57537ff5e",
-    "directory": "ecosystem/work/granio-cross"
-  },
-  "github.com/Uzer007-admin/granio-setup": {
-    "version": "v0.0.0-20261018002508-683d1f108126",
-    "commit": "683d1f108126c6ea51bc7052cf5208e4ce55ea6f",
-    "directory": "ecosystem/work/granio-setup"
-  },
-  "github.com/Uzer007-admin/granio-ui": {
-    "version": "v0.0.8-0.20261018002026-c66cdcecc0d5",
-    "commit": "c66cdcecc0d58a5b58b32e3c0b81dfe3dbfbc205",
-    "directory": "ecosystem/work/granio-ui"
-  },
   "github.com/Uzer007-admin/granio-apps": {
-    "version": "v0.0.0-20261018002111-cd4e572f8915",
-    "commit": "cd4e572f89158a374abaa717d4bfca8ba511c50d",
+    "version": "v0.0.0-20261018070308-9bd2a3e67297",
+    "commit": "9bd2a3e672976bc308a1d47e40758c65170c6f37",
     "directory": "extras/apps"
   },
-  "github.com/Uzer007-admin/granio-terminal": {
-    "version": "v0.0.0-20261018002701-574c4ff0f8e6",
-    "commit": "574c4ff0f8e6c69c4abfe184a1393bd42720ac20",
-    "directory": "ecosystem/work/granio-terminal"
-  },
-  "github.com/Uzer007-admin/granio-locale": {
-    "version": "v0.0.0-20261018004045-f28f8175f09f",
-    "commit": "f28f8175f09fceba681537562ed44ecbcbe0d2a3",
-    "directory": "ecosystem/work/granio-locale"
-  },
   "github.com/Uzer007-admin/granio-xgb": {
-    "version": "v0.0.0-20261018002341-7f28d74f76cf",
-    "commit": "7f28d74f76cf3f701cbbaeeb3d406966665131b7",
+    "version": "v0.0.0-20261018064218-418fa8a142d8",
+    "commit": "418fa8a142d85fb7f067f5e625c40c138ac1ed3e",
     "directory": "ecosystem/work/granio-xgb"
   },
-  "github.com/Uzer007-admin/granio-xgbutil": {
-    "version": "v0.0.0-20261018004154-5c1edd265a02",
-    "commit": "5c1edd265a02b49426fddbd423b8246d983143fc",
-    "directory": "ecosystem/work/granio-xgbutil"
+  "github.com/Uzer007-admin/granio/deps/gl-js": {
+    "version": "v0.0.0-20261018062049-d56bde3dff7f",
+    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "directory": "deps/gl-js"
   },
-  "github.com/Uzer007-admin/granio-mobile-bridge": {
-    "version": "v0.1.1-0.20261018004219-ffcc419abe1d",
-    "commit": "ffcc419abe1dcdf551a6313e511a2d8885cc4c84",
-    "directory": "ecosystem/work/granio-mobile-bridge"
+  "github.com/Uzer007-admin/granio/deps/glfw-js": {
+    "version": "v0.0.0-20261018062049-d56bde3dff7f",
+    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "directory": "deps/glfw-js"
   },
-  "github.com/Uzer007-admin/granio-cloud": {
-    "version": "v0.0.0-20261018004253-3d634a4219c9",
-    "commit": "3d634a4219c9164bfb605a423a3ba8b773c6ab2a",
-    "directory": "ecosystem/work/granio-cloud"
+  "github.com/Uzer007-admin/granio/deps/systray": {
+    "version": "v0.0.0-20261018062049-d56bde3dff7f",
+    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "directory": "deps/systray"
+  },
+  "github.com/Uzer007-admin/granio/deps/image": {
+    "version": "v0.0.0-20261018062049-d56bde3dff7f",
+    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "directory": "deps/image"
+  },
+  "github.com/Uzer007-admin/granio/deps/oksvg": {
+    "version": "v0.0.0-20261018062049-d56bde3dff7f",
+    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "directory": "deps/oksvg"
+  },
+  "github.com/Uzer007-admin/granio-tools/cross": {
+    "version": "v0.0.0-20261018065601-9286299481ee",
+    "commit": "9286299481eeb6500361436638266dc5a612258b",
+    "directory": "ecosystem/work/granio-tools/cross"
+  },
+  "github.com/Uzer007-admin/granio-tools/mobile-bridge": {
+    "version": "v0.0.0-20261018065601-9286299481ee",
+    "commit": "9286299481eeb6500361436638266dc5a612258b",
+    "directory": "ecosystem/work/granio-tools/mobile-bridge"
   }
 }

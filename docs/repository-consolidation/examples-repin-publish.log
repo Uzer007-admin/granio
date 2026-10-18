@@ -1,0 +1,12 @@
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SOURCES.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cloud/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'extensions/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'go.mod', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'go.sum', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packaging/web/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'terminal/LICENSE', LF will be replaced by CRLF the next time Git touches it
+[dev/granio a1540c99] Обновление расширений, упаковщика и сведений об источниках примеров
+ 8 files changed, 93 insertions(+), 93 deletions(-)
+To https://github.com/Uzer007-admin/granio-examples.git
+   b5855186..a1540c99  HEAD -> dev/granio

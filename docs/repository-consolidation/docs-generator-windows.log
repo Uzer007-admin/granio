@@ -1,0 +1,24 @@
+# github.com/Uzer007-admin/granio-docs/_gen
+.\genlayouts.go:16:6: drawItem redeclared in this block
+	.\gendialogs.go:17:6: other declaration of drawItem
+.\genlayouts.go:22:2: imgDir redeclared in this block
+	.\gendialogs.go:23:2: other declaration of imgDir
+.\genlayouts.go:35:6: makeDrawList redeclared in this block
+	.\gendialogs.go:26:6: other declaration of makeDrawList
+.\genlayouts.go:86:6: draw redeclared in this block
+	.\gendialogs.go:49:6: other declaration of draw
+.\genlayouts.go:109:6: main redeclared in this block
+	.\gendialogs.go:84:6: other declaration of main
+.\genwidgets.go:23:6: drawItem redeclared in this block
+	.\gendialogs.go:17:6: other declaration of drawItem
+.\genwidgets.go:29:2: imgDir redeclared in this block
+	.\gendialogs.go:23:2: other declaration of imgDir
+.\genwidgets.go:32:6: makeDrawList redeclared in this block
+	.\gendialogs.go:26:6: other declaration of makeDrawList
+.\genwidgets.go:204:6: draw redeclared in this block
+	.\gendialogs.go:49:6: other declaration of draw
+.\genwidgets.go:255:6: main redeclared in this block
+	.\gendialogs.go:84:6: other declaration of main
+.\genwidgets.go:255:6: too many errors
+FAIL	github.com/Uzer007-admin/granio-docs/_gen [build failed]
+FAIL

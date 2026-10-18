@@ -1,0 +1,21 @@
+--- FAIL: Test_mobileDriver_AbsolutePositionForObject (0.03s)
+    --- FAIL: Test_mobileDriver_AbsolutePositionForObject/for_a_padded_child_window_it_is_(padding,padding) (0.03s)
+panic: interface conversion: granio.Driver is *test.driver, not *mobile.driver [recovered, repanicked]
+
+goroutine 36 [running]:
+testing.tRunner.func1.2({0x141695b50, 0xc0003a8a50})
+	C:/Program Files/Go/src/testing/testing.go:2125 +0x3f7
+testing.tRunner.func1()
+	C:/Program Files/Go/src/testing/testing.go:2128 +0x65f
+panic({0x141695b50?, 0xc0003a8a50?})
+	C:/Program Files/Go/src/runtime/panic.go:859 +0x125
+github.com/Uzer007-admin/granio/v2/internal/driver/mobile.(*window).Show(0xc000397d40)
+	D:/fyne/internal/driver/mobile/window.go:107 +0x1449
+github.com/Uzer007-admin/granio/v2/internal/driver/mobile.Test_mobileDriver_AbsolutePositionForObject.func1(0xc0003c2400)
+	D:/fyne/internal/driver/mobile/driver_test.go:53 +0x2dd
+testing.tRunner(0xc0003c2400, 0xc000294348)
+	C:/Program Files/Go/src/testing/testing.go:2195 +0x1cb
+created by testing.(*T).Run in goroutine 35
+	C:/Program Files/Go/src/testing/testing.go:2260 +0xb2b
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/mobile	1.765s
+FAIL

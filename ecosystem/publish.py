@@ -16,6 +16,7 @@ def main():
     parser.add_argument("--create", action="store_true", help="создать отсутствующие форки")
     parser.add_argument("--push", action="store_true", help="опубликовать подготовленную ветку dev/granio")
     parser.add_argument("--set-default", action="store_true", help="сделать опубликованную ветку основной")
+    parser.add_argument("--metadata", action="store_true", help="обновить описание и ссылку на исходник")
     parser.add_argument("--only", action="append", help="обработать только указанное имя репозитория")
     args = parser.parse_args()
     manifest = json.loads((ROOT / "ecosystem/repositories.json").read_text(encoding="utf-8"))
@@ -80,7 +81,7 @@ def main():
             item["remote_created"] = True
             (ROOT / "ecosystem/repositories.json").write_bytes(
                 (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
-        if args.create or args.push:
+        if args.create or args.push or args.metadata:
             api(f"repos/{owner}/{name}", {"description": "Форк " + item["upstream"] + ". Цель: " + item["purpose"],
                                         "homepage": item["upstream"]}, "PATCH")
         if args.push:

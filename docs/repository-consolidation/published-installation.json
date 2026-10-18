@@ -1,0 +1,24 @@
+{
+  "tool_version": "v1.7.4-0.20261018072944-90863175404b",
+  "GOWORK": "off",
+  "commands": [
+    {
+      "command": "go install github.com/Uzer007-admin/granio-tools/cmd/granio@v1.7.4-0.20261018072944-90863175404b",
+      "exit_code": 0
+    },
+    {
+      "command": "go install github.com/Uzer007-admin/granio-tools/studio@v1.7.4-0.20261018072944-90863175404b",
+      "exit_code": 0
+    }
+  ],
+  "binaries": {
+    "granio.exe": {
+      "bytes": 22736384,
+      "sha256": "cda5f198eff35cc8b78954b55a1a0c08a65823dfe82ffcd838f0c94efa11aee5"
+    },
+    "studio.exe": {
+      "bytes": 50178313,
+      "sha256": "d472dc5df7ed8cd55d167d032e6a32e0fa7858852cfcd239b570cb5011a98792"
+    }
+  }
+}

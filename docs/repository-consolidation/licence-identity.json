@@ -1,0 +1,104 @@
+[
+  {
+    "source": "granio-gl-js",
+    "file": "deps/gl-js/LICENSE",
+    "sha256": "2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067",
+    "destination_repository": "granio"
+  },
+  {
+    "source": "granio-glfw-js",
+    "file": "deps/glfw-js/LICENSE",
+    "sha256": "2c4f9672fedf96bcac9ae5c1dd6ae5c3981826cc7c8d649f53a9b2c46af81636",
+    "destination_repository": "granio"
+  },
+  {
+    "source": "granio-systray",
+    "file": "deps/systray/LICENSE",
+    "sha256": "a106bc9f4d5d7d91d5173e86d0864fcf061c33a30cc237710b8f4a05cf127021",
+    "destination_repository": "granio"
+  },
+  {
+    "source": "granio-image",
+    "file": "deps/image/LICENSE",
+    "sha256": "b9c31d8f1a43d7260789099ef59cc17a8b72aa3fccd1479bd516ec1b924637c3",
+    "destination_repository": "granio"
+  },
+  {
+    "source": "granio-oksvg",
+    "file": "deps/oksvg/LICENSE",
+    "sha256": "cda28abc46a25d34ad876ec119ad3c29edbb8634d5fef46ccf2e1d63acd9ca34",
+    "destination_repository": "granio"
+  },
+  {
+    "source": "granio-terminal",
+    "file": "terminal/LICENSE",
+    "sha256": "9cfae76a4837605904dd1da5604a34660efd704d01d5099d2962585ac2a0bc6f",
+    "destination_repository": "granio-x"
+  },
+  {
+    "source": "granio-ui",
+    "file": "ui/LICENSE",
+    "sha256": "4e69d39b1597fe1a99a1e0c80a6ff6f38be65b5270960d9bb8d8a71b3f329cee",
+    "destination_repository": "granio-x"
+  },
+  {
+    "source": "granio-ui",
+    "file": "ui/AUTHORS",
+    "sha256": "e2ca6337fbaf76d7c83d165314f44722fb6b2a1ae0c3350a40f471af550afcb0",
+    "destination_repository": "granio-x"
+  },
+  {
+    "source": "granio-cloud",
+    "file": "cloud/LICENSE",
+    "sha256": "452b92450225652777c6dd3efe7fe96dc644d4eb7a42dcf1c52a67222a057a10",
+    "destination_repository": "granio-x"
+  },
+  {
+    "source": "granio-locale",
+    "file": "locale/LICENSE",
+    "sha256": "f5a169b17b7b5bc97a3909f190089256dc62adb86eefc65454b0fdca37861c20",
+    "destination_repository": "granio-x"
+  },
+  {
+    "source": "granio-setup",
+    "file": "setup/LICENSE",
+    "sha256": "4e69d39b1597fe1a99a1e0c80a6ff6f38be65b5270960d9bb8d8a71b3f329cee",
+    "destination_repository": "granio-tools"
+  },
+  {
+    "source": "granio-setup",
+    "file": "setup/AUTHORS",
+    "sha256": "efacd7afd0856fee05c335bd2d1b183c289aa013be54295b64ded0d56071461e",
+    "destination_repository": "granio-tools"
+  },
+  {
+    "source": "granio-cross",
+    "file": "cross/LICENSE",
+    "sha256": "d58b01a280e998e2613aed4c5af895d1a1b6fcbda387c5336034fcd490d10a48",
+    "destination_repository": "granio-tools"
+  },
+  {
+    "source": "granio-cross-images",
+    "file": "cross-images/LICENSE",
+    "sha256": "572095eeff3630909d11fec4749bcf7304cd5d544affc4d8a4fc9e9bf016aca1",
+    "destination_repository": "granio-tools"
+  },
+  {
+    "source": "granio-studio",
+    "file": "studio/LICENSE",
+    "sha256": "4e69d39b1597fe1a99a1e0c80a6ff6f38be65b5270960d9bb8d8a71b3f329cee",
+    "destination_repository": "granio-tools"
+  },
+  {
+    "source": "granio-studio",
+    "file": "studio/AUTHORS",
+    "sha256": "e2ca6337fbaf76d7c83d165314f44722fb6b2a1ae0c3350a40f471af550afcb0",
+    "destination_repository": "granio-tools"
+  },
+  {
+    "source": "granio-xgbutil",
+    "file": "xgbutil/COPYING",
+    "sha256": "96f17857f3eb28a7d93dad930bc099a3cb65a9a2afb37069bfd1ba5ec5964389",
+    "destination_repository": "granio-xgb"
+  }
+]

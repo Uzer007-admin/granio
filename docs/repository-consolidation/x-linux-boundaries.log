@@ -1,0 +1,21 @@
+?   	github.com/Uzer007-admin/granio-x/cloud	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/cloud/internal	2.090s
+?   	github.com/Uzer007-admin/granio-x/cloud/internal/settings	[no test files]
+?   	github.com/Uzer007-admin/granio-x/cloud/provider/dropbox	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/data/binding	1.026s
+ok  	github.com/Uzer007-admin/granio-x/data/validation	1.010s
+?   	github.com/Uzer007-admin/granio-x/dialog	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/layout	1.079s
+ok  	github.com/Uzer007-admin/granio-x/locale	1.012s
+ok  	github.com/Uzer007-admin/granio-x/menu	1.029s
+ok  	github.com/Uzer007-admin/granio-x/terminal	2.200s
+ok  	github.com/Uzer007-admin/granio-x/terminal/internal/widget	1.029s
+?   	github.com/Uzer007-admin/granio-x/theme	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/ui	1.044s
+?   	github.com/Uzer007-admin/granio-x/ui/internal/guidefs	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/ui/internal/tools	1.026s
+ok  	github.com/Uzer007-admin/granio-x/widget	3.981s
+ok  	github.com/Uzer007-admin/granio-x/widget/diagramwidget	1.028s
+?   	github.com/Uzer007-admin/granio-x/widget/diagramwidget/geometry	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/widget/diagramwidget/geometry/r2	1.010s
+ok  	github.com/Uzer007-admin/granio-x/wrapper	1.110s

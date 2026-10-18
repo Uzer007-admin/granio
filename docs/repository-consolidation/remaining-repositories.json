@@ -1,0 +1,90 @@
+[
+  {
+    "name": "dbus",
+    "url": "https://github.com/Uzer007-admin/dbus",
+    "description": "Форк https://github.com/godbus/dbus. Цель: D-Bus, системные порталы, наблюдение за темой и палитрой KDE для Granio.",
+    "homepage": "https://github.com/godbus/dbus",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "gl",
+    "url": "https://github.com/Uzer007-admin/gl",
+    "description": "Форк https://github.com/go-gl/gl. Цель: Обёртки OpenGL/GLES, диагностика функций и управление ресурсами Granio.",
+    "homepage": "https://github.com/go-gl/gl",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "glfw",
+    "url": "https://github.com/Uzer007-admin/glfw",
+    "description": "Форк https://github.com/go-gl/glfw. Цель: GLFW 3.5.1, окна, ввод, Wayland/X11 и оконные материалы Granio.",
+    "homepage": "https://github.com/go-gl/glfw",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "glow",
+    "url": "https://github.com/Uzer007-admin/glow",
+    "description": "Форк https://github.com/go-gl/glow. Цель: Воспроизводимая генерация согласованных обёрток OpenGL/GLES Granio.",
+    "homepage": "https://github.com/go-gl/glow",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio",
+    "url": "https://github.com/Uzer007-admin/granio",
+    "description": "Форк https://github.com/fyne-io/fyne. Цель: Ядро Granio и встроенные модули графического и системного стека: OpenGL/WebGL, окна, трей, SVG и изображения.",
+    "homepage": "https://github.com/fyne-io/fyne",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio-apps",
+    "url": "https://github.com/Uzer007-admin/granio-apps",
+    "description": "Форк https://github.com/fyne-io/apps. Цель: Каталог приложений Granio и проверка совместимости ядра.",
+    "homepage": "https://github.com/fyne-io/apps",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio-docs",
+    "url": "https://github.com/Uzer007-admin/granio-docs",
+    "description": "Форк https://github.com/fyne-io/docs.fyne.io. Цель: Документация Granio и исходники каталогов приложений и расширений.",
+    "homepage": "https://github.com/fyne-io/docs.fyne.io",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio-examples",
+    "url": "https://github.com/Uzer007-admin/granio-examples",
+    "description": "Форк https://github.com/fyne-io/examples. Цель: Общий модуль приложений и примеров Granio: терминал, виджеты, игры, локаль, облако и упаковка.",
+    "homepage": "https://github.com/fyne-io/examples",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio-tools",
+    "url": "https://github.com/Uzer007-admin/granio-tools",
+    "description": "Форк https://github.com/fyne-io/tools. Цель: Инструменты Granio: упаковка, подготовка окружения, Studio, кросс-сборка, образы и мобильный мост.",
+    "homepage": "https://github.com/fyne-io/tools",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio-x",
+    "url": "https://github.com/Uzer007-admin/granio-x",
+    "description": "Форк https://github.com/fyne-io/fyne-x. Цель: Общие расширения Granio: виджеты, терминал, описания интерфейсов, облачные провайдеры и локаль.",
+    "homepage": "https://github.com/fyne-io/fyne-x",
+    "archived": false,
+    "default_branch": "dev/granio"
+  },
+  {
+    "name": "granio-xgb",
+    "url": "https://github.com/Uzer007-admin/granio-xgb",
+    "description": "Форк https://github.com/fyne-io/xgb. Цель: Общий Go-модуль протокола X11, EWMH, ICCCM, событий, клавиатуры и вспомогательной графики.",
+    "homepage": "https://github.com/fyne-io/xgb",
+    "archived": false,
+    "default_branch": "dev/granio"
+  }
+]

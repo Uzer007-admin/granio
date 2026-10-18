@@ -1,0 +1,13 @@
+{
+  "Path": "github.com/Uzer007-admin/granio-x",
+  "Version": "v0.0.0-20261018072629-9836f4ca6d00",
+  "Query": "9836f4ca6d00090a572b63c3863e17687e3ee433",
+  "Time": "2026-10-18T07:26:29Z",
+  "GoMod": "C:\\Users\\night\\go\\pkg\\mod\\cache\\download\\github.com\\!uzer007-admin\\granio-x\\@v\\v0.0.0-20261018072629-9836f4ca6d00.mod",
+  "GoVersion": "1.27.1",
+  "Origin": {
+    "VCS": "git",
+    "URL": "https://github.com/Uzer007-admin/granio-x",
+    "Hash": "9836f4ca6d00090a572b63c3863e17687e3ee433"
+  }
+}

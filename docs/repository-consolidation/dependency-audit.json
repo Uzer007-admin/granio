@@ -1,0 +1,38 @@
+{
+  ".": {
+    "selected_modules": 65,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-x": {
+    "selected_modules": 85,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-tools": {
+    "selected_modules": 77,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-tools/cross": {
+    "selected_modules": 128,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-tools/mobile-bridge": {
+    "selected_modules": 52,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-xgb": {
+    "selected_modules": 3,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-examples": {
+    "selected_modules": 82,
+    "removed_modules_present": []
+  },
+  "extras/apps": {
+    "selected_modules": 66,
+    "removed_modules_present": []
+  },
+  "ecosystem/work/granio-docs/_gen": {
+    "selected_modules": 64,
+    "removed_modules_present": []
+  }
+}

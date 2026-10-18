@@ -92,3 +92,32 @@ CLI при создании нового проекта закрепляет с�
 Сортировка, фильтрация и группировка строят проекцию в памяти; создание виджетов
 остаётся ограничено видимой областью. Данные удалённых источников нужно загружать
 асинхронно до обновления интерфейса.
+
+## Объединение репозиториев Granio
+
+Старые отдельные репозитории после переноса удалены. Для обновления приложений
+нужно заменить импорты и добавить опубликованную версию родительского модуля.
+Пути и версии перечислены в [отчёте](REPOSITORY_CONSOLIDATION.md)
+и [реестре модулей](../ecosystem/modules.json).
+
+| Прежний префикс | Новый префикс импорта |
+| --- | --- |
+| `github.com/Uzer007-admin/granio-gl-js` | `github.com/Uzer007-admin/granio/deps/gl-js` |
+| `github.com/Uzer007-admin/granio-glfw-js` | `github.com/Uzer007-admin/granio/deps/glfw-js` |
+| `github.com/Uzer007-admin/granio-systray` | `github.com/Uzer007-admin/granio/deps/systray` |
+| `github.com/Uzer007-admin/granio-image` | `github.com/Uzer007-admin/granio/deps/image` |
+| `github.com/Uzer007-admin/granio-oksvg` | `github.com/Uzer007-admin/granio/deps/oksvg` |
+| `github.com/Uzer007-admin/granio-terminal` | `github.com/Uzer007-admin/granio-x/terminal` |
+| `github.com/Uzer007-admin/granio-ui` | `github.com/Uzer007-admin/granio-x/ui` |
+| `github.com/Uzer007-admin/granio-cloud` | `github.com/Uzer007-admin/granio-x/cloud` |
+| `github.com/Uzer007-admin/granio-locale` | `github.com/Uzer007-admin/granio-x/locale` |
+| `github.com/Uzer007-admin/granio-setup` | `github.com/Uzer007-admin/granio-tools/setup` |
+| `github.com/Uzer007-admin/granio-cross` | `github.com/Uzer007-admin/granio-tools/cross` |
+| `github.com/Uzer007-admin/granio-mobile-bridge` | `github.com/Uzer007-admin/granio-tools/mobile-bridge` |
+| `github.com/Uzer007-admin/granio-studio` | `github.com/Uzer007-admin/granio-tools/studio` |
+| `github.com/Uzer007-admin/granio-xgbutil` | `github.com/Uzer007-admin/granio-xgb/xgbutil` |
+
+Кросс-сборщик устанавливается из `granio-tools/cross/cmd/granio_cross`,
+проверка окружения — из `granio-tools/cmd/granio_setup`,
+Studio — из `granio-tools/studio`. Приложение терминала запускается
+командой `go run ./terminal` из общего репозитория примеров.

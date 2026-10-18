@@ -1,0 +1,9 @@
+?   	github.com/Uzer007-admin/granio-tools/cross/cmd/granio_cross	[no test files]
+?   	github.com/Uzer007-admin/granio-tools/cross/internal/cloud	[no test files]
+?   	github.com/Uzer007-admin/granio-tools/cross/internal/cmd/fyne-cross-s3	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cross/internal/command	1.367s
+?   	github.com/Uzer007-admin/granio-tools/cross/internal/icon	[no test files]
+?   	github.com/Uzer007-admin/granio-tools/cross/internal/log	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cross/internal/metadata	1.013s
+?   	github.com/Uzer007-admin/granio-tools/cross/internal/resource	[no test files]
+?   	github.com/Uzer007-admin/granio-tools/cross/internal/volume	[no test files]

@@ -1,0 +1,73 @@
+ok  	github.com/Uzer007-admin/granio/v2	1.016s
+ok  	github.com/Uzer007-admin/granio/v2/app	18.910s
+?   	github.com/Uzer007-admin/granio/v2/cache	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/canvas	3.228s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/commands	1.023s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/commands	3.057s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile/binres	1.086s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/util	1.011s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_demo	1.027s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_demo/data	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_demo/tutorials	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_gallery	9.800s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_settings	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_settings/data	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_settings/settings	1.100s
+?   	github.com/Uzer007-admin/granio/v2/cmd/hello	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/container	3.911s
+ok  	github.com/Uzer007-admin/granio/v2/data/binding	1.037s
+ok  	github.com/Uzer007-admin/granio/v2/data/validation	1.014s
+ok  	github.com/Uzer007-admin/granio/v2/dialog	41.398s
+ok  	github.com/Uzer007-admin/granio/v2/driver	1.021s
+ok  	github.com/Uzer007-admin/granio/v2/driver/desktop	1.024s
+?   	github.com/Uzer007-admin/granio/v2/driver/embedded	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/driver/mobile	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/driver/software	1.860s
+ok  	github.com/Uzer007-admin/granio/v2/internal	1.932s
+ok  	github.com/Uzer007-admin/granio/v2/internal/animation	2.202s
+ok  	github.com/Uzer007-admin/granio/v2/internal/app	1.107s
+ok  	github.com/Uzer007-admin/granio/v2/internal/async	3.100s
+?   	github.com/Uzer007-admin/granio/v2/internal/build	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/cache	1.119s
+ok  	github.com/Uzer007-admin/granio/v2/internal/color	1.012s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver	1.108s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/common	1.075s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/embedded	1.236s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.031s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/mobile	4.405s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app	1.012s
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl	1.014s
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/foldermeta	1.029s
+?   	github.com/Uzer007-admin/granio/v2/internal/goos	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/metadata	1.908s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter	5.294s
+?   	github.com/Uzer007-admin/granio/v2/internal/painter/geom	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	2.144s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/software	10.575s
+ok  	github.com/Uzer007-admin/granio/v2/internal/repository	1.036s
+ok  	github.com/Uzer007-admin/granio/v2/internal/repository/mime	1.035s
+?   	github.com/Uzer007-admin/granio/v2/internal/scale	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/scheduler	3.332s
+ok  	github.com/Uzer007-admin/granio/v2/internal/svg	1.093s
+ok  	github.com/Uzer007-admin/granio/v2/internal/test	1.067s
+ok  	github.com/Uzer007-admin/granio/v2/internal/theme	1.011s
+ok  	github.com/Uzer007-admin/granio/v2/internal/widget	1.187s
+ok  	github.com/Uzer007-admin/granio/v2/lang	1.034s
+ok  	github.com/Uzer007-admin/granio/v2/layout	1.078s
+ok  	github.com/Uzer007-admin/granio/v2/storage	1.034s
+?   	github.com/Uzer007-admin/granio/v2/storage/foldermeta	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/storage/repository	1.013s
+ok  	github.com/Uzer007-admin/granio/v2/test	1.220s
+ok  	github.com/Uzer007-admin/granio/v2/theme	1.044s
+ok  	github.com/Uzer007-admin/granio/v2/tools/playground	1.028s
+ok  	github.com/Uzer007-admin/granio/v2/widget	46.795s

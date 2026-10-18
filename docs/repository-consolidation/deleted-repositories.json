@@ -1,0 +1,128 @@
+[
+  {
+    "name": "granio-gl-js",
+    "verified_http_status": 404,
+    "source_commit": "9e3b07127717faca7c69b5d215a7184317a41b41",
+    "destination_repository": "granio",
+    "destination_path": "deps/gl-js",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:31.600358+00:00"
+  },
+  {
+    "name": "granio-glfw-js",
+    "verified_http_status": 404,
+    "source_commit": "9e15a5515cc9406ee996e3086a0a9b979df6b017",
+    "destination_repository": "granio",
+    "destination_path": "deps/glfw-js",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:32.720534+00:00"
+  },
+  {
+    "name": "granio-systray",
+    "verified_http_status": 404,
+    "source_commit": "fd45fbf4dbbd8124eec16765ed71bb2c72ca7817",
+    "destination_repository": "granio",
+    "destination_path": "deps/systray",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:33.811944+00:00"
+  },
+  {
+    "name": "granio-image",
+    "verified_http_status": 404,
+    "source_commit": "b1607a79c1ebffe894310f02c81bf19357e3c80d",
+    "destination_repository": "granio",
+    "destination_path": "deps/image",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:34.929924+00:00"
+  },
+  {
+    "name": "granio-oksvg",
+    "verified_http_status": 404,
+    "source_commit": "ddb3049db67ca590393977442a37227d944cd61a",
+    "destination_repository": "granio",
+    "destination_path": "deps/oksvg",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:35.996006+00:00"
+  },
+  {
+    "name": "granio-terminal",
+    "verified_http_status": 404,
+    "source_commit": "574c4ff0f8e6c69c4abfe184a1393bd42720ac20",
+    "destination_repository": "granio-x",
+    "destination_path": "terminal",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:37.377197+00:00"
+  },
+  {
+    "name": "granio-ui",
+    "verified_http_status": 404,
+    "source_commit": "c66cdcecc0d58a5b58b32e3c0b81dfe3dbfbc205",
+    "destination_repository": "granio-x",
+    "destination_path": "ui",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:38.598287+00:00"
+  },
+  {
+    "name": "granio-cloud",
+    "verified_http_status": 404,
+    "source_commit": "3d634a4219c9164bfb605a423a3ba8b773c6ab2a",
+    "destination_repository": "granio-x",
+    "destination_path": "cloud",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:40.031764+00:00"
+  },
+  {
+    "name": "granio-locale",
+    "verified_http_status": 404,
+    "source_commit": "f28f8175f09fceba681537562ed44ecbcbe0d2a3",
+    "destination_repository": "granio-x",
+    "destination_path": "locale",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:41.160741+00:00"
+  },
+  {
+    "name": "granio-setup",
+    "verified_http_status": 404,
+    "source_commit": "683d1f108126c6ea51bc7052cf5208e4ce55ea6f",
+    "destination_repository": "granio-tools",
+    "destination_path": "setup",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:42.269195+00:00"
+  },
+  {
+    "name": "granio-cross",
+    "verified_http_status": 404,
+    "source_commit": "31df9a655fbdd6ef62f61dc7f39f00e57537ff5e",
+    "destination_repository": "granio-tools",
+    "destination_path": "cross",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:43.347903+00:00"
+  },
+  {
+    "name": "granio-cross-images",
+    "verified_http_status": 404,
+    "source_commit": "ae4beedb31fcb026052e4426eb9c4ecdeab67a2b",
+    "destination_repository": "granio-tools",
+    "destination_path": "cross-images",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:44.804251+00:00"
+  },
+  {
+    "name": "granio-mobile-bridge",
+    "verified_http_status": 404,
+    "source_commit": "ffcc419abe1dcdf551a6313e511a2d8885cc4c84",
+    "destination_repository": "granio-tools",
+    "destination_path": "mobile-bridge",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:46.144974+00:00"
+  },
+  {
+    "name": "granio-xgbutil",
+    "verified_http_status": 404,
+    "source_commit": "5c1edd265a02b49426fddbd423b8246d983143fc",
+    "destination_repository": "granio-xgb",
+    "destination_path": "xgbutil",
+    "history_available": true,
+    "verified_at_utc": "2026-10-18T07:09:47.229294+00:00"
+  }
+]

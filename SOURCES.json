@@ -7,7 +7,7 @@
       "path": "deps/gl-js",
       "history_merged": true,
       "previous_repository": "https://github.com/Uzer007-admin/granio-gl-js",
-      "previous_repository_deleted": false,
+      "previous_repository_deleted": true,
       "module": "github.com/Uzer007-admin/granio/deps/gl-js",
       "license_files": [
         "LICENSE"
@@ -19,7 +19,7 @@
       "path": "deps/glfw-js",
       "history_merged": true,
       "previous_repository": "https://github.com/Uzer007-admin/granio-glfw-js",
-      "previous_repository_deleted": false,
+      "previous_repository_deleted": true,
       "module": "github.com/Uzer007-admin/granio/deps/glfw-js",
       "license_files": [
         "LICENSE"
@@ -31,7 +31,7 @@
       "path": "deps/systray",
       "history_merged": true,
       "previous_repository": "https://github.com/Uzer007-admin/granio-systray",
-      "previous_repository_deleted": false,
+      "previous_repository_deleted": true,
       "module": "github.com/Uzer007-admin/granio/deps/systray",
       "license_files": [
         "LICENSE"
@@ -43,7 +43,7 @@
       "path": "deps/image",
       "history_merged": true,
       "previous_repository": "https://github.com/Uzer007-admin/granio-image",
-      "previous_repository_deleted": false,
+      "previous_repository_deleted": true,
       "module": "github.com/Uzer007-admin/granio/deps/image",
       "license_files": [
         "LICENSE"
@@ -55,7 +55,7 @@
       "path": "deps/oksvg",
       "history_merged": true,
       "previous_repository": "https://github.com/Uzer007-admin/granio-oksvg",
-      "previous_repository_deleted": false,
+      "previous_repository_deleted": true,
       "module": "github.com/Uzer007-admin/granio/deps/oksvg",
       "license_files": [
         "LICENSE"

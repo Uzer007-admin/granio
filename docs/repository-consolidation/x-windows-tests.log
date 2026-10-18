@@ -1,0 +1,836 @@
+?   	github.com/Uzer007-admin/granio-x/cloud	[no test files]
+--- FAIL: TestPreferences_Save (0.12s)
+    preferences_stored_test.go:65: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:65
+        	Error:      	Not equal: 
+        	            	expected: map[string]interface {}{"key":"value", "key2":"value2", "keyBool":true, "keyBoolList":[]interface {}{true, false, true}, "keyFloat":3.5, "keyFloatList":[]interface {}{1.1, 2.2, 3.3}, "keyInt":4, "keyIntList":[]interface {}{1, 2, 3}, "keyStringList":[]interface {}{"1", "2", "3"}}
+        	            	actual  : map[string]interface {}{"key":"value", "key2":"value2", "keyBool":true, "keyBoolList":[]interface {}{true, false, true}, "keyFloat":3.5, "keyFloatList":[]interface {}{1.1, 2.2, 3.3}, "keyInt":4, "keyIntList":[]interface {}{1, 2, 3}, "keyString":"value", "keyStringList":[]interface {}{"1", "2", "3"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,2 +1,2 @@
+        	            	-(map[string]interface {}) (len=9) {
+        	            	+(map[string]interface {}) (len=10) {
+        	            	  (string) (len=3) "key": (string) (len=5) "value",
+        	            	@@ -21,2 +21,3 @@
+        	            	  },
+        	            	+ (string) (len=9) "keyString": (string) (len=5) "value",
+        	            	  (string) (len=13) "keyStringList": ([]interface {}) (len=3) {
+        	Test:       	TestPreferences_Save
+    preferences_stored_test.go:69: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:69
+        	Error:      	Not equal: 
+        	            	expected: "value"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-value
+        	            	+
+        	Test:       	TestPreferences_Save
+2026/10/18 09:31:14 Ошибка Granio:  Preferences load error:
+2026/10/18 09:31:14   Cause: EOF
+2026/10/18 09:31:14   At: D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:98
+--- FAIL: TestPreferences_Load (0.00s)
+    preferences_stored_test.go:98: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:98
+        	Error:      	Not equal: 
+        	            	expected: "value"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-value
+        	            	+
+        	Test:       	TestPreferences_Load
+==================
+WARNING: DATA RACE
+Read at 0x00c00027c4b0 by goroutine 56:
+  runtime.mapaccess2_faststr()
+      C:/Program Files/Go/src/internal/runtime/maps/runtime_faststr.go:120 +0x0
+  github.com/Uzer007-admin/granio/v2/storage/repository.ForScheme()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/repository/repository.go:295 +0x5d
+  github.com/Uzer007-admin/granio/v2/storage/repository.ForURI()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/repository/repository.go:283 +0x39
+  github.com/Uzer007-admin/granio/v2/storage.Parent()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/uri.go:95 +0x34
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).saveToFile()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:73 +0x105
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).save()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:65 +0xce
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).resetSavedRecently.func1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:59 +0xb7
+
+Previous write at 0x00c00027c4b0 by goroutine 75:
+  runtime.mapassign_faststr()
+      C:/Program Files/Go/src/internal/runtime/maps/runtime_faststr.go:261 +0x0
+  github.com/Uzer007-admin/granio/v2/storage/repository.Register()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/repository/repository.go:270 +0xd2
+  github.com/Uzer007-admin/granio/v2/test.NewDriver()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/test/driver.go:34 +0x89
+  github.com/Uzer007-admin/granio/v2/test.NewApp()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/test/app.go:203 +0x27a
+  github.com/Uzer007-admin/granio-x/cloud/internal.loadPreferences()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:16 +0x8c
+  github.com/Uzer007-admin/granio-x/cloud/internal.TestPreferences_Load()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:94 +0x36
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Goroutine 56 (running) created at:
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).resetSavedRecently()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:50 +0x8a
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).saveToFile.deferwrap1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:72 +0x2e
+  runtime.deferreturn()
+      C:/Program Files/Go/src/runtime/panic.go:668 +0x53
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).save()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:65 +0x104
+  github.com/Uzer007-admin/granio-x/cloud/internal.NewPreferences.func1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:156 +0xed
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*InMemoryPreferences).fireChange.func1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences.go:272 +0x77
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*InMemoryPreferences).fireChange.gowrap1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences.go:273 +0x38
+
+Goroutine 75 (finished) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:94 +0x164
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c0002725b8 by goroutine 56:
+  github.com/Uzer007-admin/granio/v2/storage/repository.ForScheme()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/repository/repository.go:295 +0x6b
+  github.com/Uzer007-admin/granio/v2/storage/repository.ForURI()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/repository/repository.go:283 +0x39
+  github.com/Uzer007-admin/granio/v2/storage.Parent()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/uri.go:95 +0x34
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).saveToFile()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:73 +0x105
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).save()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:65 +0xce
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).resetSavedRecently.func1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:59 +0xb7
+
+Previous write at 0x00c0002725b8 by goroutine 75:
+  github.com/Uzer007-admin/granio/v2/storage/repository.Register()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/storage/repository/repository.go:270 +0xde
+  github.com/Uzer007-admin/granio/v2/test.NewDriver()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/test/driver.go:34 +0x89
+  github.com/Uzer007-admin/granio/v2/test.NewApp()
+      C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261018062539-44c3df9361e7/test/app.go:203 +0x27a
+  github.com/Uzer007-admin/granio-x/cloud/internal.loadPreferences()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:16 +0x8c
+  github.com/Uzer007-admin/granio-x/cloud/internal.TestPreferences_Load()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored_test.go:94 +0x36
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Goroutine 56 (running) created at:
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).resetSavedRecently()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:50 +0x8a
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).saveToFile.deferwrap1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:72 +0x2e
+  runtime.deferreturn()
+      C:/Program Files/Go/src/runtime/panic.go:668 +0x53
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*preferences).save()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:65 +0x104
+  github.com/Uzer007-admin/granio-x/cloud/internal.NewPreferences.func1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences_stored.go:156 +0xed
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*InMemoryPreferences).fireChange.func1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences.go:272 +0x77
+  github.com/Uzer007-admin/granio-x/cloud/internal.(*InMemoryPreferences).fireChange.gowrap1()
+      D:/fyne/ecosystem/work/granio-x/cloud/internal/preferences.go:273 +0x38
+
+Goroutine 75 (finished) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:94 +0x164
+==================
+--- FAIL: TestInMemoryPreferences_OnChange (0.20s)
+    testing.go:1867: race detected during execution of test
+FAIL
+FAIL	github.com/Uzer007-admin/granio-x/cloud/internal	8.150s
+?   	github.com/Uzer007-admin/granio-x/cloud/internal/settings	[no test files]
+?   	github.com/Uzer007-admin/granio-x/cloud/provider/dropbox	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/data/binding	13.309s
+ok  	github.com/Uzer007-admin/granio-x/data/validation	7.549s
+?   	github.com/Uzer007-admin/granio-x/dialog	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/layout	17.397s
+ok  	github.com/Uzer007-admin/granio-x/locale	5.599s
+ok  	github.com/Uzer007-admin/granio-x/menu	6.722s
+2026/10/18 09:32:57 Unhandled secondary device attribute 
+2026/10/18 09:32:57 Unhandled tertiary device attribute 
+2026/10/18 09:32:57 Unhandled secondary device attribute 0
+2026/10/18 09:32:57 Unknown device attribute ?1
+--- FAIL: TestOSC_Directory (0.00s)
+    osc_test.go:55: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/terminal/osc_test.go:55
+        	Error:      	Not equal: 
+        	            	expected: "C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3235432018\\001"
+        	            	actual  : "file://C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3235432018\\001"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-C:\Users\night\AppData\Local\Temp\TestOSC_Directory3235432018\001
+        	            	+file://C:\Users\night\AppData\Local\Temp\TestOSC_Directory3235432018\001
+        	Test:       	TestOSC_Directory
+    osc_test.go:56: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/terminal/osc_test.go:56
+        	Error:      	Not equal: 
+        	            	expected: "C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3235432018\\001"
+        	            	actual  : "file://C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3235432018\\001"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-C:\Users\night\AppData\Local\Temp\TestOSC_Directory3235432018\001
+        	            	+file://C:\Users\night\AppData\Local\Temp\TestOSC_Directory3235432018\001
+        	Test:       	TestOSC_Directory
+    osc_test.go:62: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/terminal/osc_test.go:62
+        	Error:      	Not equal: 
+        	            	expected: "C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3235432018\\001"
+        	            	actual  : "file://some-hostC:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3235432018\\001"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-C:\Users\night\AppData\Local\Temp\TestOSC_Directory3235432018\001
+        	            	+file://some-hostC:\Users\night\AppData\Local\Temp\TestOSC_Directory3235432018\001
+        	Test:       	TestOSC_Directory
+==================
+WARNING: DATA RACE
+Read at 0x00c0013a19b0 by goroutine 357:
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:532 +0x46
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c0013a19b0 by goroutine 358:
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:362 +0xcb
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c000005198 by goroutine 357:
+  os.(*File).write()
+      C:/Program Files/Go/src/os/file_posix.go:47 +0x7a
+  os.(*File).Write()
+      C:/Program Files/Go/src/os/file.go:215 +0x75
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:536 +0x8f
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c000005198 by goroutine 358:
+  os.newFile()
+      C:/Program Files/Go/src/os/file_windows.go:106 +0x2b8
+  os.newFileFromNewFile()
+      C:/Program Files/Go/src/os/file_windows.go:134 +0x276
+  os.NewFile()
+      C:/Program Files/Go/src/os/file.go:134 +0x25d
+  github.com/ActiveState/termtest/conpty.(*ConPty).createPseudoConsoleAndPipes()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:207 +0x23c
+  github.com/ActiveState/termtest/conpty.New()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:39 +0x12e
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:25 +0x44
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:357 +0x89
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c001288201 by goroutine 357:
+  internal/poll.(*FD).Write()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:851 +0x78
+  os.(*File).write()
+      C:/Program Files/Go/src/os/file_posix.go:47 +0x9e
+  os.(*File).Write()
+      C:/Program Files/Go/src/os/file.go:215 +0x75
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:536 +0x8f
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c001288200 by goroutine 358:
+  os.newFile()
+      C:/Program Files/Go/src/os/file_windows.go:106 +0x1a4
+  os.newFileFromNewFile()
+      C:/Program Files/Go/src/os/file_windows.go:134 +0x276
+  os.NewFile()
+      C:/Program Files/Go/src/os/file.go:134 +0x25d
+  github.com/ActiveState/termtest/conpty.(*ConPty).createPseudoConsoleAndPipes()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:207 +0x23c
+  github.com/ActiveState/termtest/conpty.New()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:39 +0x12e
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:25 +0x44
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:357 +0x89
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c001288180 by goroutine 357:
+  sync/atomic.LoadInt64()
+      C:/Program Files/Go/src/runtime/race_amd64.s:208 +0xb
+  sync/atomic.LoadUint64()
+      <autogenerated>:1 +0x10
+  internal/poll.(*FD).writeLock()
+      C:/Program Files/Go/src/internal/poll/fd_mutex.go:250 +0x99
+  internal/poll.(*FD).Write()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:857 +0xaa
+  os.(*File).write()
+      C:/Program Files/Go/src/os/file_posix.go:47 +0x9e
+  os.(*File).Write()
+      C:/Program Files/Go/src/os/file.go:215 +0x75
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:536 +0x8f
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c001288180 by goroutine 358:
+  os.newFile()
+      C:/Program Files/Go/src/os/file_windows.go:106 +0x1a4
+  os.newFileFromNewFile()
+      C:/Program Files/Go/src/os/file_windows.go:134 +0x276
+  os.NewFile()
+      C:/Program Files/Go/src/os/file.go:134 +0x25d
+  github.com/ActiveState/termtest/conpty.(*ConPty).createPseudoConsoleAndPipes()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:207 +0x23c
+  github.com/ActiveState/termtest/conpty.New()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:39 +0x12e
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:25 +0x44
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:357 +0x89
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c001288198 by goroutine 357:
+  internal/poll.(*pollDesc).prepare()
+      C:/Program Files/Go/src/internal/poll/fd_poll_runtime.go:65 +0x35
+  internal/poll.(*FD).execIO()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:263 +0xae
+  internal/poll.(*FD).Write()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:876 +0x544
+  os.(*File).write()
+      C:/Program Files/Go/src/os/file_posix.go:47 +0x9e
+  os.(*File).Write()
+      C:/Program Files/Go/src/os/file.go:215 +0x75
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:536 +0x8f
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c001288198 by goroutine 358:
+  os.newFile()
+      C:/Program Files/Go/src/os/file_windows.go:106 +0x1a4
+  os.newFileFromNewFile()
+      C:/Program Files/Go/src/os/file_windows.go:134 +0x276
+  os.NewFile()
+      C:/Program Files/Go/src/os/file.go:134 +0x25d
+  github.com/ActiveState/termtest/conpty.(*ConPty).createPseudoConsoleAndPipes()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:207 +0x23c
+  github.com/ActiveState/termtest/conpty.New()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:39 +0x12e
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:25 +0x44
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:357 +0x89
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c0012881a0 by goroutine 357:
+  internal/poll.(*FD).execIO()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:273 +0x20a
+  internal/poll.(*FD).Write()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:876 +0x544
+  os.(*File).write()
+      C:/Program Files/Go/src/os/file_posix.go:47 +0x9e
+  os.(*File).Write()
+      C:/Program Files/Go/src/os/file.go:215 +0x75
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:536 +0x8f
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c0012881a0 by goroutine 358:
+  os.newFile()
+      C:/Program Files/Go/src/os/file_windows.go:106 +0x1a4
+  os.newFileFromNewFile()
+      C:/Program Files/Go/src/os/file_windows.go:134 +0x276
+  os.NewFile()
+      C:/Program Files/Go/src/os/file.go:134 +0x25d
+  github.com/ActiveState/termtest/conpty.(*ConPty).createPseudoConsoleAndPipes()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:207 +0x23c
+  github.com/ActiveState/termtest/conpty.New()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:39 +0x12e
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:25 +0x44
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:357 +0x89
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c001288190 by goroutine 357:
+  internal/poll.(*FD).Write.func1()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:877 +0x8e
+  internal/poll.(*FD).execIO()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:303 +0x444
+  internal/poll.(*FD).Write()
+      C:/Program Files/Go/src/internal/poll/fd_windows.go:876 +0x544
+  os.(*File).write()
+      C:/Program Files/Go/src/os/file_posix.go:47 +0x9e
+  os.(*File).Write()
+      C:/Program Files/Go/src/os/file.go:215 +0x75
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).Write()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:536 +0x8f
+  fmt.Fprintf()
+      C:/Program Files/Go/src/fmt/print.go:217 +0xaa
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:53 +0x2c4
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+
+Previous write at 0x00c001288190 by goroutine 358:
+  os.newFile()
+      C:/Program Files/Go/src/os/file_windows.go:106 +0x1a4
+  os.newFileFromNewFile()
+      C:/Program Files/Go/src/os/file_windows.go:134 +0x276
+  os.NewFile()
+      C:/Program Files/Go/src/os/file.go:134 +0x25d
+  github.com/ActiveState/termtest/conpty.(*ConPty).createPseudoConsoleAndPipes()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:207 +0x23c
+  github.com/ActiveState/termtest/conpty.New()
+      C:/Users/night/go/pkg/mod/github.com/!active!state/termtest/conpty@v0.5.0/conpty_windows.go:39 +0x12e
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:25 +0x44
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).open()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:357 +0x89
+  github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell()
+      D:/fyne/ecosystem/work/granio-x/terminal/term.go:489 +0x11c
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2e
+
+Goroutine 357 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2744 +0x84
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2742 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2602 +0xf44
+  main.main()
+      _testmain.go:174 +0x164
+
+Goroutine 358 (running) created at:
+  github.com/Uzer007-admin/granio-x/terminal.testExitCodeN()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x204
+  github.com/Uzer007-admin/granio-x/terminal.TestExitCode01()
+      D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x28
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2195 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2260 +0x38
+==================
+panic: test timed out after 3m0s
+	running tests:
+		TestExitCode01 (2m59s)
+
+goroutine 356 [running]:
+testing.(*M).startAlarm.func1()
+	C:/Program Files/Go/src/testing/testing.go:2961 +0x605
+created by time.goFunc
+	C:/Program Files/Go/src/time/sleep.go:182 +0x45
+
+goroutine 1 [chan receive, 2 minutes]:
+testing.(*T).Run(0xc00045a000, {0x141187604, 0xe}, 0x1417cf888)
+	C:/Program Files/Go/src/testing/testing.go:2268 +0xb56
+testing.runTests.func1(0xc00045a000)
+	C:/Program Files/Go/src/testing/testing.go:2744 +0x85
+testing.tRunner(0xc00045a000, 0xc00033fa40)
+	C:/Program Files/Go/src/testing/testing.go:2195 +0x1cb
+testing.runTests({0x141199fc4, 0x21}, {0x1411a083e, 0x2a}, 0xc000210138, {0x141147708, 0x41, 0x41}, {0xc2ad381363d2f280, 0x29e9f01c81, ...})
+	C:/Program Files/Go/src/testing/testing.go:2742 +0x9f8
+testing.(*M).Run(0xc0002821e0)
+	C:/Program Files/Go/src/testing/testing.go:2602 +0xf45
+main.main()
+	_testmain.go:174 +0x165
+
+goroutine 394 [sleep]:
+time.Sleep(0x2faf080)
+	C:/Program Files/Go/src/runtime/time.go:368 +0x167
+github.com/Uzer007-admin/granio-x/terminal.testExitCodeN(0xc001bae400, 0x0)
+	D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:56 +0x2dd
+github.com/Uzer007-admin/granio-x/terminal.TestExitCode01(0xc001bae400)
+	D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:63 +0x29
+testing.tRunner(0xc001bae400, 0x1417cf888)
+	C:/Program Files/Go/src/testing/testing.go:2195 +0x1cb
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:2260 +0xb2b
+
+goroutine 395 [syscall, 2 minutes]:
+syscall.syscalln(0x14004cad3?, 0x0?, {0xc001a03998?, 0x0?, 0xc000200000?})
+	C:/Program Files/Go/src/runtime/syscall_windows.go:427 +0x48
+syscall.SyscallN(0x7ffc45547410, {0xc001a03998, 0x5, 0x5})
+	C:/Program Files/Go/src/syscall/dll_windows.go:99 +0x45
+syscall.readFile(0x2a4, {0xc001bbc000, 0x8000, 0xc001a03a48?}, 0xc001a03a88, 0x0)
+	C:/Program Files/Go/src/syscall/zsyscall_windows.go:1030 +0x1ad
+syscall.ReadFile(0x2a4, {0xc001bbc000, 0x8000, 0x8000}, 0xc001a03a88, 0x0)
+	C:/Program Files/Go/src/syscall/syscall_windows.go:510 +0x5d
+internal/poll.(*FD).Read.func1(0xc000b16750)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:619 +0xb6
+internal/poll.(*FD).execIO(0xc001288240, 0x72, 0xc001a03e00, {0xc001a03dd0, 0x1, 0xc001a03d18?})
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:303 +0x445
+internal/poll.(*FD).Read(0xc001288240, {0xc001bbc000, 0x8000, 0x8000})
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:618 +0x51c
+os.(*File).read(...)
+	C:/Program Files/Go/src/os/file_posix.go:30
+os.(*File).Read(0xc0000051a0, {0xc001bbc000, 0x8000, 0x8000})
+	C:/Program Files/Go/src/os/file.go:144 +0xad
+github.com/Uzer007-admin/granio-x/terminal.(*Terminal).run(0xc0013a18c8)
+	D:/fyne/ecosystem/work/granio-x/terminal/term.go:445 +0xb6
+github.com/Uzer007-admin/granio-x/terminal.(*Terminal).RunLocalShell(0xc0013a18c8)
+	D:/fyne/ecosystem/work/granio-x/terminal/term.go:497 +0x166
+github.com/Uzer007-admin/granio-x/terminal.testExitCodeN.func1()
+	D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:48 +0x2f
+created by github.com/Uzer007-admin/granio-x/terminal.testExitCodeN in goroutine 394
+	D:/fyne/ecosystem/work/granio-x/terminal/term_test.go:47 +0x205
+
+goroutine 396 [syscall, 2 minutes]:
+syscall.syscalln(0xc00165f840?, 0x0?, {0xc001bb9e28?, 0xc0000a60c0?, 0x1411343e8?})
+	C:/Program Files/Go/src/runtime/syscall_windows.go:427 +0x48
+syscall.SyscallN(0x7ffc45546f90, {0xc001bb9e28, 0x2, 0x2})
+	C:/Program Files/Go/src/syscall/dll_windows.go:99 +0x45
+syscall.WaitForSingleObject(0x2ac, 0xffffffff)
+	C:/Program Files/Go/src/syscall/zsyscall_windows.go:1159 +0xe5
+os.(*Process).wait(0xc000b37c80)
+	C:/Program Files/Go/src/os/exec_windows.go:28 +0xdb
+os.(*Process).Wait(...)
+	C:/Program Files/Go/src/os/exec.go:347
+github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY.func1()
+	D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:49 +0x4a
+created by github.com/Uzer007-admin/granio-x/terminal.(*Terminal).startPTY in goroutine 395
+	D:/fyne/ecosystem/work/granio-x/terminal/term_windows.go:48 +0x46b
+FAIL	github.com/Uzer007-admin/granio-x/terminal	194.659s
+ok  	github.com/Uzer007-admin/granio-x/terminal/internal/widget	9.574s
+?   	github.com/Uzer007-admin/granio-x/theme	[no test files]
+--- FAIL: TestEncodeObject (0.00s)
+    json_test.go:122: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/ui/json_test.go:122
+        	Error:      	Not equal: 
+        	            	expected: "{\n  \"Type\": \"*widget.Label\",\n  \"Name\": \"myLabel\",\n  \"Struct\": {\n    \"Hidden\": false,\n    \"Text\": \"Hi\",\n    \"Alignment\": 1,\n    \"Wrapping\": 0,\n    \"TextStyle\": {\n      \"Bold\": true,\n      \"Italic\": false,\n      \"Monospace\": false,\n      \"Symbol\": false,\n      \"TabWidth\": 0,\n      \"Underline\": false\n    },\n    \"Truncation\": 0,\n    \"Importance\": 0,\n    \"SizeName\": \"\",\n    \"Selectable\": false\n  }\n}\n"
+        	            	actual  : "{\n  \"Type\": \"*widget.Label\",\n  \"Name\": \"myLabel\",\n  \"Struct\": {\n    \"Hidden\": false,\n    \"Text\": \"Hi\",\n    \"Alignment\": 1,\n    \"Wrapping\": 0,\n    \"TextStyle\": {\n      \"Bold\": true,\n      \"Italic\": false,\n      \"Monospace\": false,\n      \"Symbol\": false,\n      \"TabWidth\": 0,\n      \"Underline\": false,\n      \"Strikethrough\": false\n    },\n    \"Truncation\": 0,\n    \"Importance\": 0,\n    \"SizeName\": \"\",\n    \"TextRole\": 0,\n    \"Selectable\": false\n  }\n}\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -14,3 +14,4 @@
+        	            	       "TabWidth": 0,
+        	            	-      "Underline": false
+        	            	+      "Underline": false,
+        	            	+      "Strikethrough": false
+        	            	     },
+        	            	@@ -19,2 +20,3 @@
+        	            	     "SizeName": "",
+        	            	+    "TextRole": 0,
+        	            	     "Selectable": false
+        	Test:       	TestEncodeObject
+--- FAIL: TestEncodeSplit (0.00s)
+    json_test.go:138: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/ui/json_test.go:138
+        	Error:      	Not equal: 
+        	            	expected: "{\n  \"Type\": \"*container.Split\",\n  \"Name\": \"mySplit\",\n  \"Struct\": {\n    \"Horizontal\": true,\n    \"Leading\": {\n      \"Type\": \"*widget.Label\",\n      \"Struct\": {\n        \"Hidden\": false,\n        \"Text\": \"Hi\",\n        \"Alignment\": 1,\n        \"Wrapping\": 0,\n        \"TextStyle\": {\n          \"Bold\": true,\n          \"Italic\": false,\n          \"Monospace\": false,\n          \"Symbol\": false,\n          \"TabWidth\": 0,\n          \"Underline\": false\n        },\n        \"Truncation\": 0,\n        \"Importance\": 0,\n        \"SizeName\": \"\",\n        \"Selectable\": false\n      }\n    },\n    \"Offset\": 0.75,\n    \"Trailing\": {\n      \"Type\": \"*widget.Label\",\n      \"Struct\": {\n        \"Hidden\": false,\n        \"Text\": \"Hi\",\n        \"Alignment\": 1,\n        \"Wrapping\": 0,\n        \"TextStyle\": {\n          \"Bold\": true,\n          \"Italic\": false,\n          \"Monospace\": false,\n          \"Symbol\": false,\n          \"TabWidth\": 0,\n          \"Underline\": false\n        },\n        \"Truncation\": 0,\n        \"Importance\": 0,\n        \"SizeName\": \"\",\n        \"Selectable\": false\n      }\n    }\n  }\n}\n"
+        	            	actual  : "{\n  \"Type\": \"*container.Split\",\n  \"Name\": \"mySplit\",\n  \"Struct\": {\n    \"Horizontal\": true,\n    \"Leading\": {\n      \"Type\": \"*widget.Label\",\n      \"Struct\": {\n        \"Hidden\": false,\n        \"Text\": \"Hi\",\n        \"Alignment\": 1,\n        \"Wrapping\": 0,\n        \"TextStyle\": {\n          \"Bold\": true,\n          \"Italic\": false,\n          \"Monospace\": false,\n          \"Symbol\": false,\n          \"TabWidth\": 0,\n          \"Underline\": false,\n          \"Strikethrough\": false\n        },\n        \"Truncation\": 0,\n        \"Importance\": 0,\n        \"SizeName\": \"\",\n        \"TextRole\": 0,\n        \"Selectable\": false\n      }\n    },\n    \"Offset\": 0.75,\n    \"Trailing\": {\n      \"Type\": \"*widget.Label\",\n      \"Struct\": {\n        \"Hidden\": false,\n        \"Text\": \"Hi\",\n        \"Alignment\": 1,\n        \"Wrapping\": 0,\n        \"TextStyle\": {\n          \"Bold\": true,\n          \"Italic\": false,\n          \"Monospace\": false,\n          \"Symbol\": false,\n          \"TabWidth\": 0,\n          \"Underline\": false,\n          \"Strikethrough\": false\n        },\n        \"Truncation\": 0,\n        \"Importance\": 0,\n        \"SizeName\": \"\",\n        \"TextRole\": 0,\n        \"Selectable\": false\n      }\n    }\n  }\n}\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -18,3 +18,4 @@
+        	            	           "TabWidth": 0,
+        	            	-          "Underline": false
+        	            	+          "Underline": false,
+        	            	+          "Strikethrough": false
+        	            	         },
+        	            	@@ -23,2 +24,3 @@
+        	            	         "SizeName": "",
+        	            	+        "TextRole": 0,
+        	            	         "Selectable": false
+        	            	@@ -40,3 +42,4 @@
+        	            	           "TabWidth": 0,
+        	            	-          "Underline": false
+        	            	+          "Underline": false,
+        	            	+          "Strikethrough": false
+        	            	         },
+        	            	@@ -45,2 +48,3 @@
+        	            	         "SizeName": "",
+        	            	+        "TextRole": 0,
+        	            	         "Selectable": false
+        	Test:       	TestEncodeSplit
+FAIL
+FAIL	github.com/Uzer007-admin/granio-x/ui	7.949s
+?   	github.com/Uzer007-admin/granio-x/ui/internal/guidefs	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/ui/internal/tools	2.941s
+ok  	github.com/Uzer007-admin/granio-x/widget	7.788s
+ok  	github.com/Uzer007-admin/granio-x/widget/diagramwidget	3.918s
+?   	github.com/Uzer007-admin/granio-x/widget/diagramwidget/geometry	[no test files]
+ok  	github.com/Uzer007-admin/granio-x/widget/diagramwidget/geometry/r2	2.220s
+ok  	github.com/Uzer007-admin/granio-x/wrapper	6.330s
+FAIL

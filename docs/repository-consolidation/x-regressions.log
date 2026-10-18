@@ -1,0 +1,49 @@
+2026/10/18 09:40:37 Unhandled secondary device attribute 
+2026/10/18 09:40:37 Unhandled tertiary device attribute 
+2026/10/18 09:40:37 Unhandled secondary device attribute 0
+2026/10/18 09:40:37 Unknown device attribute ?1
+--- FAIL: TestOSC_Directory (0.00s)
+    osc_test.go:55: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/terminal/osc_test.go:55
+        	Error:      	Not equal: 
+        	            	expected: "C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3464862178\\001"
+        	            	actual  : "file://C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3464862178\\001"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-C:\Users\night\AppData\Local\Temp\TestOSC_Directory3464862178\001
+        	            	+file://C:\Users\night\AppData\Local\Temp\TestOSC_Directory3464862178\001
+        	Test:       	TestOSC_Directory
+    osc_test.go:56: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/terminal/osc_test.go:56
+        	Error:      	Not equal: 
+        	            	expected: "C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3464862178\\001"
+        	            	actual  : "file://C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3464862178\\001"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-C:\Users\night\AppData\Local\Temp\TestOSC_Directory3464862178\001
+        	            	+file://C:\Users\night\AppData\Local\Temp\TestOSC_Directory3464862178\001
+        	Test:       	TestOSC_Directory
+    osc_test.go:62: 
+        	Error Trace:	D:/fyne/ecosystem/work/granio-x/terminal/osc_test.go:62
+        	Error:      	Not equal: 
+        	            	expected: "C:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3464862178\\001"
+        	            	actual  : "file://some-hostC:\\Users\\night\\AppData\\Local\\Temp\\TestOSC_Directory3464862178\\001"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-C:\Users\night\AppData\Local\Temp\TestOSC_Directory3464862178\001
+        	            	+file://some-hostC:\Users\night\AppData\Local\Temp\TestOSC_Directory3464862178\001
+        	Test:       	TestOSC_Directory
+FAIL
+FAIL	github.com/Uzer007-admin/granio-x/terminal	6.367s
+ok  	github.com/Uzer007-admin/granio-x/ui	6.555s
+ok  	github.com/Uzer007-admin/granio-x/cloud/internal	6.938s
+FAIL

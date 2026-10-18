@@ -1,0 +1,14 @@
+ok  	github.com/Uzer007-admin/granio-tools	(cached)
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/commands	(cached)
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/goos	(cached)
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/metadata	(cached)
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile	(cached)
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/binres	(cached)
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/gendex	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/templates	(cached)
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/util	(cached)
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio_setup	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/setup/pkg	1.026s
+?   	github.com/Uzer007-admin/granio-tools/studio	[no test files]
+?   	github.com/Uzer007-admin/granio-tools/studio/internal/guibuilder	[no test files]

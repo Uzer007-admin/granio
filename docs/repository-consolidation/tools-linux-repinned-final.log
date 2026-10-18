@@ -1,0 +1,14 @@
+ok  	github.com/Uzer007-admin/granio-tools	1.022s
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/commands	3.187s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/goos	1.011s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/metadata	1.879s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile	2.294s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/binres	1.049s
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/gendex	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/templates	1.013s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/util	1.023s
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio_setup	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/setup/pkg	1.025s
+?   	github.com/Uzer007-admin/granio-tools/studio	[no test files]
+?   	github.com/Uzer007-admin/granio-tools/studio/internal/guibuilder	[no test files]

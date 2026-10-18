@@ -1,0 +1,17 @@
+{
+  "github.com/Uzer007-admin/granio-examples": {
+    "version": "v0.0.0-20261018073022-a1540c9916ac",
+    "commit": "a1540c9916acb03dbbfed4fe46c1c7fe3154e9fb",
+    "directory": "ecosystem/work/granio-examples"
+  },
+  "github.com/Uzer007-admin/granio-xgb": {
+    "version": "v0.0.0-20261018064218-418fa8a142d8",
+    "commit": "418fa8a142d85fb7f067f5e625c40c138ac1ed3e",
+    "directory": "ecosystem/work/granio-xgb"
+  },
+  "github.com/Uzer007-admin/granio-apps": {
+    "version": "v0.0.0-20261018070308-9bd2a3e67297",
+    "commit": "9bd2a3e672976bc308a1d47e40758c65170c6f37",
+    "directory": "extras/apps"
+  }
+}

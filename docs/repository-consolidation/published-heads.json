@@ -1,0 +1,62 @@
+[
+  {
+    "repository": "granio-apps",
+    "commit": "9017d1afc8ff2b55025d61d89ef0f5519e959c71",
+    "remote_commit": "9017d1afc8ff2b55025d61d89ef0f5519e959c71",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "granio-xgb",
+    "commit": "f88368a26042a238a29578f9084c9461964f04f8",
+    "remote_commit": "f88368a26042a238a29578f9084c9461964f04f8",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "granio-x",
+    "commit": "22bd3db3fccdd90833426a4a9264cd1abcbbbb9e",
+    "remote_commit": "22bd3db3fccdd90833426a4a9264cd1abcbbbb9e",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "granio-tools",
+    "commit": "5f79b8ee8d3e52658a98f7711df6e6b69aed5135",
+    "remote_commit": "5f79b8ee8d3e52658a98f7711df6e6b69aed5135",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "granio-examples",
+    "commit": "11f5775a91658362c4ac3e7794f8f5c92c9f7e6f",
+    "remote_commit": "11f5775a91658362c4ac3e7794f8f5c92c9f7e6f",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "granio-docs",
+    "commit": "28b338b57f3a6ff5992703d131dd9af73c8cf596",
+    "remote_commit": "28b338b57f3a6ff5992703d131dd9af73c8cf596",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "gl",
+    "commit": "3756695c655823cb1c7ceb3bc8c7ff068838f855",
+    "remote_commit": "3756695c655823cb1c7ceb3bc8c7ff068838f855",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "glfw",
+    "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+    "remote_commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "glow",
+    "commit": "3169226de4e23d221876255a099c0603000dfc39",
+    "remote_commit": "3169226de4e23d221876255a099c0603000dfc39",
+    "working_tree_clean": true
+  },
+  {
+    "repository": "dbus",
+    "commit": "2eb3d0dba943ea7c2df845285aea69db9fb4712a",
+    "remote_commit": "2eb3d0dba943ea7c2df845285aea69db9fb4712a",
+    "working_tree_clean": true
+  }
+]

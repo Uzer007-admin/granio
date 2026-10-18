@@ -1,0 +1,13 @@
+package main
+import (
+ "fmt"
+ "log"
+ "github.com/Uzer007-admin/granio-xgb/xgbutil"
+ "github.com/Uzer007-admin/granio-xgb/xproto"
+)
+func main(){
+ x,err:=xgbutil.NewConn(); if err!=nil {log.Fatal(err)}; defer x.Conn().Close()
+ g,err:=xproto.GetGeometry(x.Conn(),xproto.Drawable(x.RootWin())).Reply(); if err!=nil {log.Fatal(err)}
+ if g.Width==0 || g.Height==0 {log.Fatal("empty root geometry")}
+ fmt.Printf("X11 connection and geometry query passed: %dx%d\n",g.Width,g.Height)
+}

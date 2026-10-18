@@ -1,0 +1,14 @@
+# github.com/Uzer007-admin/granio-tools/cmd/granio_setup
+cmd/granio_setup/main.go:6:2: cannot find module providing package github.com/Uzer007-admin/granio-tools/setup/pkg: import lookup disabled by -mod=vendor
+FAIL	github.com/Uzer007-admin/granio-tools/cmd/granio_setup [setup failed]
+ok  	github.com/Uzer007-admin/granio-tools	1.011s
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/commands	3.271s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/goos	1.032s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/metadata	1.865s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile	2.325s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/binres	1.049s
+?   	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/gendex	[no test files]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/templates	1.012s
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/util	1.021s
+FAIL

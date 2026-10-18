@@ -1,0 +1,52 @@
+?   	github.com/Uzer007-admin/granio-examples	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/7guis/counter	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/7guis/crud	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/7guis/temperature-converter	[no test files]
+ok  	github.com/Uzer007-admin/granio-examples/bugs	1.117s
+ok  	github.com/Uzer007-admin/granio-examples/calculator	1.743s
+?   	github.com/Uzer007-admin/granio-examples/clock	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/cloud	[no test files]
+ok  	github.com/Uzer007-admin/granio-examples/demo	1.735s
+?   	github.com/Uzer007-admin/granio-examples/demo/data	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/demo/tutorials	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/calendar_demo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/diagramdemo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/fyne-x	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/hexwidget_demo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/map_demo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/numericalentry_demo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/portion_demo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/responsive_layout	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/twostatetoolbaraction_demo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/extensions/wrapper	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/fractal	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/img/icon	[no test files]
+ok  	github.com/Uzer007-admin/granio-examples/life	1.172s
+?   	github.com/Uzer007-admin/granio-examples/localization/getlocale	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/localization/getlocale-gui	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/packaging/flatpak	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/pixeledit	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/pixeledit/internal/api	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/pixeledit/internal/data	[no test files]
+ok  	github.com/Uzer007-admin/granio-examples/pixeledit/internal/tool	1.141s
+ok  	github.com/Uzer007-admin/granio-examples/pixeledit/internal/ui	1.188s
+ok  	github.com/Uzer007-admin/granio-examples/solitaire	1.174s
+?   	github.com/Uzer007-admin/granio-examples/solitaire/faces	[no test files]
+ok  	github.com/Uzer007-admin/granio-examples/terminal	4.935s
+?   	github.com/Uzer007-admin/granio-examples/terminal/data	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/tictactoe	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/tutorials/explore/systray	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/tutorials/started/hello	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/tutorials/started/packaging	[no test files]
+ok  	github.com/Uzer007-admin/granio-examples/tutorials/started/testing	1.247s
+?   	github.com/Uzer007-admin/granio-examples/tutorials/started/update	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/tutorials/started/windows	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/FyneConf2023/hello	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/FyneConf2023/todo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/GoLab2024/greeter	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/GoLab2024/hello	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/GoLab2024/more/bind	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/GoLab2024/more/custom	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/GoLab2024/more/extend	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/workshops/GoLab2024/todo	[no test files]
+?   	github.com/Uzer007-admin/granio-examples/xkcd	[no test files]

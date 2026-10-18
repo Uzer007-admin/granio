@@ -1,0 +1,87 @@
+{
+  "core-windows-desktop-final.log": {
+    "packages": 72,
+    "packages_with_tests": 47,
+    "passed": true
+  },
+  "x-windows-final.log": {
+    "packages": 21,
+    "packages_with_tests": 14,
+    "passed": true
+  },
+  "tools-windows-final.log": {
+    "packages": 14,
+    "packages_with_tests": 9,
+    "passed": true
+  },
+  "cross-windows-tests.log": {
+    "packages": 9,
+    "packages_with_tests": 2,
+    "passed": true
+  },
+  "examples-windows-final.log": {
+    "packages": 52,
+    "packages_with_tests": 9,
+    "passed": true
+  },
+  "apps-windows-tests.log": {
+    "packages": 1,
+    "packages_with_tests": 1,
+    "passed": true
+  },
+  "core-tests.log": {
+    "packages": 73,
+    "packages_with_tests": 50,
+    "passed": true
+  },
+  "x-tests.log": {
+    "packages": 21,
+    "packages_with_tests": 14,
+    "passed": true
+  },
+  "tools-tests-final.log": {
+    "packages": 14,
+    "packages_with_tests": 9,
+    "passed": true
+  },
+  "cross-tests-final.log": {
+    "packages": 9,
+    "packages_with_tests": 2,
+    "passed": true
+  },
+  "bridge-tests-final.log": {
+    "packages": 1,
+    "packages_with_tests": 0,
+    "passed": true
+  },
+  "xgb-tests-final.log": {
+    "packages": 47,
+    "packages_with_tests": 0,
+    "passed": true
+  },
+  "x-windows-boundaries.log": {
+    "packages": 21,
+    "packages_with_tests": 14,
+    "passed": true
+  },
+  "x-linux-boundaries.log": {
+    "packages": 21,
+    "packages_with_tests": 14,
+    "passed": true
+  },
+  "tools-windows-repinned-final.log": {
+    "packages": 14,
+    "packages_with_tests": 9,
+    "passed": true
+  },
+  "tools-linux-repinned-final.log": {
+    "packages": 14,
+    "packages_with_tests": 9,
+    "passed": true
+  },
+  "examples-windows-repinned.log": {
+    "packages": 52,
+    "packages_with_tests": 9,
+    "passed": true
+  }
+}

@@ -1,0 +1,17 @@
+warning: in the working copy of 'SOURCES.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cloud/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cloud/internal/preferences_stored.go', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cloud/internal/preferences_stored_test.go', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'go.sum', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'terminal/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'terminal/term.go', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'terminal/term_test.go', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'terminal/term_windows.go', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ui/AUTHORS', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ui/LICENSE', LF will be replaced by CRLF the next time Git touches it
+[dev/granio 9836f4c] Исправление граничных значений терминала и пустых настроек
+ 7 files changed, 72 insertions(+), 15 deletions(-)
+[dev/granio 22bd3db] Актуализация закреплённой версии расширений
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To https://github.com/Uzer007-admin/granio-x.git
+   f388481..22bd3db  HEAD -> dev/granio

@@ -1,0 +1,20 @@
+warning: in the working copy of '.github/workflows/fyne-qa.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SOURCES.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cmd/granio/internal/metadata/load_test.go', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cmd/granio/internal/metadata/testdata/FyneApp.toml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cross-images/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cross/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cross/go.sum', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'go.mod', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'go.sum', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mobile-bridge/go.sum', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'setup/AUTHORS', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'setup/LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'studio/AUTHORS', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'studio/LICENSE', LF will be replaced by CRLF the next time Git touches it
+[dev/granio 9086317] Согласование Studio с общим модулем расширений и источниками
+ 8 files changed, 100 insertions(+), 14 deletions(-)
+[dev/granio 2f8e13d] Закрепление актуальной версии упаковщика и Studio
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+To https://github.com/Uzer007-admin/granio-tools.git
+   28ac943..2f8e13d  HEAD -> dev/granio

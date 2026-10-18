@@ -1,0 +1,5 @@
+go: downloading github.com/Uzer007-admin/granio/deps/gl-js v0.0.0-20261018062049-d56bde3dff7f
+go: downloading github.com/Uzer007-admin/granio/deps/glfw-js v0.0.0-20261018062049-d56bde3dff7f
+go: downloading github.com/Uzer007-admin/granio/deps/image v0.0.0-20261018062049-d56bde3dff7f
+go: downloading github.com/Uzer007-admin/granio/deps/systray v0.0.0-20261018062049-d56bde3dff7f
+go: downloading github.com/Uzer007-admin/granio/deps/oksvg v0.0.0-20261018062049-d56bde3dff7f

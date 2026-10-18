@@ -1,0 +1,93 @@
+ok  	github.com/Uzer007-admin/granio/v2	2.409s
+ok  	github.com/Uzer007-admin/granio/v2/app	21.671s
+?   	github.com/Uzer007-admin/granio/v2/cache	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/canvas	10.499s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/commands	4.104s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/commands	6.751s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile/binres	4.246s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio/internal/util	6.814s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_demo	7.655s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_demo/data	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_demo/tutorials	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_gallery	17.002s
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_settings	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/cmd/granio_settings/data	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_settings/settings	4.461s
+?   	github.com/Uzer007-admin/granio/v2/cmd/hello	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/container	5.858s
+ok  	github.com/Uzer007-admin/granio/v2/data/binding	2.153s
+ok  	github.com/Uzer007-admin/granio/v2/data/validation	1.691s
+ok  	github.com/Uzer007-admin/granio/v2/dialog	33.037s
+ok  	github.com/Uzer007-admin/granio/v2/driver	1.688s
+ok  	github.com/Uzer007-admin/granio/v2/driver/desktop	2.514s
+?   	github.com/Uzer007-admin/granio/v2/driver/embedded	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/driver/mobile	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/driver/software	4.731s
+ok  	github.com/Uzer007-admin/granio/v2/internal	3.482s
+ok  	github.com/Uzer007-admin/granio/v2/internal/animation	3.293s
+ok  	github.com/Uzer007-admin/granio/v2/internal/app	2.428s
+ok  	github.com/Uzer007-admin/granio/v2/internal/async	3.258s
+?   	github.com/Uzer007-admin/granio/v2/internal/build	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/cache	1.404s
+ok  	github.com/Uzer007-admin/granio/v2/internal/color	1.628s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver	2.560s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/common	2.791s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/embedded	2.581s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	3.110s
+--- FAIL: Test_device_HideVirtualKeyboard_BeforeRun (0.00s)
+panic: runtime error: invalid memory address or nil pointer dereference [recovered, repanicked]
+[signal 0xc0000005 code=0x0 addr=0x38 pc=0x14088fe2a]
+
+goroutine 35 [running]:
+testing.tRunner.func1.2({0x1417031b8, 0x1410ed5c0})
+	C:/Program Files/Go/src/testing/testing.go:2125 +0x3f7
+testing.tRunner.func1()
+	C:/Program Files/Go/src/testing/testing.go:2128 +0x65f
+panic({0x1417031b8?, 0x1410ed5c0?})
+	C:/Program Files/Go/src/runtime/panic.go:859 +0x125
+github.com/Uzer007-admin/granio/v2/internal/driver/mobile.(*device).HideVirtualKeyboard(0xc00035beb0)
+	D:/fyne/internal/driver/mobile/device.go:71 +0x2a
+github.com/Uzer007-admin/granio/v2/internal/driver/mobile.Test_device_HideVirtualKeyboard_BeforeRun(0xc000500000)
+	D:/fyne/internal/driver/mobile/device_test.go:26 +0xb3
+testing.tRunner(0xc000500000, 0x14178f568)
+	C:/Program Files/Go/src/testing/testing.go:2195 +0x1cb
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:2260 +0xb2b
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/mobile	0.877s
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl	[no test files]
+?   	github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/foldermeta	1.890s
+?   	github.com/Uzer007-admin/granio/v2/internal/goos	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/metadata	2.458s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter	6.095s
+?   	github.com/Uzer007-admin/granio/v2/internal/painter/geom	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	2.028s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/software	9.079s
+ok  	github.com/Uzer007-admin/granio/v2/internal/repository	35.444s
+ok  	github.com/Uzer007-admin/granio/v2/internal/repository/mime	1.703s
+?   	github.com/Uzer007-admin/granio/v2/internal/scale	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/internal/scheduler	4.084s
+ok  	github.com/Uzer007-admin/granio/v2/internal/svg	2.013s
+ok  	github.com/Uzer007-admin/granio/v2/internal/test	2.321s
+ok  	github.com/Uzer007-admin/granio/v2/internal/theme	1.725s
+ok  	github.com/Uzer007-admin/granio/v2/internal/widget	3.003s
+ok  	github.com/Uzer007-admin/granio/v2/lang	2.268s
+ok  	github.com/Uzer007-admin/granio/v2/layout	3.242s
+ok  	github.com/Uzer007-admin/granio/v2/storage	2.512s
+?   	github.com/Uzer007-admin/granio/v2/storage/foldermeta	[no test files]
+ok  	github.com/Uzer007-admin/granio/v2/storage/repository	1.778s
+ok  	github.com/Uzer007-admin/granio/v2/test	3.152s
+ok  	github.com/Uzer007-admin/granio/v2/theme	2.365s
+ok  	github.com/Uzer007-admin/granio/v2/tools/playground	2.542s
+ok  	github.com/Uzer007-admin/granio/v2/widget	49.604s
+FAIL

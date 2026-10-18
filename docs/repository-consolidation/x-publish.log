@@ -1,0 +1,67 @@
+[dev/granio 22a6db2] Объединение терминала, интерфейсов и интеграций с расширениями
+ 99 files changed, 1699 insertions(+), 2944 deletions(-)
+ create mode 100644 SOURCES.json
+ create mode 100644 UPSTREAM.md
+ create mode 100644 cloud/UPSTREAM.md
+ delete mode 100644 cloud/example/main.go
+ rename cloud/{go.mod => go.mod.upstream} (98%)
+ rename locale/go.sum => cloud/go.sum.upstream (99%)
+ delete mode 100644 cmd/calendar_demo/main.go
+ delete mode 100644 cmd/diagramdemo/main.go
+ delete mode 100644 cmd/fyne-x/FyneApp.toml
+ delete mode 100644 cmd/fyne-x/Icon.png
+ delete mode 100644 cmd/fyne-x/main.go
+ delete mode 100644 cmd/hexwidget_demo/README.md
+ delete mode 100644 cmd/hexwidget_demo/main.go
+ delete mode 100644 cmd/map_demo/main.go
+ delete mode 100644 cmd/numericalentry_demo/main.go
+ delete mode 100644 cmd/portion_demo/main.go
+ delete mode 100644 cmd/responsive_layout/main.go
+ delete mode 100644 cmd/twostatetoolbaraction_demo/main.go
+ delete mode 100644 cmd/wrapper/main.go
+ create mode 100644 docs/upstream-ci/platform_tests.yml
+ create mode 100644 docs/upstream-ci/static_analysis.yml
+ create mode 100644 locale/UPSTREAM.md
+ delete mode 100644 locale/examples/getlocale-gui/README.md
+ delete mode 100644 locale/examples/getlocale-gui/android.go
+ delete mode 100644 locale/examples/getlocale-gui/icon.png
+ delete mode 100644 locale/examples/getlocale-gui/main.go
+ delete mode 100644 locale/examples/getlocale/main.go
+ rename locale/{go.mod => go.mod.upstream} (100%)
+ rename cloud/go.sum => locale/go.sum.upstream (100%)
+ create mode 100644 terminal/UPSTREAM.md
+ delete mode 100644 terminal/cmd/fyneterm/FyneApp.toml
+ delete mode 100644 terminal/cmd/fyneterm/data/Icon.png
+ delete mode 100644 terminal/cmd/fyneterm/data/Icon.svg
+ delete mode 100644 terminal/cmd/fyneterm/data/bundled.go
+ delete mode 100644 terminal/cmd/fyneterm/data/fyne_logo.png
+ delete mode 100644 terminal/cmd/fyneterm/data/icons.go
+ delete mode 100644 terminal/cmd/fyneterm/font/Hack-Bold.ttf
+ delete mode 100644 terminal/cmd/fyneterm/font/Hack-BoldItalic.ttf
+ delete mode 100644 terminal/cmd/fyneterm/font/Hack-Italic.ttf
+ delete mode 100644 terminal/cmd/fyneterm/font/Hack-Regular.ttf
+ delete mode 100644 terminal/cmd/fyneterm/font/LICENSE.md
+ delete mode 100644 terminal/cmd/fyneterm/fonts.go
+ delete mode 100644 terminal/cmd/fyneterm/main.go
+ delete mode 100644 terminal/cmd/fyneterm/main_test.go
+ delete mode 100644 terminal/cmd/fyneterm/theme.go
+ delete mode 100644 terminal/cmd/fyneterm/translation/en.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/fr.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/ja.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/pl.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/pt.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/pt_BR.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/ru.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/sk.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/sv.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/ta.json
+ delete mode 100644 terminal/cmd/fyneterm/translation/uk.json
+ rename terminal/{go.mod => go.mod.upstream} (98%)
+ rename terminal/{go.sum => go.sum.upstream} (99%)
+ create mode 100644 ui/UPSTREAM.md
+ rename ui/{go.mod => go.mod.upstream} (97%)
+ rename ui/{go.sum => go.sum.upstream} (98%)
+[dev/granio f388481] Закрепление версии общего модуля расширений
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+To https://github.com/Uzer007-admin/granio-x.git
+   c5b0341..f388481  HEAD -> dev/granio
