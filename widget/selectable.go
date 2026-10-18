@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 type selectable struct {
@@ -23,19 +23,19 @@ type selectable struct {
 	selectRow, selectColumn int
 
 	focused, selecting, selectEnded, password bool
-	sizeName                                  fyne.ThemeSizeName
-	style                                     fyne.TextStyle
+	sizeName                                  granio.ThemeSizeName
+	style                                     granio.TextStyle
 
 	provider *RichText
-	theme    fyne.Theme
-	focus    fyne.Focusable
+	theme    granio.Theme
+	focus    granio.Focusable
 
 	// doubleTappedAtUnixMillis stores the time the entry was last DoubleTapped
 	// used for deciding whether the next MouseDown/TouchDown is a triple-tap or not
 	doubleTappedAtUnixMillis int64
 }
 
-func (s *selectable) CreateRenderer() fyne.WidgetRenderer {
+func (s *selectable) CreateRenderer() granio.WidgetRenderer {
 	return &selectableRenderer{sel: s}
 }
 
@@ -43,7 +43,7 @@ func (*selectable) Cursor() desktop.Cursor {
 	return desktop.TextCursor
 }
 
-func (s *selectable) DoubleTapped(p *fyne.PointEvent) {
+func (s *selectable) DoubleTapped(p *granio.PointEvent) {
 	s.doubleTappedAtUnixMillis = time.Now().UnixMilli()
 	s.updateMousePointer(p.Position)
 	row := s.provider.row(s.cursorRow)
@@ -73,7 +73,7 @@ func (s *selectable) DragEnd() {
 	s.selectEnded = true
 }
 
-func (s *selectable) Dragged(d *fyne.DragEvent) {
+func (s *selectable) Dragged(d *granio.DragEvent) {
 	if !s.selecting || s.selectEnded {
 		s.selectEnded = false
 		s.updateMousePointer(d.Position)
@@ -129,8 +129,8 @@ func (s *selectable) SelectedText() string {
 	return s.provider.textBetween(start, stop)
 }
 
-func (s *selectable) Tapped(*fyne.PointEvent) {
-	if !fyne.CurrentDevice().IsMobile() {
+func (s *selectable) Tapped(*granio.PointEvent) {
+	if !granio.CurrentDevice().IsMobile() {
 		return
 	}
 
@@ -142,15 +142,15 @@ func (s *selectable) Tapped(*fyne.PointEvent) {
 	s.Refresh()
 }
 
-func (s *selectable) TappedSecondary(ev *fyne.PointEvent) {
-	app := fyne.CurrentApp()
-	c := app.Driver().CanvasForObject(s.focus.(fyne.CanvasObject))
+func (s *selectable) TappedSecondary(ev *granio.PointEvent) {
+	app := granio.CurrentApp()
+	c := app.Driver().CanvasForObject(s.focus.(granio.CanvasObject))
 	if c == nil {
 		return
 	}
 
-	m := fyne.NewMenu("",
-		fyne.NewMenuItem(lang.L("Copy"), func() {
+	m := granio.NewMenu("",
+		granio.NewMenuItem(lang.L("Copy"), func() {
 			app.Clipboard().SetContent(s.SelectedText())
 		}))
 	ShowPopUpMenuAtPosition(m, c, ev.AbsolutePosition)
@@ -170,13 +170,13 @@ func (s *selectable) TouchDown(*mobile.TouchEvent) {
 func (*selectable) TouchUp(*mobile.TouchEvent) {
 }
 
-func (s *selectable) TypedShortcut(sh fyne.Shortcut) {
-	if _, ok := sh.(*fyne.ShortcutCopy); ok {
-		fyne.CurrentApp().Clipboard().SetContent(s.SelectedText())
+func (s *selectable) TypedShortcut(sh granio.Shortcut) {
+	if _, ok := sh.(*granio.ShortcutCopy); ok {
+		granio.CurrentApp().Clipboard().SetContent(s.SelectedText())
 	}
 }
 
-func (s *selectable) cursorColAt(row int, pos fyne.Position) int {
+func (s *selectable) cursorColAt(row int, pos granio.Position) int {
 	th := s.theme
 	innerPad := th.Size(theme.SizeNameInnerPadding)
 	provider := s.provider
@@ -188,15 +188,11 @@ func (s *selectable) cursorColAt(row int, pos fyne.Position) int {
 			if concealed(text) {
 				runes = []rune(strings.Repeat(passwordChar, len(runes)))
 			}
-			size, style := text.size(), text.Style.TextStyle
-			for i := 0; i < len(runes); i++ {
-				wid := fyne.MeasureText(string(runes[0:i]), size, style).Width
-				charWid := fyne.MeasureText(string(runes[i]), size, style).Width
-				if pos.X < innerPad+wid+(charWid/2) {
-					return i
-				}
-			}
-			return len(runes)
+			return sort.Search(len(runes), func(i int) bool {
+				left := text.measure(string(runes[:i])).Width
+				right := text.measure(string(runes[:i+1])).Width
+				return pos.X < innerPad+(left+right)/2
+			})
 		}
 	}
 
@@ -208,7 +204,7 @@ func (s *selectable) cursorColAt(row int, pos fyne.Position) int {
 	})
 }
 
-func (s *selectable) getRowCol(p fyne.Position) (row, col int) {
+func (s *selectable) getRowCol(p granio.Position) (row, col int) {
 	th := s.theme
 	innerPad := th.Size(theme.SizeNameInnerPadding)
 
@@ -276,7 +272,7 @@ func textPosFromRowCol(row, col int, prov *RichText) int {
 	return b.docBegin + col
 }
 
-func (s *selectable) updateMousePointer(p fyne.Position) {
+func (s *selectable) updateMousePointer(p granio.Position) {
 	row, col := s.getRowCol(p)
 	s.cursorRow, s.cursorColumn = row, col
 
@@ -286,7 +282,7 @@ func (s *selectable) updateMousePointer(p fyne.Position) {
 	}
 }
 
-func (s *selectable) getSizeName() fyne.ThemeSizeName {
+func (s *selectable) getSizeName() granio.ThemeSizeName {
 	if s.sizeName != "" {
 		return s.sizeName
 	}
@@ -296,20 +292,20 @@ func (s *selectable) getSizeName() fyne.ThemeSizeName {
 type selectableRenderer struct {
 	sel *selectable
 
-	selections []fyne.CanvasObject
+	selections []granio.CanvasObject
 }
 
 func (*selectableRenderer) Destroy() {
 }
 
-func (*selectableRenderer) Layout(fyne.Size) {
+func (*selectableRenderer) Layout(granio.Size) {
 }
 
-func (*selectableRenderer) MinSize() fyne.Size {
-	return fyne.Size{}
+func (*selectableRenderer) MinSize() granio.Size {
+	return granio.Size{}
 }
 
-func (r *selectableRenderer) Objects() []fyne.CanvasObject {
+func (r *selectableRenderer) Objects() []granio.CanvasObject {
 	if r.sel.provider != nil && len(r.sel.provider.decor) > 0 {
 		return nil // the text draws them, above the panels that its blocks sit on
 	}
@@ -324,12 +320,11 @@ func (r *selectableRenderer) Refresh() {
 		// hand them over so the text can draw them above any panels that it has
 		r.sel.provider.setHighlights(r.sel, selections)
 	}
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
-	selectionColor := r.sel.theme.Color(theme.ColorNameSelection, v)
 	for _, selection := range selections {
 		rect, _ := selection.(*canvas.Rectangle)
-		rect.FillColor = selectionColor
+		applySelectionStyle(rect, r.sel.theme, v)
 		if r.sel.focused {
 			rect.Show()
 		} else {
@@ -349,7 +344,7 @@ func (r *selectableRenderer) Refresh() {
 // all rectangles to comply with the occurrence order as stated above.
 func (r *selectableRenderer) buildSelection() {
 	th := r.sel.theme
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	textSize := th.Size(r.sel.getSizeName())
 
 	cursorRow, cursorCol := r.sel.cursorRow, r.sel.cursorColumn
@@ -423,17 +418,17 @@ func (r *selectableRenderer) buildSelection() {
 		x2, _ := getCoordinates(endCol, row)
 
 		// resize and reposition each rectangle
-		r.selections[i].Resize(fyne.NewSize(x2-x1+1, rowHeight(row)))
-		r.selections[i].Move(fyne.NewPos(x1-1, y1))
+		r.selections[i].Resize(granio.NewSize(x2-x1+1, rowHeight(row)))
+		r.selections[i].Move(granio.NewPos(x1-1, y1))
 	}
 }
 
 func (s *selectable) grabFocus() {
-	if c := fyne.CurrentApp().Driver().CanvasForObject(s.focus.(fyne.CanvasObject)); c != nil {
+	if c := granio.CurrentApp().Driver().CanvasForObject(s.focus.(granio.CanvasObject)); c != nil {
 		c.Focus(s.focus)
 	}
 }
 
 func isTripleTap(double, nowMilli int64) bool {
-	return nowMilli-double <= fyne.CurrentApp().Driver().DoubleTapDelay().Milliseconds()
+	return nowMilli-double <= granio.CurrentApp().Driver().DoubleTapDelay().Milliseconds()
 }

@@ -15,10 +15,13 @@ jobs:
         go-version: ["", "stable"]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-go@v6
+          submodules: recursive
+      - name: Apply local submodule patches
+        run: python scripts/apply-patches.py
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version: ${{ matrix.go-version }}
           go-version-file: ${{ matrix.go-version == '' && 'go.mod' || '' }}
@@ -35,5 +38,5 @@ jobs:
         run: xvfb-run go test -race -tags mobile,ci,migrated_fynedo ./...
 
       - name: Compile
-        working-directory: cmd/fyne_demo
+        working-directory: cmd/granio_demo
         run: go build -tags mobile

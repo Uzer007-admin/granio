@@ -1,0 +1,9 @@
+PASS: own Fyne probe and NVDA processes exited
+PASS: owned Linux temporary directory /tmp/fa11y-d4DB3py5 removed after evidence collection
+PASS: all owned Windows temporary binaries, caches, logs and profiles removed
+PASS: remaining IAccessible2proxy.dll (137920 bytes) and ISimpleDOM.dll (121008 bytes) removed on 2026-10-13
+PASS: owned Windows temporary directory X:\fyne\.build-accessibility-c28a1842 removed; absence verified
+PASS: Yandex Browser closed after explicit user authorization; no Yandex browser processes remained
+PASS: Explorer desktop shell restarted after explicit user authorization and verified running
+PASS: original Windows language profiles restored and compared to baseline
+Reports, project sources and installed Linux test tools retained

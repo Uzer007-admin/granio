@@ -1,0 +1,5 @@
+ok  	github.com/Uzer007-admin/glow	2.023s
+ok  	github.com/Uzer007-admin/gl/v2.1/gl	1.347s
+ok  	github.com/Uzer007-admin/gl/v2.1/fyne	1.286s
+ok  	github.com/Uzer007-admin/gl/v2.0/gles2	1.287s
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.238s

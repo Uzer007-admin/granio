@@ -1,0 +1,169 @@
+{
+  "Date": "2026-10-12",
+  "BaselineCommit": "7f99a87b0e1903ebc17f3c8c8f478b840a6eabe5",
+  "ExistingUncommittedChanges": true,
+  "Ordinary": [
+    {
+      "Name": "BenchmarkContentMinSize",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 1.248,
+      "MinNs": 1.248,
+      "MaxNs": 1.252,
+      "MedianBytes": 0,
+      "MedianAllocs": 0
+    },
+    {
+      "Name": "BenchmarkDrawRectangle_Generic_1280x800",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 10641420.0,
+      "MinNs": 10608976.0,
+      "MaxNs": 10663532.0,
+      "MedianBytes": 0,
+      "MedianAllocs": 0
+    },
+    {
+      "Name": "BenchmarkDrawRectangle_Opaque_1280x800",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 655479.0,
+      "MinNs": 650998.0,
+      "MaxNs": 655603.0,
+      "MedianBytes": 0,
+      "MedianAllocs": 0
+    },
+    {
+      "Name": "BenchmarkFrameEnsureMinSize",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 114896.0,
+      "MinNs": 109150.0,
+      "MaxNs": 119307.0,
+      "MedianBytes": 144,
+      "MedianAllocs": 2
+    },
+    {
+      "Name": "BenchmarkFrameWalkTrees",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 24052.0,
+      "MinNs": 22872.0,
+      "MaxNs": 25162.0,
+      "MedianBytes": 144,
+      "MedianAllocs": 2
+    },
+    {
+      "Name": "BenchmarkGetFontMetrics",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 16615.0,
+      "MinNs": 16525.0,
+      "MaxNs": 16654.0,
+      "MedianBytes": 0,
+      "MedianAllocs": 0
+    },
+    {
+      "Name": "BenchmarkRunOnMain",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 8838.0,
+      "MinNs": 8633.0,
+      "MaxNs": 8845.0,
+      "MedianBytes": 18,
+      "MedianAllocs": 0
+    },
+    {
+      "Name": "BenchmarkText_howManyRunesFit_chinese",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 1598.0,
+      "MinNs": 1596.0,
+      "MaxNs": 1611.0,
+      "MedianBytes": 928,
+      "MedianAllocs": 4
+    },
+    {
+      "Name": "BenchmarkText_howManyRunesFit_latin",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 1159.0,
+      "MinNs": 1155.0,
+      "MaxNs": 1199.0,
+      "MedianBytes": 2400,
+      "MedianAllocs": 3
+    },
+    {
+      "Name": "BenchmarkText_lineBounds_WrapWord",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 1370780.0,
+      "MinNs": 1341579.0,
+      "MaxNs": 1373842.0,
+      "MedianBytes": 1696388,
+      "MedianAllocs": 13948
+    },
+    {
+      "Name": "BenchmarkText_splitLines",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 13157.0,
+      "MinNs": 12231.0,
+      "MaxNs": 13688.0,
+      "MedianBytes": 30224,
+      "MedianAllocs": 28
+    },
+    {
+      "Name": "BenchmarkTextGrid_Refresh",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 22830.0,
+      "MinNs": 22652.0,
+      "MaxNs": 27446.0,
+      "MedianBytes": 4064,
+      "MedianAllocs": 1001
+    }
+  ],
+  "Migrated": [
+    {
+      "Name": "BenchmarkFrameEnsureMinSize",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 100082.0,
+      "MinNs": 96208.0,
+      "MaxNs": 101626.0,
+      "MedianBytes": 144,
+      "MedianAllocs": 2
+    },
+    {
+      "Name": "BenchmarkFrameWalkTrees",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 22568.0,
+      "MinNs": 21501.0,
+      "MaxNs": 22917.0,
+      "MedianBytes": 144,
+      "MedianAllocs": 2
+    },
+    {
+      "Name": "BenchmarkGetFontMetrics",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 13732.0,
+      "MinNs": 13605.0,
+      "MaxNs": 13782.0,
+      "MedianBytes": 0,
+      "MedianAllocs": 0
+    },
+    {
+      "Name": "BenchmarkRunOnMain",
+      "Samples": 3,
+      "Procs": 16,
+      "MedianNs": 8593.0,
+      "MinNs": 8557.0,
+      "MaxNs": 8915.0,
+      "MedianBytes": 18,
+      "MedianAllocs": 0
+    }
+  ]
+}

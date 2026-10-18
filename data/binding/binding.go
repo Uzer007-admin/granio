@@ -8,8 +8,9 @@ import (
 	"errors"
 	"reflect"
 	"sync"
+	"sync/atomic"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 var (
@@ -59,22 +60,24 @@ func (l *listener) DataChanged() {
 }
 
 type base struct {
-	listeners []DataListener
+	listeners     []DataListener
+	listenerCount atomic.Int32
 
 	lock sync.RWMutex
 }
 
 // AddListener allows a data listener to be informed of changes to this item.
 func (b *base) AddListener(l DataListener) {
-	fyne.Do(func() {
+	granio.Do(func() {
 		b.listeners = append(b.listeners, l)
+		b.listenerCount.Store(int32(len(b.listeners)))
 		l.DataChanged()
 	})
 }
 
 // RemoveListener should be called if the listener is no longer interested in being informed of data change events.
 func (b *base) RemoveListener(l DataListener) {
-	fyne.Do(func() {
+	granio.Do(func() {
 		for i, listener := range b.listeners {
 			if listener == l {
 				// Delete without preserving order:
@@ -82,6 +85,7 @@ func (b *base) RemoveListener(l DataListener) {
 				b.listeners[i] = b.listeners[lastIndex]
 				b.listeners[lastIndex] = nil
 				b.listeners = b.listeners[:lastIndex]
+				b.listenerCount.Store(int32(len(b.listeners)))
 				return
 			}
 		}
@@ -89,7 +93,10 @@ func (b *base) RemoveListener(l DataListener) {
 }
 
 func (b *base) trigger() {
-	fyne.Do(b.triggerFromMain)
+	if b.listenerCount.Load() == 0 {
+		return
+	}
+	granio.Do(b.triggerFromMain)
 }
 
 func (b *base) triggerFromMain() {
@@ -122,7 +129,7 @@ type ExternalUntyped = ExternalItem[any]
 func BindUntyped(v any) ExternalUntyped {
 	t := reflect.TypeOf(v)
 	if t.Kind() != reflect.Pointer {
-		fyne.LogError("Invalid type passed to BindUntyped, must be a pointer", nil)
+		granio.LogError("Invalid type passed to BindUntyped, must be a pointer", nil)
 		v = nil
 	}
 

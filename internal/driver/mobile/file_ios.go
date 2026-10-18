@@ -25,8 +25,8 @@ import (
 	"io"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 type secureReadCloser struct {
@@ -99,8 +99,8 @@ func (s *secureWriteCloser) Close() error {
 	return nil
 }
 
-func deleteURI(u fyne.URI) error {
-	if u.Scheme() != fyne.URISchemeFile {
+func deleteURI(u granio.URI) error {
+	if u.Scheme() != granio.URISchemeFile {
 		return errors.New("cannot delete from " + u.Scheme() + " scheme on iOS")
 	}
 
@@ -111,8 +111,8 @@ func deleteURI(u fyne.URI) error {
 	return nil
 }
 
-func existsURI(u fyne.URI) (bool, error) {
-	if u.Scheme() != fyne.URISchemeFile {
+func existsURI(u granio.URI) (bool, error) {
+	if u.Scheme() != granio.URISchemeFile {
 		return true, errors.New("cannot check existence of " + u.Scheme() + " scheme on iOS")
 	}
 
@@ -154,5 +154,5 @@ func nativeFileSave(f *fileSave, truncate bool) (io.WriteCloser, error) {
 
 func registerRepository(d *driver) {
 	repo := &mobileFileRepo{}
-	repository.Register(fyne.URISchemeFile, repo)
+	repository.Register(granio.URISchemeFile, repo)
 }

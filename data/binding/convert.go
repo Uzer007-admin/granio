@@ -3,8 +3,8 @@ package binding
 import (
 	"fmt"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 // BoolToString creates a binding that connects a Bool data item to a String.
@@ -182,7 +182,7 @@ func StringToIntWithFormat(str String, format string) Int {
 //
 // Since: 2.1
 func StringToURI(str String) URI {
-	v := &fromStringTo[fyne.URI]{from: str, parser: formatURI, formatter: parseURI}
+	v := &fromStringTo[granio.URI]{from: str, parser: formatURI, formatter: parseURI}
 	str.AddListener(v)
 	return v
 }

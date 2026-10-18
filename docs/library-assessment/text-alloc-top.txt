@@ -1,0 +1,28 @@
+File: widget.test.exe
+Build ID: X:\fyne\.build-assessment-profile-6a5fe945b6f5438180f29aa3e0db11c1\go-build3123660735\b001\widget.test.exe2026-10-12 09:04:03.4266105 +0300 MSK
+Type: alloc_space
+Time: 2026-10-12 09:04:06 MSK
+Showing nodes accounting for 2.76GB, 98.58% of 2.80GB total
+Dropped 146 nodes (cum <= 0.01GB)
+Showing top 20 nodes out of 40
+      flat  flat%   sum%        cum   cum%
+    2.35GB 83.81% 83.81%     2.71GB 96.56%  github.com/Uzer007-admin/granio/v2/widget.wrapWordLines
+    0.27GB  9.56% 93.37%     0.27GB  9.56%  github.com/Uzer007-admin/granio/v2/internal/cache.SetFontMetrics
+    0.09GB  3.19% 96.56%     0.36GB 12.75%  github.com/Uzer007-admin/granio/v2/widget.benchmarkTextLineBounds.func1
+    0.06GB  2.02% 98.58%     0.06GB  2.02%  github.com/Uzer007-admin/granio/v2/widget.splitLines
+         0     0% 98.58%     0.30GB 10.68%  github.com/Uzer007-admin/granio/v2.MeasureText
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/internal/cache.Renderer
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/internal/painter.CachedFontFace
+         0     0% 98.58%     0.30GB 10.68%  github.com/Uzer007-admin/granio/v2/internal/painter.RenderedTextSize
+         0     0% 98.58%     0.02GB  0.69%  github.com/Uzer007-admin/granio/v2/internal/painter.loadMap
+         0     0% 98.58%     0.02GB  0.69%  github.com/Uzer007-admin/granio/v2/internal/painter.loadSystemFonts (inline)
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/internal/painter.lookupFaces
+         0     0% 98.58%     0.02GB  0.88%  github.com/Uzer007-admin/granio/v2/internal/painter.lookupLangFont
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/internal/painter.measureText
+         0     0% 98.58%     0.30GB 10.68%  github.com/Uzer007-admin/granio/v2/test.(*driver).RenderedTextSize
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/widget.(*BaseWidget).MinSize
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/widget.(*Label).MinSize
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/widget.(*RichText).CreateRenderer
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/widget.(*RichText).MinSize
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/widget.(*RichText).updateRowBounds
+         0     0% 98.58%     0.03GB  1.11%  github.com/Uzer007-admin/granio/v2/widget.(*labelRenderer).MinSize

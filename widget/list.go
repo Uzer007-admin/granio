@@ -5,15 +5,15 @@ import (
 	"math"
 	"sort"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // ListItemID uniquely identifies an item within a list.
@@ -21,15 +21,15 @@ type ListItemID = int
 
 // Declare conformity with interfaces.
 var (
-	_ fyne.Widget    = (*List)(nil)
-	_ fyne.Focusable = (*List)(nil)
+	_ granio.Widget    = (*List)(nil)
+	_ granio.Focusable = (*List)(nil)
 )
 
 type listBind struct {
 	listener annotatedListener
 
 	oldLength func() int
-	oldUpdate func(id ListItemID, item fyne.CanvasObject)
+	oldUpdate func(id ListItemID, item granio.CanvasObject)
 }
 
 // List is a widget that pools list items for performance and
@@ -40,19 +40,20 @@ type listBind struct {
 // Since: 1.4
 type List struct {
 	BaseWidget
+	SelectionMode SelectionMode
 
 	// Length is a callback for returning the number of items in the list.
 	Length func() int `json:"-"`
 
 	// CreateItem is a callback invoked to create a new widget to render
 	// a row in the list.
-	CreateItem func() fyne.CanvasObject `json:"-"`
+	CreateItem func() granio.CanvasObject `json:"-"`
 
 	// UpdateItem is a callback invoked to update a list row widget
 	// to display a new row in the list. The UpdateItem callback should
 	// only update the given item, it should not invoke APIs that would
 	// change other properties of the list itself.
-	UpdateItem func(id ListItemID, item fyne.CanvasObject) `json:"-"`
+	UpdateItem func(id ListItemID, item granio.CanvasObject) `json:"-"`
 
 	// OnSelected is a callback to be notified when a given item
 	// in the list has been selected.
@@ -73,15 +74,18 @@ type List struct {
 	// Since: 2.8
 	OnHighlighted func(id ListItemID) `json:"-"`
 
-	currentHighlight ListItemID
-	focused          bool
-	scroller         *widget.Scroll
-	selected         []ListItemID
-	itemMin          fyne.Size
-	itemHeights      map[ListItemID]float32
-	offsetY          float32
-	offsetUpdated    func(fyne.Position)
-	minSizeCache     fyne.Size
+	currentHighlight  ListItemID
+	focused           bool
+	scroller          *widget.Scroll
+	selected          []ListItemID
+	itemMin           granio.Size
+	itemHeights       map[ListItemID]float32
+	offsetY           float32
+	offsetUpdated     func(granio.Position)
+	minSizeCache      granio.Size
+	rowGeometry       collectionGeometry
+	selectionAnchor   ListItemID
+	selectionAnchored bool
 
 	lastBind *listBind
 }
@@ -90,7 +94,7 @@ type List struct {
 // a vertical layout with scrolling and caching for performance.
 //
 // Since: 1.4
-func NewList(length func() int, createItem func() fyne.CanvasObject, updateItem func(ListItemID, fyne.CanvasObject)) *List {
+func NewList(length func() int, createItem func() granio.CanvasObject, updateItem func(ListItemID, granio.CanvasObject)) *List {
 	list := &List{Length: length, CreateItem: createItem, UpdateItem: updateItem}
 	list.ExtendBaseWidget(list)
 	return list
@@ -99,14 +103,14 @@ func NewList(length func() int, createItem func() fyne.CanvasObject, updateItem 
 // NewListWithData creates a new list widget that will display the contents of the provided data.
 //
 // Since: 2.0
-func NewListWithData(data binding.DataList, createItem func() fyne.CanvasObject, updateItem func(binding.DataItem, fyne.CanvasObject)) *List {
+func NewListWithData(data binding.DataList, createItem func() granio.CanvasObject, updateItem func(binding.DataItem, granio.CanvasObject)) *List {
 	l := NewList(
 		data.Length,
 		createItem,
-		func(i ListItemID, o fyne.CanvasObject) {
+		func(i ListItemID, o granio.CanvasObject) {
 			item, err := data.GetItem(i)
 			if err != nil {
-				fyne.LogError(fmt.Sprintf("Error getting data item %d", i), err)
+				granio.LogError(fmt.Sprintf("Error getting data item %d", i), err)
 				return
 			}
 			updateItem(item, o)
@@ -123,16 +127,16 @@ func NewListWithData(data binding.DataList, createItem func() fyne.CanvasObject,
 // Upon binding all items will update.
 //
 // Since: 2.8
-func (l *List) Bind(data binding.DataList, update func(di binding.DataItem, o fyne.CanvasObject)) {
+func (l *List) Bind(data binding.DataList, update func(di binding.DataItem, o granio.CanvasObject)) {
 	l.Unbind()
 
 	oldLength := l.Length
 	oldUpdate := l.UpdateItem
 	l.Length = data.Length
-	l.UpdateItem = func(i ListItemID, o fyne.CanvasObject) {
+	l.UpdateItem = func(i ListItemID, o granio.CanvasObject) {
 		item, err := data.GetItem(i)
 		if err != nil {
-			fyne.LogError(fmt.Sprintf("Error getting data item %d", i), err)
+			granio.LogError(fmt.Sprintf("Error getting data item %d", i), err)
 			return
 		}
 		update(item, o)
@@ -145,7 +149,7 @@ func (l *List) Bind(data binding.DataList, update func(di binding.DataItem, o fy
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (l *List) CreateRenderer() fyne.WidgetRenderer {
+func (l *List) CreateRenderer() granio.WidgetRenderer {
 	l.ExtendBaseWidget(l)
 
 	if f := l.CreateItem; f != nil && l.itemMin.IsZero() {
@@ -154,10 +158,10 @@ func (l *List) CreateRenderer() fyne.WidgetRenderer {
 		l.itemMin = item.MinSize()
 	}
 
-	layout := &fyne.Container{Layout: newListLayout(l)}
+	layout := &granio.Container{Layout: newListLayout(l)}
 	l.scroller = widget.NewVScroll(layout)
 	layout.Resize(layout.MinSize())
-	objects := []fyne.CanvasObject{l.scroller}
+	objects := []granio.CanvasObject{l.scroller}
 	return newListRenderer(objects, l, l.scroller, layout)
 }
 
@@ -177,7 +181,7 @@ func (l *List) FocusLost() {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (l *List) MinSize() fyne.Size {
+func (l *List) MinSize() granio.Size {
 	l.ExtendBaseWidget(l)
 	return l.BaseWidget.MinSize()
 }
@@ -186,12 +190,13 @@ func (l *List) MinSize() fyne.Size {
 //
 // Since: 2.4
 func (l *List) RefreshItem(id ListItemID) {
-	l.minSizeCache = fyne.Size{}
+	l.rowGeometry.dirty = true
+	l.minSizeCache = granio.Size{}
 	if l.scroller == nil {
 		return
 	}
 	l.BaseWidget.Refresh()
-	lo, _ := l.scroller.Content.(*fyne.Container).Layout.(*listLayout)
+	lo, _ := l.scroller.Content.(*granio.Container).Layout.(*listLayout)
 	item, ok := lo.searchVisible(lo.visible, id)
 	if ok {
 		lo.setupListItem(item, id, l.focused && l.currentHighlight == id)
@@ -199,7 +204,7 @@ func (l *List) RefreshItem(id ListItemID) {
 }
 
 // SetItemHeight supports changing the height of the specified list item. Items normally take the height of the template
-// returned from the CreateItem callback. The height parameter uses the same units as a fyne.Size type and refers
+// returned from the CreateItem callback. The height parameter uses the same units as a granio.Size type and refers
 // to the internal content height not including the divider size.
 //
 // Since: 2.3
@@ -245,17 +250,10 @@ func (l *List) scrollWithoutItemCheckTo(id ListItemID) {
 	if len(l.itemHeights) == 0 {
 		y = (float32(id) * l.itemMin.Height) + (float32(id) * separatorThickness)
 	} else {
-		i := 0
-		for ; i < id; i++ {
-			height := l.itemMin.Height
-			if h, ok := l.itemHeights[i]; ok {
-				height = h
-			}
-
-			y += height + separatorThickness
-		}
+		l.rowGeometry.prepare(l.itemHeights, l.Length(), l.itemMin.Height, separatorThickness)
+		y = l.rowGeometry.position(id)
 		lastItemHeight = l.itemMin.Height
-		if h, ok := l.itemHeights[i]; ok {
+		if h, ok := l.itemHeights[id]; ok {
 			lastItemHeight = h
 		}
 	}
@@ -268,14 +266,14 @@ func (l *List) scrollWithoutItemCheckTo(id ListItemID) {
 }
 
 // Resize is called when this list should change size. We refresh to ensure invisible items are drawn.
-func (l *List) Resize(s fyne.Size) {
+func (l *List) Resize(s granio.Size) {
 	l.BaseWidget.Resize(s)
 	if l.scroller == nil {
 		return
 	}
 
 	l.offsetUpdated(l.scroller.Offset)
-	l.scroller.Content.(*fyne.Container).Layout.(*listLayout).updateList(true)
+	l.scroller.Content.(*granio.Container).Layout.(*listLayout).updateList(true)
 }
 
 // Highlight scrolls to the item represented by id and highlights it
@@ -291,7 +289,7 @@ func (l *List) Highlight(id ListItemID) {
 		newID = 0
 	}
 
-	if id > l.Length() {
+	if id >= l.Length() {
 		newID = l.Length() - 1
 	}
 
@@ -305,6 +303,15 @@ func (l *List) Highlight(id ListItemID) {
 
 // Select add the item identified by the given ID to the selection.
 func (l *List) Select(id ListItemID) {
+	if l.SelectionMode == SelectionMultiple {
+		index := sort.SearchInts(l.selected, id)
+		if l.Length == nil || id < 0 || id >= l.Length() || (index < len(l.selected) && l.selected[index] == id) {
+			return
+		}
+		l.setSelection(append(append([]ListItemID(nil), l.selected...), id))
+		l.scrollWithoutItemCheckTo(id)
+		return
+	}
 	if len(l.selected) > 0 && id == l.selected[0] {
 		return
 	}
@@ -377,7 +384,7 @@ func (l *List) ScrollToOffset(offset float32) {
 	if offset > contentHeight {
 		offset = contentHeight
 	}
-	l.scroller.ScrollToOffset(fyne.NewPos(0, offset))
+	l.scroller.ScrollToOffset(granio.NewPos(0, offset))
 	l.offsetUpdated(l.scroller.Offset)
 }
 
@@ -389,13 +396,17 @@ func (l *List) GetScrollOffset() float32 {
 }
 
 // TypedKey is called if a key event happens while this List is focused.
-func (l *List) TypedKey(event *fyne.KeyEvent) {
+func (l *List) TypedKey(event *granio.KeyEvent) {
 	oldFocus := l.currentHighlight
 
 	switch event.Name {
-	case fyne.KeySpace:
-		l.Select(l.currentHighlight)
-	case fyne.KeyDown:
+	case granio.KeySpace:
+		if l.SelectionMode == SelectionMultiple {
+			l.pointerSelect(l.currentHighlight, selectionModifiers()|granio.KeyModifierControl)
+		} else {
+			l.Select(l.currentHighlight)
+		}
+	case granio.KeyDown:
 		if f := l.Length; f != nil && l.currentHighlight >= f()-1 {
 			return
 		}
@@ -403,7 +414,7 @@ func (l *List) TypedKey(event *fyne.KeyEvent) {
 		l.currentHighlight++
 		l.scrollWithoutItemCheckTo(l.currentHighlight)
 		l.RefreshItem(l.currentHighlight)
-	case fyne.KeyUp:
+	case granio.KeyUp:
 		if l.currentHighlight <= 0 {
 			return
 		}
@@ -414,6 +425,9 @@ func (l *List) TypedKey(event *fyne.KeyEvent) {
 	}
 
 	if oldFocus != l.currentHighlight {
+		if l.SelectionMode == SelectionMultiple && selectionModifiers()&granio.KeyModifierShift != 0 {
+			l.pointerSelect(l.currentHighlight, selectionModifiers())
+		}
 		if f := l.OnHighlighted; f != nil {
 			f(l.currentHighlight)
 		}
@@ -427,6 +441,15 @@ func (*List) TypedRune(_ rune) {
 
 // Unselect removes the item identified by the given ID from the selection.
 func (l *List) Unselect(id ListItemID) {
+	if l.SelectionMode == SelectionMultiple {
+		for i, selected := range l.selected {
+			if selected == id {
+				l.setSelection(append(append([]ListItemID(nil), l.selected[:i]...), l.selected[i+1:]...))
+				return
+			}
+		}
+		return
+	}
 	if len(l.selected) == 0 || l.selected[0] != id {
 		return
 	}
@@ -458,46 +481,35 @@ func (l *List) UnselectAll() {
 
 // Refresh causes this List to be redrawn in its current state
 func (l *List) Refresh() {
-	l.minSizeCache = fyne.Size{}
+	l.rowGeometry.dirty = true
+	l.minSizeCache = granio.Size{}
 	l.BaseWidget.Refresh()
 }
 
-func (l *List) contentMinSize() fyne.Size {
+func (l *List) contentMinSize() granio.Size {
 	if !l.minSizeCache.IsZero() {
 		return l.minSizeCache
 	}
 
 	separatorThickness := l.Theme().Size(theme.SizeNamePadding)
 	if l.Length == nil {
-		return fyne.NewSize(0, 0)
+		return granio.NewSize(0, 0)
 	}
 	items := l.Length()
 
 	if len(l.itemHeights) == 0 {
-		return fyne.NewSize(l.itemMin.Width,
+		return granio.NewSize(l.itemMin.Width,
 			(l.itemMin.Height+separatorThickness)*float32(items)-separatorThickness)
 	}
 
-	height := float32(0)
-	totalCustom := 0
-	templateHeight := l.itemMin.Height
-	for id, itemHeight := range l.itemHeights {
-		if id < items {
-			totalCustom++
-			height += itemHeight
-		}
-	}
-	height += float32(items-totalCustom) * templateHeight
-
-	size := fyne.NewSize(l.itemMin.Width, height+separatorThickness*float32(items-1))
+	l.rowGeometry.prepare(l.itemHeights, items, l.itemMin.Height, separatorThickness)
+	size := granio.NewSize(l.itemMin.Width, l.rowGeometry.position(items)-separatorThickness)
 	l.minSizeCache = size
 	return size
 }
 
 // fills l.visibleRowHeights and also returns offY and minRow
-func (l *listLayout) calculateVisibleRowHeights(itemHeight float32, length int, th fyne.Theme) (offY float32, minRow int) {
-	rowOffset := float32(0)
-	isVisible := false
+func (l *listLayout) calculateVisibleRowHeights(itemHeight float32, length int, th granio.Theme) (offY float32, minRow int) {
 	l.visibleRowHeights = l.visibleRowHeights[:0]
 
 	if l.list.scroller.Size().Height <= 0 {
@@ -531,56 +543,48 @@ func (l *listLayout) calculateVisibleRowHeights(itemHeight float32, length int, 
 		return offY, minRow
 	}
 
-	for i := 0; i < length; i++ {
+	geometry := &l.list.rowGeometry
+	geometry.prepare(l.list.itemHeights, length, itemHeight, padding)
+	minRow = geometry.itemAt(l.list.offsetY)
+	offY = geometry.position(minRow)
+	end := geometry.endAt(l.list.offsetY + l.list.scroller.Size().Height)
+	for id := minRow; id < end; id++ {
 		height := itemHeight
-		if h, ok := l.list.itemHeights[i]; ok {
-			height = h
+		if custom, ok := l.list.itemHeights[id]; ok {
+			height = custom
 		}
-
-		if rowOffset > l.list.offsetY-height-padding && rowOffset <= l.list.offsetY {
-			minRow = i
-			offY = rowOffset
-			isVisible = true
-		}
-		if rowOffset >= l.list.offsetY+l.list.scroller.Size().Height {
-			break
-		}
-
-		rowOffset += height + padding
-		if isVisible {
-			l.visibleRowHeights = append(l.visibleRowHeights, height)
-		}
+		l.visibleRowHeights = append(l.visibleRowHeights, height)
 	}
 	return offY, minRow
 }
 
 // Declare conformity with WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*listRenderer)(nil)
+var _ granio.WidgetRenderer = (*listRenderer)(nil)
 
 type listRenderer struct {
 	widget.BaseRenderer
 
 	list     *List
 	scroller *widget.Scroll
-	layout   *fyne.Container
+	layout   *granio.Container
 }
 
-func newListRenderer(objects []fyne.CanvasObject, l *List, scroller *widget.Scroll, layout *fyne.Container) *listRenderer {
+func newListRenderer(objects []granio.CanvasObject, l *List, scroller *widget.Scroll, layout *granio.Container) *listRenderer {
 	lr := &listRenderer{BaseRenderer: widget.NewBaseRenderer(objects), list: l, scroller: scroller, layout: layout}
 	lr.scroller.OnScrolled = l.offsetUpdated
 	return lr
 }
 
-func (l *listRenderer) Layout(size fyne.Size) {
+func (l *listRenderer) Layout(size granio.Size) {
 	l.scroller.Resize(size)
 }
 
-func (l *listRenderer) MinSize() fyne.Size {
+func (l *listRenderer) MinSize() granio.Size {
 	return internal.MaxSizes(l.scroller.MinSize(), l.list.itemMin)
 }
 
 func (l *listRenderer) Refresh() {
-	l.list.minSizeCache = fyne.Size{}
+	l.list.minSizeCache = granio.Size{}
 	if f := l.list.CreateItem; f != nil {
 		item := createItemAndApplyThemeScope(f, l.list)
 		l.list.itemMin = item.MinSize()
@@ -598,22 +602,28 @@ func (l *listRenderer) Refresh() {
 
 // Declare conformity with interfaces.
 var (
-	_ fyne.Widget       = (*listItem)(nil)
-	_ fyne.Tappable     = (*listItem)(nil)
+	_ granio.Widget     = (*listItem)(nil)
+	_ granio.Tappable   = (*listItem)(nil)
 	_ desktop.Hoverable = (*listItem)(nil)
 )
 
 type listItem struct {
 	BaseWidget
+	collection *List
+	index      ListItemID
 
 	onTapped          func()
 	onHovered         func()
 	background        *canvas.Rectangle
-	child             fyne.CanvasObject
+	child             granio.CanvasObject
 	hovered, selected bool
+	clickModifiers    granio.KeyModifier
 }
 
-func newListItem(child fyne.CanvasObject, tapped func()) *listItem {
+func (li *listItem) MouseDown(event *desktop.MouseEvent) { li.clickModifiers = event.Modifier }
+func (*listItem) MouseUp(*desktop.MouseEvent)            {}
+
+func newListItem(child granio.CanvasObject, tapped func()) *listItem {
 	li := &listItem{
 		child:    child,
 		onTapped: tapped,
@@ -624,22 +634,22 @@ func newListItem(child fyne.CanvasObject, tapped func()) *listItem {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (li *listItem) CreateRenderer() fyne.WidgetRenderer {
+func (li *listItem) CreateRenderer() granio.WidgetRenderer {
 	li.ExtendBaseWidget(li)
 	th := li.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	li.background = canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	li.background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
 	li.background.Hide()
 
-	objects := []fyne.CanvasObject{li.background, li.child}
+	objects := []granio.CanvasObject{li.background, li.child}
 
 	return &listItemRenderer{widget.NewBaseRenderer(objects), li}
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (li *listItem) MinSize() fyne.Size {
+func (li *listItem) MinSize() granio.Size {
 	li.ExtendBaseWidget(li)
 	return li.BaseWidget.MinSize()
 }
@@ -664,7 +674,7 @@ func (li *listItem) MouseOut() {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any tap handler.
-func (li *listItem) Tapped(*fyne.PointEvent) {
+func (li *listItem) Tapped(*granio.PointEvent) {
 	if li.onTapped != nil {
 		li.selected = true
 		li.Refresh()
@@ -673,7 +683,7 @@ func (li *listItem) Tapped(*fyne.PointEvent) {
 }
 
 // Declare conformity with the WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*listItemRenderer)(nil)
+var _ granio.WidgetRenderer = (*listItemRenderer)(nil)
 
 type listItemRenderer struct {
 	widget.BaseRenderer
@@ -683,23 +693,24 @@ type listItemRenderer struct {
 
 // MinSize calculates the minimum size of a listItem.
 // This is based on the size of the status indicator and the size of the child object.
-func (li *listItemRenderer) MinSize() fyne.Size {
+func (li *listItemRenderer) MinSize() granio.Size {
 	return li.item.child.MinSize()
 }
 
 // Layout the components of the listItem widget.
-func (li *listItemRenderer) Layout(size fyne.Size) {
+func (li *listItemRenderer) Layout(size granio.Size) {
 	li.item.background.Resize(size)
 	li.item.child.Resize(size)
 }
 
 func (li *listItemRenderer) Refresh() {
 	th := li.item.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	li.item.background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
+	li.item.background.StrokeWidth = 0
 	if li.item.selected {
-		li.item.background.FillColor = th.Color(theme.ColorNameSelection, v)
+		applySelectionStyle(li.item.background, th, v)
 		li.item.background.Show()
 	} else if li.item.hovered {
 		li.item.background.FillColor = th.Color(theme.ColorNameHover, v)
@@ -712,7 +723,7 @@ func (li *listItemRenderer) Refresh() {
 }
 
 // Declare conformity with Layout interface.
-var _ fyne.Layout = (*listLayout)(nil)
+var _ granio.Layout = (*listLayout)(nil)
 
 type listItemAndID struct {
 	item *listItem
@@ -721,8 +732,8 @@ type listItemAndID struct {
 
 type listLayout struct {
 	list       *List
-	separators []fyne.CanvasObject
-	children   []fyne.CanvasObject
+	separators []granio.CanvasObject
+	children   []granio.CanvasObject
 
 	itemPool          async.Pool[*listItem]
 	visible           []listItemAndID
@@ -730,17 +741,17 @@ type listLayout struct {
 	visibleRowHeights []float32
 }
 
-func newListLayout(list *List) fyne.Layout {
+func newListLayout(list *List) granio.Layout {
 	l := &listLayout{list: list}
 	list.offsetUpdated = l.offsetUpdated
 	return l
 }
 
-func (l *listLayout) Layout([]fyne.CanvasObject, fyne.Size) {
+func (l *listLayout) Layout([]granio.CanvasObject, granio.Size) {
 	l.updateList(true)
 }
 
-func (l *listLayout) MinSize([]fyne.CanvasObject) fyne.Size {
+func (l *listLayout) MinSize([]granio.CanvasObject) granio.Size {
 	return l.list.contentMinSize()
 }
 
@@ -756,7 +767,7 @@ func (l *listLayout) getItem() *listItem {
 	return nil
 }
 
-func (l *listLayout) offsetUpdated(pos fyne.Position) {
+func (l *listLayout) offsetUpdated(pos granio.Position) {
 	if l.list.offsetY == pos.Y {
 		return
 	}
@@ -765,14 +776,11 @@ func (l *listLayout) offsetUpdated(pos fyne.Position) {
 }
 
 func (l *listLayout) setupListItem(li *listItem, id ListItemID, focus bool) {
+	li.collection, li.index = l.list, id
 	previousIndicator := li.selected
 	li.selected = false
-	for _, s := range l.list.selected {
-		if id == s {
-			li.selected = true
-			break
-		}
-	}
+	index := sort.SearchInts(l.list.selected, id)
+	li.selected = index < len(l.list.selected) && l.list.selected[index] == id
 	if focus {
 		li.hovered = true
 		li.Refresh()
@@ -789,16 +797,20 @@ func (l *listLayout) setupListItem(li *listItem, id ListItemID, focus bool) {
 		}
 	}
 	li.onTapped = func() {
-		if !fyne.CurrentDevice().IsMobile() {
-			canvas := fyne.CurrentApp().Driver().CanvasForObject(l.list.super())
+		if !granio.CurrentDevice().IsMobile() {
+			canvas := granio.CurrentApp().Driver().CanvasForObject(l.list.super())
 			if canvas != nil {
-				canvas.Focus(l.list.super().(fyne.Focusable))
+				canvas.Focus(l.list.super().(granio.Focusable))
 			}
 
 			l.list.currentHighlight = id
 		}
 
-		l.list.Select(id)
+		if l.list.SelectionMode == SelectionMultiple {
+			l.list.pointerSelect(id, li.clickModifiers)
+		} else {
+			l.list.Select(id)
+		}
 	}
 }
 
@@ -811,7 +823,7 @@ func (l *listLayout) updateList(newOnly bool) {
 		length = f()
 	}
 	if l.list.UpdateItem == nil {
-		fyne.LogError("Missing UpdateItem callback required for List", nil)
+		granio.LogError("Missing UpdateItem callback required for List", nil)
 	}
 
 	// l.wasVisible now represents the currently visible items, while
@@ -830,7 +842,7 @@ func (l *listLayout) updateList(newOnly bool) {
 	y := offY
 	for index, itemHeight := range l.visibleRowHeights {
 		row := index + minRow
-		size := fyne.NewSize(width, itemHeight)
+		size := granio.NewSize(width, itemHeight)
 
 		c, ok := l.searchVisible(l.wasVisible, row)
 		if !ok {
@@ -841,7 +853,7 @@ func (l *listLayout) updateList(newOnly bool) {
 			c.Resize(size)
 		}
 
-		c.Move(fyne.NewPos(0, y))
+		c.Move(granio.NewPos(0, y))
 		c.Resize(size)
 
 		y += itemHeight + separatorThickness
@@ -858,7 +870,7 @@ func (l *listLayout) updateList(newOnly bool) {
 
 	l.updateSeparators()
 
-	c, _ := l.list.scroller.Content.(*fyne.Container)
+	c, _ := l.list.scroller.Content.(*granio.Container)
 	oldObjLen := len(c.Objects)
 	c.Objects = c.Objects[:0]
 	c.Objects = append(c.Objects, l.children...)
@@ -914,8 +926,8 @@ func (l *listLayout) updateSeparators() {
 		if i == 0 {
 			continue
 		}
-		l.separators[i].Move(fyne.NewPos(0, child.Position().Y-dividerOff))
-		l.separators[i].Resize(fyne.NewSize(l.list.Size().Width, separatorThickness))
+		l.separators[i].Move(granio.NewPos(0, child.Position().Y-dividerOff))
+		l.separators[i].Resize(granio.NewSize(l.list.Size().Width, separatorThickness))
 		l.separators[i].Show()
 	}
 }
@@ -930,14 +942,14 @@ func (*listLayout) searchVisible(visible []listItemAndID, id ListItemID) (*listI
 	return nil, false
 }
 
-func (*listLayout) nilOldSliceData(objs []fyne.CanvasObject, length, oldLength int) {
+func (*listLayout) nilOldSliceData(objs []granio.CanvasObject, length, oldLength int) {
 	if oldLength > length {
 		objs = objs[:oldLength] // gain view into old data
 		clear(objs[length:])
 	}
 }
 
-func createItemAndApplyThemeScope(f func() fyne.CanvasObject, scope fyne.Widget) fyne.CanvasObject {
+func createItemAndApplyThemeScope(f func() granio.CanvasObject, scope granio.Widget) granio.CanvasObject {
 	item := f()
 	if !cache.OverrideThemeMatchingScope(item, scope) {
 		return item

@@ -63,13 +63,13 @@ import (
 	"time"
 	"unsafe"
 
-	"fyne.io/fyne/v2/internal/driver/mobile/app/callfn"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/key"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/paint"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/size"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/touch"
-	"fyne.io/fyne/v2/internal/driver/mobile/mobileinit"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app/callfn"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit"
 )
 
 // mimeMap contains standard mime entries that are missing on Android

@@ -7,16 +7,16 @@ import (
 	"os"
 	"path/filepath"
 
-	"fyne.io/fyne/v2"
-	internalApp "fyne.io/fyne/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2"
+	internalApp "github.com/Uzer007-admin/granio/v2/internal/app"
 )
 
-func setupSystemTheme(fallback fyne.Theme) fyne.Theme {
+func setupSystemTheme(fallback granio.Theme) granio.Theme {
 	path := filepath.Join(internalApp.RootConfigDir(), "theme.json")
 	f, err := os.Open(path)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			fyne.LogError("Failed to load user theme file: "+path, err)
+			granio.LogError("Failed to load user theme file: "+path, err)
 		}
 		return nil
 	}
@@ -24,7 +24,7 @@ func setupSystemTheme(fallback fyne.Theme) fyne.Theme {
 
 	th, err := FromJSONReaderWithFallback(bufio.NewReader(f), fallback)
 	if err != nil {
-		fyne.LogError("Failed to parse user theme file: "+path, err)
+		granio.LogError("Failed to parse user theme file: "+path, err)
 		return nil
 	}
 

@@ -4,17 +4,17 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Circle)(nil)
+var _ granio.CanvasObject = (*Circle)(nil)
 
 // Circle describes a colored circle primitive in a Fyne canvas
 type Circle struct {
-	Position1 fyne.Position // The current top-left position of the Circle
-	Position2 fyne.Position // The current bottomright position of the Circle
-	Hidden    bool          // Is this circle currently hidden
+	Position1 granio.Position // The current top-left position of the Circle
+	Position2 granio.Position // The current bottomright position of the Circle
+	Hidden    bool            // Is this circle currently hidden
 
 	FillColor   color.Color // The circle fill color
 	StrokeColor color.Color // The circle stroke color
@@ -40,12 +40,12 @@ func (c *Circle) Hide() {
 
 // MinSize for a Circle simply returns Size{1, 1} as there is no
 // explicit content
-func (*Circle) MinSize() fyne.Size {
-	return fyne.NewSize(1, 1)
+func (*Circle) MinSize() granio.Size {
+	return granio.NewSize(1, 1)
 }
 
 // Move the circle object to a new position, relative to its parent / canvas
-func (c *Circle) Move(pos fyne.Position) {
+func (c *Circle) Move(pos granio.Position) {
 	if c.Position1 == pos {
 		return
 	}
@@ -58,7 +58,7 @@ func (c *Circle) Move(pos fyne.Position) {
 }
 
 // Position gets the current top-left position of this circle object, relative to its parent / canvas
-func (c *Circle) Position() fyne.Position {
+func (c *Circle) Position() granio.Position {
 	return c.Position1
 }
 
@@ -69,7 +69,7 @@ func (c *Circle) Refresh() {
 
 // Resize sets a new bottom-right position for the circle object
 // If it has a stroke width this will cause it to Refresh.
-func (c *Circle) Resize(size fyne.Size) {
+func (c *Circle) Resize(size granio.Size) {
 	if size == c.Size() {
 		return
 	}
@@ -87,8 +87,8 @@ func (c *Circle) Show() {
 }
 
 // Size returns the current size of bounding box for this circle object
-func (c *Circle) Size() fyne.Size {
-	return fyne.NewSize(
+func (c *Circle) Size() granio.Size {
+	return granio.NewSize(
 		float32(math.Abs(float64(c.Position2.X)-float64(c.Position1.X))),
 		float32(math.Abs(float64(c.Position2.Y)-float64(c.Position1.Y))),
 	)

@@ -1,26 +1,33 @@
 package cache
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
-var renderers async.Map[fyne.Widget, *rendererInfo]
+var renderers async.Map[granio.Widget, *rendererInfo]
 
 type isBaseWidget interface {
-	ExtendBaseWidget(fyne.Widget)
-	super() fyne.Widget
+	ExtendBaseWidget(granio.Widget)
+	super() granio.Widget
 }
 
 // Renderer looks up the render implementation for a widget
 // If one does not exist, it creates and caches a renderer for the widget.
-func Renderer(wid fyne.Widget) fyne.WidgetRenderer {
+func Renderer(wid granio.Widget) granio.WidgetRenderer {
 	renderer, ok := CachedRenderer(wid)
 	if !ok && wid != nil {
 		renderer = wid.CreateRenderer()
 		rinfo := &rendererInfo{renderer: renderer}
 		rinfo.setAlive()
 		renderers.Store(wid, rinfo)
+		// Store before Layout: layout may look up this renderer recursively.
+		// A renderer recreated after cache expiry must recover the widget's size.
+		if restorer, ok := wid.(interface{ RestoreRendererLayout(granio.WidgetRenderer) }); ok {
+			restorer.RestoreRendererLayout(renderer)
+		} else {
+			renderer.Layout(wid.Size())
+		}
 	}
 
 	return renderer
@@ -28,7 +35,7 @@ func Renderer(wid fyne.Widget) fyne.WidgetRenderer {
 
 // CachedRenderer looks up the cached render implementation for a widget
 // If a renderer does not exist in the cache, it returns nil, false.
-func CachedRenderer(wid fyne.Widget) (fyne.WidgetRenderer, bool) {
+func CachedRenderer(wid granio.Widget) (granio.WidgetRenderer, bool) {
 	if wid == nil {
 		return nil, false
 	}
@@ -50,7 +57,7 @@ func CachedRenderer(wid fyne.Widget) (fyne.WidgetRenderer, bool) {
 
 // DestroyRenderer frees a render implementation for a widget.
 // This is typically for internal use only.
-func DestroyRenderer(wid fyne.Widget) {
+func DestroyRenderer(wid granio.Widget) {
 	rinfo, ok := renderers.LoadAndDelete(wid)
 	if !ok {
 		return
@@ -63,12 +70,12 @@ func DestroyRenderer(wid fyne.Widget) {
 
 // IsRendered returns true of the widget currently has a renderer.
 // One will be created the first time a widget is shown but may be removed after it is hidden.
-func IsRendered(wid fyne.Widget) bool {
+func IsRendered(wid granio.Widget) bool {
 	_, found := renderers.Load(wid)
 	return found
 }
 
 type rendererInfo struct {
 	expiringCache
-	renderer fyne.WidgetRenderer
+	renderer granio.WidgetRenderer
 }

@@ -4,17 +4,17 @@ import (
 	"image/color"
 	"net/url"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Accessible = (*Hyperlink)(nil)
-	_ fyne.Focusable  = (*Hyperlink)(nil)
-	_ fyne.Widget     = (*Hyperlink)(nil)
+	_ granio.Accessible = (*Hyperlink)(nil)
+	_ granio.Focusable  = (*Hyperlink)(nil)
+	_ granio.Widget     = (*Hyperlink)(nil)
 )
 
 // Hyperlink widget is a text component with appropriate padding and layout.
@@ -23,26 +23,26 @@ type Hyperlink struct {
 	BaseWidget
 	Text      string
 	URL       *url.URL
-	Alignment fyne.TextAlign // The alignment of the Text
-	Wrapping  fyne.TextWrap  // The wrapping of the Text
-	TextStyle fyne.TextStyle // The style of the hyperlink text
+	Alignment granio.TextAlign // The alignment of the Text
+	Wrapping  granio.TextWrap  // The wrapping of the Text
+	TextStyle granio.TextStyle // The style of the hyperlink text
 
 	// The truncation mode of the hyperlink
 	//
 	// Since: 2.5
-	Truncation fyne.TextTruncation
+	Truncation granio.TextTruncation
 
 	// The theme size name for the text size of the hyperlink
 	//
 	// Since: 2.5
-	SizeName fyne.ThemeSizeName
+	SizeName granio.ThemeSizeName
 
-	// OnTapped overrides the default `fyne.OpenURL` call when the link is tapped
+	// OnTapped overrides the default `granio.OpenURL` call when the link is tapped
 	//
 	// Since: 2.2
 	OnTapped func() `json:"-"`
 
-	textSize         fyne.Size // updated in syncSegments
+	textSize         granio.Size // updated in syncSegments
 	focused, hovered bool
 	provider         RichText
 
@@ -51,11 +51,11 @@ type Hyperlink struct {
 
 // NewHyperlink creates a new hyperlink widget with the set text content
 func NewHyperlink(text string, u *url.URL) *Hyperlink {
-	return NewHyperlinkWithStyle(text, u, fyne.TextAlignLeading, fyne.TextStyle{})
+	return NewHyperlinkWithStyle(text, u, granio.TextAlignLeading, granio.TextStyle{})
 }
 
 // NewHyperlinkWithStyle creates a new hyperlink widget with the set text content
-func NewHyperlinkWithStyle(text string, u *url.URL, alignment fyne.TextAlign, style fyne.TextStyle) *Hyperlink {
+func NewHyperlinkWithStyle(text string, u *url.URL, alignment granio.TextAlign, style granio.TextStyle) *Hyperlink {
 	hl := &Hyperlink{
 		Text:      text,
 		URL:       u,
@@ -73,28 +73,28 @@ func (hl *Hyperlink) AccessibilityLabel() string {
 	return hl.Text
 }
 
-// AccessibilityRole for a hyperlink is fyne.AccessibleRoleLink.
+// AccessibilityRole for a hyperlink is granio.AccessibleRoleLink.
 //
 // Since: 2.8
-func (*Hyperlink) AccessibilityRole() fyne.AccessibleRole {
-	return fyne.AccessibleRoleLink
+func (*Hyperlink) AccessibilityRole() granio.AccessibleRole {
+	return granio.AccessibleRoleLink
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (hl *Hyperlink) CreateRenderer() fyne.WidgetRenderer {
+func (hl *Hyperlink) CreateRenderer() granio.WidgetRenderer {
 	hl.ExtendBaseWidget(hl)
 	hl.provider.ExtendBaseWidget(&hl.provider)
 	hl.syncSegments()
 
 	th := hl.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	focus := canvas.NewRectangle(color.Transparent)
 	focus.StrokeColor = th.Color(theme.ColorNameFocus, v)
 	focus.StrokeWidth = 2
 	focus.Hide()
 	under := canvas.NewRectangle(th.Color(theme.ColorNameHyperlink, v))
 	under.Hide()
-	return &hyperlinkRenderer{hl: hl, objects: []fyne.CanvasObject{&hl.provider, focus, under}, focus: focus, under: under}
+	return &hyperlinkRenderer{hl: hl, objects: []granio.CanvasObject{&hl.provider, focus, under}, focus: focus, under: under}
 }
 
 // Cursor returns the cursor type of this widget
@@ -166,18 +166,18 @@ func (hl *Hyperlink) focusXPos() float32 {
 	innerPad := hl.Theme().Size(theme.SizeNameInnerPadding)
 
 	switch hl.Alignment {
-	case fyne.TextAlignLeading:
+	case granio.TextAlignLeading:
 		return innerPad / 2
-	case fyne.TextAlignCenter:
+	case granio.TextAlignCenter:
 		return (hl.Size().Width - hl.focusWidth()) / 2
-	case fyne.TextAlignTrailing:
+	case granio.TextAlignTrailing:
 		return (hl.Size().Width - hl.focusWidth()) - innerPad/2
 	default:
 		return 0 // unreached
 	}
 }
 
-func (hl *Hyperlink) isPosOverText(pos fyne.Position) bool {
+func (hl *Hyperlink) isPosOverText(pos granio.Position) bool {
 	th := hl.Theme()
 	innerPad := th.Size(theme.SizeNameInnerPadding)
 	pad := th.Size(theme.SizeNamePadding)
@@ -200,14 +200,14 @@ func (hl *Hyperlink) Refresh() {
 }
 
 // MinSize returns the smallest size this widget can shrink to
-func (hl *Hyperlink) MinSize() fyne.Size {
+func (hl *Hyperlink) MinSize() granio.Size {
 	hl.ExtendBaseWidget(hl)
 	return hl.BaseWidget.MinSize()
 }
 
 // Resize sets a new size for the hyperlink.
 // Note this should not be used if the widget is being managed by a Layout within a Container.
-func (hl *Hyperlink) Resize(size fyne.Size) {
+func (hl *Hyperlink) Resize(size granio.Size) {
 	hl.BaseWidget.Resize(size)
 
 	if len(hl.provider.Segments) == 0 {
@@ -243,7 +243,7 @@ func (hl *Hyperlink) SetURLFromString(str string) error {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any change handler
-func (hl *Hyperlink) Tapped(e *fyne.PointEvent) {
+func (hl *Hyperlink) Tapped(e *granio.PointEvent) {
 	if len(hl.provider.Segments) != 0 && !hl.isPosOverText(e.Position) {
 		return // tapped outside text area
 	}
@@ -265,8 +265,8 @@ func (*Hyperlink) TypedRune(rune) {
 }
 
 // TypedKey is a hook called by the input handling logic on key events if this object is focused.
-func (hl *Hyperlink) TypedKey(ev *fyne.KeyEvent) {
-	if ev.Name == fyne.KeySpace {
+func (hl *Hyperlink) TypedKey(ev *granio.KeyEvent) {
+	if ev.Name == granio.KeySpace {
 		hl.invokeAction()
 	}
 }
@@ -275,9 +275,9 @@ func (hl *Hyperlink) openURL() {
 	u := hl.URL
 
 	if u != nil {
-		err := fyne.CurrentApp().OpenURL(u)
+		err := granio.CurrentApp().OpenURL(u)
 		if err != nil {
-			fyne.LogError("Failed to open url", err)
+			granio.LogError("Failed to open url", err)
 		}
 	}
 }
@@ -313,23 +313,23 @@ func (hl *Hyperlink) syncSegments() {
 		sizeName = theme.SizeNameText
 	}
 	hl.provider.Segments[0].(*TextSegment).Style.SizeName = sizeName
-	hl.textSize = fyne.MeasureText(hl.Text, th.Size(sizeName), hl.TextStyle)
+	hl.textSize = granio.MeasureText(hl.Text, th.Size(sizeName), hl.TextStyle)
 }
 
-var _ fyne.WidgetRenderer = (*hyperlinkRenderer)(nil)
+var _ granio.WidgetRenderer = (*hyperlinkRenderer)(nil)
 
 type hyperlinkRenderer struct {
 	hl    *Hyperlink
 	focus *canvas.Rectangle
 	under *canvas.Rectangle
 
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 func (*hyperlinkRenderer) Destroy() {
 }
 
-func (r *hyperlinkRenderer) Layout(s fyne.Size) {
+func (r *hyperlinkRenderer) Layout(s granio.Size) {
 	th := r.hl.Theme()
 	textSize := r.hl.textSize
 	innerPad := th.Size(theme.SizeNameInnerPadding)
@@ -340,24 +340,24 @@ func (r *hyperlinkRenderer) Layout(s fyne.Size) {
 	lineCount := float32(len(r.hl.provider.rowBounds))
 
 	r.hl.provider.Resize(s)
-	r.focus.Move(fyne.NewPos(xposFocus, innerPad/2))
-	r.focus.Resize(fyne.NewSize(w, textSize.Height*lineCount+innerPad))
-	r.under.Move(fyne.NewPos(xposUnderline, textSize.Height*lineCount+th.Size(theme.SizeNamePadding)*2))
-	r.under.Resize(fyne.NewSize(w-innerPad, 1))
+	r.focus.Move(granio.NewPos(xposFocus, innerPad/2))
+	r.focus.Resize(granio.NewSize(w, textSize.Height*lineCount+innerPad))
+	r.under.Move(granio.NewPos(xposUnderline, textSize.Height*lineCount+th.Size(theme.SizeNamePadding)*2))
+	r.under.Resize(granio.NewSize(w-innerPad, 1))
 }
 
-func (r *hyperlinkRenderer) MinSize() fyne.Size {
+func (r *hyperlinkRenderer) MinSize() granio.Size {
 	return r.hl.provider.MinSize()
 }
 
-func (r *hyperlinkRenderer) Objects() []fyne.CanvasObject {
+func (r *hyperlinkRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
 func (r *hyperlinkRenderer) Refresh() {
 	r.hl.provider.Refresh()
 	th := r.hl.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	r.focus.StrokeColor = th.Color(theme.ColorNameFocus, v)
 	r.focus.Hidden = !r.hl.focused

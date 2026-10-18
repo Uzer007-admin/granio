@@ -1,52 +1,52 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 type menuButton struct {
 	widget.BaseWidget
 	win  *window
-	menu *fyne.MainMenu
+	menu *granio.MainMenu
 }
 
-func (w *window) newMenuButton(menu *fyne.MainMenu) *menuButton {
+func (w *window) newMenuButton(menu *granio.MainMenu) *menuButton {
 	b := &menuButton{win: w, menu: menu}
 	b.ExtendBaseWidget(b)
 	return b
 }
 
-func (m *menuButton) CreateRenderer() fyne.WidgetRenderer {
+func (m *menuButton) CreateRenderer() granio.WidgetRenderer {
 	btn := widget.NewButtonWithIcon("", theme.MenuIcon(), func() {
 		m.win.canvas.showMenu(m.menu)
 	})
 	bg := fynecanvas.NewRectangle(theme.Color(theme.ColorNameBackground))
-	return &menuButtonRenderer{btn: btn, bg: bg, objects: []fyne.CanvasObject{bg, btn}}
+	return &menuButtonRenderer{btn: btn, bg: bg, objects: []granio.CanvasObject{bg, btn}}
 }
 
 type menuButtonRenderer struct {
 	btn     *widget.Button
 	bg      *fynecanvas.Rectangle
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 func (*menuButtonRenderer) Destroy() {
 }
 
-func (m *menuButtonRenderer) Layout(size fyne.Size) {
-	m.bg.Move(fyne.NewPos(theme.Padding()/2, theme.Padding()/2))
-	m.bg.Resize(size.Subtract(fyne.NewSize(theme.Padding(), theme.Padding())))
+func (m *menuButtonRenderer) Layout(size granio.Size) {
+	m.bg.Move(granio.NewPos(theme.Padding()/2, theme.Padding()/2))
+	m.bg.Resize(size.Subtract(granio.NewSize(theme.Padding(), theme.Padding())))
 	m.btn.Resize(size)
 }
 
-func (m *menuButtonRenderer) MinSize() fyne.Size {
+func (m *menuButtonRenderer) MinSize() granio.Size {
 	return m.btn.MinSize()
 }
 
-func (m *menuButtonRenderer) Objects() []fyne.CanvasObject {
+func (m *menuButtonRenderer) Objects() []granio.CanvasObject {
 	return m.objects
 }
 

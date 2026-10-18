@@ -6,12 +6,12 @@ import (
 	"strconv"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/scale"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // listIndentSpaces is how many spaces of indentation each level of list nesting adds.
@@ -25,7 +25,7 @@ var (
 		ColorName: theme.ColorNameForeground,
 		Inline:    true,
 		SizeName:  theme.SizeNameText,
-		TextStyle: fyne.TextStyle{Italic: true},
+		TextStyle: granio.TextStyle{Italic: true},
 	}
 	// RichTextStyleCodeBlock represents a code blog segment.
 	//
@@ -34,7 +34,7 @@ var (
 		ColorName: theme.ColorNameForeground,
 		Inline:    false,
 		SizeName:  theme.SizeNameText,
-		TextStyle: fyne.TextStyle{Monospace: true},
+		TextStyle: granio.TextStyle{Monospace: true},
 	}
 	// RichTextStyleCodeInline represents an inline code segment.
 	//
@@ -43,7 +43,7 @@ var (
 		ColorName:  theme.ColorNameForeground,
 		Inline:     true,
 		SizeName:   theme.SizeNameText,
-		TextStyle:  fyne.TextStyle{Monospace: true},
+		TextStyle:  granio.TextStyle{Monospace: true},
 		codeInline: true,
 	}
 	// RichTextStyleEmphasis represents regular text with emphasis.
@@ -53,7 +53,7 @@ var (
 		ColorName: theme.ColorNameForeground,
 		Inline:    true,
 		SizeName:  theme.SizeNameText,
-		TextStyle: fyne.TextStyle{Italic: true},
+		TextStyle: granio.TextStyle{Italic: true},
 	}
 	// RichTextStyleHeading represents a heading text that stands on its own line.
 	//
@@ -62,7 +62,7 @@ var (
 		ColorName: theme.ColorNameForeground,
 		Inline:    true,
 		SizeName:  theme.SizeNameHeadingText,
-		TextStyle: fyne.TextStyle{Bold: true},
+		TextStyle: granio.TextStyle{Bold: true},
 	}
 	// RichTextStyleInline represents standard text that can be surrounded by other elements.
 	//
@@ -96,7 +96,7 @@ var (
 		ColorName: theme.ColorNameForeground,
 		Inline:    true,
 		SizeName:  theme.SizeNameText,
-		TextStyle: fyne.TextStyle{Bold: true},
+		TextStyle: granio.TextStyle{Bold: true},
 	}
 	// RichTextStyleSubHeading represents a sub-heading text that stands on its own line.
 	//
@@ -105,7 +105,7 @@ var (
 		ColorName: theme.ColorNameForeground,
 		Inline:    true,
 		SizeName:  theme.SizeNameSubHeadingText,
-		TextStyle: fyne.TextStyle{Bold: true},
+		TextStyle: granio.TextStyle{Bold: true},
 	}
 )
 
@@ -113,19 +113,19 @@ var (
 //
 // Since: 2.1
 type HyperlinkSegment struct {
-	Alignment fyne.TextAlign
+	Alignment granio.TextAlign
 	Text      string
 	URL       *url.URL
 
-	// OnTapped overrides the default `fyne.OpenURL` call when the link is tapped
+	// OnTapped overrides the default `granio.OpenURL` call when the link is tapped
 	//
 	// Since: 2.4
 	OnTapped func() `json:"-"`
 
 	// Since 2.8
-	TextStyle fyne.TextStyle
+	TextStyle granio.TextStyle
 	// Since 2.8
-	SizeName     fyne.ThemeSizeName // The theme name of the text size to use, if blank will be the standard text size
+	SizeName     granio.ThemeSizeName // The theme name of the text size to use, if blank will be the standard text size
 	quotingLevel int
 }
 
@@ -140,16 +140,16 @@ func (h *HyperlinkSegment) Textual() string {
 }
 
 // Visual returns a new instance of a hyperlink widget required to render this segment.
-func (h *HyperlinkSegment) Visual() fyne.CanvasObject {
+func (h *HyperlinkSegment) Visual() granio.CanvasObject {
 	link := NewHyperlink(h.Text, h.URL)
 	link.Alignment = h.Alignment
 	link.OnTapped = h.OnTapped
-	return &fyne.Container{Layout: &unpadTextWidgetLayout{parent: link}, Objects: []fyne.CanvasObject{link}}
+	return &granio.Container{Layout: &unpadTextWidgetLayout{parent: link}, Objects: []granio.CanvasObject{link}}
 }
 
 // Update applies the current state of this hyperlink segment to an existing visual.
-func (h *HyperlinkSegment) Update(o fyne.CanvasObject) {
-	link, _ := o.(*fyne.Container).Objects[0].(*Hyperlink)
+func (h *HyperlinkSegment) Update(o granio.CanvasObject) {
+	link, _ := o.(*granio.Container).Objects[0].(*Hyperlink)
 	link.URL = h.URL
 	link.Alignment = h.Alignment
 	link.SizeName = h.SizeName
@@ -159,7 +159,7 @@ func (h *HyperlinkSegment) Update(o fyne.CanvasObject) {
 }
 
 // Select tells the segment that the user is selecting the content between the two positions.
-func (*HyperlinkSegment) Select(_, _ fyne.Position) {
+func (*HyperlinkSegment) Select(_, _ granio.Position) {
 	// no-op: this will be added when we progress to editor
 }
 
@@ -178,12 +178,12 @@ func (*HyperlinkSegment) Unselect() {
 //
 // Since: 2.3
 type ImageSegment struct {
-	Source fyne.URI
+	Source granio.URI
 	Title  string
 
 	// Alignment specifies the horizontal alignment of this image segment
 	// Since: 2.4
-	Alignment fyne.TextAlign
+	Alignment granio.TextAlign
 }
 
 // Inline returns false as images in rich text are blocks.
@@ -197,12 +197,12 @@ func (i *ImageSegment) Textual() string {
 }
 
 // Visual returns a new instance of an image widget required to render this segment.
-func (i *ImageSegment) Visual() fyne.CanvasObject {
+func (i *ImageSegment) Visual() granio.CanvasObject {
 	return newRichImage(i.Source, i.Alignment)
 }
 
 // Update applies the current state of this image segment to an existing visual.
-func (i *ImageSegment) Update(o fyne.CanvasObject) {
+func (i *ImageSegment) Update(o granio.CanvasObject) {
 	newer := canvas.NewImageFromURI(i.Source)
 	img, _ := o.(*richImage)
 
@@ -215,7 +215,7 @@ func (i *ImageSegment) Update(o fyne.CanvasObject) {
 }
 
 // Select tells the segment that the user is selecting the content between the two positions.
-func (*ImageSegment) Select(_, _ fyne.Position) {
+func (*ImageSegment) Select(_, _ granio.Position) {
 	// no-op: this will be added when we progress to editor
 }
 
@@ -311,16 +311,16 @@ func (*ListSegment) Textual() string {
 }
 
 // Visual returns no additional elements for this segment.
-func (*ListSegment) Visual() fyne.CanvasObject {
+func (*ListSegment) Visual() granio.CanvasObject {
 	return nil
 }
 
 // Update doesn't need to change a list visual.
-func (*ListSegment) Update(fyne.CanvasObject) {
+func (*ListSegment) Update(granio.CanvasObject) {
 }
 
 // Select does nothing for a list container.
-func (*ListSegment) Select(_, _ fyne.Position) {
+func (*ListSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the empty string for this list.
@@ -341,7 +341,7 @@ type listMarkerSegment struct {
 	indent  int
 	quoting int
 
-	colorName fyne.ThemeColorName
+	colorName granio.ThemeColorName
 	parent    *RichText
 }
 
@@ -366,14 +366,14 @@ func (l *listMarkerSegment) marker() string {
 }
 
 // Visual returns a new text object drawing this marker.
-func (l *listMarkerSegment) Visual() fyne.CanvasObject {
+func (l *listMarkerSegment) Visual() granio.CanvasObject {
 	text := canvas.NewText("", color.Transparent)
 	l.Update(text)
 	return text
 }
 
 // Update applies the current state of this marker to an existing visual.
-func (l *listMarkerSegment) Update(o fyne.CanvasObject) {
+func (l *listMarkerSegment) Update(o granio.CanvasObject) {
 	text, ok := o.(*canvas.Text)
 	if !ok {
 		return
@@ -385,12 +385,12 @@ func (l *listMarkerSegment) Update(o fyne.CanvasObject) {
 	}
 	text.Color = theme.ColorForWidget(col, l.parent)
 	text.TextSize = theme.SizeForWidget(theme.SizeNameText, l.parent)
-	text.TextStyle = fyne.TextStyle{Bold: true}
+	text.TextStyle = granio.TextStyle{Bold: true}
 	text.Refresh()
 }
 
 // Select does nothing for a list marker.
-func (*listMarkerSegment) Select(_, _ fyne.Position) {
+func (*listMarkerSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the marker as it introduces this item in selected text.
@@ -426,16 +426,16 @@ func (*ParagraphSegment) Textual() string {
 }
 
 // Visual returns the no extra elements.
-func (*ParagraphSegment) Visual() fyne.CanvasObject {
+func (*ParagraphSegment) Visual() granio.CanvasObject {
 	return nil
 }
 
 // Update doesn't need to change a paragraph container.
-func (*ParagraphSegment) Update(fyne.CanvasObject) {
+func (*ParagraphSegment) Update(granio.CanvasObject) {
 }
 
 // Select does nothing for a paragraph container.
-func (*ParagraphSegment) Select(_, _ fyne.Position) {
+func (*ParagraphSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the empty string for this paragraph container.
@@ -465,16 +465,16 @@ func (*SeparatorSegment) Textual() string {
 }
 
 // Visual returns a new instance of a separator widget for this segment.
-func (*SeparatorSegment) Visual() fyne.CanvasObject {
+func (*SeparatorSegment) Visual() granio.CanvasObject {
 	return NewSeparator()
 }
 
 // Update doesn't need to change a separator visual.
-func (*SeparatorSegment) Update(fyne.CanvasObject) {
+func (*SeparatorSegment) Update(granio.CanvasObject) {
 }
 
 // Select does nothing for a separator.
-func (*SeparatorSegment) Select(_, _ fyne.Position) {
+func (*SeparatorSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the empty string for this separator.
@@ -532,7 +532,7 @@ func (c *CodeBlockSegment) Segments() []RichTextSegment {
 }
 
 // panel returns the background that the lines of this block are drawn on.
-func (c *CodeBlockSegment) panel() fyne.CanvasObject {
+func (c *CodeBlockSegment) panel() granio.CanvasObject {
 	if c.bg == nil {
 		c.bg = newRichCodeBlock()
 	}
@@ -540,16 +540,16 @@ func (c *CodeBlockSegment) panel() fyne.CanvasObject {
 }
 
 // Visual returns a new panel widget for the background of this code block.
-func (*CodeBlockSegment) Visual() fyne.CanvasObject {
+func (*CodeBlockSegment) Visual() granio.CanvasObject {
 	return newRichCodeBlock()
 }
 
 // Update has nothing to change, the content is drawn as text on the panel.
-func (*CodeBlockSegment) Update(fyne.CanvasObject) {
+func (*CodeBlockSegment) Update(granio.CanvasObject) {
 }
 
 // Select does nothing for a code block.
-func (*CodeBlockSegment) Select(_, _ fyne.Position) {
+func (*CodeBlockSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the code block content.
@@ -574,7 +574,7 @@ func newRichCodeBlock() *richCodeBlock {
 	return c
 }
 
-func (c *richCodeBlock) CreateRenderer() fyne.WidgetRenderer {
+func (c *richCodeBlock) CreateRenderer() granio.WidgetRenderer {
 	c.bg = canvas.NewRectangle(color.Transparent)
 	c.applyTheme()
 	return NewSimpleRenderer(c.bg)
@@ -618,20 +618,20 @@ func (c *CheckBoxSegment) Textual() string {
 }
 
 // Visual returns a new instance of a check widget for this segment.
-func (c *CheckBoxSegment) Visual() fyne.CanvasObject {
+func (c *CheckBoxSegment) Visual() granio.CanvasObject {
 	check := NewCheck(c.Text, nil)
 	if c.Checked {
 		check.SetChecked(true)
 	}
-	return &fyne.Container{Layout: &unpadTextWidgetLayout{parent: check}, Objects: []fyne.CanvasObject{check}}
+	return &granio.Container{Layout: &unpadTextWidgetLayout{parent: check}, Objects: []granio.CanvasObject{check}}
 }
 
 // Update doesn't need to change a checkbox
-func (*CheckBoxSegment) Update(fyne.CanvasObject) {
+func (*CheckBoxSegment) Update(granio.CanvasObject) {
 }
 
 // Select does nothing for a checkbox.
-func (*CheckBoxSegment) Select(_, _ fyne.Position) {
+func (*CheckBoxSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the empty string for a checkbox.
@@ -651,7 +651,7 @@ type TableSegment struct {
 	Headers [][]RichTextSegment
 	// Rows holds the body rows; each row is a slice of cells, each cell a slice of segments.
 	Rows       [][][]RichTextSegment
-	Alignments []fyne.TextAlign
+	Alignments []granio.TextAlign
 }
 
 // Inline returns false as a table is a full-width block element.
@@ -695,21 +695,21 @@ func (t *TableSegment) columns() int {
 	return cols
 }
 
-func (t *TableSegment) alignFor(col int) fyne.TextAlign {
+func (t *TableSegment) alignFor(col int) granio.TextAlign {
 	if col < len(t.Alignments) {
 		return t.Alignments[col]
 	}
-	return fyne.TextAlignLeading
+	return granio.TextAlignLeading
 }
 
 // Visual returns a new grid laying out the table cells.
-func (t *TableSegment) Visual() fyne.CanvasObject {
+func (t *TableSegment) Visual() granio.CanvasObject {
 	cols := t.columns()
 	if cols == 0 {
 		return NewRichText()
 	}
 
-	objects := make([]fyne.CanvasObject, 0, cols*(len(t.Rows)+1))
+	objects := make([]granio.CanvasObject, 0, cols*(len(t.Rows)+1))
 	appendRow := func(cells [][]RichTextSegment, header bool) {
 		for c := 0; c < cols; c++ {
 			var segs []RichTextSegment
@@ -726,17 +726,17 @@ func (t *TableSegment) Visual() fyne.CanvasObject {
 		appendRow(r, false)
 	}
 
-	grid := &fyne.Container{Layout: &tableSegmentLayout{cols: cols}, Objects: objects}
+	grid := &granio.Container{Layout: &tableSegmentLayout{cols: cols}, Objects: objects}
 	border := canvas.NewRectangle(theme.Color(theme.ColorNameInputBorder))
-	return widget.NewHScroll(&fyne.Container{Layout: layout.NewStackLayout(), Objects: []fyne.CanvasObject{border, grid}})
+	return widget.NewHScroll(&granio.Container{Layout: layout.NewStackLayout(), Objects: []granio.CanvasObject{border, grid}})
 }
 
 // Update does nothing; a table visual is rebuilt rather than updated.
-func (*TableSegment) Update(fyne.CanvasObject) {
+func (*TableSegment) Update(granio.CanvasObject) {
 }
 
 // Select does nothing for a table.
-func (*TableSegment) Select(_, _ fyne.Position) {
+func (*TableSegment) Select(_, _ granio.Position) {
 }
 
 // SelectedText returns the table content as text.
@@ -751,7 +751,7 @@ func (*TableSegment) Unselect() {
 // newTableCell builds a single table cell: padded rich-text content over a fill,
 // so the grid-line colour drawn behind the grid shows through the gaps left by
 // tableSegmentLayout.
-func newTableCell(segs []RichTextSegment, align fyne.TextAlign, header bool) fyne.CanvasObject {
+func newTableCell(segs []RichTextSegment, align granio.TextAlign, header bool) granio.CanvasObject {
 	fill := theme.Color(theme.ColorNameBackground)
 	if header {
 		fill = theme.Color(theme.ColorNameHeaderBackground)
@@ -776,9 +776,9 @@ func newTableCell(segs []RichTextSegment, align fyne.TextAlign, header bool) fyn
 	}
 
 	text := NewRichText(cell...)
-	text.Wrapping = fyne.TextWrapOff
-	padded := &fyne.Container{Layout: layout.NewPaddedLayout(), Objects: []fyne.CanvasObject{text}}
-	return &fyne.Container{Layout: layout.NewStackLayout(), Objects: []fyne.CanvasObject{bg, padded}}
+	text.Wrapping = granio.TextWrapOff
+	padded := &granio.Container{Layout: layout.NewPaddedLayout(), Objects: []granio.CanvasObject{text}}
+	return &granio.Container{Layout: layout.NewStackLayout(), Objects: []granio.CanvasObject{bg, padded}}
 }
 
 // tableSegmentLayout arranges cells row-major. Columns are sized to their widest
@@ -789,7 +789,7 @@ type tableSegmentLayout struct {
 	cols int
 }
 
-func (l *tableSegmentLayout) measure(objects []fyne.CanvasObject) (colWidths, rowHeights []float32) {
+func (l *tableSegmentLayout) measure(objects []granio.CanvasObject) (colWidths, rowHeights []float32) {
 	rows := (len(objects) + l.cols - 1) / l.cols
 	colWidths = make([]float32, l.cols)
 	rowHeights = make([]float32, rows)
@@ -806,7 +806,7 @@ func (l *tableSegmentLayout) measure(objects []fyne.CanvasObject) (colWidths, ro
 	return colWidths, rowHeights
 }
 
-func (l *tableSegmentLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
+func (l *tableSegmentLayout) MinSize(objects []granio.CanvasObject) granio.Size {
 	colWidths, rowHeights := l.measure(objects)
 	gap := theme.Size(theme.SizeNameSeparatorThickness)
 	w := gap
@@ -817,10 +817,10 @@ func (l *tableSegmentLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
 	for _, rh := range rowHeights {
 		h += rh + gap
 	}
-	return fyne.NewSize(w, h)
+	return granio.NewSize(w, h)
 }
 
-func (l *tableSegmentLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
+func (l *tableSegmentLayout) Layout(objects []granio.CanvasObject, size granio.Size) {
 	colWidths, rowHeights := l.measure(objects)
 	gap := theme.Size(theme.SizeNameSeparatorThickness)
 
@@ -843,8 +843,8 @@ func (l *tableSegmentLayout) Layout(objects []fyne.CanvasObject, size fyne.Size)
 			if idx >= len(objects) {
 				break
 			}
-			objects[idx].Move(fyne.NewPos(x, y))
-			objects[idx].Resize(fyne.NewSize(colWidths[c], rh))
+			objects[idx].Move(granio.NewPos(x, y))
+			objects[idx].Resize(granio.NewSize(colWidths[c], rh))
 			x += colWidths[c] + gap
 		}
 		y += rh + gap
@@ -855,11 +855,12 @@ func (l *tableSegmentLayout) Layout(objects []fyne.CanvasObject, size fyne.Size)
 //
 // Since: 2.1
 type RichTextStyle struct {
-	Alignment fyne.TextAlign
-	ColorName fyne.ThemeColorName
+	Alignment granio.TextAlign
+	ColorName granio.ThemeColorName
 	Inline    bool
-	SizeName  fyne.ThemeSizeName // The theme name of the text size to use, if blank will be the standard text size
-	TextStyle fyne.TextStyle
+	SizeName  granio.ThemeSizeName // The theme name of the text size to use, if blank will be the standard text size
+	TextStyle granio.TextStyle
+	TextRole  granio.TextRole
 	// Since: 2.8
 	QuotingDepth int
 
@@ -879,10 +880,10 @@ type RichTextStyle struct {
 type RichTextSegment interface {
 	Inline() bool
 	Textual() string
-	Update(fyne.CanvasObject)
-	Visual() fyne.CanvasObject
+	Update(granio.CanvasObject)
+	Visual() granio.CanvasObject
 
-	Select(pos1, pos2 fyne.Position)
+	Select(pos1, pos2 granio.Position)
 	SelectedText() string
 	Unselect()
 }
@@ -918,11 +919,11 @@ func (t *TextSegment) Textual() string {
 }
 
 // Visual returns a new instance of a graphical element required to render this segment.
-func (t *TextSegment) Visual() fyne.CanvasObject {
+func (t *TextSegment) Visual() granio.CanvasObject {
 	text := canvas.NewText(t.Text, t.color())
 	if t.Style.codeInline {
 		bg := canvas.NewRectangle(theme.ColorForWidget(theme.ColorNameInputBackground, t.parent))
-		c := &fyne.Container{Layout: &codeInlineLayout{}, Objects: []fyne.CanvasObject{bg, text}}
+		c := &granio.Container{Layout: &codeInlineLayout{}, Objects: []granio.CanvasObject{bg, text}}
 		t.Update(c)
 		return c
 	}
@@ -932,10 +933,10 @@ func (t *TextSegment) Visual() fyne.CanvasObject {
 }
 
 // Update applies the current state of this text segment to an existing visual.
-func (t *TextSegment) Update(o fyne.CanvasObject) {
+func (t *TextSegment) Update(o granio.CanvasObject) {
 	obj, ok := o.(*canvas.Text)
 	if !ok { // inline code container: [background, text]
-		c, _ := o.(*fyne.Container)
+		c, _ := o.(*granio.Container)
 		bg, _ := c.Objects[0].(*canvas.Rectangle)
 		bg.FillColor = theme.ColorForWidget(theme.ColorNameInputBackground, t.parent)
 		bg.Refresh()
@@ -944,8 +945,8 @@ func (t *TextSegment) Update(o fyne.CanvasObject) {
 	obj.Text = t.Text
 	obj.Color = t.color()
 	obj.Alignment = t.Style.Alignment
-	obj.TextStyle = t.Style.TextStyle
-	obj.TextSize = t.size()
+	resolved := t.typography()
+	obj.TextStyle, obj.TextSize, obj.FontSource = resolved.Style, resolved.Size, resolved.Font
 	obj.Refresh()
 }
 
@@ -954,20 +955,20 @@ func (t *TextSegment) Update(o fyne.CanvasObject) {
 // not stretch with it.
 type codeInlineLayout struct{}
 
-func (codeInlineLayout) MinSize(o []fyne.CanvasObject) fyne.Size {
+func (codeInlineLayout) MinSize(o []granio.CanvasObject) granio.Size {
 	return o[1].MinSize()
 }
 
-func (codeInlineLayout) Layout(o []fyne.CanvasObject, _ fyne.Size) {
+func (codeInlineLayout) Layout(o []granio.CanvasObject, _ granio.Size) {
 	size := o[1].MinSize()
 	for _, obj := range o {
 		obj.Resize(size)
-		obj.Move(fyne.NewPos(0, 0))
+		obj.Move(granio.NewPos(0, 0))
 	}
 }
 
 // Select tells the segment that the user is selecting the content between the two positions.
-func (*TextSegment) Select(_, _ fyne.Position) {
+func (*TextSegment) Select(_, _ granio.Position) {
 	// no-op: this will be added when we progress to editor
 }
 
@@ -991,25 +992,39 @@ func (t *TextSegment) color() color.Color {
 }
 
 func (t *TextSegment) size() float32 {
-	if t.Style.SizeName != "" {
-		i := theme.SizeForWidget(t.Style.SizeName, t.parent)
-		return i
-	}
+	return t.typography().Size
+}
 
-	i := theme.SizeForWidget(theme.SizeNameText, t.parent)
-	return i
+func (t *TextSegment) typography() granio.TypographyStyle {
+	th := theme.CurrentForWidget(t.parent)
+	if t.Style.TextRole != granio.TextRoleDefault {
+		return theme.Typography(th, t.Style.TextRole, t.Style.TextStyle)
+	}
+	result := granio.TypographyStyle{Style: t.Style.TextStyle}
+	if t.Style.SizeName != "" {
+		result.Size = th.Size(t.Style.SizeName)
+	} else {
+		result.Size = th.Size(theme.SizeNameText)
+	}
+	return result
+}
+
+func (t *TextSegment) measure(text string) granio.Size {
+	resolved := t.typography()
+	size, _ := granio.CurrentApp().Driver().RenderedTextSize(text, resolved.Size, resolved.Style, resolved.Font)
+	return size
 }
 
 type richImage struct {
 	BaseWidget
-	align  fyne.TextAlign
+	align  granio.TextAlign
 	img    *canvas.Image
-	oldMin fyne.Size
-	layout *fyne.Container
-	min    fyne.Size
+	oldMin granio.Size
+	layout *granio.Container
+	min    granio.Size
 }
 
-func newRichImage(u fyne.URI, align fyne.TextAlign) *richImage {
+func newRichImage(u granio.URI, align granio.TextAlign) *richImage {
 	img := canvas.NewImageFromURI(u)
 	img.FillMode = canvas.ImageFillOriginal
 	i := &richImage{img: img, align: align}
@@ -1017,14 +1032,14 @@ func newRichImage(u fyne.URI, align fyne.TextAlign) *richImage {
 	return i
 }
 
-func (r *richImage) CreateRenderer() fyne.WidgetRenderer {
-	r.layout = &fyne.Container{Layout: &richImageLayout{r}, Objects: []fyne.CanvasObject{r.img}}
+func (r *richImage) CreateRenderer() granio.WidgetRenderer {
+	r.layout = &granio.Container{Layout: &richImageLayout{r}, Objects: []granio.CanvasObject{r.img}}
 	return NewSimpleRenderer(r.layout)
 }
 
-func (r *richImage) MinSize() fyne.Size {
+func (r *richImage) MinSize() granio.Size {
 	orig := r.img.MinSize()
-	c := fyne.CurrentApp().Driver().CanvasForObject(r)
+	c := granio.CurrentApp().Driver().CanvasForObject(r)
 	if c == nil {
 		return r.oldMin // not yet rendered
 	}
@@ -1033,11 +1048,11 @@ func (r *richImage) MinSize() fyne.Size {
 	w := scale.ToScreenCoordinate(c, orig.Width)
 	h := scale.ToScreenCoordinate(c, orig.Height)
 	// we return size / 2 as this assumes a HiDPI / 2x image scaling
-	r.min = fyne.NewSize(float32(w)/2, float32(h)/2)
+	r.min = granio.NewSize(float32(w)/2, float32(h)/2)
 	return r.min
 }
 
-func (r *richImage) setAlign(a fyne.TextAlign) {
+func (r *richImage) setAlign(a granio.TextAlign) {
 	if r.layout != nil {
 		r.layout.Refresh()
 	}
@@ -1048,39 +1063,39 @@ type richImageLayout struct {
 	r *richImage
 }
 
-func (r *richImageLayout) Layout(_ []fyne.CanvasObject, s fyne.Size) {
+func (r *richImageLayout) Layout(_ []granio.CanvasObject, s granio.Size) {
 	r.r.img.Resize(r.r.min)
 	gap := float32(0)
 
 	switch r.r.align {
-	case fyne.TextAlignCenter:
+	case granio.TextAlignCenter:
 		gap = (s.Width - r.r.min.Width) / 2
-	case fyne.TextAlignTrailing:
+	case granio.TextAlignTrailing:
 		gap = s.Width - r.r.min.Width
 	}
 
-	r.r.img.Move(fyne.NewPos(gap, 0))
+	r.r.img.Move(granio.NewPos(gap, 0))
 }
 
-func (r *richImageLayout) MinSize(_ []fyne.CanvasObject) fyne.Size {
+func (r *richImageLayout) MinSize(_ []granio.CanvasObject) granio.Size {
 	return r.r.min
 }
 
 type unpadTextWidgetLayout struct {
-	parent fyne.Widget
+	parent granio.Widget
 }
 
-func (u *unpadTextWidgetLayout) Layout(o []fyne.CanvasObject, s fyne.Size) {
+func (u *unpadTextWidgetLayout) Layout(o []granio.CanvasObject, s granio.Size) {
 	innerPad := theme.SizeForWidget(theme.SizeNameInnerPadding, u.parent)
 	pad := innerPad * -1
 	pad2 := pad * -2
 
-	o[0].Move(fyne.NewPos(pad, pad))
-	o[0].Resize(s.Add(fyne.NewSize(pad2, pad2)))
+	o[0].Move(granio.NewPos(pad, pad))
+	o[0].Resize(s.Add(granio.NewSize(pad2, pad2)))
 }
 
-func (u *unpadTextWidgetLayout) MinSize(o []fyne.CanvasObject) fyne.Size {
+func (u *unpadTextWidgetLayout) MinSize(o []granio.CanvasObject) granio.Size {
 	innerPad := theme.SizeForWidget(theme.SizeNameInnerPadding, u.parent)
 	pad := innerPad * 2
-	return o[0].MinSize().Subtract(fyne.NewSize(pad, pad))
+	return o[0].MinSize().Subtract(granio.NewSize(pad, pad))
 }

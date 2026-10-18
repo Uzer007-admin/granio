@@ -8,15 +8,15 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // AssertNotificationSent allows an app developer to assert that a notification was sent.
 // After the content of f has executed this utility will check that the specified notification was sent.
-func AssertNotificationSent(t *testing.T, n *fyne.Notification, f func()) {
+func AssertNotificationSent(t *testing.T, n *granio.Notification, f func()) {
 	require.NotNil(t, f, "function has to be specified")
-	require.IsType(t, &app{}, fyne.CurrentApp())
-	a, _ := fyne.CurrentApp().(*app)
+	require.IsType(t, &app{}, granio.CurrentApp())
+	a, _ := granio.CurrentApp().(*app)
 	a.lastNotification = nil
 
 	f()
@@ -33,14 +33,14 @@ func AssertNotificationSent(t *testing.T, n *fyne.Notification, f func()) {
 }
 
 // AssertNotificationScheduled checks that a notification was scheduled for delivery
-// after the supplied function has run. The reported [fyne.ScheduledNotification.Title]
-// and [fyne.ScheduledNotification.Content] must match the supplied notification.
+// after the supplied function has run. The reported [granio.ScheduledNotification.Title]
+// and [granio.ScheduledNotification.Content] must match the supplied notification.
 //
 // Since: 2.8
-func AssertNotificationScheduled(t *testing.T, n *fyne.Notification, f func()) {
+func AssertNotificationScheduled(t *testing.T, n *granio.Notification, f func()) {
 	require.NotNil(t, f, "function has to be specified")
-	require.IsType(t, &app{}, fyne.CurrentApp())
-	a, _ := fyne.CurrentApp().(*app)
+	require.IsType(t, &app{}, granio.CurrentApp())
+	a, _ := granio.CurrentApp().(*app)
 	a.lastScheduledNotification = nil
 
 	f()

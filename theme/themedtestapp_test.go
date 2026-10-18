@@ -4,25 +4,25 @@ import (
 	"net/url"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 type themedApp struct {
 	primaryColor string
-	theme        fyne.Theme
-	variant      fyne.ThemeVariant
+	theme        granio.Theme
+	variant      granio.ThemeVariant
 }
 
-func (*themedApp) CloudProvider() fyne.CloudProvider {
+func (*themedApp) CloudProvider() granio.CloudProvider {
 	return nil
 }
 
-func (*themedApp) BuildType() fyne.BuildType {
-	return fyne.BuildStandard
+func (*themedApp) BuildType() granio.BuildType {
+	return granio.BuildStandard
 }
 
-func (*themedApp) NewWindow(_ string) fyne.Window {
+func (*themedApp) NewWindow(_ string) granio.Window {
 	return nil
 }
 
@@ -30,11 +30,11 @@ func (*themedApp) OpenURL(_ *url.URL) error {
 	return nil
 }
 
-func (*themedApp) Icon() fyne.Resource {
+func (*themedApp) Icon() granio.Resource {
 	return nil
 }
 
-func (*themedApp) SetIcon(fyne.Resource) {
+func (*themedApp) SetIcon(granio.Resource) {
 }
 
 func (*themedApp) Run() {
@@ -43,7 +43,7 @@ func (*themedApp) Run() {
 func (*themedApp) Quit() {
 }
 
-func (*themedApp) Driver() fyne.Driver {
+func (*themedApp) Driver() granio.Driver {
 	return nil
 }
 
@@ -51,10 +51,10 @@ func (*themedApp) UniqueID() string {
 	return ""
 }
 
-func (*themedApp) SendNotification(_ *fyne.Notification) {
+func (*themedApp) SendNotification(_ *granio.Notification) {
 }
 
-func (*themedApp) ScheduleNotification(_ *fyne.Notification, _ time.Time) (*fyne.ScheduledNotification, error) {
+func (*themedApp) ScheduleNotification(_ *granio.Notification, _ time.Time) (*granio.ScheduledNotification, error) {
 	return nil, nil
 }
 
@@ -62,28 +62,28 @@ func (*themedApp) CancelScheduledNotification(_ string) error {
 	return nil
 }
 
-func (a *themedApp) Settings() fyne.Settings {
+func (a *themedApp) Settings() granio.Settings {
 	return a
 }
 
-func (*themedApp) Storage() fyne.Storage {
+func (*themedApp) Storage() granio.Storage {
 	return nil
 }
 
-func (*themedApp) Preferences() fyne.Preferences {
+func (*themedApp) Preferences() granio.Preferences {
 	return nil
 }
 
-func (*themedApp) SecretPreferences([]byte) (fyne.Preferences, error) {
+func (*themedApp) SecretPreferences([]byte) (granio.Preferences, error) {
 	return nil, nil
 }
 
-func (*themedApp) Lifecycle() fyne.Lifecycle {
+func (*themedApp) Lifecycle() granio.Lifecycle {
 	return nil
 }
 
-func (*themedApp) Metadata() fyne.AppMetadata {
-	return fyne.AppMetadata{}
+func (*themedApp) Metadata() granio.AppMetadata {
+	return granio.AppMetadata{}
 }
 
 func (a *themedApp) PrimaryColor() string {
@@ -94,19 +94,19 @@ func (a *themedApp) PrimaryColor() string {
 	return theme.ColorBlue
 }
 
-func (a *themedApp) Theme() fyne.Theme {
+func (a *themedApp) Theme() granio.Theme {
 	return a.theme
 }
 
-func (a *themedApp) SetTheme(t fyne.Theme) {
+func (a *themedApp) SetTheme(t granio.Theme) {
 	a.theme = t
 }
 
-func (a *themedApp) ThemeVariant() fyne.ThemeVariant {
+func (a *themedApp) ThemeVariant() granio.ThemeVariant {
 	return a.variant // The null value is theme.VariantDark
 }
 
-func (*themedApp) SetCloudProvider(fyne.CloudProvider) {
+func (*themedApp) SetCloudProvider(granio.CloudProvider) {
 }
 
 func (*themedApp) Scale() float32 {
@@ -117,16 +117,16 @@ func (*themedApp) ShowAnimations() bool {
 	return true
 }
 
-func (*themedApp) AddChangeListener(chan fyne.Settings) {
+func (*themedApp) AddChangeListener(chan granio.Settings) {
 }
 
-func (*themedApp) AddListener(func(fyne.Settings)) {
+func (*themedApp) AddListener(func(granio.Settings)) {
 }
 
-func (*themedApp) Cache() fyne.Cache {
+func (*themedApp) Cache() granio.Cache {
 	return nil
 }
 
-func (*themedApp) Clipboard() fyne.Clipboard {
+func (*themedApp) Clipboard() granio.Clipboard {
 	return nil
 }

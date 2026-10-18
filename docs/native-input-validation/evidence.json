@@ -1,0 +1,133 @@
+{
+  "source_hash_algorithm": "SHA-256 exact bytes",
+  "artifacts": {
+    "cleanup.txt": {
+      "bytes": 764,
+      "sha256": "94eee2dde23c6657b29c1e8b2565534015cd9ba69fbdd4425e82277feb19bae4"
+    },
+    "compositor.png": {
+      "bytes": 66989,
+      "sha256": "7183168177ee8724261407804317d13966a7335da0fa3fd6eb19b1c5b63db530"
+    },
+    "fork-patch-replay.json": {
+      "bytes": 1132,
+      "sha256": "a47e092285caebbc1e44cc2b2f0f19512e644d87699ea0a772fdfc84b788c72d"
+    },
+    "ibus-privacy-lifetime.txt": {
+      "bytes": 222,
+      "sha256": "fc7b3db0a6d3b70de05e687a50b8a0d49580ead88de9954b64e822d4a27eceff"
+    },
+    "ime-anthy.jsonl": {
+      "bytes": 384,
+      "sha256": "efdcb093f07f07574480244df2356601f8e181280d784f8ceaff6fd27d08ec42"
+    },
+    "ime-pinyin.jsonl": {
+      "bytes": 431,
+      "sha256": "1d93470b6a1f542da24d08ffaa279ed2acc7ece7ed18c31dba6d589b3c2d99ce"
+    },
+    "linux-source-hashes.json": {
+      "bytes": 364117,
+      "sha256": "86757ce8be02899748a3614a97baec1167d4772052362e03855e2bfad88a6f75"
+    },
+    "linux-suite-stderr.txt": {
+      "bytes": 532,
+      "sha256": "2d71327179f3315801768cc20ce0600d54093242b071408fa6c08225d084261c"
+    },
+    "linux-suite.jsonl": {
+      "bytes": 3991251,
+      "sha256": "ccaf89fb0df667bfaaae378ddf6a5f021bbecebaed8d647809df4fc2f7514859"
+    },
+    "material-gles2.txt": {
+      "bytes": 759,
+      "sha256": "966074a54a9ff2b6c02a63ccc5fe98e26d032c30aae615c852f9310b23090fda"
+    },
+    "material-wayland.txt": {
+      "bytes": 334,
+      "sha256": "7936a3a68233b7b31e9723165ad17d0ccbfe821af11dafd6fd8e8da0fc7ab003"
+    },
+    "nvda-check.txt": {
+      "bytes": 66,
+      "sha256": "483bbe95350d4e01628c6eb42c3877e075c70471559fa59f63fde4d970207699"
+    },
+    "nvda-speech.txt": {
+      "bytes": 320,
+      "sha256": "5c51170cb10d7ae8530af43645931612a80f162963122c8d4cf53b7e2821e726"
+    },
+    "orca-speech.txt": {
+      "bytes": 149,
+      "sha256": "10bff24c7f8c46428d9c096687df1d9f73496665c00e53ebdc225127d6660f0a"
+    },
+    "reader-client.json": {
+      "bytes": 255,
+      "sha256": "aff0d312ff97dbafd9af4d65902979685ab7404f8c3a616ca0e9daa857b1abaa"
+    },
+    "real-anthy.txt": {
+      "bytes": 1767,
+      "sha256": "fe6c10684b1f4f17099e37e5bc0cbc6b3bfad77b764f56b2c7dcb03d8a5a6d76"
+    },
+    "real-pinyin-orca.txt": {
+      "bytes": 1872,
+      "sha256": "5990b16f5d068f7244c154d63ae7c289618c90e340422294a1693c526df0dd6d"
+    },
+    "summary.json": {
+      "bytes": 3090,
+      "sha256": "ef0a64901afc264c1a288373c081d3017c39ea4840989b552ea46a86569c779c"
+    },
+    "wasm-build.txt": {
+      "bytes": 156,
+      "sha256": "1f1d13dec660f18ef9f95019e727651e8f8e0fa4ec106dd10214101ff6db2bf2"
+    },
+    "wayland-drag.txt": {
+      "bytes": 1223,
+      "sha256": "1f7cbe1df6663cab486ad0ebae8d6dc4ed794101fe73eb4e1e2411661bb44fce"
+    },
+    "wayland-protocol-results.json": {
+      "bytes": 1344,
+      "sha256": "7ad2fbf459a0aa32786a33fece490d1c3183ae542a8a665ede48ffacb7b2d4bc"
+    },
+    "windows-focused.txt": {
+      "bytes": 996,
+      "sha256": "fa43b7ec3438bfa4daf380810eba328f1efb2ae43c8c7debaa2ecef62022b16a"
+    },
+    "windows-headless-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "windows-headless.jsonl": {
+      "bytes": 3676565,
+      "sha256": "122ed968134d4e167a1250fed6571fabfff5328ae42e80f3bb6e57701d1b54ce"
+    },
+    "windows-ime-environment.txt": {
+      "bytes": 157,
+      "sha256": "f503a88631a3916ff71e9d0d0f316716dee3139b2e51e949d22251777bf13728"
+    },
+    "windows-language-restoration.json": {
+      "bytes": 727,
+      "sha256": "3d93b8bccc7c71ae7cfd75762e0591196ecd15b30a52ec247efce310d33e2219"
+    },
+    "windows-reader-client.json": {
+      "bytes": 100,
+      "sha256": "96513ce3fd30d655dfb367d6306b947ac3a23b1b57d9a0e3d6e4f16f76799afe"
+    },
+    "windows-real-ime-failed.txt": {
+      "bytes": 574,
+      "sha256": "af0e6e4efaaa26df32c50b36b976a82d90b698716d0b87c57c5bdf7e26b26264"
+    },
+    "windows-sibling-regression.txt": {
+      "bytes": 726,
+      "sha256": "b77711d9a2eb49c615100778f2f3dd8b295b738d372720bdd74613dd54d1e619"
+    },
+    "windows-source-hashes.json": {
+      "bytes": 367370,
+      "sha256": "b951f13136ba4b74b85547626c0da8bf0fd1608de095eb4e76df234883a4dd40"
+    },
+    "windows-suite-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "windows-suite.jsonl": {
+      "bytes": 3858459,
+      "sha256": "89848f12681ec0f095a95dd79c1ca49d31c87774466a753c426c645364897a64"
+    }
+  }
+}

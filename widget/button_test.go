@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -70,9 +70,9 @@ func TestButton_Tapped_Unfocus(t *testing.T) {
 	button := widget.NewButton("Hi", func() {
 	})
 
-	w := test.NewWindow(&fyne.Container{
+	w := test.NewWindow(&granio.Container{
 		Layout:  layout.NewGridLayoutWithColumns(1),
-		Objects: []fyne.CanvasObject{e, button},
+		Objects: []granio.CanvasObject{e, button},
 	})
 	c := w.Canvas()
 
@@ -148,17 +148,17 @@ func TestButton_Hover(t *testing.T) {
 	w := test.NewWindow(b)
 	defer w.Close()
 
-	if !fyne.CurrentDevice().IsMobile() {
-		test.MoveMouse(w.Canvas(), fyne.NewPos(5, 5))
+	if !granio.CurrentDevice().IsMobile() {
+		test.MoveMouse(w.Canvas(), granio.NewPos(5, 5))
 		test.AssertImageMatches(t, "button/hovered.png", w.Canvas().Capture())
 	}
 
 	b.Importance = widget.HighImportance
 	b.Refresh()
-	if !fyne.CurrentDevice().IsMobile() {
+	if !granio.CurrentDevice().IsMobile() {
 		test.AssertImageMatches(t, "button/high_importance_hovered.png", w.Canvas().Capture())
 
-		test.MoveMouse(w.Canvas(), fyne.NewPos(0, 0))
+		test.MoveMouse(w.Canvas(), granio.NewPos(0, 0))
 		b.Refresh()
 	}
 	test.AssertImageMatches(t, "button/high_importance.png", w.Canvas().Capture())
@@ -173,7 +173,7 @@ func TestButton_Layout(t *testing.T) {
 
 	for name, tt := range map[string]struct {
 		text      string
-		icon      fyne.Resource
+		icon      granio.Resource
 		alignment widget.ButtonAlign
 		placement widget.ButtonIconPlacement
 	}{
@@ -288,7 +288,7 @@ func TestButton_Layout(t *testing.T) {
 
 			window := test.NewWindow(button)
 			defer window.Close()
-			window.Resize(button.MinSize().Max(fyne.NewSize(150, 200)))
+			window.Resize(button.MinSize().Max(granio.NewSize(150, 200)))
 
 			test.AssertRendersToMarkup(t, "button/layout_"+name+".xml", window.Canvas())
 		})
@@ -301,9 +301,9 @@ func TestButton_ChangeTheme(t *testing.T) {
 	b := widget.NewButton("Test", func() {})
 	w := test.NewWindow(b)
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 	b.Resize(b.MinSize())
-	b.Move(fyne.NewPos(10, 10))
+	b.Move(granio.NewPos(10, 10))
 
 	test.AssertImageMatches(t, "button/theme_initial.png", w.Canvas().Capture())
 

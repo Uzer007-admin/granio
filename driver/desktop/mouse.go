@@ -1,6 +1,6 @@
 package desktop
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // MouseButton represents a single button in a desktop MouseEvent
 type MouseButton int
@@ -36,9 +36,9 @@ const (
 
 // MouseEvent contains data relating to desktop mouse events
 type MouseEvent struct {
-	fyne.PointEvent
+	granio.PointEvent
 	Button   MouseButton
-	Modifier fyne.KeyModifier
+	Modifier granio.KeyModifier
 }
 
 // Mouseable represents desktop mouse events that can be sent to CanvasObjects

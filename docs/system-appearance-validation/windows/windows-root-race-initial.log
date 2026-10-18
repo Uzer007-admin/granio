@@ -1,0 +1,133 @@
+ok  	fyne.io/fyne/v2	2.423s
+ok  	fyne.io/fyne/v2/app	31.482s
+?   	fyne.io/fyne/v2/cache	[no test files]
+ok  	fyne.io/fyne/v2/canvas	8.806s
+?   	fyne.io/fyne/v2/cmd/fyne	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/commands	1.707s
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/commands	3.558s
+?   	fyne.io/fyne/v2/cmd/fyne/internal/mobile	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres	1.739s
+?   	fyne.io/fyne/v2/cmd/fyne/internal/templates	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/util	1.547s
+ok  	fyne.io/fyne/v2/cmd/fyne_demo	3.694s
+?   	fyne.io/fyne/v2/cmd/fyne_demo/data	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_demo/tutorials	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_gallery	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings/data	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne_settings/settings	8.324s
+?   	fyne.io/fyne/v2/cmd/hello	[no test files]
+ok  	fyne.io/fyne/v2/container	6.282s
+ok  	fyne.io/fyne/v2/data/binding	2.117s
+ok  	fyne.io/fyne/v2/data/validation	1.764s
+ok  	fyne.io/fyne/v2/dialog	37.920s
+ok  	fyne.io/fyne/v2/driver	1.639s
+ok  	fyne.io/fyne/v2/driver/desktop	1.744s
+?   	fyne.io/fyne/v2/driver/embedded	[no test files]
+?   	fyne.io/fyne/v2/driver/mobile	[no test files]
+ok  	fyne.io/fyne/v2/driver/software	3.189s
+ok  	fyne.io/fyne/v2/internal	3.025s
+ok  	fyne.io/fyne/v2/internal/animation	2.732s
+ok  	fyne.io/fyne/v2/internal/app	2.195s
+ok  	fyne.io/fyne/v2/internal/async	5.093s
+?   	fyne.io/fyne/v2/internal/build	[no test files]
+ok  	fyne.io/fyne/v2/internal/cache	1.802s
+ok  	fyne.io/fyne/v2/internal/color	1.701s
+ok  	fyne.io/fyne/v2/internal/driver	2.515s
+ok  	fyne.io/fyne/v2/internal/driver/common	2.384s
+ok  	fyne.io/fyne/v2/internal/driver/embedded	1.849s
+ok  	fyne.io/fyne/v2/internal/driver/glfw	61.544s
+ok  	fyne.io/fyne/v2/internal/driver/mobile	7.655s
+?   	fyne.io/fyne/v2/internal/driver/mobile/app	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/key	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/paint	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/size	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/touch	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/gl	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/mobileinit	[no test files]
+?   	fyne.io/fyne/v2/internal/goos	[no test files]
+ok  	fyne.io/fyne/v2/internal/metadata	2.072s
+ok  	fyne.io/fyne/v2/internal/painter	15.828s
+?   	fyne.io/fyne/v2/internal/painter/geom	[no test files]
+ok  	fyne.io/fyne/v2/internal/painter/gl	1.953s
+ok  	fyne.io/fyne/v2/internal/painter/software	13.384s
+ok  	fyne.io/fyne/v2/internal/repository	35.031s
+ok  	fyne.io/fyne/v2/internal/repository/mime	2.808s
+?   	fyne.io/fyne/v2/internal/scale	[no test files]
+ok  	fyne.io/fyne/v2/internal/scheduler	5.070s
+ok  	fyne.io/fyne/v2/internal/svg	2.722s
+ok  	fyne.io/fyne/v2/internal/test	1.942s
+ok  	fyne.io/fyne/v2/internal/theme	1.277s
+ok  	fyne.io/fyne/v2/internal/widget	1.924s
+ok  	fyne.io/fyne/v2/lang	1.503s
+ok  	fyne.io/fyne/v2/layout	4.390s
+ok  	fyne.io/fyne/v2/storage	2.669s
+ok  	fyne.io/fyne/v2/storage/repository	1.630s
+2026/10/13 17:03:38 Fyne error:  Failed to load image
+2026/10/13 17:03:38   Cause: image: unknown format
+2026/10/13 17:03:38   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:03:38 Fyne error:  Failed to load image
+2026/10/13 17:03:38   Cause: image: unknown format
+2026/10/13 17:03:38   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:03:38 Fyne error:  Failed to load image
+2026/10/13 17:03:38   Cause: image: unknown format
+2026/10/13 17:03:38   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:03:40 Fyne error:  
+2026/10/13 17:03:40   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:03:40   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:03:40 Fyne error:  
+2026/10/13 17:03:40   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:03:40   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:03:40 Fyne error:  Failed to load image
+2026/10/13 17:03:40   Cause: image: unknown format
+2026/10/13 17:03:40   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:03:40 Fyne error:  
+2026/10/13 17:03:40   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:03:40   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:03:40 Fyne error:  
+2026/10/13 17:03:40   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:03:40   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:03:40 Fyne error:  Failed to load image
+2026/10/13 17:03:40   Cause: image: unknown format
+2026/10/13 17:03:40   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:03:40 Fyne error:  
+2026/10/13 17:03:40   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:03:40   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:03:40 Fyne error:  
+2026/10/13 17:03:40   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:03:40   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:03:40 Fyne error:  Failed to load image
+2026/10/13 17:03:40   Cause: image: unknown format
+2026/10/13 17:03:40   At: X:/fyne/canvas/image.go:147
+--- FAIL: Test_NewTheme (0.01s)
+    --- FAIL: Test_NewTheme/TestUniqueColorValues (0.00s)
+        theme_test.go:51: 
+            	Error Trace:	X:/fyne/test/theme_test.go:51
+            	Error:      	Should be true
+            	Test:       	Test_NewTheme/TestUniqueColorValues
+            	Messages:   	color value &color.Gray{Y:0xff} for color foregroundOnButton variant dark already used for color foreground in theme Ugly Test Theme
+        theme_test.go:51: 
+            	Error Trace:	X:/fyne/test/theme_test.go:51
+            	Error:      	Should be true
+            	Test:       	Test_NewTheme/TestUniqueColorValues
+            	Messages:   	color value &color.Gray{Y:0xff} for color foregroundOnButton variant light already used for color foreground in theme Ugly Test Theme
+--- FAIL: Test_Theme (0.01s)
+    --- FAIL: Test_Theme/TestUniqueColorValues (0.00s)
+        theme_test.go:51: 
+            	Error Trace:	X:/fyne/test/theme_test.go:51
+            	Error:      	Should be true
+            	Test:       	Test_Theme/TestUniqueColorValues
+            	Messages:   	color value color.NRGBA{R:0xff, G:0xff, B:0xff, A:0xff} for color foregroundOnButton variant dark already used for color foreground in theme Default Test Theme
+        theme_test.go:51: 
+            	Error Trace:	X:/fyne/test/theme_test.go:51
+            	Error:      	Should be true
+            	Test:       	Test_Theme/TestUniqueColorValues
+            	Messages:   	color value color.NRGBA{R:0xff, G:0xff, B:0xff, A:0xff} for color foregroundOnButton variant light already used for color foreground in theme Default Test Theme
+FAIL
+FAIL	fyne.io/fyne/v2/test	3.602s
+ok  	fyne.io/fyne/v2/theme	2.543s
+ok  	fyne.io/fyne/v2/tools/playground	2.266s
+ok  	fyne.io/fyne/v2/widget	31.622s
+FAIL

@@ -3,8 +3,8 @@ package widget
 import (
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/lang"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/lang"
 )
 
 type weekday int
@@ -93,7 +93,7 @@ func getLocaleWeekStart() weekday {
 	return lookupLocaleSetting(lang.SystemLocale()).weekStartDay
 }
 
-func lookupLocaleSetting(l fyne.Locale) localeSetting {
+func lookupLocaleSetting(l granio.Locale) localeSetting {
 	region := ""
 	language := l.LanguageString()
 	if pos := strings.Index(language, "-"); pos != -1 {

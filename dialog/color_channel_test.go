@@ -3,8 +3,8 @@ package dialog
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func Test_colorChannel_Layout(t *testing.T) {
@@ -12,7 +12,7 @@ func Test_colorChannel_Layout(t *testing.T) {
 
 	minValue := 0
 	maxValue := 100
-	size := fyne.NewSize(250, 50)
+	size := granio.NewSize(250, 50)
 
 	for name, tt := range map[string]struct {
 		name  string

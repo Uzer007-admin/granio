@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +16,7 @@ func TestActivity_Start(t *testing.T) {
 	a := NewActivity()
 	w := test.NewWindow(a)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
 	img1 := w.Canvas().Capture()
 	a.Start()
@@ -34,7 +34,7 @@ func TestActivity_Stop(t *testing.T) {
 	a := NewActivity()
 	w := test.NewWindow(a)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
 	a.Start()
 	time.Sleep(time.Millisecond * 50)

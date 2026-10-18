@@ -4,8 +4,8 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/svg"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/svg"
 )
 
 const (
@@ -16,8 +16,8 @@ const (
 )
 
 // Refresh instructs the containing canvas to refresh the specified obj.
-func Refresh(obj fyne.CanvasObject) {
-	app := fyne.CurrentApp()
+func Refresh(obj granio.CanvasObject) {
+	app := granio.CurrentApp()
 	if app == nil || app.Driver() == nil {
 		return
 	}
@@ -30,7 +30,7 @@ func Refresh(obj fyne.CanvasObject) {
 
 // RecolorSVG takes a []byte containing SVG content, and returns
 // new SVG content, re-colorized to be monochrome with the given color.
-// The content can be assigned to a new fyne.StaticResource with an appropriate name
+// The content can be assigned to a new granio.StaticResource with an appropriate name
 // to be used in a widget.Button, canvas.Image, etc.
 //
 // If an error occurs, the returned content will be the original un-modified content,
@@ -42,8 +42,8 @@ func RecolorSVG(svgContent []byte, c color.Color) ([]byte, error) {
 }
 
 // repaint instructs the containing canvas to redraw, even if nothing changed.
-func repaint(obj fyne.CanvasObject) {
-	app := fyne.CurrentApp()
+func repaint(obj granio.CanvasObject) {
+	app := granio.CurrentApp()
 	if app == nil || app.Driver() == nil {
 		return
 	}

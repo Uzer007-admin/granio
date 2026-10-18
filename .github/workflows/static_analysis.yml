@@ -18,10 +18,13 @@ jobs:
           - windows-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-go@v6
+          submodules: recursive
+      - name: Apply local submodule patches
+        run: python scripts/apply-patches.py
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version: "stable"
 
@@ -37,7 +40,7 @@ jobs:
 
       - name: golangci-lint
         if: ${{ runner.os != 'Windows' }} # TODO: On Windows the checks all succeed but there is a compiler issue that cannot be ignored using the configuration.
-        uses: golangci/golangci-lint-action@v9
+        uses: golangci/golangci-lint-action@v9.3.0
         with:
           args: '--verbose'
 
@@ -48,9 +51,10 @@ jobs:
           go install lucor.dev/lian@latest
 
       - name: Formatting
+        shell: bash
         run: |
-          gofumpt -d -e .
-          test -z "$(goimports -e -d . | tee /dev/stderr)"
+          git ls-files -z -- '*.go' | xargs -0 gofumpt -d -e
+          test -z "$(git ls-files -z -- '*.go' | xargs -0 goimports -e -d | tee /dev/stderr)"
 
       - name: Check license of dependencies
         run: lian -d --allowed="Apache-2.0, BSD-2-Clause, BSD-3-Clause, MIT, ISC"

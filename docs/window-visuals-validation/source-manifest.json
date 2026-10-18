@@ -1,0 +1,57 @@
+{
+  "Date": "2026-10-13",
+  "SpecificationHash": "b17bc258a1281bd5f16144148029b07832d35cf9b72661b60e03fb572d30cc2c",
+  "WindowsPassingPackages": 46,
+  "LinuxPassingPackages": 48,
+  "WindowsNativeFlags": [
+    "race",
+    "cgocheck2",
+    "checkptr=2",
+    "migrated_fynedo"
+  ],
+  "LinuxNativeBackends": [
+    "X11/GL",
+    "X11/GLES2",
+    "Wayland/GL",
+    "Wayland/GLES2"
+  ],
+  "Unverified": [
+    "Windows 22621/22631 optical",
+    "AMD/Intel",
+    "RDP/VM",
+    "physical mixed DPI",
+    "macOS/mobile/browser runtime",
+    "long performance acceptance"
+  ],
+  "SourceSHA256": {
+    "driver/desktop/visuals.go": "4de3e9e78695ef92574231b44d6997ce3548d5316f95cf534d2d00b025f4b6f4",
+    "driver/desktop/visuals_test.go": "55cef9e3cd302636a7a2de4c2a77c596528436f62a54d9cebbd44bd434788d10",
+    "internal/driver/glfw/window_visuals.go": "e25d9fd08d48531c22d13d641d9c3113ba8a1b1320e90975af8f80c524ea29c0",
+    "internal/driver/glfw/window_visuals_native.go": "93cc26f3d1ed357c88dfc2c3774648499052f64e794e046608155da5a1bc49a9",
+    "internal/driver/glfw/window_visuals_windows.go": "442ef86ed3b26dfa475ba12f60daa7af2556a758581ebf1306145049413f7e22",
+    "internal/driver/glfw/window_visuals_other.go": "c5418158ab1e2bc92cadc009d605cf917a42aae79d9eee3a43eee119e72608f9",
+    "internal/driver/glfw/window_visuals_web.go": "5949a7a88c9826e87f2f97d18ceab0a059f8194e1ada5b92926b6c1811f54031",
+    "internal/driver/glfw/window_visuals_native_test.go": "bab5739ab62927454c238c761273819aaeffcaa6d28a2c21299f0c15a3bd4551",
+    "internal/driver/glfw/window_visuals_native_windows_test.go": "4c0bc44ade07f01b4c4df0eddab481f535a70fb7c2837575200ea9993f461a23",
+    "internal/driver/glfw/window_visuals_policy_windows_test.go": "2af48bef9e2a1bcd2e8ecfebaaa8d40abcad9d4f2a25014317b82fbaf898244d",
+    "internal/driver/glfw/window_visual_policy_other.go": "a0b1c81e804a816babb0879f6f2cfc1d618bd3693fea2b0db741930cfb8ab8e8",
+    "internal/driver/glfw/window.go": "b903b4589fdb25560de79e014c5ca15e7c8495b9eefc1c670fd41abc63b9f3d6",
+    "internal/driver/glfw/window_desktop.go": "36af8cf8eed47fce26d3ba22f2497dc673761bc970532573e33f1f441d171a81",
+    "internal/driver/glfw/window_wasm.go": "d2b73755861beaf2eea77bd3e31fb82f5ca1d26bfa4faa5f65448f04b129d68e",
+    "internal/driver/glfw/loop.go": "649e3efda3a6f41936a677ba08c81f354ab9d9488857a6940901dc750dd73582",
+    "internal/painter/gl/window_surface.go": "a8580c5c9f7a269c688f12e67f9b6cab2951f18b38c39389e80b0552c45703dd",
+    "internal/painter/gl/material_native.go": "2e8155d452529dad6923f6d268fc29681e23cc4ffaae4ec9d1a903bb8f9aea80",
+    "internal/painter/gl/material_mask.go": "95be4c824bb30a81c7bc83cd3c6ad32f582a78175cd658263efae1f758950ec7",
+    "internal/painter/gl/gl_core.go": "2ec95297eec5db3b2a1aaed9b8ab9c2a87245fb1c24e57624e7c5475d9acddf7",
+    "internal/painter/gl/gl_es.go": "9791123745d7cc663c7432d1ceb7d6480ca1495440f50db4409afecf04a8e7d4",
+    "internal/painter/gl/gl_wasm.go": "997b57466e1446e672dd01d5e080ee63189fbdec4e0370d9813718bfc3e96026",
+    "internal/painter/gl/capture.go": "664558afdb1bc7fc6e91d1b33693b433de8ec826ec4055a18cd3f6095d982d98",
+    "internal/painter/gl/painter.go": "d2bd2d23a39a3ccb228f17b30ac71bbc1322e2a2843364bb38256ce3b4623775",
+    "cmd/fyne_gallery/main.go": "0b8afa35458167f54de035f0d5208abacff60ddb1c01d2a45008c2cd6a18260a",
+    "cmd/fyne_gallery/window_visuals.go": "9ed0a2b1e426b988d5bbc9057cd7e7e1b38358d94871a713b03f7a7d0e5c774c",
+    "scripts/update-fyne-gl-profile.py": "8193311c10e474d0dcd7db244b05a09d92f8fcac50d15a7a4962ff83f4cd3d8e",
+    "scripts/validate-window-visuals-linux.sh": "74673716b72ef0ba8d17ba068e7ce8a13aedcb77926bc19c68ac851c10961c4e",
+    "deps/gl/profiles/fyne-gl21.json": "74ac433e120099a842aad05c34068458cf115d876a9f8abd2389cfc7ade7e471",
+    "deps/gl/v2.1/fyne/package.go": "31244d69f4f022624a7687208a5463abc25e38259f8c17cc2d30591e69b8890e"
+  }
+}

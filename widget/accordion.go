@@ -1,13 +1,13 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-var _ fyne.Widget = (*Accordion)(nil)
+var _ granio.Widget = (*Accordion)(nil)
 
 // Accordion displays a list of AccordionItems.
 // Each item is represented by a button that reveals a detailed view when tapped.
@@ -53,7 +53,7 @@ func (a *Accordion) CloseAll() {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (a *Accordion) CreateRenderer() fyne.WidgetRenderer {
+func (a *Accordion) CreateRenderer() granio.WidgetRenderer {
 	a.ExtendBaseWidget(a)
 	r := &accordionRenderer{container: a}
 	r.updateObjects()
@@ -61,7 +61,7 @@ func (a *Accordion) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (a *Accordion) MinSize() fyne.Size {
+func (a *Accordion) MinSize() granio.Size {
 	a.ExtendBaseWidget(a)
 	return a.BaseWidget.MinSize()
 }
@@ -131,11 +131,11 @@ type accordionRenderer struct {
 	widget.BaseRenderer
 	container    *Accordion
 	headers      []*Button
-	dividers     []fyne.CanvasObject
-	minSizeCache fyne.Size
+	dividers     []granio.CanvasObject
+	minSizeCache granio.Size
 }
 
-func (r *accordionRenderer) Layout(size fyne.Size) {
+func (r *accordionRenderer) Layout(size granio.Size) {
 	r.updateObjects()
 	th := r.container.Theme()
 	pad := th.Size(theme.SizeNamePadding)
@@ -168,24 +168,24 @@ func (r *accordionRenderer) Layout(size fyne.Size) {
 		if i != 0 {
 			div := r.dividers[i-1]
 			if i > 0 {
-				div.Move(fyne.NewPos(x, y-dividerOff))
+				div.Move(granio.NewPos(x, y-dividerOff))
 			}
-			div.Resize(fyne.NewSize(size.Width, separator))
+			div.Resize(granio.NewSize(size.Width, separator))
 		}
 
 		h := r.headers[i]
-		h.Move(fyne.NewPos(x, y))
+		h.Move(granio.NewPos(x, y))
 		minHeight := h.MinSize().Height
-		h.Resize(fyne.NewSize(size.Width, minHeight))
+		h.Resize(granio.NewSize(size.Width, minHeight))
 		y += minHeight
 
 		if ai.Open {
 			y += pad
 			d := ai.Detail
-			d.Move(fyne.NewPos(x, y))
+			d.Move(granio.NewPos(x, y))
 
 			openSize := ai.Detail.MinSize().Height + extra
-			d.Resize(fyne.NewSize(size.Width, openSize))
+			d.Resize(granio.NewSize(size.Width, openSize))
 			y += openSize
 		}
 		if i < len(r.container.Items)-1 {
@@ -194,7 +194,7 @@ func (r *accordionRenderer) Layout(size fyne.Size) {
 	}
 }
 
-func (r *accordionRenderer) MinSize() fyne.Size {
+func (r *accordionRenderer) MinSize() granio.Size {
 	if !r.minSizeCache.IsZero() {
 		return r.minSizeCache
 	}
@@ -202,7 +202,7 @@ func (r *accordionRenderer) MinSize() fyne.Size {
 	r.updateObjects()
 	th := r.container.Theme()
 	pad := th.Size(theme.SizeNamePadding)
-	size := fyne.Size{}
+	size := granio.Size{}
 
 	for i, ai := range r.container.Items {
 		if i != 0 {
@@ -224,7 +224,7 @@ func (r *accordionRenderer) MinSize() fyne.Size {
 }
 
 func (r *accordionRenderer) Refresh() {
-	r.minSizeCache = fyne.Size{}
+	r.minSizeCache = granio.Size{}
 	r.updateObjects()
 	r.Layout(r.container.Size())
 	canvas.Refresh(r.container)
@@ -274,7 +274,7 @@ func (r *accordionRenderer) updateObjects() {
 		r.headers[i].Hide()
 	}
 	// Set objects
-	objects := make([]fyne.CanvasObject, hs+is+ds)
+	objects := make([]granio.CanvasObject, hs+is+ds)
 	for i, header := range r.headers {
 		objects[i] = header
 	}
@@ -303,12 +303,12 @@ func (r *accordionRenderer) updateObjects() {
 // AccordionItem represents a single item in an Acc rdion.
 type AccordionItem struct {
 	Title  string
-	Detail fyne.CanvasObject
+	Detail granio.CanvasObject
 	Open   bool
 }
 
 // NewAccordionItem creates a new item for an Accordion.
-func NewAccordionItem(title string, detail fyne.CanvasObject) *AccordionItem {
+func NewAccordionItem(title string, detail granio.CanvasObject) *AccordionItem {
 	return &AccordionItem{
 		Title:  title,
 		Detail: detail,

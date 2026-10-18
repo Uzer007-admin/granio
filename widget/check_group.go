@@ -3,12 +3,12 @@ package widget
 import (
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
 )
 
-var _ fyne.Widget = (*CheckGroup)(nil)
+var _ granio.Widget = (*CheckGroup)(nil)
 
 // CheckGroup widget has a list of text labels and checkbox icons next to each.
 // Changing the selection (any number can be selected) will trigger the changed func.
@@ -46,11 +46,11 @@ func (r *CheckGroup) Append(option string) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (r *CheckGroup) CreateRenderer() fyne.WidgetRenderer {
+func (r *CheckGroup) CreateRenderer() granio.WidgetRenderer {
 	r.ExtendBaseWidget(r)
 
 	r.update()
-	objects := make([]fyne.CanvasObject, len(r.items))
+	objects := make([]granio.CanvasObject, len(r.items))
 	for i, item := range r.items {
 		objects[i] = item
 	}
@@ -59,7 +59,7 @@ func (r *CheckGroup) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (r *CheckGroup) MinSize() fyne.Size {
+func (r *CheckGroup) MinSize() granio.Size {
 	r.ExtendBaseWidget(r)
 	return r.BaseWidget.MinSize()
 }
@@ -174,7 +174,7 @@ type checkGroupRenderer struct {
 }
 
 // Layout the components of the checks widget
-func (r *checkGroupRenderer) Layout(_ fyne.Size) {
+func (r *checkGroupRenderer) Layout(_ granio.Size) {
 	count := 1
 	if len(r.items) > 0 {
 		count = len(r.items)
@@ -189,11 +189,11 @@ func (r *checkGroupRenderer) Layout(_ fyne.Size) {
 		itemWidth = minSize.Width
 	}
 
-	itemSize := fyne.NewSize(itemWidth, itemHeight)
+	itemSize := granio.NewSize(itemWidth, itemHeight)
 	x, y := float32(0), float32(0)
 	for _, item := range r.items {
 		item.Resize(itemSize)
-		item.Move(fyne.NewPos(x, y))
+		item.Move(granio.NewPos(x, y))
 		if r.checks.Horizontal {
 			x += itemWidth
 		} else {
@@ -205,7 +205,7 @@ func (r *checkGroupRenderer) Layout(_ fyne.Size) {
 // MinSize calculates the minimum size of a checks item.
 // This is based on the contained text, the checks icon and a standard amount of padding
 // between each item.
-func (r *checkGroupRenderer) MinSize() fyne.Size {
+func (r *checkGroupRenderer) MinSize() granio.Size {
 	width := float32(0)
 	height := float32(0)
 	for _, item := range r.items {
@@ -221,7 +221,7 @@ func (r *checkGroupRenderer) MinSize() fyne.Size {
 		height = height * float32(len(r.items))
 	}
 
-	return fyne.NewSize(width, height)
+	return granio.NewSize(width, height)
 }
 
 func (r *checkGroupRenderer) Refresh() {

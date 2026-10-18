@@ -1,12 +1,12 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/repository/mime"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/repository/mime"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const (
@@ -22,29 +22,29 @@ type FileIcon struct {
 
 	// Deprecated: Selection is now handled externally.
 	Selected bool
-	URI      fyne.URI
+	URI      granio.URI
 
-	resource  fyne.Resource
+	resource  granio.Resource
 	extension string
 }
 
 // NewFileIcon takes a filepath and creates an icon with an overlaid label using the detected mimetype and extension
 //
 // Since: 1.4
-func NewFileIcon(uri fyne.URI) *FileIcon {
+func NewFileIcon(uri granio.URI) *FileIcon {
 	i := &FileIcon{URI: uri}
 	i.ExtendBaseWidget(i)
 	return i
 }
 
 // SetURI changes the URI and makes the icon reflect a different file
-func (i *FileIcon) SetURI(uri fyne.URI) {
+func (i *FileIcon) SetURI(uri granio.URI) {
 	i.URI = uri
 	i.Refresh()
 }
 
 // must be called with i.propertyLock RLocked
-func (i *FileIcon) applyURI(uri fyne.URI) {
+func (i *FileIcon) applyURI(uri granio.URI) {
 	if uri == nil {
 		i.resource = i.Theme().Icon(theme.IconNameFile)
 		return
@@ -56,15 +56,15 @@ func (i *FileIcon) applyURI(uri fyne.URI) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (i *FileIcon) MinSize() fyne.Size {
+func (i *FileIcon) MinSize() granio.Size {
 	i.ExtendBaseWidget(i)
 	return i.BaseWidget.MinSize()
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (i *FileIcon) CreateRenderer() fyne.WidgetRenderer {
+func (i *FileIcon) CreateRenderer() granio.WidgetRenderer {
 	th := i.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	i.ExtendBaseWidget(i)
 	i.applyURI(i.URI)
@@ -77,9 +77,9 @@ func (i *FileIcon) CreateRenderer() fyne.WidgetRenderer {
 	s.img = canvas.NewImageFromResource(s.file.resource)
 	s.img.FillMode = canvas.ImageFillContain
 	s.ext = canvas.NewText(s.file.extension, th.Color(theme.ColorNameBackground, v))
-	s.ext.Alignment = fyne.TextAlignCenter
+	s.ext.Alignment = granio.TextAlignCenter
 
-	s.SetObjects([]fyne.CanvasObject{s.background, s.img, s.ext})
+	s.SetObjects([]granio.CanvasObject{s.background, s.img, s.ext})
 
 	return s
 }
@@ -93,8 +93,8 @@ func (i *FileIcon) SetSelected(selected bool) {
 }
 
 // must be called with i.propertyLock RLocked
-func (i *FileIcon) lookupIcon(uri fyne.URI) fyne.Resource {
-	if icon, ok := uri.(fyne.URIWithIcon); ok {
+func (i *FileIcon) lookupIcon(uri granio.URI) granio.Resource {
+	if icon, ok := uri.(granio.URIWithIcon); ok {
 		return icon.Icon()
 	}
 	if i.isDir(uri) {
@@ -119,8 +119,8 @@ func (i *FileIcon) lookupIcon(uri fyne.URI) fyne.Resource {
 	}
 }
 
-func (i *FileIcon) isDir(uri fyne.URI) bool {
-	if _, ok := uri.(fyne.ListableURI); ok {
+func (i *FileIcon) isDir(uri granio.URI) bool {
+	if _, ok := uri.(granio.ListableURI); ok {
 		return true
 	}
 
@@ -143,12 +143,12 @@ type fileIconRenderer struct {
 	img        *canvas.Image
 }
 
-func (s *fileIconRenderer) MinSize() fyne.Size {
+func (s *fileIconRenderer) MinSize() granio.Size {
 	th := s.file.Theme()
-	return fyne.NewSquareSize(th.Size(theme.SizeNameInlineIcon))
+	return granio.NewSquareSize(th.Size(theme.SizeNameInlineIcon))
 }
 
-func (s *fileIconRenderer) Layout(size fyne.Size) {
+func (s *fileIconRenderer) Layout(size granio.Size) {
 	isize := min(size.Width, size.Height)
 
 	xoff := float32(0)
@@ -161,8 +161,8 @@ func (s *fileIconRenderer) Layout(size fyne.Size) {
 
 	oldSize := s.ext.TextSize
 	s.ext.TextSize = float32(int(isize * ratioTextSize))
-	s.ext.Resize(fyne.NewSize(isize, s.ext.MinSize().Height))
-	s.ext.Move(fyne.NewPos(xoff, yoff))
+	s.ext.Resize(granio.NewSize(isize, s.ext.MinSize().Height))
+	s.ext.Move(granio.NewPos(xoff, yoff))
 	if oldSize != s.ext.TextSize {
 		s.ext.Refresh()
 	}
@@ -173,7 +173,7 @@ func (s *fileIconRenderer) Layout(size fyne.Size) {
 
 func (s *fileIconRenderer) Refresh() {
 	th := s.file.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	s.file.applyURI(s.file.URI)
 
@@ -203,7 +203,7 @@ func (s *fileIconRenderer) Refresh() {
 	canvas.Refresh(s.file.super())
 }
 
-func trimmedExtension(uri fyne.URI) string {
+func trimmedExtension(uri granio.URI) string {
 	ext := uri.Extension()
 	if len(ext) > 5 {
 		ext = ext[:5]

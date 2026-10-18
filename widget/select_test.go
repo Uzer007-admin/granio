@@ -7,16 +7,16 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -46,16 +46,16 @@ func TestSelect_Align(t *testing.T) {
 	test.NewTempApp(t)
 
 	sel := widget.NewSelect([]string{"Hi"}, func(string) {})
-	sel.Alignment = fyne.TextAlignCenter
-	w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+	sel.Alignment = granio.TextAlignCenter
+	w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 150))
-	c := fyne.CurrentApp().Driver().CanvasForObject(sel)
+	w.Resize(granio.NewSize(200, 150))
+	c := granio.CurrentApp().Driver().CanvasForObject(sel)
 
 	test.Tap(sel)
 	assertRendersToPlatformMarkup(t, "select/%s/center.xml", c)
 
-	sel.Alignment = fyne.TextAlignTrailing
+	sel.Alignment = granio.TextAlignTrailing
 	sel.Refresh()
 	assertRendersToPlatformMarkup(t, "select/%s/trailing.xml", c)
 }
@@ -112,9 +112,9 @@ func TestSelect_ChangeTheme(t *testing.T) {
 	combo := widget.NewSelect([]string{"1", "2"}, func(string) {})
 	w := test.NewWindow(combo)
 	defer w.Close()
-	w.Resize(fyne.NewSize(220, 220))
+	w.Resize(granio.NewSize(220, 220))
 	combo.Resize(combo.MinSize())
-	combo.Move(fyne.NewPos(10, 10))
+	combo.Move(granio.NewPos(10, 10))
 	test.Tap(combo)
 
 	assertImageMatchesPlatform(t, "select/%s/theme_initial.png", w.Canvas().Capture())
@@ -154,7 +154,7 @@ func TestSelect_ClearSelected(t *testing.T) {
 func TestSelect_ClipValue(t *testing.T) {
 	combo := widget.NewSelect([]string{"some text", "more"}, func(string) {})
 	combo.SetSelected("some text")
-	combo.Resize(fyne.NewSize(90, 38))
+	combo.Resize(granio.NewSize(90, 38))
 
 	r := cache.Renderer(combo)
 	text := r.Objects()[2].(*widget.RichText)
@@ -170,10 +170,10 @@ func TestSelect_Disable(t *testing.T) {
 	test.NewTempApp(t)
 
 	sel := widget.NewSelect([]string{"Hi"}, func(string) {})
-	w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+	w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 150))
-	c := fyne.CurrentApp().Driver().CanvasForObject(sel)
+	w.Resize(granio.NewSize(200, 150))
+	c := granio.CurrentApp().Driver().CanvasForObject(sel)
 
 	sel.Disable()
 	test.AssertRendersToMarkup(t, "select/disabled.xml", c)
@@ -201,10 +201,10 @@ func TestSelect_Enable(t *testing.T) {
 
 	sel.Enable()
 	test.Tap(sel)
-	c := fyne.CurrentApp().Driver().CanvasForObject(sel)
+	c := granio.CurrentApp().Driver().CanvasForObject(sel)
 	ovl := c.Overlays().Top()
 	if assert.NotNil(t, ovl, "pop-up for enabled Select") {
-		test.TapCanvas(c, ovl.Position().Add(fyne.NewPos(theme.InnerPadding(), theme.InnerPadding())))
+		test.TapCanvas(c, ovl.Position().Add(granio.NewPos(theme.InnerPadding(), theme.InnerPadding())))
 		assert.Equal(t, "Hi", selected, "Radio should have been re-enabled.")
 	}
 }
@@ -214,9 +214,9 @@ func TestSelect_FocusRendering(t *testing.T) {
 
 	t.Run("gain/lose focus", func(t *testing.T) {
 		sel := widget.NewSelect([]string{"Option A", "Option B", "Option C"}, nil)
-		w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+		w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 		defer w.Close()
-		w.Resize(fyne.NewSize(200, 150))
+		w.Resize(granio.NewSize(200, 150))
 
 		c := w.Canvas()
 		test.AssertRendersToMarkup(t, "select/focus_unfocused_none_selected.xml", c)
@@ -235,9 +235,9 @@ func TestSelect_FocusRendering(t *testing.T) {
 	})
 	t.Run("disable/enable focused", func(t *testing.T) {
 		sel := widget.NewSelect([]string{"Option A", "Option B", "Option C"}, nil)
-		w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+		w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 		defer w.Close()
-		w.Resize(fyne.NewSize(200, 150))
+		w.Resize(granio.NewSize(200, 150))
 
 		c := w.Canvas().(software.WindowlessCanvas)
 		c.FocusNext()
@@ -254,89 +254,89 @@ func TestSelect_KeyboardControl(t *testing.T) {
 
 	t.Run("activate pop-up", func(t *testing.T) {
 		sel := widget.NewSelect([]string{"Option A", "Option B"}, nil)
-		w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+		w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 		defer w.Close()
-		w.Resize(fyne.NewSize(150, 200))
+		w.Resize(granio.NewSize(150, 200))
 		c := w.Canvas()
 		c.Focus(sel)
 		areaPos, _ := c.InteractiveArea()
 
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected_popup.xml", c)
 		test.TapCanvas(c, areaPos)
 
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyUp})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyUp})
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected_popup.xml", c)
 		test.TapCanvas(c, areaPos)
 
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected_popup.xml", c)
 		test.TapCanvas(c, areaPos)
 
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyEnter})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyEnter})
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
 	})
 
 	t.Run("traverse options without pop-up", func(t *testing.T) {
 		sel := widget.NewSelect([]string{"Option A", "Option B", "Option C"}, nil)
-		w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+		w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 		defer w.Close()
-		w.Resize(fyne.NewSize(150, 200))
+		w.Resize(granio.NewSize(150, 200))
 		c := w.Canvas()
 		c.Focus(sel)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
 
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 		assert.Equal(t, "Option C", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_c_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 		assert.Equal(t, "Option B", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_b_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 		assert.Equal(t, "Option A", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_a_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 		assert.Equal(t, "Option C", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_c_selected.xml", c)
 
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 		assert.Equal(t, "Option A", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_a_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 		assert.Equal(t, "Option B", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_b_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 		assert.Equal(t, "Option C", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_c_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 		assert.Equal(t, "Option A", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_a_selected.xml", c)
 	})
 
 	t.Run("trying to traverse empty options without pop-up", func(t *testing.T) {
 		sel := widget.NewSelect([]string{}, nil)
-		w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{sel}})
+		w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{sel}})
 		defer w.Close()
-		w.Resize(fyne.NewSize(150, 200))
+		w.Resize(granio.NewSize(150, 200))
 		c := w.Canvas()
 		c.Focus(sel)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
 
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 		assert.Equal(t, "", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 		assert.Equal(t, "", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
 
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 		assert.Equal(t, "", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
-		sel.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+		sel.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 		assert.Equal(t, "", sel.Selected)
 		test.AssertRendersToMarkup(t, "select/kbdctrl_none_selected.xml", c)
 	})
@@ -348,16 +348,16 @@ func TestSelect_Move(t *testing.T) {
 	combo := widget.NewSelect([]string{"1", "2"}, nil)
 	w := test.NewWindow(combo)
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 150))
+	w.Resize(granio.NewSize(200, 150))
 
 	combo.Resize(combo.MinSize())
-	combo.Move(fyne.NewPos(10, 10))
+	combo.Move(granio.NewPos(10, 10))
 	test.AssertRendersToMarkup(t, "select/move_initial.xml", w.Canvas())
 
-	combo.Tapped(&fyne.PointEvent{})
+	combo.Tapped(&granio.PointEvent{})
 	assertRendersToPlatformMarkup(t, "select/%s/move_tapped.xml", w.Canvas())
 
-	combo.Move(fyne.NewPos(20, 20))
+	combo.Move(granio.NewPos(20, 20))
 	assertRendersToPlatformMarkup(t, "select/%s/move_moved.xml", w.Canvas())
 }
 
@@ -390,9 +390,9 @@ func TestSelect_SetSelected(t *testing.T) {
 		triggered = true
 		triggeredValue = s
 	})
-	w := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{combo}})
+	w := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{combo}})
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 150))
+	w.Resize(granio.NewSize(200, 150))
 
 	c := w.Canvas()
 	test.AssertRendersToMarkup(t, "select/set_selected_none_selected.xml", c)
@@ -479,11 +479,11 @@ func TestSelect_Tapped(t *testing.T) {
 	combo := widget.NewSelect([]string{"1", "2"}, func(string) {})
 	w := test.NewWindow(combo)
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 150))
+	w.Resize(granio.NewSize(200, 150))
 	combo.Resize(combo.MinSize())
 
 	test.Tap(combo)
-	c := fyne.CurrentApp().Driver().CanvasForObject(combo)
+	c := granio.CurrentApp().Driver().CanvasForObject(combo)
 	assert.Len(t, c.Overlays().List(), 1)
 	assertRendersToPlatformMarkup(t, "select/%s/tapped.xml", w.Canvas())
 }
@@ -494,11 +494,11 @@ func TestSelect_Tapped_Constrained(t *testing.T) {
 	combo := widget.NewSelect([]string{"1", "2"}, func(string) {})
 	w := test.NewWindow(combo)
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 150))
+	w.Resize(granio.NewSize(200, 150))
 	combo.Resize(combo.MinSize())
 
 	c := w.Canvas()
-	combo.Move(fyne.NewPos(c.Size().Width-10, c.Size().Height-10))
+	combo.Move(granio.NewPos(c.Size().Width-10, c.Size().Height-10))
 	test.Tap(combo)
 	assert.Len(t, c.Overlays().List(), 1)
 	assertRendersToPlatformMarkup(t, "select/%s/tapped_constrained.xml", w.Canvas())
@@ -604,48 +604,48 @@ func TestSelect_Layout(t *testing.T) {
 				Selected:    tt.selected,
 			}
 
-			window := test.NewTempWindow(t, &fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{combo}})
+			window := test.NewTempWindow(t, &granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{combo}})
 			if tt.expanded {
 				test.Tap(combo)
 			}
-			window.Resize(combo.MinSize().Max(fyne.NewSize(150, 200)))
+			window.Resize(combo.MinSize().Max(granio.NewSize(150, 200)))
 
 			assertRendersToPlatformMarkup(t, "select/%s/layout_"+name+".xml", window.Canvas())
 		})
 	}
 }
 
-// nilCanvasDriver wraps a fyne.Driver and returns nil from CanvasForObject
+// nilCanvasDriver wraps a granio.Driver and returns nil from CanvasForObject
 // for one specific target, simulating the state observed on the real GLFW
 // driver after a widget is detached from its window between event delivery
 // and popup creation (fyne-io/fyne#5965). The stock test driver always
 // returns the last window's canvas regardless of the queried object, so the
 // detach scenario cannot otherwise be reproduced under the unit test driver.
 type nilCanvasDriver struct {
-	fyne.Driver
-	target fyne.CanvasObject
+	granio.Driver
+	target granio.CanvasObject
 }
 
-func (d *nilCanvasDriver) CanvasForObject(o fyne.CanvasObject) fyne.Canvas {
+func (d *nilCanvasDriver) CanvasForObject(o granio.CanvasObject) granio.Canvas {
 	if o == d.target {
 		return nil
 	}
 	return d.Driver.CanvasForObject(o)
 }
 
-func (d *nilCanvasDriver) AbsolutePositionForObject(o fyne.CanvasObject) fyne.Position {
+func (d *nilCanvasDriver) AbsolutePositionForObject(o granio.CanvasObject) granio.Position {
 	if o == d.target {
-		return fyne.NewPos(0, 0)
+		return granio.NewPos(0, 0)
 	}
 	return d.Driver.AbsolutePositionForObject(o)
 }
 
 type wrappedApp struct {
-	fyne.App
-	drv fyne.Driver
+	granio.App
+	drv granio.Driver
 }
 
-func (a *wrappedApp) Driver() fyne.Driver { return a.drv }
+func (a *wrappedApp) Driver() granio.Driver { return a.drv }
 
 // Repro for fyne-io/fyne#5965: Select.Tapped must not panic when the widget
 // was already detached from its canvas (a frequent outcome of SetContent /
@@ -660,19 +660,19 @@ func TestSelect_Tapped_AfterCanvasDetach_DoesNotPanic(t *testing.T) {
 	sel := widget.NewSelect([]string{"a", "b", "c"}, nil)
 	w := test.NewWindow(container.NewVBox(sel))
 	defer w.Close()
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 
-	require.NotNil(t, fyne.CurrentApp().Driver().CanvasForObject(sel),
+	require.NotNil(t, granio.CurrentApp().Driver().CanvasForObject(sel),
 		"precondition: Select is attached to a canvas before detach")
 
 	shim := &wrappedApp{App: baseApp, drv: &nilCanvasDriver{
 		Driver: baseApp.Driver(),
-		target: fyne.CanvasObject(sel),
+		target: granio.CanvasObject(sel),
 	}}
-	fyne.SetCurrentApp(shim)
-	t.Cleanup(func() { fyne.SetCurrentApp(baseApp) })
+	granio.SetCurrentApp(shim)
+	t.Cleanup(func() { granio.SetCurrentApp(baseApp) })
 
-	require.Nil(t, fyne.CurrentApp().Driver().CanvasForObject(fyne.CanvasObject(sel)),
+	require.Nil(t, granio.CurrentApp().Driver().CanvasForObject(granio.CanvasObject(sel)),
 		"precondition: Select sees nil canvas after detach")
 
 	defer func() {
@@ -680,12 +680,12 @@ func TestSelect_Tapped_AfterCanvasDetach_DoesNotPanic(t *testing.T) {
 			t.Fatalf("Select.Tapped panicked after canvas detach: %v\n%s", r, debug.Stack())
 		}
 	}()
-	sel.Tapped(&fyne.PointEvent{Position: fyne.NewPos(0, 0)})
+	sel.Tapped(&granio.PointEvent{Position: granio.NewPos(0, 0)})
 }
 
-func assertRendersToPlatformMarkup(t *testing.T, file string, c fyne.Canvas) {
+func assertRendersToPlatformMarkup(t *testing.T, file string, c granio.Canvas) {
 	platform := "desktop"
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		platform = "mobile"
 	}
 
@@ -695,7 +695,7 @@ func assertRendersToPlatformMarkup(t *testing.T, file string, c fyne.Canvas) {
 
 func assertImageMatchesPlatform(t *testing.T, file string, i image.Image) {
 	platform := "desktop"
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		platform = "mobile"
 	}
 

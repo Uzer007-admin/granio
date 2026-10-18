@@ -5,10 +5,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestGridWrap_Focus(t *testing.T) {
@@ -16,7 +16,7 @@ func TestGridWrap_Focus(t *testing.T) {
 	list := createGridWrap(100)
 	window := test.NewWindow(list)
 	defer window.Close()
-	window.Resize(list.MinSize().Max(fyne.NewSize(150, 200)))
+	window.Resize(list.MinSize().Max(granio.NewSize(150, 200)))
 
 	canvas := window.Canvas().(software.WindowlessCanvas)
 	assert.Nil(t, canvas.Focused())
@@ -25,37 +25,37 @@ func TestGridWrap_Focus(t *testing.T) {
 	assert.NotNil(t, canvas.Focused())
 	assert.Equal(t, 0, canvas.Focused().(*GridWrap).currentHighlight)
 
-	children := list.scroller.Content.(*fyne.Container).Objects
+	children := list.scroller.Content.(*granio.Container).Objects
 	assert.True(t, children[0].(*gridWrapItem).hovered)
 	assert.False(t, children[1].(*gridWrapItem).hovered)
 	assert.False(t, children[6].(*gridWrapItem).hovered)
 	assert.False(t, children[7].(*gridWrapItem).hovered)
 
-	list.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	list.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	assert.False(t, children[0].(*gridWrapItem).hovered)
 	assert.False(t, children[1].(*gridWrapItem).hovered)
 	assert.True(t, children[6].(*gridWrapItem).hovered)
 	assert.False(t, children[7].(*gridWrapItem).hovered)
 
-	list.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	list.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.False(t, children[0].(*gridWrapItem).hovered)
 	assert.False(t, children[1].(*gridWrapItem).hovered)
 	assert.False(t, children[6].(*gridWrapItem).hovered)
 	assert.True(t, children[7].(*gridWrapItem).hovered)
 
-	list.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	list.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.False(t, children[0].(*gridWrapItem).hovered)
 	assert.False(t, children[1].(*gridWrapItem).hovered)
 	assert.True(t, children[6].(*gridWrapItem).hovered)
 	assert.False(t, children[7].(*gridWrapItem).hovered)
 
-	list.TypedKey(&fyne.KeyEvent{Name: fyne.KeyUp})
+	list.TypedKey(&granio.KeyEvent{Name: granio.KeyUp})
 	assert.True(t, children[0].(*gridWrapItem).hovered)
 	assert.False(t, children[1].(*gridWrapItem).hovered)
 	assert.False(t, children[6].(*gridWrapItem).hovered)
 	assert.False(t, children[7].(*gridWrapItem).hovered)
 
-	canvas.Focused().TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	canvas.Focused().TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.True(t, children[0].(*gridWrapItem).selected)
 }
 
@@ -73,7 +73,7 @@ func TestGridWrap_OffsetChange(t *testing.T) {
 
 	assert.Equal(t, float32(0), g.offsetY)
 
-	g.scroller.Scrolled(&fyne.ScrollEvent{Scrolled: fyne.NewDelta(0, -280)})
+	g.scroller.Scrolled(&granio.ScrollEvent{Scrolled: granio.NewDelta(0, -280)})
 
 	assert.NotEqual(t, 0, g.offsetY)
 }
@@ -84,7 +84,7 @@ func TestGridWrap_ScrollTo(t *testing.T) {
 	// override update item to keep track of greatest item rendered
 	oldUpdateFunc := g.UpdateItem
 	var greatest GridWrapItemID = -1
-	g.UpdateItem = func(id GridWrapItemID, item fyne.CanvasObject) {
+	g.UpdateItem = func(id GridWrapItemID, item granio.CanvasObject) {
 		if id > greatest {
 			greatest = id
 		}
@@ -103,7 +103,7 @@ func TestGridWrap_ScrollTo(t *testing.T) {
 
 func TestGridWrap_ScrollToOffset(t *testing.T) {
 	g := createGridWrap(10)
-	g.Resize(fyne.NewSize(10, 10))
+	g.Resize(granio.NewSize(10, 10))
 
 	g.ScrollToOffset(2)
 	assert.Equal(t, float32(2), g.GetScrollOffset())
@@ -115,7 +115,7 @@ func TestGridWrap_ScrollToOffset(t *testing.T) {
 	assert.LessOrEqual(t, g.GetScrollOffset(), float32(500) /* upper bound on content height */)
 
 	// GridWrap viewport is larger than content size
-	g.Resize(fyne.NewSize(50, 250))
+	g.Resize(granio.NewSize(50, 250))
 	g.ScrollToOffset(20)
 	assert.Equal(t, float32(0), g.GetScrollOffset()) // doesn't scroll
 }
@@ -129,7 +129,7 @@ func TestGridWrap_ScrollToTop(t *testing.T) {
 }
 
 func createGridWrap(items int) *GridWrap {
-	data := make([]fyne.Resource, items)
+	data := make([]granio.Resource, items)
 	for i := 0; i < items; i++ {
 		switch i % 10 {
 		case 0:
@@ -159,15 +159,15 @@ func createGridWrap(items int) *GridWrap {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			icon := NewIcon(theme.DocumentIcon())
 			return icon
 		},
-		func(id GridWrapItemID, item fyne.CanvasObject) {
+		func(id GridWrapItemID, item granio.CanvasObject) {
 			item.(*Icon).SetResource(data[id])
 		},
 	)
-	list.Resize(fyne.NewSize(200, 400))
+	list.Resize(granio.NewSize(200, 400))
 	return list
 }
 
@@ -176,8 +176,8 @@ func TestGridWrap_IndexIsInt(*testing.T) {
 
 	// Both of these should be allowed to match List behavior.
 	// It allows the same update item function to be shared between both widgets if necessary.
-	gw.UpdateItem = func(GridWrapItemID, fyne.CanvasObject) {}
-	gw.UpdateItem = func(int, fyne.CanvasObject) {}
+	gw.UpdateItem = func(GridWrapItemID, granio.CanvasObject) {}
+	gw.UpdateItem = func(int, granio.CanvasObject) {}
 }
 
 func TestGridWrap_RefreshItem(t *testing.T) {
@@ -190,20 +190,20 @@ func TestGridWrap_RefreshItem(t *testing.T) {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			icon := NewLabel("dummy")
 			return icon
 		},
-		func(id GridWrapItemID, item fyne.CanvasObject) {
+		func(id GridWrapItemID, item granio.CanvasObject) {
 			item.(*Label).SetText(data[id])
 		},
 	)
-	list.Resize(fyne.NewSize(50, 100))
+	list.Resize(granio.NewSize(50, 100))
 
 	data[2] = "Replace"
 	list.RefreshItem(2)
 
-	children := list.scroller.Content.(*fyne.Container).Objects
+	children := list.scroller.Content.(*granio.Container).Objects
 	assert.Equal(t, "Text", children[1].(*gridWrapItem).child.(*Label).Text)
 	assert.Equal(t, "Replace", children[2].(*gridWrapItem).child.(*Label).Text)
 }
@@ -214,7 +214,7 @@ func TestGridWrap_Highlight(t *testing.T) {
 	// override update item to keep track of greatest item rendered
 	oldUpdateFunc := g.UpdateItem
 	var greatest GridWrapItemID = -1
-	g.UpdateItem = func(id GridWrapItemID, item fyne.CanvasObject) {
+	g.UpdateItem = func(id GridWrapItemID, item granio.CanvasObject) {
 		if id > greatest {
 			greatest = id
 		}
@@ -286,50 +286,50 @@ func TestGridWrap_Selection(t *testing.T) {
 func TestGridWrap_ResizeToSameSizeBeforeRender(*testing.T) {
 	g := NewGridWrap(
 		func() int { return 1 },
-		func() fyne.CanvasObject { return NewLabel("") },
-		func(_ GridWrapItemID, co fyne.CanvasObject) { co.(*Label).SetText("foo") },
+		func() granio.CanvasObject { return NewLabel("") },
+		func(_ GridWrapItemID, co granio.CanvasObject) { co.(*Label).SetText("foo") },
 	)
 	// will not create renderer.
 	// will crash if GridWrap scroller (not yet created) is accessed
-	g.Resize(fyne.NewSize(0, 0))
+	g.Resize(granio.NewSize(0, 0))
 }
 
 func TestGridWrap_TypedKey(t *testing.T) {
 	gridWrap := createGridWrap(20)
 	window := test.NewWindow(gridWrap)
 	defer window.Close()
-	window.Resize(fyne.NewSize(80, 100))
+	window.Resize(granio.NewSize(80, 100))
 
 	// want 3 columns to make assert navigaiton behavior
 	assert.Equal(t, 3, gridWrap.ColumnCount())
 
 	canvas := window.Canvas().(software.WindowlessCanvas)
 	canvas.FocusNext()
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	assert.Equal(t, 3, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyUp})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyUp})
 	assert.Equal(t, 0, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.Equal(t, 0, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, 1, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, 2, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, 3, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.Equal(t, 2, gridWrap.currentHighlight)
 
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.Equal(t, []int{2}, gridWrap.selected)
 
 	gridWrap.currentHighlight = 20
-	gridWrap.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	gridWrap.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, 20, gridWrap.currentHighlight)
 }

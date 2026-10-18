@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/scale"
-	"fyne.io/fyne/v2/internal/svg"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2/internal/svg"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 // ImageFill defines the different type of ways an image can stretch to fill its space.
@@ -56,7 +56,7 @@ const (
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Image)(nil)
+var _ granio.CanvasObject = (*Image)(nil)
 
 // Image describes a drawable image area that can render in a Fyne canvas
 // The image may be a vector or a bitmap representation, it will fill the area.
@@ -69,9 +69,9 @@ type Image struct {
 	isSVG  bool
 
 	// one of the following sources will provide our image data
-	File     string        // Load the image from a file
-	Resource fyne.Resource // Load the image from an in-memory resource
-	Image    image.Image   // Specify a loaded image to use in this canvas object
+	File     string          // Load the image from a file
+	Resource granio.Resource // Load the image from an in-memory resource
+	Image    image.Image     // Specify a loaded image to use in this canvas object
 
 	Translucency float64    // Set a translucency value > 0.0 to fade the image
 	FillMode     ImageFill  // Specify how the image should expand to fill or fit the available space
@@ -109,7 +109,7 @@ func (i *Image) Hide() {
 }
 
 // MinSize returns the specified minimum size, if set, or {1, 1} otherwise.
-func (i *Image) MinSize() fyne.Size {
+func (i *Image) MinSize() granio.Size {
 	if i.Image == nil || i.aspect == 0 {
 		if i.File != "" || i.Resource != nil {
 			i.Refresh()
@@ -119,7 +119,7 @@ func (i *Image) MinSize() fyne.Size {
 }
 
 // Move the image object to a new position, relative to its parent top, left corner.
-func (i *Image) Move(pos fyne.Position) {
+func (i *Image) Move(pos granio.Position) {
 	if i.Position() == pos {
 		return
 	}
@@ -133,7 +133,7 @@ func (i *Image) Move(pos fyne.Position) {
 func (i *Image) Refresh() {
 	rc, err := i.updateReader()
 	if err != nil {
-		fyne.LogError("Failed to load image", err)
+		granio.LogError("Failed to load image", err)
 		return
 	}
 	if rc != nil {
@@ -144,7 +144,7 @@ func (i *Image) Refresh() {
 	if i.File != "" || i.Resource != nil || i.Image != nil {
 		r, err := i.updateAspectAndMinSize(rc)
 		if err != nil {
-			fyne.LogError("Failed to load image", err)
+			granio.LogError("Failed to load image", err)
 			return
 		}
 		if r != nil {
@@ -171,7 +171,7 @@ func (i *Image) Refresh() {
 		if i.isSVG {
 			tex, err := i.renderSVG(width, height)
 			if err != nil {
-				fyne.LogError("Failed to render SVG", err)
+				granio.LogError("Failed to render SVG", err)
 				return
 			}
 			i.Image = tex
@@ -182,7 +182,7 @@ func (i *Image) Refresh() {
 
 			img, _, err := image.Decode(rc)
 			if err != nil {
-				fyne.LogError("Failed to render image", err)
+				granio.LogError("Failed to render image", err)
 				return
 			}
 			i.Image = img
@@ -195,7 +195,7 @@ func (i *Image) Refresh() {
 
 // Resize on an image will scale the content or reposition it according to FillMode.
 // It will normally cause a Refresh to ensure the pixels are recalculated.
-func (i *Image) Resize(s fyne.Size) {
+func (i *Image) Resize(s granio.Size) {
 	if s == i.Size() {
 		return
 	}
@@ -210,7 +210,7 @@ func (i *Image) Resize(s fyne.Size) {
 		// we need to rasterize at the new size
 		tex, err := i.renderSVG(s.Width, s.Height)
 		if err != nil {
-			fyne.LogError("Failed to render SVG", err)
+			granio.LogError("Failed to render SVG", err)
 			return
 		}
 		i.Image = tex
@@ -236,8 +236,8 @@ func NewImageFromFile(file string) *Image {
 // The method for scaling can be set using the Fill field.
 //
 // Since: 2.0
-func NewImageFromURI(uri fyne.URI) *Image {
-	if path := uri.Path(); path != "" && uri.Scheme() == fyne.URISchemeFile {
+func NewImageFromURI(uri granio.URI) *Image {
+	if path := uri.Path(); path != "" && uri.Scheme() == granio.URISchemeFile {
 		return NewImageFromFile(path)
 	}
 
@@ -245,7 +245,7 @@ func NewImageFromURI(uri fyne.URI) *Image {
 
 	read, err := storage.Reader(uri) // attempt unknown / http file type
 	if err != nil {
-		fyne.LogError("Failed to open image URI", err)
+		granio.LogError("Failed to open image URI", err)
 		return &Image{}
 	}
 
@@ -263,11 +263,11 @@ func NewImageFromURI(uri fyne.URI) *Image {
 func NewImageFromReader(read io.Reader, name string) *Image {
 	data, err := io.ReadAll(read)
 	if err != nil {
-		fyne.LogError("Unable to read image data", err)
+		granio.LogError("Unable to read image data", err)
 		return nil
 	}
 
-	res := &fyne.StaticResource{
+	res := &granio.StaticResource{
 		StaticName:    name,
 		StaticContent: data,
 	}
@@ -278,7 +278,7 @@ func NewImageFromReader(read io.Reader, name string) *Image {
 // NewImageFromResource creates a new image by loading the specified resource.
 // Images returned from this method will scale to fit the canvas object.
 // The method for scaling can be set using the Fill field.
-func NewImageFromResource(res fyne.Resource) *Image {
+func NewImageFromResource(res granio.Resource) *Image {
 	return &Image{Resource: res}
 }
 
@@ -304,14 +304,14 @@ func (i *Image) updateReader() (io.ReadCloser, error) {
 	if i.Resource != nil {
 		i.isSVG = svg.IsResourceSVG(i.Resource)
 		content := i.Resource.Content()
-		if res, ok := i.Resource.(fyne.ThemedResource); i.isSVG && ok {
+		if res, ok := i.Resource.(granio.ThemedResource); i.isSVG && ok {
 			th := cache.WidgetTheme(i)
 			if th != nil {
-				col := th.Color(res.ThemeColorName(), fyne.CurrentApp().Settings().ThemeVariant())
+				col := th.Color(res.ThemeColorName(), granio.CurrentApp().Settings().ThemeVariant())
 				var err error
 				content, err = svg.Colorize(content, col)
 				if err != nil {
-					fyne.LogError("", err)
+					granio.LogError("", err)
 				}
 			}
 		}
@@ -385,11 +385,11 @@ func (i *Image) imageDetailsFromReader(source io.Reader) (reader io.Reader, widt
 }
 
 func (i *Image) renderSVG(width, height float32) (image.Image, error) {
-	c := fyne.CurrentApp().Driver().CanvasForObject(i)
+	c := granio.CurrentApp().Driver().CanvasForObject(i)
 	screenWidth, screenHeight := int(width), int(height)
 	if c != nil {
 		// We want real output pixel count not just the screen coordinate space (i.e. macOS Retina)
-		screenWidth, screenHeight = c.PixelCoordinateForPosition(fyne.Position{X: width, Y: height})
+		screenWidth, screenHeight = c.PixelCoordinateForPosition(granio.Position{X: width, Y: height})
 	} else { // no canvas info, assume HiDPI
 		screenWidth *= 2
 		screenHeight *= 2

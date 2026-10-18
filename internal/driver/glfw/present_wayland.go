@@ -41,7 +41,7 @@ import "C"
 import (
 	"unsafe"
 
-	"fyne.io/fyne/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
 )
 
 type frameTracker struct {

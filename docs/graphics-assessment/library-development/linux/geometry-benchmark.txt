@@ -1,0 +1,12 @@
+goos: linux
+goarch: amd64
+pkg: github.com/Uzer007-admin/glfw/v3.5/glfw
+cpu: Intel(R) Xeon(R) Gold 5320 CPU @ 2.20GHz
+BenchmarkLegacySurfaceGeometry-8   	   26700	     49593 ns/op	      24 B/op	       3 allocs/op
+BenchmarkLegacySurfaceGeometry-8   	   23970	     50322 ns/op	      24 B/op	       3 allocs/op
+BenchmarkLegacySurfaceGeometry-8   	   25598	     47569 ns/op	      24 B/op	       3 allocs/op
+BenchmarkSurfaceGeometry-8         	   27480	     44867 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSurfaceGeometry-8         	   23592	     48770 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSurfaceGeometry-8         	   29842	     43172 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	7.881s

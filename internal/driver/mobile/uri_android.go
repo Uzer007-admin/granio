@@ -15,14 +15,14 @@ import (
 	"path/filepath"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 type androidURI struct {
 	systemURI string
-	fyne.URI
+	granio.URI
 }
 
 // Override Name on android for content://
@@ -59,6 +59,6 @@ func contentURIGetFileName(uri string) string {
 	return filename
 }
 
-func nativeURI(uri string) fyne.URI {
+func nativeURI(uri string) granio.URI {
 	return &androidURI{URI: storage.NewURI(uri), systemURI: uri}
 }

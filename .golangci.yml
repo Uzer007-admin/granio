@@ -25,7 +25,7 @@ linters:
           - gosec
           - revive
           - staticcheck
-      - path: cmd/fyne_demo/ # The whole tool is deprecated
+      - path: cmd/granio_demo/ # The whole tool is deprecated
         linters:
           - errcheck
           - gosec

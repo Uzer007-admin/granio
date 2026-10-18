@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/internal/color"
 )
 
 func Test_Parse(t *testing.T) {

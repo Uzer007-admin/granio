@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Layout defines how [CanvasObject]s may be laid out in a specified Size.
 type Layout interface {

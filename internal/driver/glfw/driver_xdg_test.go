@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	fynecolor "fyne.io/fyne/v2/internal/color"
+	fynecolor "github.com/Uzer007-admin/granio/v2/internal/color"
 )
 
 func TestToOSIconEncodesJPGAsPNG(t *testing.T) {

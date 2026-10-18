@@ -1,8 +1,8 @@
 package test
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
 )
 
 type window struct {
@@ -15,17 +15,17 @@ type window struct {
 
 	canvas software.WindowlessCanvas
 	driver *driver
-	menu   *fyne.MainMenu
+	menu   *granio.MainMenu
 }
 
 // NewWindow creates and registers a new window for test purposes
-func NewWindow(content fyne.CanvasObject) fyne.Window {
-	window := fyne.CurrentApp().NewWindow("")
+func NewWindow(content granio.CanvasObject) granio.Window {
+	window := granio.CurrentApp().NewWindow("")
 	window.SetContent(content)
 	return window
 }
 
-func (w *window) Canvas() fyne.Canvas {
+func (w *window) Canvas() granio.Canvas {
 	return w.canvas
 }
 
@@ -33,7 +33,7 @@ func (*window) CenterOnScreen() {
 	// no-op
 }
 
-func (*window) Clipboard() fyne.Clipboard {
+func (*window) Clipboard() granio.Clipboard {
 	return NewClipboard()
 }
 
@@ -45,7 +45,7 @@ func (w *window) Close() {
 	w.driver.removeWindow(w)
 }
 
-func (w *window) Content() fyne.CanvasObject {
+func (w *window) Content() granio.CanvasObject {
 	return w.Canvas().Content()
 }
 
@@ -61,11 +61,11 @@ func (w *window) Hide() {
 	w.focused = false
 }
 
-func (*window) Icon() fyne.Resource {
-	return fyne.CurrentApp().Icon()
+func (*window) Icon() granio.Resource {
+	return granio.CurrentApp().Icon()
 }
 
-func (w *window) MainMenu() *fyne.MainMenu {
+func (w *window) MainMenu() *granio.MainMenu {
 	return w.menu
 }
 
@@ -81,11 +81,11 @@ func (w *window) RequestFocus() {
 	w.focused = true
 }
 
-func (w *window) Resize(size fyne.Size) {
+func (w *window) Resize(size granio.Size) {
 	w.canvas.Resize(size)
 }
 
-func (w *window) SetContent(obj fyne.CanvasObject) {
+func (w *window) SetContent(obj granio.CanvasObject) {
 	w.Canvas().SetContent(obj)
 }
 
@@ -93,7 +93,7 @@ func (w *window) SetFixedSize(fixed bool) {
 	w.fixedSize = fixed
 }
 
-func (*window) SetIcon(_ fyne.Resource) {
+func (*window) SetIcon(_ granio.Resource) {
 	// no-op
 }
 
@@ -101,7 +101,7 @@ func (w *window) SetFullScreen(fullScreen bool) {
 	w.fullScreen = fullScreen
 }
 
-func (w *window) SetMainMenu(menu *fyne.MainMenu) {
+func (w *window) SetMainMenu(menu *granio.MainMenu) {
 	w.menu = menu
 }
 
@@ -117,7 +117,7 @@ func (w *window) SetCloseIntercept(callback func()) {
 	w.onCloseIntercepted = callback
 }
 
-func (*window) SetOnDropped(func(fyne.Position, []fyne.URI)) {
+func (*window) SetOnDropped(func(granio.Position, []granio.URI)) {
 }
 
 func (w *window) SetPadded(padded bool) {

@@ -5,21 +5,21 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 // EqualURI returns true if the two URIs are equal.
 //
 // Since: 2.6
-func EqualURI(t1, t2 fyne.URI) bool {
+func EqualURI(t1, t2 granio.URI) bool {
 	return repository.EqualURI(t1, t2)
 }
 
 // NewFileURI creates a new URI from the given file path.
 // Relative paths will be converted to absolute using filepath.Abs if required.
-func NewFileURI(fpath string) fyne.URI {
+func NewFileURI(fpath string) granio.URI {
 	if runtime.GOOS == goos.Windows && len(fpath) >= 2 && fpath[1] == ':' {
 		return repository.NewFileURI(fpath)
 	}
@@ -38,7 +38,7 @@ func NewFileURI(fpath string) fyne.URI {
 // a URI from an external source or one saved from URI.String()
 //
 // Deprecated: use ParseURI instead
-func NewURI(s string) fyne.URI {
+func NewURI(s string) granio.URI {
 	u, _ := ParseURI(s)
 	return u
 }
@@ -55,7 +55,7 @@ func NewURI(s string) fyne.URI {
 // path component on Windows.
 //
 // Since: 2.0
-func ParseURI(s string) (fyne.URI, error) {
+func ParseURI(s string) (granio.URI, error) {
 	return repository.ParseURI(s)
 }
 
@@ -91,7 +91,7 @@ func ParseURI(s string) (fyne.URI, error) {
 // the scheme of the URI it is given.
 //
 // Since: 1.4
-func Parent(u fyne.URI) (fyne.URI, error) {
+func Parent(u granio.URI) (granio.URI, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return nil, err
@@ -130,7 +130,7 @@ func Parent(u fyne.URI) (fyne.URI, error) {
 // the scheme of the URI it is given.
 //
 // Since: 1.4
-func Child(u fyne.URI, component string) (fyne.URI, error) {
+func Child(u granio.URI, component string) (granio.URI, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ func Child(u fyne.URI, component string) (fyne.URI, error) {
 // been registered.
 //
 // Since: 1.4
-func Exists(u fyne.URI) (bool, error) {
+func Exists(u granio.URI) (bool, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return false, err
@@ -193,7 +193,7 @@ func Exists(u fyne.URI) (bool, error) {
 // into a scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func Delete(u fyne.URI) error {
+func Delete(u granio.URI) error {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return err
@@ -214,7 +214,7 @@ func Delete(u fyne.URI) error {
 // into a scheme-specific implementation from a registered repository.
 //
 // Since: 2.7
-func DeleteAll(u fyne.URI) error {
+func DeleteAll(u granio.URI) error {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return err
@@ -248,7 +248,7 @@ func DeleteAll(u fyne.URI) error {
 // into a scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func Reader(u fyne.URI) (fyne.URIReadCloser, error) {
+func Reader(u granio.URI) (granio.URIReadCloser, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return nil, err
@@ -274,7 +274,7 @@ func Reader(u fyne.URI) (fyne.URIReadCloser, error) {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func CanRead(u fyne.URI) (bool, error) {
+func CanRead(u granio.URI) (bool, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return false, err
@@ -313,7 +313,7 @@ func CanRead(u fyne.URI) (bool, error) {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
+func Writer(u granio.URI) (granio.URIWriteCloser, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return nil, err
@@ -355,7 +355,7 @@ func Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.6
-func Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
+func Appender(u granio.URI) (granio.URIWriteCloser, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return nil, err
@@ -382,7 +382,7 @@ func Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func CanWrite(u fyne.URI) (bool, error) {
+func CanWrite(u granio.URI) (bool, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return false, err
@@ -426,7 +426,7 @@ func CanWrite(u fyne.URI) (bool, error) {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func Copy(source fyne.URI, destination fyne.URI) error {
+func Copy(source granio.URI, destination granio.URI) error {
 	repo, err := repository.ForURI(source)
 	if err != nil {
 		return err
@@ -474,7 +474,7 @@ func Copy(source fyne.URI, destination fyne.URI) error {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func Move(source fyne.URI, destination fyne.URI) error {
+func Move(source granio.URI, destination granio.URI) error {
 	repo, err := repository.ForURI(source)
 	if err != nil {
 		return err
@@ -510,7 +510,7 @@ func Move(source fyne.URI, destination fyne.URI) error {
 // scheme-specific implementation from a registered repository.
 //
 // Since: 2.0
-func CanList(u fyne.URI) (bool, error) {
+func CanList(u granio.URI) (bool, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return false, err
@@ -550,7 +550,7 @@ func CanList(u fyne.URI) (bool, error) {
 // URIOperationNotSupported error.
 //
 // Since: 2.0
-func List(u fyne.URI) ([]fyne.URI, error) {
+func List(u granio.URI) ([]granio.URI, error) {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return nil, err
@@ -601,7 +601,7 @@ func List(u fyne.URI) ([]fyne.URI, error) {
 // fails with a URIOperationNotSupported error.
 //
 // Since: 2.0
-func CreateListable(u fyne.URI) error {
+func CreateListable(u granio.URI) error {
 	repo, err := repository.ForURI(u)
 	if err != nil {
 		return err

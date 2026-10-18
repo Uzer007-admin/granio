@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	paint "fyne.io/fyne/v2/internal/painter"
+	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
 )
 
 // TestPushQuad pins the batch vertex layout the glyph shader reads: position,

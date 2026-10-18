@@ -1,0 +1,92 @@
+[
+  {
+    "file": "baseline-benchmarks.txt",
+    "sha256": "d34ad0cbfa5bc8482eb91b76bfed17f3ae3f2eb4f657e5f703e29b0b21e08d81",
+    "bytes": 2956
+  },
+  {
+    "file": "benchmarks-final.txt",
+    "sha256": "711224822cf39602c66c221214491048bb3adb294ae5e3b424aad9f6d186aa89",
+    "bytes": 3252
+  },
+  {
+    "file": "clipboard-native-windows.txt",
+    "sha256": "b350c566aee6a19f58e1a2275b8ef1f9c478432fba96017e52de52c34a6794aa",
+    "bytes": 656
+  },
+  {
+    "file": "extended-native-compatibility.txt",
+    "sha256": "fedde694b5269ee15e3730559d931a4e49606e8728c32c9ef3599a5e1243c9ed",
+    "bytes": 86
+  },
+  {
+    "file": "fork-patch-replay-final.json",
+    "sha256": "b52f80093db64630985bf2b11a56d46772a4bff5fb2840ac8dcebc5372c74323",
+    "bytes": 1132
+  },
+  {
+    "file": "lifecycle-shutdown-tests.txt",
+    "sha256": "865ed68b0adb6ccc47a352c68337b724b9c38435b84c988f0febc7327bfaa2c4",
+    "bytes": 76
+  },
+  {
+    "file": "linux-native-fonts-final.json",
+    "sha256": "0ccd461f6217d8b4264a3d901ffbdac5472176e8960b410a8d16d6d35a774fc7",
+    "bytes": 3953711
+  },
+  {
+    "file": "linux-native-fonts-final.stderr",
+    "sha256": "703da3b112b38c5841b0953e141531d39304c181b87a657d7077cf3754c114f7",
+    "bytes": 532
+  },
+  {
+    "file": "linux-native-services.txt",
+    "sha256": "8015d0ed6bc9c36e4cc71d067aa6a8a25048e8207cc9afe7907114607a87b64e",
+    "bytes": 1345
+  },
+  {
+    "file": "native-ime-a11y.txt",
+    "sha256": "575bdbd06470ba279d3cfb67036f022467732154126091057a844a00b65f65d3",
+    "bytes": 86
+  },
+  {
+    "file": "optimized-wrap-direct-benchmarks.txt",
+    "sha256": "099329520eed0d5392cfdaaaf171991bccdde09183071882976d07b17ccefa78",
+    "bytes": 755
+  },
+  {
+    "file": "smoke-linux-wayland.txt",
+    "sha256": "30e0ec239581904ac58db31c69601ba0f0d1d72d428f5e7afcbb90a97df88c74",
+    "bytes": 657
+  },
+  {
+    "file": "smoke-linux-x11.txt",
+    "sha256": "cd06fbe9efba758193301d3b77d05aa8f1618fef9b6443bbab8f2bb66dc4156c",
+    "bytes": 631
+  },
+  {
+    "file": "smoke-windows-fixed.txt",
+    "sha256": "bd881a6b7034fd471bf911611724a1fba6e591d325164b4b626ba2847d5b525e",
+    "bytes": 50
+  },
+  {
+    "file": "windows-headless-final.json",
+    "sha256": "5b60a79ffde5bf9011b6c040cc95ff5c4796e31d7f70aff7fdc92eaff394b1f0",
+    "bytes": 3671670
+  },
+  {
+    "file": "windows-headless-final.stderr",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "file": "windows-native-final.json",
+    "sha256": "496ff1be3368e598ca104d194ce1332e8c39dde0c362c2e30472d84095648319",
+    "bytes": 3817369
+  },
+  {
+    "file": "windows-native-final.stderr",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+]

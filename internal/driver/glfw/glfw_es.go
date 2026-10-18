@@ -2,7 +2,7 @@
 
 package glfw
 
-import "github.com/go-gl/glfw/v3.4/glfw"
+import "github.com/Uzer007-admin/glfw/v3.5/glfw"
 
 func initWindowHints() {
 	glfw.WindowHint(glfw.ClientAPI, glfw.OpenGLESAPI)

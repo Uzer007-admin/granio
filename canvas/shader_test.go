@@ -3,9 +3,9 @@ package canvas_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +31,7 @@ func TestShader_MinSize(t *testing.T) {
 
 func TestShader_Resize(t *testing.T) {
 	shader := canvas.NewShader("test", nil, nil)
-	size := fyne.NewSize(100, 50)
+	size := granio.NewSize(100, 50)
 	shader.Resize(size)
 
 	assert.Equal(t, size, shader.Size())
@@ -39,7 +39,7 @@ func TestShader_Resize(t *testing.T) {
 
 func TestShader_Move(t *testing.T) {
 	shader := canvas.NewShader("test", nil, nil)
-	pos := fyne.NewPos(10, 20)
+	pos := granio.NewPos(10, 20)
 	shader.Move(pos)
 
 	assert.Equal(t, pos, shader.Position())

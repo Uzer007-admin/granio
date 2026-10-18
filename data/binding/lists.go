@@ -3,8 +3,8 @@ package binding
 import (
 	"bytes"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 // List supports binding a list of values with type T.
@@ -230,28 +230,28 @@ func BindUntypedList(v *[]any) ExternalList[any] {
 	return bindListWithComparator(v, func(t1, t2 any) bool { return t1 == t2 })
 }
 
-// URIList supports binding a list of fyne.URI values.
+// URIList supports binding a list of granio.URI values.
 //
 // Since: 2.1
-type URIList = List[fyne.URI]
+type URIList = List[granio.URI]
 
-// ExternalURIList supports binding a list of fyne.URI values from an external variable.
+// ExternalURIList supports binding a list of granio.URI values from an external variable.
 //
 // Since: 2.1
-type ExternalURIList = ExternalList[fyne.URI]
+type ExternalURIList = ExternalList[granio.URI]
 
-// NewURIList returns a bindable list of fyne.URI values.
+// NewURIList returns a bindable list of granio.URI values.
 //
 // Since: 2.1
-func NewURIList() List[fyne.URI] {
+func NewURIList() List[granio.URI] {
 	return NewList(storage.EqualURI)
 }
 
-// BindURIList returns a bound list of fyne.URI values, based on the contents of the passed slice.
+// BindURIList returns a bound list of granio.URI values, based on the contents of the passed slice.
 // If your code changes the content of the slice this refers to you should call Reload() to inform the bindings.
 //
 // Since: 2.1
-func BindURIList(v *[]fyne.URI) ExternalList[fyne.URI] {
+func BindURIList(v *[]granio.URI) ExternalList[granio.URI] {
 	return bindListWithComparator(v, storage.EqualURI)
 }
 

@@ -4,7 +4,7 @@ import (
 	"image"
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type captureImage struct {
@@ -12,6 +12,7 @@ type captureImage struct {
 	width, height int
 
 	leftPad, rightPad, topPad, bottomPad int
+	preserveAlpha                        bool
 }
 
 func (c *captureImage) SubImage(inner image.Rectangle) *captureImage {
@@ -20,10 +21,11 @@ func (c *captureImage) SubImage(inner image.Rectangle) *captureImage {
 		width:  c.width,
 		height: c.height,
 
-		leftPad:   inner.Min.X,
-		topPad:    inner.Min.Y,
-		rightPad:  c.width - inner.Max.X,
-		bottomPad: c.height - inner.Max.Y,
+		leftPad:       inner.Min.X,
+		topPad:        inner.Min.Y,
+		rightPad:      c.width - inner.Max.X,
+		bottomPad:     c.height - inner.Max.Y,
+		preserveAlpha: c.preserveAlpha,
 	}
 }
 
@@ -39,16 +41,29 @@ func (c *captureImage) At(x, y int) color.Color {
 	start := ((c.height-y-1)*c.width + x) * 4
 	// The framebuffer colour is already composited against the window background, but blending
 	// leaves an alpha below 255 wherever a shadow or an anti-aliased edge was drawn.
-	return color.RGBA{R: c.pix[start], G: c.pix[start+1], B: c.pix[start+2], A: 0xff}
+	alpha := uint8(0xff)
+	if c.preserveAlpha {
+		alpha = c.pix[start+3]
+	}
+	return color.RGBA{R: c.pix[start], G: c.pix[start+1], B: c.pix[start+2], A: alpha}
 }
 
-func (p *painter) Capture(c fyne.Canvas) image.Image {
-	pos := fyne.NewPos(c.Size().Width, c.Size().Height)
+func (p *painter) Capture(c granio.Canvas) image.Image {
+	return p.captureBuffer(c, front)
+}
+
+// CaptureBack reads a freshly rendered canvas before presentation. The desktop
+// driver uses this path because GLX front buffers can be clipped or unavailable
+// under compositors, occlusion and headless X servers.
+func (p *painter) CaptureBack(c granio.Canvas) image.Image { return p.captureBuffer(c, back) }
+
+func (p *painter) captureBuffer(c granio.Canvas, buffer uint32) image.Image {
+	pos := granio.NewPos(c.Size().Width, c.Size().Height)
 	width, height := c.PixelCoordinateForPosition(pos)
 	pixels := make([]uint8, width*height*4)
 
 	p.contextProvider.RunWithContext(func() {
-		p.ctx.ReadBuffer(front)
+		p.ctx.ReadBuffer(buffer)
 		p.logError()
 		p.ctx.ReadPixels(0, 0, width, height, colorFormatRGBA, unsignedByte, pixels)
 		p.logError()
@@ -58,8 +73,9 @@ func (p *painter) Capture(c fyne.Canvas) image.Image {
 	})
 
 	return &captureImage{
-		pix:    pixels,
-		width:  width,
-		height: height,
+		pix:           pixels,
+		width:         width,
+		height:        height,
+		preserveAlpha: p.windowSurface != WindowSurfaceLegacy,
 	}
 }

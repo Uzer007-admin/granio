@@ -1,0 +1,8 @@
+ok  	github.com/Uzer007-admin/dbus/v5	5.608s
+?   	github.com/Uzer007-admin/dbus/v5/introspect	[no test files]
+--- FAIL: TestSettingsThroughDaemon (0.00s)
+    settings_integration_test.go:52: wire appearance: {ColorScheme:{Value:0 Available:false} HighContrast:{Value:false Available:false} ReducedMotion:{Value:false Available:false} Accent:{Value:{Red:0 Green:0 Blue:0} Available:false}}; portal: invalid settings response: accent-color must be (ddd)
+FAIL
+FAIL	github.com/Uzer007-admin/dbus/v5/portal	0.014s
+ok  	github.com/Uzer007-admin/dbus/v5/prop	1.026s
+FAIL

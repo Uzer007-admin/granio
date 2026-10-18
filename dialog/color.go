@@ -7,14 +7,14 @@ import (
 	"math/cmplx"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/internal/painter/geom"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 const (
@@ -43,7 +43,7 @@ type ColorPickerDialog struct {
 // The callback is triggered when the user selects a color.
 //
 // Since: 1.4
-func NewColorPicker(title, message string, callback func(c color.Color), parent fyne.Window) *ColorPickerDialog {
+func NewColorPicker(title, message string, callback func(c color.Color), parent granio.Window) *ColorPickerDialog {
 	return &ColorPickerDialog{
 		dialog:   newDialog(title, message, theme.ColorPaletteIcon(), nil /* cancel? */, parent),
 		color:    theme.Color(theme.ColorNamePrimary),
@@ -55,7 +55,7 @@ func NewColorPicker(title, message string, callback func(c color.Color), parent 
 // The callback is triggered when the user selects a color.
 //
 // Since: 1.4
-func ShowColorPicker(title, message string, callback func(c color.Color), parent fyne.Window) {
+func ShowColorPicker(title, message string, callback func(c color.Color), parent granio.Window) {
 	NewColorPicker(title, message, callback, parent).Show()
 }
 
@@ -69,7 +69,7 @@ func (p *ColorPickerDialog) SetColor(c color.Color) {
 	if p.picker == nil && p.Advanced {
 		p.updateUI()
 	} else if !p.Advanced {
-		fyne.LogError("Advanced mode needs to be enabled to use SetColor", nil)
+		granio.LogError("Advanced mode needs to be enabled to use SetColor", nil)
 		return
 	}
 	p.picker.SetColor(c)
@@ -83,9 +83,9 @@ func (p *ColorPickerDialog) Show() {
 	p.dialog.Show()
 }
 
-func (p *ColorPickerDialog) createSimplePickers() (contents []fyne.CanvasObject) {
+func (p *ColorPickerDialog) createSimplePickers() (contents []granio.CanvasObject) {
 	contents = append(contents, newColorBasicPicker(p.selectColor), newColorGreyscalePicker(p.selectColor))
-	if recent := newColorRecentPicker(p.selectColor); len(recent.(*fyne.Container).Objects) > 0 {
+	if recent := newColorRecentPicker(p.selectColor); len(recent.(*granio.Container).Objects) > 0 {
 		// Add divider and recents if there are any,
 		contents = append(contents, canvas.NewLine(theme.Color(theme.ColorNameShadow)), recent)
 	}
@@ -166,8 +166,8 @@ func wrapHue(hue int) int {
 	return hue
 }
 
-func newColorButtonBox(colors []color.Color, icon fyne.Resource, callback func(color.Color)) fyne.CanvasObject {
-	var objects []fyne.CanvasObject
+func newColorButtonBox(colors []color.Color, icon granio.Resource, callback func(color.Color)) granio.CanvasObject {
+	var objects []granio.CanvasObject
 	if icon != nil && len(colors) > 0 {
 		objects = append(objects, widget.NewIcon(icon))
 	}
@@ -206,7 +206,7 @@ func newCheckeredBackground(radial bool) *canvas.Raster {
 }
 
 func readRecentColors() (recents []string) {
-	for _, r := range strings.Split(fyne.CurrentApp().Preferences().String(preferenceRecents), ",") {
+	for _, r := range strings.Split(granio.CurrentApp().Preferences().String(preferenceRecents), ",") {
 		if r != "" {
 			recents = append(recents, r)
 		}
@@ -225,7 +225,7 @@ func writeRecentColor(c string) {
 	if len(recents) > preferenceMaxRecents {
 		recents = recents[:preferenceMaxRecents]
 	}
-	fyne.CurrentApp().Preferences().SetString(preferenceRecents, strings.Join(recents, ","))
+	granio.CurrentApp().Preferences().SetString(preferenceRecents, strings.Join(recents, ","))
 }
 
 func colorToString(c color.Color) string {
@@ -243,7 +243,7 @@ func stringsToColors(ss ...string) (colors []color.Color) {
 		}
 		c, err := col.Parse(s)
 		if err != nil {
-			fyne.LogError("Couldn't parse color:", err)
+			granio.LogError("Couldn't parse color:", err)
 		} else {
 			colors = append(colors, c)
 		}

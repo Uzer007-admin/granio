@@ -2,7 +2,7 @@
 
 package build
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // Mode is the application's build mode.
-const Mode = fyne.BuildRelease
+const Mode = granio.BuildRelease

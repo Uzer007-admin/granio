@@ -4,32 +4,32 @@ import (
 	"image/color"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	fynecolor "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/internal/svg"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	fynecolor "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/internal/svg"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Widget       = (*menuItem)(nil)
+	_ granio.Widget     = (*menuItem)(nil)
 	_ desktop.Hoverable = (*menuItem)(nil)
-	_ fyne.Tappable     = (*menuItem)(nil)
+	_ granio.Tappable   = (*menuItem)(nil)
 )
 
 // menuItem is a widget for displaying a fyne.menuItem.
 type menuItem struct {
 	widget.Base
-	Item *fyne.MenuItem
+	Item *granio.MenuItem
 
-	alignment     fyne.TextAlign
+	alignment     granio.TextAlign
 	child, parent *Menu
 }
 
 // newMenuItem creates a new menuItem.
-func newMenuItem(item *fyne.MenuItem, parent *Menu) *menuItem {
+func newMenuItem(item *granio.MenuItem, parent *Menu) *menuItem {
 	i := &menuItem{Item: item, parent: parent}
 	i.alignment = parent.alignment
 	i.ExtendBaseWidget(i)
@@ -48,16 +48,16 @@ func (i *menuItem) Child() *Menu {
 }
 
 // CreateRenderer returns a new renderer for the menu item.
-func (i *menuItem) CreateRenderer() fyne.WidgetRenderer {
+func (i *menuItem) CreateRenderer() granio.WidgetRenderer {
 	th := i.parent.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	background.CornerRadius = th.Size(theme.SizeNameMenuRadius)
 	background.Hide()
 	text := canvas.NewText(i.Item.Label, th.Color(theme.ColorNameForeground, v))
 	text.Alignment = i.alignment
-	objects := []fyne.CanvasObject{background, text}
+	objects := []granio.CanvasObject{background, text}
 	var expandIcon *canvas.Image
 	if i.Item.ChildMenu != nil {
 		expandIcon = canvas.NewImageFromResource(th.Icon(theme.IconNameMenuExpand))
@@ -73,7 +73,7 @@ func (i *menuItem) CreateRenderer() fyne.WidgetRenderer {
 		objects = append(objects, icon)
 	}
 	var shortcutTexts []*canvas.Text
-	if s, ok := i.Item.Shortcut.(fyne.KeyboardShortcut); ok {
+	if s, ok := i.Item.Shortcut.(granio.KeyboardShortcut); ok {
 		shortcutTexts = textsForShortcut(s, th)
 		for _, t := range shortcutTexts {
 			objects = append(objects, t)
@@ -114,13 +114,13 @@ func (i *menuItem) MouseOut() {
 
 // Tapped performs the action of the item and dismisses the menu.
 // It does nothing if the item doesn’t have an action.
-func (i *menuItem) Tapped(*fyne.PointEvent) {
+func (i *menuItem) Tapped(*granio.PointEvent) {
 	if i.Item.Disabled {
 		return
 	}
 
 	if i.Item.Action == nil || i.Item.ChildMenu != nil {
-		if fyne.CurrentDevice().IsMobile() {
+		if granio.CurrentDevice().IsMobile() {
 			i.activate()
 		}
 
@@ -201,12 +201,12 @@ type menuItemRenderer struct {
 	expandIcon       *canvas.Image
 	icon             *canvas.Image
 	lastThemePadding float32
-	minSize          fyne.Size
+	minSize          granio.Size
 	shortcutTexts    []*canvas.Text
 	text             *canvas.Text
 }
 
-func (r *menuItemRenderer) Layout(size fyne.Size) {
+func (r *menuItemRenderer) Layout(size granio.Size) {
 	th := r.i.parent.Theme()
 	innerPad := th.Size(theme.SizeNameInnerPadding)
 	pad := th.Size(theme.SizeNamePadding)
@@ -214,13 +214,13 @@ func (r *menuItemRenderer) Layout(size fyne.Size) {
 
 	leftOffset := innerPad + r.checkSpace()
 	rightOffset := size.Width
-	iconSize := fyne.NewSquareSize(inlineIcon)
+	iconSize := granio.NewSquareSize(inlineIcon)
 	iconTopOffset := (size.Height - inlineIcon) / 2
 
 	if r.expandIcon != nil {
 		rightOffset -= inlineIcon
 		r.expandIcon.Resize(iconSize)
-		r.expandIcon.Move(fyne.NewPos(rightOffset, iconTopOffset))
+		r.expandIcon.Move(granio.NewPos(rightOffset, iconTopOffset))
 	}
 
 	rightOffset -= innerPad
@@ -229,7 +229,7 @@ func (r *menuItemRenderer) Layout(size fyne.Size) {
 		text := r.shortcutTexts[i]
 		text.Resize(text.MinSize())
 		rightOffset -= text.MinSize().Width
-		text.Move(fyne.NewPos(rightOffset, innerPad+(textHeight-text.Size().Height)))
+		text.Move(granio.NewPos(rightOffset, innerPad+(textHeight-text.Size().Height)))
 
 		if i == 0 {
 			rightOffset -= innerPad
@@ -237,23 +237,23 @@ func (r *menuItemRenderer) Layout(size fyne.Size) {
 	}
 
 	r.checkIcon.Resize(iconSize)
-	r.checkIcon.Move(fyne.NewPos(innerPad, iconTopOffset))
+	r.checkIcon.Move(granio.NewPos(innerPad, iconTopOffset))
 
 	if r.icon != nil {
 		r.icon.Resize(iconSize)
-		r.icon.Move(fyne.NewPos(leftOffset, iconTopOffset))
+		r.icon.Move(granio.NewPos(leftOffset, iconTopOffset))
 		leftOffset += inlineIcon
 		leftOffset += innerPad
 	}
 
-	r.text.Resize(fyne.NewSize(rightOffset-leftOffset, textHeight))
-	r.text.Move(fyne.NewPos(leftOffset, innerPad))
+	r.text.Resize(granio.NewSize(rightOffset-leftOffset, textHeight))
+	r.text.Move(granio.NewPos(leftOffset, innerPad))
 
-	r.background.Resize(size.Subtract(fyne.NewSquareSize(pad)))
-	r.background.Move(fyne.NewPos(pad/2, pad/2))
+	r.background.Resize(size.Subtract(granio.NewSquareSize(pad)))
+	r.background.Move(granio.NewPos(pad/2, pad/2))
 }
 
-func (r *menuItemRenderer) MinSize() fyne.Size {
+func (r *menuItemRenderer) MinSize() granio.Size {
 	if r.minSizeUnchanged() {
 		return r.minSize
 	}
@@ -283,12 +283,16 @@ func (r *menuItemRenderer) MinSize() fyne.Size {
 
 func (r *menuItemRenderer) updateVisuals() {
 	th := r.i.parent.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	r.background.CornerRadius = th.Size(theme.SizeNameMenuRadius)
-	if fyne.CurrentDevice().IsMobile() || !r.i.isActive() {
+	r.background.StrokeWidth = 0
+	if granio.CurrentDevice().IsMobile() || !r.i.isActive() {
 		r.background.Hide()
 	} else {
 		r.background.FillColor = th.Color(theme.ColorNameFocus, v)
+		if _, native := activeSystemColors(th); native {
+			applySelectionStyle(r.background, th, v)
+		}
 		r.background.Show()
 	}
 	r.background.Refresh()
@@ -330,7 +334,7 @@ func (r *menuItemRenderer) minSizeUnchanged() bool {
 		r.lastThemePadding == th.Size(theme.SizeNameInnerPadding)
 }
 
-func (r *menuItemRenderer) updateIcon(img *canvas.Image, rsc fyne.Resource) {
+func (r *menuItemRenderer) updateIcon(img *canvas.Image, rsc granio.Resource) {
 	if img == nil {
 		return
 	}
@@ -343,7 +347,7 @@ func (r *menuItemRenderer) updateIcon(img *canvas.Image, rsc fyne.Resource) {
 
 func (r *menuItemRenderer) refreshText(text *canvas.Text, shortcut bool) {
 	th := r.i.parent.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	text.TextSize = th.Size(theme.SizeNameText)
 	if r.i.Item.Disabled {
@@ -358,27 +362,30 @@ func (r *menuItemRenderer) refreshText(text *canvas.Text, shortcut bool) {
 	text.Refresh()
 }
 
-func shortcutColor(th fyne.Theme) color.Color {
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+func shortcutColor(th granio.Theme) color.Color {
+	if colors, ok := activeSystemColors(th); ok {
+		return colors.GrayText
+	}
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	r, g, b, a := fynecolor.ToNRGBA(th.Color(theme.ColorNameForeground, v))
 	a = uint8(float32(a) * 0.198)
 	return color.NRGBA{R: r, G: g, B: b, A: a}
 }
 
-func textsForShortcut(sc fyne.KeyboardShortcut, th fyne.Theme) (texts []*canvas.Text) {
+func textsForShortcut(sc granio.KeyboardShortcut, th granio.Theme) (texts []*canvas.Text) {
 	// add modifier
 	b := strings.Builder{}
 	mods := sc.Mod()
-	if mods&fyne.KeyModifierControl != 0 {
+	if mods&granio.KeyModifierControl != 0 {
 		b.WriteString(textModifierControl)
 	}
-	if mods&fyne.KeyModifierAlt != 0 {
+	if mods&granio.KeyModifierAlt != 0 {
 		b.WriteString(textModifierAlt)
 	}
-	if mods&fyne.KeyModifierShift != 0 {
+	if mods&granio.KeyModifierShift != 0 {
 		b.WriteString(textModifierShift)
 	}
-	if mods&fyne.KeyModifierSuper != 0 {
+	if mods&granio.KeyModifierSuper != 0 {
 		b.WriteString(textModifierSuper)
 	}
 	shortColor := shortcutColor(th)
@@ -393,7 +400,7 @@ func textsForShortcut(sc fyne.KeyboardShortcut, th fyne.Theme) (texts []*canvas.
 	if !ok {
 		s = string(sc.Key())
 	} else if len(s) == 1 {
-		style = fyne.TextStyle{Symbol: true}
+		style = granio.TextStyle{Symbol: true}
 	}
 	t := canvas.NewText(s, shortColor)
 	t.TextStyle = style

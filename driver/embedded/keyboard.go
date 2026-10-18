@@ -1,6 +1,6 @@
 package embedded
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // KeyDirection specifies the press/release of a key event
 //
@@ -23,7 +23,7 @@ const (
 //
 // Since: 2.7
 type KeyEvent struct {
-	Name      fyne.KeyName
+	Name      granio.KeyName
 	Direction KeyDirection
 }
 

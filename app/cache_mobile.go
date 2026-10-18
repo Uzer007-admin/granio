@@ -2,8 +2,8 @@
 
 package app
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func rootCacheDir(a fyne.App) string {
+func rootCacheDir(a granio.App) string {
 	return a.(*fyneApp).storageRoot()
 }

@@ -1,20 +1,20 @@
-package fyne_test
+package granio_test
 
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewSquareOffsetPosition(t *testing.T) {
-	pos := fyne.NewSquareOffsetPos(10)
+	pos := granio.NewSquareOffsetPos(10)
 	assert.Equal(t, pos.X, pos.Y)
 }
 
 func TestPosition_Add(t *testing.T) {
-	pos1 := fyne.NewPos(10, 10)
-	pos2 := fyne.NewPos(25, 25)
+	pos1 := granio.NewPos(10, 10)
+	pos2 := granio.NewPos(25, 25)
 
 	pos3 := pos1.Add(pos2)
 
@@ -23,8 +23,8 @@ func TestPosition_Add(t *testing.T) {
 }
 
 func TestPosition_Add_Size(t *testing.T) {
-	pos1 := fyne.NewPos(10, 10)
-	s := fyne.NewSize(25, 25)
+	pos1 := granio.NewPos(10, 10)
+	s := granio.NewSize(25, 25)
 
 	pos2 := pos1.Add(s)
 
@@ -33,8 +33,8 @@ func TestPosition_Add_Size(t *testing.T) {
 }
 
 func TestPosition_Add_Vector(t *testing.T) {
-	pos1 := fyne.NewPos(10, 10)
-	v := fyne.NewDelta(25, 25)
+	pos1 := granio.NewPos(10, 10)
+	v := granio.NewDelta(25, 25)
 
 	pos2 := pos1.Add(v)
 
@@ -43,7 +43,7 @@ func TestPosition_Add_Vector(t *testing.T) {
 }
 
 func TestPosition_AddXY(t *testing.T) {
-	pos1 := fyne.NewPos(10, 10)
+	pos1 := granio.NewPos(10, 10)
 
 	pos2 := pos1.AddXY(25, 25)
 
@@ -53,14 +53,14 @@ func TestPosition_AddXY(t *testing.T) {
 
 func TestPosition_IsZero(t *testing.T) {
 	for name, tt := range map[string]struct {
-		p    fyne.Position
+		p    granio.Position
 		want bool
 	}{
-		"zero value":       {fyne.Position{}, true},
-		"0,0":              {fyne.NewPos(0, 0), true},
-		"zero X":           {fyne.NewPos(0, 42), false},
-		"zero Y":           {fyne.NewPos(17, 0), false},
-		"non-zero X and Y": {fyne.NewPos(6, 9), false},
+		"zero value":       {granio.Position{}, true},
+		"0,0":              {granio.NewPos(0, 0), true},
+		"zero X":           {granio.NewPos(0, 42), false},
+		"zero Y":           {granio.NewPos(17, 0), false},
+		"non-zero X and Y": {granio.NewPos(6, 9), false},
 	} {
 		t.Run(name, func(t *testing.T) {
 			assert.Equal(t, tt.want, tt.p.IsZero())
@@ -69,8 +69,8 @@ func TestPosition_IsZero(t *testing.T) {
 }
 
 func TestPosition_Subtract(t *testing.T) {
-	pos1 := fyne.NewPos(25, 25)
-	pos2 := fyne.NewPos(10, 10)
+	pos1 := granio.NewPos(25, 25)
+	pos2 := granio.NewPos(10, 10)
 
 	pos3 := pos1.Subtract(pos2)
 
@@ -79,7 +79,7 @@ func TestPosition_Subtract(t *testing.T) {
 }
 
 func TestPosition_SubtractXY(t *testing.T) {
-	pos1 := fyne.NewPos(25, 25)
+	pos1 := granio.NewPos(25, 25)
 
 	pos2 := pos1.SubtractXY(10, 10)
 
@@ -88,8 +88,8 @@ func TestPosition_SubtractXY(t *testing.T) {
 }
 
 func TestSize_Add(t *testing.T) {
-	size1 := fyne.NewSize(10, 10)
-	size2 := fyne.NewSize(25, 25)
+	size1 := granio.NewSize(10, 10)
+	size2 := granio.NewSize(25, 25)
 
 	size3 := size1.Add(size2)
 
@@ -98,8 +98,8 @@ func TestSize_Add(t *testing.T) {
 }
 
 func TestSize_Add_Position(t *testing.T) {
-	size1 := fyne.NewSize(10, 10)
-	p := fyne.NewSize(25, 25)
+	size1 := granio.NewSize(10, 10)
+	p := granio.NewSize(25, 25)
 
 	size2 := size1.Add(p)
 
@@ -108,8 +108,8 @@ func TestSize_Add_Position(t *testing.T) {
 }
 
 func TestSize_Add_Vector(t *testing.T) {
-	size1 := fyne.NewSize(10, 10)
-	v := fyne.NewDelta(25, 25)
+	size1 := granio.NewSize(10, 10)
+	v := granio.NewDelta(25, 25)
 
 	size2 := size1.Add(v)
 
@@ -118,7 +118,7 @@ func TestSize_Add_Vector(t *testing.T) {
 }
 
 func TestSize_AddWidthHeight(t *testing.T) {
-	size1 := fyne.NewSize(10, 10)
+	size1 := granio.NewSize(10, 10)
 
 	size2 := size1.AddWidthHeight(25, 25)
 
@@ -128,14 +128,14 @@ func TestSize_AddWidthHeight(t *testing.T) {
 
 func TestSize_IsZero(t *testing.T) {
 	for name, tt := range map[string]struct {
-		s    fyne.Size
+		s    granio.Size
 		want bool
 	}{
-		"zero value":    {fyne.Size{}, true},
-		"0x0":           {fyne.NewSize(0, 0), true},
-		"zero width":    {fyne.NewSize(0, 42), false},
-		"zero height":   {fyne.NewSize(17, 0), false},
-		"non-zero area": {fyne.NewSize(6, 9), false},
+		"zero value":    {granio.Size{}, true},
+		"0x0":           {granio.NewSize(0, 0), true},
+		"zero width":    {granio.NewSize(0, 42), false},
+		"zero height":   {granio.NewSize(17, 0), false},
+		"non-zero area": {granio.NewSize(6, 9), false},
 	} {
 		t.Run(name, func(t *testing.T) {
 			assert.Equal(t, tt.want, tt.s.IsZero())
@@ -144,8 +144,8 @@ func TestSize_IsZero(t *testing.T) {
 }
 
 func TestSize_Max(t *testing.T) {
-	size1 := fyne.NewSize(10, 100)
-	size2 := fyne.NewSize(100, 10)
+	size1 := granio.NewSize(10, 100)
+	size2 := granio.NewSize(100, 10)
 
 	size3 := size1.Max(size2)
 
@@ -154,8 +154,8 @@ func TestSize_Max(t *testing.T) {
 }
 
 func TestSize_Min(t *testing.T) {
-	size1 := fyne.NewSize(10, 100)
-	size2 := fyne.NewSize(100, 10)
+	size1 := granio.NewSize(10, 100)
+	size2 := granio.NewSize(100, 10)
 
 	size3 := size1.Min(size2)
 
@@ -164,8 +164,8 @@ func TestSize_Min(t *testing.T) {
 }
 
 func TestSize_Subtract(t *testing.T) {
-	size1 := fyne.NewSize(25, 25)
-	size2 := fyne.NewSize(10, 10)
+	size1 := granio.NewSize(25, 25)
+	size2 := granio.NewSize(10, 10)
 
 	size3 := size1.Subtract(size2)
 
@@ -174,7 +174,7 @@ func TestSize_Subtract(t *testing.T) {
 }
 
 func TestSize_SubtractWidthHeight(t *testing.T) {
-	size1 := fyne.NewSize(25, 25)
+	size1 := granio.NewSize(25, 25)
 
 	size2 := size1.SubtractWidthHeight(10, 10)
 
@@ -183,12 +183,12 @@ func TestSize_SubtractWidthHeight(t *testing.T) {
 }
 
 func TestSquareSize(t *testing.T) {
-	size := fyne.NewSquareSize(10)
+	size := granio.NewSquareSize(10)
 	assert.Equal(t, size.Height, size.Width)
 }
 
 func TestVector_IsZero(t *testing.T) {
-	v := fyne.NewDelta(0, 0)
+	v := granio.NewDelta(0, 0)
 
 	assert.True(t, v.IsZero())
 

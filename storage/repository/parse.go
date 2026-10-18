@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
 )
 
 const domainLabelPattern = "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?"
@@ -22,7 +22,7 @@ var rxHostName = regexp.MustCompile("^" + domainLabelPattern + `(?:\.` + domainL
 // need to call it, and it prevents a circular import.
 //
 // Since: 2.0
-func NewFileURI(path string) fyne.URI {
+func NewFileURI(path string) granio.URI {
 	// URIs are supposed to use forward slashes. On Windows, it
 	// should be OK to use the platform native filepath with UNIX
 	// or NT style paths, with / or \, but when we reconstruct
@@ -34,7 +34,7 @@ func NewFileURI(path string) fyne.URI {
 	}
 
 	return &uri{url.URL{
-		Scheme: fyne.URISchemeFile,
+		Scheme: granio.URISchemeFile,
 		Path:   path,
 	}}
 }
@@ -44,9 +44,9 @@ func NewFileURI(path string) fyne.URI {
 // need to call it, and it prevents a circular import.
 //
 // Since: 2.0
-func ParseURI(s string) (fyne.URI, error) {
+func ParseURI(s string) (granio.URI, error) {
 	// Extract the scheme.
-	scheme, path, ok := strings.Cut(s, fyne.URISchemeSeparator)
+	scheme, path, ok := strings.Cut(s, granio.URISchemeSeparator)
 	if !ok {
 		return nil, errors.New("invalid URI, scheme must be present")
 	}
@@ -64,11 +64,11 @@ func ParseURI(s string) (fyne.URI, error) {
 
 	if runtime.GOOS == goos.Windows && len(scheme) == 1 {
 		path = scheme + ":" + filepath.ToSlash(path)
-		scheme = fyne.URISchemeFile
+		scheme = granio.URISchemeFile
 	}
 
-	if strings.EqualFold(scheme, fyne.URISchemeFile) {
-		path = strings.TrimPrefix(path, fyne.URIAuthorityPrefix)
+	if strings.EqualFold(scheme, granio.URISchemeFile) {
+		path = strings.TrimPrefix(path, granio.URIAuthorityPrefix)
 		if path == "" {
 			return nil, errors.New("invalid file URI, path cannot be empty")
 		}

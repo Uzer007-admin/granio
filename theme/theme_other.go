@@ -5,10 +5,10 @@ package theme
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 var (
 	fallbackColor = color.Transparent
-	fallbackIcon  = &fyne.StaticResource{}
+	fallbackIcon  = &granio.StaticResource{}
 )

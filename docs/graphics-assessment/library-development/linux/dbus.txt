@@ -1,0 +1,9 @@
+ok  	github.com/Uzer007-admin/dbus/v5	5.621s
+?   	github.com/Uzer007-admin/dbus/v5/introspect	[no test files]
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.045s
+ok  	github.com/Uzer007-admin/dbus/v5/prop	1.030s
+ok  	github.com/Uzer007-admin/dbus/v5	5.623s
+?   	github.com/Uzer007-admin/dbus/v5/introspect	[no test files]
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.044s
+ok  	github.com/Uzer007-admin/dbus/v5/prop	1.029s
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.136s

@@ -5,68 +5,68 @@ package glfw
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
 
-	"github.com/go-gl/glfw/v3.4/glfw"
+	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 	"github.com/stretchr/testify/assert"
 )
 
-var keyCodeMap = map[glfw.Key]fyne.KeyName{
+var keyCodeMap = map[glfw.Key]granio.KeyName{
 	// non-printable
-	glfw.KeyEscape:    fyne.KeyEscape,
-	glfw.KeyEnter:     fyne.KeyReturn,
-	glfw.KeyTab:       fyne.KeyTab,
-	glfw.KeyBackspace: fyne.KeyBackspace,
-	glfw.KeyInsert:    fyne.KeyInsert,
-	glfw.KeyDelete:    fyne.KeyDelete,
-	glfw.KeyRight:     fyne.KeyRight,
-	glfw.KeyLeft:      fyne.KeyLeft,
-	glfw.KeyDown:      fyne.KeyDown,
-	glfw.KeyUp:        fyne.KeyUp,
-	glfw.KeyPageUp:    fyne.KeyPageUp,
-	glfw.KeyPageDown:  fyne.KeyPageDown,
-	glfw.KeyHome:      fyne.KeyHome,
-	glfw.KeyEnd:       fyne.KeyEnd,
+	glfw.KeyEscape:    granio.KeyEscape,
+	glfw.KeyEnter:     granio.KeyReturn,
+	glfw.KeyTab:       granio.KeyTab,
+	glfw.KeyBackspace: granio.KeyBackspace,
+	glfw.KeyInsert:    granio.KeyInsert,
+	glfw.KeyDelete:    granio.KeyDelete,
+	glfw.KeyRight:     granio.KeyRight,
+	glfw.KeyLeft:      granio.KeyLeft,
+	glfw.KeyDown:      granio.KeyDown,
+	glfw.KeyUp:        granio.KeyUp,
+	glfw.KeyPageUp:    granio.KeyPageUp,
+	glfw.KeyPageDown:  granio.KeyPageDown,
+	glfw.KeyHome:      granio.KeyHome,
+	glfw.KeyEnd:       granio.KeyEnd,
 
-	glfw.KeySpace:   fyne.KeySpace,
-	glfw.KeyKPEnter: fyne.KeyEnter,
+	glfw.KeySpace:   granio.KeySpace,
+	glfw.KeyKPEnter: granio.KeyEnter,
 
 	// functions
-	glfw.KeyF1:  fyne.KeyF1,
-	glfw.KeyF2:  fyne.KeyF2,
-	glfw.KeyF3:  fyne.KeyF3,
-	glfw.KeyF4:  fyne.KeyF4,
-	glfw.KeyF5:  fyne.KeyF5,
-	glfw.KeyF6:  fyne.KeyF6,
-	glfw.KeyF7:  fyne.KeyF7,
-	glfw.KeyF8:  fyne.KeyF8,
-	glfw.KeyF9:  fyne.KeyF9,
-	glfw.KeyF10: fyne.KeyF10,
-	glfw.KeyF11: fyne.KeyF11,
-	glfw.KeyF12: fyne.KeyF12,
+	glfw.KeyF1:  granio.KeyF1,
+	glfw.KeyF2:  granio.KeyF2,
+	glfw.KeyF3:  granio.KeyF3,
+	glfw.KeyF4:  granio.KeyF4,
+	glfw.KeyF5:  granio.KeyF5,
+	glfw.KeyF6:  granio.KeyF6,
+	glfw.KeyF7:  granio.KeyF7,
+	glfw.KeyF8:  granio.KeyF8,
+	glfw.KeyF9:  granio.KeyF9,
+	glfw.KeyF10: granio.KeyF10,
+	glfw.KeyF11: granio.KeyF11,
+	glfw.KeyF12: granio.KeyF12,
 
 	// numbers - lookup by code to avoid AZERTY using the symbol name instead of number
-	glfw.Key0:   fyne.Key0,
-	glfw.KeyKP0: fyne.Key0,
-	glfw.Key1:   fyne.Key1,
-	glfw.KeyKP1: fyne.Key1,
-	glfw.Key2:   fyne.Key2,
-	glfw.KeyKP2: fyne.Key2,
-	glfw.Key3:   fyne.Key3,
-	glfw.KeyKP3: fyne.Key3,
-	glfw.Key4:   fyne.Key4,
-	glfw.KeyKP4: fyne.Key4,
-	glfw.Key5:   fyne.Key5,
-	glfw.KeyKP5: fyne.Key5,
-	glfw.Key6:   fyne.Key6,
-	glfw.KeyKP6: fyne.Key6,
-	glfw.Key7:   fyne.Key7,
-	glfw.KeyKP7: fyne.Key7,
-	glfw.Key8:   fyne.Key8,
-	glfw.KeyKP8: fyne.Key8,
-	glfw.Key9:   fyne.Key9,
-	glfw.KeyKP9: fyne.Key9,
+	glfw.Key0:   granio.Key0,
+	glfw.KeyKP0: granio.Key0,
+	glfw.Key1:   granio.Key1,
+	glfw.KeyKP1: granio.Key1,
+	glfw.Key2:   granio.Key2,
+	glfw.KeyKP2: granio.Key2,
+	glfw.Key3:   granio.Key3,
+	glfw.KeyKP3: granio.Key3,
+	glfw.Key4:   granio.Key4,
+	glfw.KeyKP4: granio.Key4,
+	glfw.Key5:   granio.Key5,
+	glfw.KeyKP5: granio.Key5,
+	glfw.Key6:   granio.Key6,
+	glfw.KeyKP6: granio.Key6,
+	glfw.Key7:   granio.Key7,
+	glfw.KeyKP7: granio.Key7,
+	glfw.Key8:   granio.Key8,
+	glfw.KeyKP8: granio.Key8,
+	glfw.Key9:   granio.Key9,
+	glfw.KeyKP9: granio.Key9,
 
 	// desktop
 	glfw.KeyLeftShift:    desktop.KeyShiftLeft,
@@ -89,36 +89,36 @@ func TestGlfwKeyToKeyName(t *testing.T) {
 	}
 
 	invalid := glfwKeyToKeyName(glfw.Key(-1))
-	assert.Equal(t, fyne.KeyUnknown, invalid)
+	assert.Equal(t, granio.KeyUnknown, invalid)
 }
 
 func TestConvertASCII(t *testing.T) {
 	for i := 0; i <= 'Z'-'A'; i++ {
 		translated := convertASCII(glfw.KeyA + glfw.Key(i))
-		expected := fyne.KeyName(rune(fyne.KeyA[0] + byte(i)))
+		expected := granio.KeyName(rune(granio.KeyA[0] + byte(i)))
 		assert.Equal(t, expected, translated)
 	}
 
 	invalid := convertASCII(glfw.Key(-1))
-	assert.Equal(t, fyne.KeyUnknown, invalid)
+	assert.Equal(t, granio.KeyUnknown, invalid)
 }
 
-var keyNameMapSpecialCharacters = map[string]fyne.KeyName{
-	"'": fyne.KeyApostrophe,
-	",": fyne.KeyComma,
-	"-": fyne.KeyMinus,
-	".": fyne.KeyPeriod,
-	"/": fyne.KeySlash,
-	"*": fyne.KeyAsterisk,
-	"`": fyne.KeyBackTick,
+var keyNameMapSpecialCharacters = map[string]granio.KeyName{
+	"'": granio.KeyApostrophe,
+	",": granio.KeyComma,
+	"-": granio.KeyMinus,
+	".": granio.KeyPeriod,
+	"/": granio.KeySlash,
+	"*": granio.KeyAsterisk,
+	"`": granio.KeyBackTick,
 
-	";": fyne.KeySemicolon,
-	"+": fyne.KeyPlus,
-	"=": fyne.KeyEqual,
+	";": granio.KeySemicolon,
+	"+": granio.KeyPlus,
+	"=": granio.KeyEqual,
 
-	"[":  fyne.KeyLeftBracket,
-	"\\": fyne.KeyBackslash,
-	"]":  fyne.KeyRightBracket,
+	"[":  granio.KeyLeftBracket,
+	"\\": granio.KeyBackslash,
+	"]":  granio.KeyRightBracket,
 }
 
 func TestKeyCodeToKeyName(t *testing.T) {
@@ -129,13 +129,13 @@ func TestKeyCodeToKeyName(t *testing.T) {
 
 	for i := rune(0); i <= 'z'-'a'; i++ {
 		translated := keyCodeToKeyName(string('a' + i))
-		expected := fyne.KeyName(rune(fyne.KeyA[0]) + i)
+		expected := granio.KeyName(rune(granio.KeyA[0]) + i)
 		assert.Equal(t, expected, translated)
 	}
 
 	invalid := keyCodeToKeyName("@")
-	assert.Equal(t, fyne.KeyUnknown, invalid)
+	assert.Equal(t, granio.KeyUnknown, invalid)
 
 	invalid = keyCodeToKeyName("invalid")
-	assert.Equal(t, fyne.KeyUnknown, invalid)
+	assert.Equal(t, granio.KeyUnknown, invalid)
 }

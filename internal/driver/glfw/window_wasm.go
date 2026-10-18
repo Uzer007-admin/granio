@@ -8,15 +8,15 @@ import (
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/painter/gl"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 
-	"github.com/fyne-io/glfw-js"
+	"github.com/Uzer007-admin/granio-glfw-js"
 )
 
 type Cursor struct {
@@ -44,46 +44,48 @@ const (
 )
 
 // Declare conformity to Window interface
-var _ fyne.Window = (*window)(nil)
+var _ granio.Window = (*window)(nil)
 
 type window struct {
-	viewport  *glfw.Window
-	frame     presentGate
-	created   bool
-	decorate  bool
-	closing   bool
-	fixedSize bool
+	visuals     windowVisualState
+	viewport    *glfw.Window
+	frame       presentGate
+	created     bool
+	decorate    bool
+	closing     bool
+	fixedSize   bool
+	scalePolicy desktop.ScalePolicy
 
 	cursor   desktop.Cursor
 	canvas   *glCanvas
 	driver   *gLDriver
 	title    string
-	icon     fyne.Resource
-	mainmenu *fyne.MainMenu
+	icon     granio.Resource
+	mainmenu *granio.MainMenu
 
 	master                          bool
 	fullScreen, fullScreenSecondary bool
 	centered, visible               bool
 	mousePosUpdateProcessed         bool
 	newMousePosX, newMousePosY      float64
-	mousePos                        fyne.Position
-	mouseDragged                    fyne.Draggable
-	mouseDraggedObjStart            fyne.Position
-	mouseDraggedOffset              fyne.Position
-	mouseDragPos                    fyne.Position
+	mousePos                        granio.Position
+	mouseDragged                    granio.Draggable
+	mouseDraggedObjStart            granio.Position
+	mouseDraggedOffset              granio.Position
+	mouseDragPos                    granio.Position
 	mouseDragStarted                bool
 	mouseButton                     desktop.MouseButton
 	mouseOver                       desktop.Hoverable
-	mouseLastClick                  fyne.CanvasObject
-	mousePressed                    fyne.CanvasObject
+	mouseLastClick                  granio.CanvasObject
+	mousePressed                    granio.CanvasObject
 	mouseClickCount                 int
 	mouseCancelFunc                 context.CancelFunc
 
 	onClosed           func()
 	onCloseIntercepted func()
 
-	menuTogglePending       fyne.KeyName
-	menuDeactivationPending fyne.KeyName
+	menuTogglePending       granio.KeyName
+	menuDeactivationPending granio.KeyName
 
 	xpos, ypos                      int
 	width, height                   int
@@ -107,7 +109,7 @@ func (w *window) CenterOnScreen() {
 	w.centered = true
 }
 
-func (w *window) SetOnDropped(dropped func(pos fyne.Position, items []fyne.URI)) {
+func (w *window) SetOnDropped(dropped func(pos granio.Position, items []granio.URI)) {
 	// FIXME: not implemented yet
 }
 
@@ -119,7 +121,7 @@ func (w *window) RequestFocus() {
 	// FIXME: no meaning for defining focus in WebGL
 }
 
-func (w *window) SetIcon(icon fyne.Resource) {
+func (w *window) SetIcon(icon granio.Resource) {
 	// FIXME: no support for SetIcon yet
 }
 
@@ -254,17 +256,17 @@ func (w *window) mouseScrolled(viewport *glfw.Window, xoff, yoff float64) {
 	})
 }
 
-func convertMouseButton(btn glfw.MouseButton, mods glfw.ModifierKey) (desktop.MouseButton, fyne.KeyModifier) {
+func convertMouseButton(btn glfw.MouseButton, mods glfw.ModifierKey) (desktop.MouseButton, granio.KeyModifier) {
 	modifier := desktopModifier(mods)
 	rightClick := false
 	if isMacOSRuntime() {
-		if modifier&fyne.KeyModifierControl != 0 {
+		if modifier&granio.KeyModifierControl != 0 {
 			rightClick = true
-			modifier &^= fyne.KeyModifierControl
+			modifier &^= granio.KeyModifierControl
 		}
-		if modifier&fyne.KeyModifierSuper != 0 {
-			modifier |= fyne.KeyModifierControl
-			modifier &^= fyne.KeyModifierSuper
+		if modifier&granio.KeyModifierSuper != 0 {
+			modifier |= granio.KeyModifierControl
+			modifier &^= granio.KeyModifierSuper
 		}
 	}
 
@@ -284,64 +286,64 @@ func convertMouseButton(btn glfw.MouseButton, mods glfw.ModifierKey) (desktop.Mo
 }
 
 //gocyclo:ignore
-func glfwKeyToKeyName(key glfw.Key) fyne.KeyName {
+func glfwKeyToKeyName(key glfw.Key) granio.KeyName {
 	switch key {
 	// numbers - lookup by code to avoid AZERTY using the symbol name instead of number
 	case glfw.Key0, glfw.KeyKP0:
-		return fyne.Key0
+		return granio.Key0
 	case glfw.Key1, glfw.KeyKP1:
-		return fyne.Key1
+		return granio.Key1
 	case glfw.Key2, glfw.KeyKP2:
-		return fyne.Key2
+		return granio.Key2
 	case glfw.Key3, glfw.KeyKP3:
-		return fyne.Key3
+		return granio.Key3
 	case glfw.Key4, glfw.KeyKP4:
-		return fyne.Key4
+		return granio.Key4
 	case glfw.Key5, glfw.KeyKP5:
-		return fyne.Key5
+		return granio.Key5
 	case glfw.Key6, glfw.KeyKP6:
-		return fyne.Key6
+		return granio.Key6
 	case glfw.Key7, glfw.KeyKP7:
-		return fyne.Key7
+		return granio.Key7
 	case glfw.Key8, glfw.KeyKP8:
-		return fyne.Key8
+		return granio.Key8
 	case glfw.Key9, glfw.KeyKP9:
-		return fyne.Key9
+		return granio.Key9
 
 	// non-printable
 	case glfw.KeyEscape:
-		return fyne.KeyEscape
+		return granio.KeyEscape
 	case glfw.KeyEnter:
-		return fyne.KeyReturn
+		return granio.KeyReturn
 	case glfw.KeyTab:
-		return fyne.KeyTab
+		return granio.KeyTab
 	case glfw.KeyBackspace:
-		return fyne.KeyBackspace
+		return granio.KeyBackspace
 	case glfw.KeyInsert:
-		return fyne.KeyInsert
+		return granio.KeyInsert
 	case glfw.KeyDelete:
-		return fyne.KeyDelete
+		return granio.KeyDelete
 	case glfw.KeyRight:
-		return fyne.KeyRight
+		return granio.KeyRight
 	case glfw.KeyLeft:
-		return fyne.KeyLeft
+		return granio.KeyLeft
 	case glfw.KeyDown:
-		return fyne.KeyDown
+		return granio.KeyDown
 	case glfw.KeyUp:
-		return fyne.KeyUp
+		return granio.KeyUp
 	case glfw.KeyPageUp:
-		return fyne.KeyPageUp
+		return granio.KeyPageUp
 	case glfw.KeyPageDown:
-		return fyne.KeyPageDown
+		return granio.KeyPageDown
 	case glfw.KeyHome:
-		return fyne.KeyHome
+		return granio.KeyHome
 	case glfw.KeyEnd:
-		return fyne.KeyEnd
+		return granio.KeyEnd
 
 	case glfw.KeySpace:
-		return fyne.KeySpace
+		return granio.KeySpace
 	case glfw.KeyKPEnter:
-		return fyne.KeyEnter
+		return granio.KeyEnter
 
 	// desktop
 	case glfw.KeyLeftShift:
@@ -369,86 +371,86 @@ func glfwKeyToKeyName(key glfw.Key) fyne.KeyName {
 
 	// functions
 	case glfw.KeyF1:
-		return fyne.KeyF1
+		return granio.KeyF1
 	case glfw.KeyF2:
-		return fyne.KeyF2
+		return granio.KeyF2
 	case glfw.KeyF3:
-		return fyne.KeyF3
+		return granio.KeyF3
 	case glfw.KeyF4:
-		return fyne.KeyF4
+		return granio.KeyF4
 	case glfw.KeyF5:
-		return fyne.KeyF5
+		return granio.KeyF5
 	case glfw.KeyF6:
-		return fyne.KeyF6
+		return granio.KeyF6
 	case glfw.KeyF7:
-		return fyne.KeyF7
+		return granio.KeyF7
 	case glfw.KeyF8:
-		return fyne.KeyF8
+		return granio.KeyF8
 	case glfw.KeyF9:
-		return fyne.KeyF9
+		return granio.KeyF9
 	case glfw.KeyF10:
-		return fyne.KeyF10
+		return granio.KeyF10
 	case glfw.KeyF11:
-		return fyne.KeyF11
+		return granio.KeyF11
 	case glfw.KeyF12:
-		return fyne.KeyF12
+		return granio.KeyF12
 	}
 
-	return fyne.KeyUnknown
+	return granio.KeyUnknown
 }
 
-func keyCodeToKeyName(code string) fyne.KeyName {
+func keyCodeToKeyName(code string) granio.KeyName {
 	if len(code) != 1 {
-		return fyne.KeyUnknown
+		return granio.KeyUnknown
 	}
 
 	char := code[0]
 	if char >= 'a' && char <= 'z' {
 		// Our alphabetical keys are all upper case characters.
-		return fyne.KeyName('A' + char - 'a')
+		return granio.KeyName('A' + char - 'a')
 	}
 
 	switch char {
 	case '[':
-		return fyne.KeyLeftBracket
+		return granio.KeyLeftBracket
 	case '\\':
-		return fyne.KeyBackslash
+		return granio.KeyBackslash
 	case ']':
-		return fyne.KeyRightBracket
+		return granio.KeyRightBracket
 	case '\'':
-		return fyne.KeyApostrophe
+		return granio.KeyApostrophe
 	case ',':
-		return fyne.KeyComma
+		return granio.KeyComma
 	case '-':
-		return fyne.KeyMinus
+		return granio.KeyMinus
 	case '.':
-		return fyne.KeyPeriod
+		return granio.KeyPeriod
 	case '/':
-		return fyne.KeySlash
+		return granio.KeySlash
 	case '*':
-		return fyne.KeyAsterisk
+		return granio.KeyAsterisk
 	case '`':
-		return fyne.KeyBackTick
+		return granio.KeyBackTick
 	case ';':
-		return fyne.KeySemicolon
+		return granio.KeySemicolon
 	case '+':
-		return fyne.KeyPlus
+		return granio.KeyPlus
 	case '=':
-		return fyne.KeyEqual
+		return granio.KeyEqual
 	}
 
-	return fyne.KeyUnknown
+	return granio.KeyUnknown
 }
 
-func keyToName(code glfw.Key, scancode int) fyne.KeyName {
+func keyToName(code glfw.Key, scancode int) granio.KeyName {
 	ret := glfwKeyToKeyName(code)
-	if ret != fyne.KeyUnknown {
+	if ret != granio.KeyUnknown {
 		return ret
 	}
 
 	//	keyName := glfw.GetKeyName(code, scancode)
 	//	return keyCodeToKeyName(keyName)
-	return fyne.KeyUnknown
+	return granio.KeyUnknown
 }
 
 func convertAction(action glfw.Action) action {
@@ -463,12 +465,12 @@ func convertAction(action glfw.Action) action {
 	panic("Could not convert glfw.Action.")
 }
 
-func convertASCII(key glfw.Key) fyne.KeyName {
+func convertASCII(key glfw.Key) granio.KeyName {
 	if key < glfw.KeyA || key > glfw.KeyZ {
-		return fyne.KeyUnknown
+		return granio.KeyUnknown
 	}
 
-	return fyne.KeyName(rune(key))
+	return granio.KeyName(rune(key))
 }
 
 func (w *window) keyPressed(viewport *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
@@ -480,19 +482,19 @@ func (w *window) keyPressed(viewport *glfw.Window, key glfw.Key, scancode int, a
 	w.processKeyPressed(keyName, keyASCII, scancode, keyAction, keyDesktopModifier)
 }
 
-func desktopModifier(mods glfw.ModifierKey) fyne.KeyModifier {
-	var m fyne.KeyModifier
+func desktopModifier(mods glfw.ModifierKey) granio.KeyModifier {
+	var m granio.KeyModifier
 	if (mods & glfw.ModShift) != 0 {
-		m |= fyne.KeyModifierShift
+		m |= granio.KeyModifierShift
 	}
 	if (mods & glfw.ModControl) != 0 {
-		m |= fyne.KeyModifierControl
+		m |= granio.KeyModifierControl
 	}
 	if (mods & glfw.ModAlt) != 0 {
-		m |= fyne.KeyModifierAlt
+		m |= granio.KeyModifierAlt
 	}
 	if (mods & glfw.ModSuper) != 0 {
-		m |= fyne.KeyModifierSuper
+		m |= granio.KeyModifierSuper
 	}
 	return m
 }
@@ -519,7 +521,7 @@ func (w *window) RescaleContext() {
 	}
 
 	w.width, w.height = w.viewport.GetSize()
-	scaledFull := fyne.NewSize(
+	scaledFull := granio.NewSize(
 		scale.ToFyneCoordinate(w.canvas, w.width),
 		scale.ToFyneCoordinate(w.canvas, w.height),
 	)
@@ -533,6 +535,7 @@ func (w *window) RescaleContext() {
 }
 
 func (w *window) create() {
+	w.beginVisualCreation()
 	// we can't hide the window in webgl, so there might be some artifact
 	initWindowHints()
 
@@ -548,6 +551,7 @@ func (w *window) create() {
 
 	win, err := glfw.CreateWindow(pixWidth, pixHeight, w.title, nil, nil)
 	if err != nil {
+		w.failVisualCreation()
 		w.driver.initFailed("window creation error", err)
 		return
 	}
@@ -591,6 +595,7 @@ func (w *window) create() {
 	width, height := win.GetSize()
 	w.processFrameSized(width, height)
 	w.processResized(width, height)
+	w.applyWindowVisuals()
 }
 
 func (w *window) view() *glfw.Window {
@@ -602,7 +607,7 @@ func (w *window) view() *glfw.Window {
 
 // wrapInner represents a window that is provided by an InnerWindow container in the canvas.
 type wrapInner struct {
-	fyne.Window
+	granio.Window
 	inner *container.InnerWindow
 	d     *gLDriver
 
@@ -610,7 +615,7 @@ type wrapInner struct {
 	onClosed func()
 }
 
-func wrapInnerWindow(w *container.InnerWindow, root fyne.Window, d *gLDriver) fyne.Window {
+func wrapInnerWindow(w *container.InnerWindow, root granio.Window, d *gLDriver) granio.Window {
 	wrapped := &wrapInner{inner: w, d: d}
 	wrapped.Window = root
 	w.CloseIntercept = wrapped.doClose
@@ -632,15 +637,15 @@ func (w *wrapInner) Hide() {
 	w.updateVisibility()
 }
 
-func (w *wrapInner) Move(p fyne.Position) {
+func (w *wrapInner) Move(p granio.Position) {
 	w.inner.Move(p)
 }
 
-func (w *wrapInner) Resize(s fyne.Size) {
+func (w *wrapInner) Resize(s granio.Size) {
 	w.inner.Resize(s)
 }
 
-func (w *wrapInner) SetContent(o fyne.CanvasObject) {
+func (w *wrapInner) SetContent(o granio.CanvasObject) {
 	w.inner.SetContent(o)
 }
 
@@ -671,7 +676,7 @@ func (w *wrapInner) doCenter() {
 	x := (multi.Size().Width - min.Width) / 2
 	y := (multi.Size().Height - min.Height) / 2
 
-	w.inner.Move(fyne.NewPos(x, y))
+	w.inner.Move(granio.NewPos(x, y))
 }
 
 func (w *wrapInner) doClose() {

@@ -1,0 +1,9 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/internal/driver/glfw
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkRunOnDraw-16    	   16239	     37015 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRunOnDraw-16    	   16515	     46777 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRunOnDraw-16    	   14620	     43712 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	5.620s

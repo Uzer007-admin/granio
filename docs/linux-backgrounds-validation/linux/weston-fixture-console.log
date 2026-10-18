@@ -1,0 +1,137 @@
+owned background fixture ready (protocol validation, no blur renderer)
+client buffer surface=14 frame=0 size=720x200 zero=0 nonopaque=132665 invalid=0
+client buffer surface=16 frame=0 size=2560x1440 zero=0 nonopaque=0 invalid=0
+extension create surface=17 fractional=1
+extension create surface=28 fractional=1
+client buffer surface=28 frame=0 size=360x290 zero=85331 nonopaque=99794 invalid=0
+client buffer surface=28 frame=4 size=410x310 zero=0 nonopaque=0 invalid=0
+extension destroy surface=28 fractional=1
+extension create surface=65 fractional=1
+extension create surface=65 fractional=0
+blur region surface=65 enabled=1 capability=1
+blur region surface=65 enabled=1 capability=1
+client buffer surface=65 frame=0 size=360x290 zero=85331 nonopaque=99794 invalid=0
+blur region surface=65 enabled=1 capability=1
+blur region surface=65 enabled=0 capability=1
+client buffer surface=65 frame=4 size=410x310 zero=0 nonopaque=0 invalid=0
+extension destroy surface=65 fractional=0
+extension destroy surface=65 fractional=1
+extension create surface=53 fractional=1
+extension create surface=53 fractional=0
+blur region surface=53 enabled=1 capability=1
+blur region surface=53 enabled=1 capability=1
+client buffer surface=53 frame=0 size=360x290 zero=85331 nonopaque=99794 invalid=0
+fixture command blur off
+blur region surface=53 enabled=0 capability=0
+client buffer surface=53 frame=2 size=360x290 zero=0 nonopaque=0 invalid=0
+fixture command blur on
+blur region surface=53 enabled=1 capability=1
+client buffer surface=53 frame=4 size=360x290 zero=85331 nonopaque=99794 invalid=0
+fixture command remove
+extension destroy surface=53 fractional=0
+client buffer surface=53 frame=6 size=360x290 zero=0 nonopaque=0 invalid=0
+fixture command add
+extension create surface=53 fractional=0
+blur region surface=53 enabled=1 capability=1
+client buffer surface=53 frame=8 size=360x290 zero=85331 nonopaque=99794 invalid=0
+fixture command scale 150
+fixture command scale 240
+fixture command scale 120
+blur region surface=53 enabled=0 capability=1
+extension destroy surface=53 fractional=0
+extension destroy surface=53 fractional=1
+extension create surface=40 fractional=1
+client buffer surface=40 frame=0 size=360x290 zero=0 nonopaque=0 invalid=0
+extension destroy surface=40 fractional=1
+extension create surface=30 fractional=1
+extension create surface=65 fractional=1
+client buffer surface=65 frame=0 size=360x290 zero=0 nonopaque=0 invalid=0
+extension create surface=46 fractional=1
+extension destroy surface=46 fractional=1
+extension destroy surface=65 fractional=1
+extension destroy surface=30 fractional=1
+extension create surface=49 fractional=1
+client buffer surface=49 frame=0 size=360x290 zero=0 nonopaque=0 invalid=0
+extension destroy surface=49 fractional=1
+extension create surface=57 fractional=1
+client buffer surface=57 frame=0 size=10x10 zero=0 nonopaque=100 invalid=0
+extension destroy surface=57 fractional=1
+extension destroy surface=0 fractional=1
+extension create surface=17 fractional=1
+extension create surface=28 fractional=1
+client buffer surface=28 frame=0 size=360x290 zero=85331 nonopaque=99794 invalid=0
+client buffer surface=28 frame=4 size=410x310 zero=0 nonopaque=0 invalid=0
+extension destroy surface=28 fractional=1
+extension create surface=51 fractional=1
+extension create surface=51 fractional=0
+blur region surface=51 enabled=1 capability=1
+blur region surface=51 enabled=1 capability=1
+client buffer surface=51 frame=0 size=360x290 zero=85331 nonopaque=99794 invalid=0
+blur region surface=51 enabled=1 capability=1
+blur region surface=51 enabled=0 capability=1
+client buffer surface=51 frame=4 size=410x310 zero=0 nonopaque=0 invalid=0
+extension destroy surface=51 fractional=0
+extension destroy surface=51 fractional=1
+extension create surface=30 fractional=1
+extension create surface=30 fractional=0
+blur region surface=30 enabled=1 capability=1
+blur region surface=30 enabled=1 capability=1
+client buffer surface=30 frame=0 size=360x290 zero=85331 nonopaque=99794 invalid=0
+fixture command blur off
+blur region surface=30 enabled=0 capability=0
+client buffer surface=30 frame=2 size=360x290 zero=0 nonopaque=0 invalid=0
+fixture command blur on
+blur region surface=30 enabled=1 capability=1
+client buffer surface=30 frame=4 size=360x290 zero=85331 nonopaque=99794 invalid=0
+fixture command remove
+extension destroy surface=30 fractional=0
+client buffer surface=30 frame=6 size=360x290 zero=0 nonopaque=0 invalid=0
+fixture command add
+extension create surface=30 fractional=0
+blur region surface=30 enabled=1 capability=1
+client buffer surface=30 frame=8 size=360x290 zero=85331 nonopaque=99794 invalid=0
+fixture command scale 150
+fixture command scale 240
+fixture command scale 120
+blur region surface=30 enabled=0 capability=1
+extension destroy surface=30 fractional=0
+extension destroy surface=30 fractional=1
+extension create surface=60 fractional=1
+client buffer surface=60 frame=0 size=360x290 zero=0 nonopaque=0 invalid=0
+extension destroy surface=60 fractional=1
+extension create surface=59 fractional=1
+extension create surface=51 fractional=1
+client buffer surface=51 frame=0 size=360x290 zero=0 nonopaque=0 invalid=0
+extension create surface=68 fractional=1
+extension destroy surface=68 fractional=1
+extension destroy surface=51 fractional=1
+extension destroy surface=59 fractional=1
+extension create surface=49 fractional=1
+client buffer surface=49 frame=0 size=360x290 zero=0 nonopaque=0 invalid=0
+extension destroy surface=49 fractional=1
+extension create surface=72 fractional=1
+client buffer surface=72 frame=0 size=10x10 zero=0 nonopaque=100 invalid=0
+extension destroy surface=72 fractional=1
+extension destroy surface=0 fractional=1
+extension create surface=17 fractional=1
+extension create surface=17 fractional=0
+blur region surface=17 enabled=1 capability=1
+blur region surface=17 enabled=0 capability=1
+blur region surface=17 enabled=1 capability=1
+blur region surface=17 enabled=0 capability=1
+blur region surface=17 enabled=0 capability=1
+extension create surface=30 fractional=1
+extension destroy surface=17 fractional=0
+extension destroy surface=17 fractional=1
+extension destroy surface=30 fractional=1
+extension create surface=17 fractional=1
+client buffer surface=17 frame=0 size=1060x760 zero=659678 nonopaque=739384 invalid=0
+extension destroy surface=0 fractional=1
+extension create surface=17 fractional=1
+extension create surface=17 fractional=0
+blur region surface=17 enabled=1 capability=1
+blur region surface=17 enabled=1 capability=1
+client buffer surface=17 frame=0 size=1060x760 zero=659661 nonopaque=739384 invalid=0
+blur region surface=17 enabled=1 capability=1
+extension destroy surface=0 fractional=1
+extension destroy surface=0 fractional=0

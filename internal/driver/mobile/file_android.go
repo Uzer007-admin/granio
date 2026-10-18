@@ -25,10 +25,10 @@ import (
 	"sync"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 type javaStream struct {
@@ -175,7 +175,7 @@ func (s *javaStream) Write(p []byte) (int, error) {
 	return len(p), err
 }
 
-func deleteURI(u fyne.URI) error {
+func deleteURI(u granio.URI) error {
 	uriStr := C.CString(u.String())
 	defer C.free(unsafe.Pointer(uriStr))
 
@@ -191,7 +191,7 @@ func deleteURI(u fyne.URI) error {
 	return nil
 }
 
-func existsURI(uri fyne.URI) (bool, error) {
+func existsURI(uri granio.URI) (bool, error) {
 	uriStr := C.CString(uri.String())
 	defer C.free(unsafe.Pointer(uriStr))
 
@@ -206,6 +206,6 @@ func existsURI(uri fyne.URI) (bool, error) {
 
 func registerRepository(d *driver) {
 	repo := &mobileFileRepo{}
-	repository.Register(fyne.URISchemeFile, repo)
+	repository.Register(granio.URISchemeFile, repo)
 	repository.Register("content", repo)
 }

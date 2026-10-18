@@ -1,0 +1,9 @@
+goos: linux
+goarch: amd64
+pkg: github.com/Uzer007-admin/dbus/v5/portal
+cpu: Intel(R) Xeon(R) Gold 5320 CPU @ 2.20GHz
+BenchmarkAppearanceDelta-4   	49026886	        24.42 ns/op	       0 B/op	       0 allocs/op
+BenchmarkAppearanceDelta-4   	49347475	        24.44 ns/op	       0 B/op	       0 allocs/op
+BenchmarkAppearanceDelta-4   	49344526	        24.49 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/dbus/v5/portal	3.697s

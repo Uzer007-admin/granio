@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // DeviceOrientation represents the different ways that a mobile device can be held
 type DeviceOrientation int

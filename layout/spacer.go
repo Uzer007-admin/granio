@@ -1,6 +1,6 @@
 package layout
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // SpacerObject is any object that can be used to space out child objects
 type SpacerObject interface {
@@ -14,14 +14,14 @@ type Spacer struct {
 	FixHorizontal bool
 	FixVertical   bool
 
-	size   fyne.Size
-	pos    fyne.Position
+	size   granio.Size
+	pos    granio.Position
 	hidden bool
 }
 
 // NewSpacer returns a spacer object which can fill vertical and horizontal
 // space. This is primarily used with a box layout.
-func NewSpacer() fyne.CanvasObject {
+func NewSpacer() granio.CanvasObject {
 	return &Spacer{}
 }
 
@@ -36,28 +36,28 @@ func (s *Spacer) ExpandHorizontal() bool {
 }
 
 // Size returns the current size of this Spacer
-func (s *Spacer) Size() fyne.Size {
+func (s *Spacer) Size() granio.Size {
 	return s.size
 }
 
 // Resize sets a new size for the Spacer - this will be called by the layout
-func (s *Spacer) Resize(size fyne.Size) {
+func (s *Spacer) Resize(size granio.Size) {
 	s.size = size
 }
 
 // Position returns the current position of this Spacer
-func (s *Spacer) Position() fyne.Position {
+func (s *Spacer) Position() granio.Position {
 	return s.pos
 }
 
 // Move sets a new position for the Spacer - this will be called by the layout
-func (s *Spacer) Move(pos fyne.Position) {
+func (s *Spacer) Move(pos granio.Position) {
 	s.pos = pos
 }
 
 // MinSize returns a 0 size as a Spacer can shrink to no actual size
-func (*Spacer) MinSize() fyne.Size {
-	return fyne.NewSize(0, 0)
+func (*Spacer) MinSize() granio.Size {
+	return granio.NewSize(0, 0)
 }
 
 // Visible returns true if this spacer should affect the layout

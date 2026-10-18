@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "project": "Granio",
+  "owner": "Uzer007-admin",
+  "core_module": "github.com/Uzer007-admin/granio/v2",
+  "minimum_go": "1.27.1",
+  "repositories": [
+    {
+      "name": "granio",
+      "path": ".",
+      "upstream": "https://github.com/fyne-io/fyne",
+      "purpose": "Ядро независимого GUI-фреймворка Granio: системная тема, Wayland/X11 и виртуализированные компоненты.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-apps",
+      "path": "extras/apps",
+      "upstream": "https://github.com/fyne-io/apps",
+      "purpose": "Каталог приложений Granio и проверка совместимости ядра.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-gl-js",
+      "path": "deps/gl-js",
+      "upstream": "https://github.com/fyne-io/gl-js",
+      "purpose": "OpenGL, GLES и WebGL для графического драйвера Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-glfw-js",
+      "path": "deps/glfw-js",
+      "upstream": "https://github.com/fyne-io/glfw-js",
+      "purpose": "Браузерные окна и ввод для Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-systray",
+      "path": "deps/systray",
+      "upstream": "https://github.com/fyne-io/systray",
+      "purpose": "Системный трей и меню приложений Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-image",
+      "path": "deps/image",
+      "upstream": "https://github.com/fyne-io/image",
+      "purpose": "Кодеки изображений для интерфейса и упаковки приложений Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-oksvg",
+      "path": "deps/oksvg",
+      "upstream": "https://github.com/fyne-io/oksvg",
+      "purpose": "Отрисовка SVG для значков и ресурсов Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-locale",
+      "path": "ecosystem/work/granio-locale",
+      "upstream": "https://github.com/fyne-io/go-locale",
+      "purpose": "Определение системного языка и локали для Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-xgb",
+      "path": "ecosystem/work/granio-xgb",
+      "upstream": "https://github.com/fyne-io/xgb",
+      "purpose": "Низкоуровневый протокол X11 для Linux-интеграции Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-xgbutil",
+      "path": "ecosystem/work/granio-xgbutil",
+      "upstream": "https://github.com/fyne-io/xgbutil",
+      "purpose": "EWMH, ICCCM и вспомогательные средства X11 для Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-mobile-bridge",
+      "path": "ecosystem/work/granio-mobile-bridge",
+      "upstream": "https://github.com/fyne-io/gomobile-bridge",
+      "purpose": "Мост мобильных библиотек и приложений Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-x",
+      "path": "ecosystem/work/granio-x",
+      "upstream": "https://github.com/fyne-io/fyne-x",
+      "purpose": "Дополнительные компоненты и интеграции Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-tools",
+      "path": "ecosystem/work/granio-tools",
+      "upstream": "https://github.com/fyne-io/tools",
+      "purpose": "Сборка, упаковка и обслуживание приложений Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-cross",
+      "path": "ecosystem/work/granio-cross",
+      "upstream": "https://github.com/fyne-io/fyne-cross",
+      "purpose": "Кросс-компиляция приложений Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-cross-images",
+      "path": "ecosystem/work/granio-cross-images",
+      "upstream": "https://github.com/fyne-io/fyne-cross-images",
+      "purpose": "Рецепты контейнеров кросс-компиляции Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-setup",
+      "path": "ecosystem/work/granio-setup",
+      "upstream": "https://github.com/fyne-io/setup",
+      "purpose": "Подготовка окружения разработчика Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-ui",
+      "path": "ecosystem/work/granio-ui",
+      "upstream": "https://github.com/fyne-io/refyne",
+      "purpose": "Сериализация и чтение описаний интерфейса Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-cloud",
+      "path": "ecosystem/work/granio-cloud",
+      "upstream": "https://github.com/fyne-io/cloud",
+      "purpose": "Провайдеры синхронизации и облачных данных Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-examples",
+      "path": "ecosystem/work/granio-examples",
+      "upstream": "https://github.com/fyne-io/examples",
+      "purpose": "Рабочие примеры приложений Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-7guis",
+      "path": "ecosystem/work/granio-7guis",
+      "upstream": "https://github.com/fyne-io/7guis",
+      "purpose": "Семь базовых сценариев интерфейса на Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-flatpak-demo",
+      "path": "ecosystem/work/granio-flatpak-demo",
+      "upstream": "https://github.com/fyne-io/flatpak_demo",
+      "purpose": "Пример упаковки приложения Granio в Flatpak.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-tutorials",
+      "path": "ecosystem/work/granio-tutorials",
+      "upstream": "https://github.com/fyne-io/tutorials",
+      "purpose": "Адаптация учебных примеров к Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-workshops",
+      "path": "ecosystem/work/granio-workshops",
+      "upstream": "https://github.com/fyne-io/workshops",
+      "purpose": "Практические занятия и учебные проекты Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-demo",
+      "path": "ecosystem/work/granio-demo",
+      "upstream": "https://github.com/fyne-io/demo",
+      "purpose": "Демонстрационное приложение компонентов Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-pixeledit",
+      "path": "ecosystem/work/granio-pixeledit",
+      "upstream": "https://github.com/fyne-io/pixeledit",
+      "purpose": "Редактор пиксельных изображений на Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-terminal",
+      "path": "ecosystem/work/granio-terminal",
+      "upstream": "https://github.com/fyne-io/terminal",
+      "purpose": "Графический терминал на Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-calculator",
+      "path": "ecosystem/work/granio-calculator",
+      "upstream": "https://github.com/fyne-io/calculator",
+      "purpose": "Калькулятор на Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-life",
+      "path": "ecosystem/work/granio-life",
+      "upstream": "https://github.com/fyne-io/life",
+      "purpose": "Клеточный автомат «Жизнь» на Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-solitaire",
+      "path": "ecosystem/work/granio-solitaire",
+      "upstream": "https://github.com/fyne-io/solitaire",
+      "purpose": "Пасьянс на Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-studio",
+      "path": "ecosystem/work/granio-studio",
+      "upstream": "https://github.com/fyne-io/defyne",
+      "purpose": "Среда разработки приложений Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-docs",
+      "path": "ecosystem/work/granio-docs",
+      "upstream": "https://github.com/fyne-io/docs.fyne.io",
+      "purpose": "Документация независимого проекта Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-catalog",
+      "path": "ecosystem/work/granio-catalog",
+      "upstream": "https://github.com/fyne-io/apps.fyne.io",
+      "purpose": "Исходники каталога приложений для экосистемы Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-addons",
+      "path": "ecosystem/work/granio-addons",
+      "upstream": "https://github.com/fyne-io/addons.fyne.io",
+      "purpose": "Исходники каталога расширений Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "granio-web-demo",
+      "path": "ecosystem/work/granio-web-demo",
+      "upstream": "https://github.com/fyne-io/demo.fyne.io",
+      "purpose": "Браузерная демонстрация Granio.",
+      "remote_created": false,
+      "branch": "dev/granio",
+      "validation": "перенос импортов и Go 1.27.1; проверка указана в отчёте"
+    },
+    {
+      "name": "gl",
+      "path": "deps/gl",
+      "upstream": "https://github.com/go-gl/gl",
+      "purpose": "Обёртки OpenGL/GLES, диагностика функций и управление ресурсами Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+    },
+    {
+      "name": "glfw",
+      "path": "deps/glfw",
+      "upstream": "https://github.com/go-gl/glfw",
+      "purpose": "GLFW 3.5.1, окна, ввод, Wayland/X11 и оконные материалы Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+    },
+    {
+      "name": "glow",
+      "path": "deps/glow",
+      "upstream": "https://github.com/go-gl/glow",
+      "purpose": "Воспроизводимая генерация согласованных обёрток OpenGL/GLES Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+    },
+    {
+      "name": "dbus",
+      "path": "deps/dbus",
+      "upstream": "https://github.com/godbus/dbus",
+      "purpose": "D-Bus, системные порталы, наблюдение за темой и палитрой KDE для Granio.",
+      "remote_created": true,
+      "branch": "dev/granio",
+      "validation": "проверены используемые профили; D-Bus полностью проверен на Linux"
+    }
+  ],
+  "excluded": [
+    {
+      "source": "fyne-io.github.io",
+      "upstream": "https://github.com/fyne-io/fyne-io.github.io",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "tour.fyne.io",
+      "upstream": "https://github.com/fyne-io/tour.fyne.io",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "conf.fyne.io",
+      "upstream": "https://github.com/fyne-io/conf.fyne.io",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "mobile",
+      "upstream": "https://github.com/fyne-io/mobile",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "developer.fyne.io",
+      "upstream": "https://github.com/fyne-io/developer.fyne.io",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "chat.fyne.io",
+      "upstream": "https://github.com/fyne-io/chat.fyne.io",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "proposals",
+      "upstream": "https://github.com/fyne-io/proposals",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "fin",
+      "upstream": "https://github.com/fyne-io/fin",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "go-image",
+      "upstream": "https://github.com/fyne-io/go-image",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    },
+    {
+      "source": "glfw",
+      "upstream": "https://github.com/fyne-io/glfw",
+      "reason": "Сайты исходного проекта, архивный компонент или дублирующая зависимость; в рабочий набор не включён."
+    }
+  ]
+}

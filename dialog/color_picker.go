@@ -4,16 +4,16 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/internal/painter/geom"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // newColorBasicPicker returns a component for selecting basic colors.
-func newColorBasicPicker(callback func(color.Color)) fyne.CanvasObject {
+func newColorBasicPicker(callback func(color.Color)) granio.CanvasObject {
 	return newColorButtonBox(
 		stringsToColors(
 			"#f44336", // red
@@ -30,7 +30,7 @@ func newColorBasicPicker(callback func(color.Color)) fyne.CanvasObject {
 }
 
 // newColorGreyscalePicker returns a component for selecting greyscale colors.
-func newColorGreyscalePicker(callback func(color.Color)) fyne.CanvasObject {
+func newColorGreyscalePicker(callback func(color.Color)) granio.CanvasObject {
 	return newColorButtonBox(
 		stringsToColors(
 			"#ffffff",
@@ -47,11 +47,11 @@ func newColorGreyscalePicker(callback func(color.Color)) fyne.CanvasObject {
 }
 
 // newColorRecentPicker returns a component for selecting recent colors.
-func newColorRecentPicker(callback func(color.Color)) fyne.CanvasObject {
+func newColorRecentPicker(callback func(color.Color)) granio.CanvasObject {
 	return newColorButtonBox(stringsToColors(readRecentColors()...), theme.HistoryIcon(), callback)
 }
 
-var _ fyne.Widget = (*colorAdvancedPicker)(nil)
+var _ granio.Widget = (*colorAdvancedPicker)(nil)
 
 // colorAdvancedPicker widget is a component for selecting a color.
 type colorAdvancedPicker struct {
@@ -98,13 +98,13 @@ func (p *colorAdvancedPicker) SetColor(c color.Color) {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (p *colorAdvancedPicker) MinSize() fyne.Size {
+func (p *colorAdvancedPicker) MinSize() granio.Size {
 	p.ExtendBaseWidget(p)
 	return p.BaseWidget.MinSize()
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (p *colorAdvancedPicker) CreateRenderer() fyne.WidgetRenderer {
+func (p *colorAdvancedPicker) CreateRenderer() granio.WidgetRenderer {
 	p.ExtendBaseWidget(p)
 
 	// Preview
@@ -157,7 +157,7 @@ func (p *colorAdvancedPicker) CreateRenderer() fyne.WidgetRenderer {
 	hex.setOnChanged(func(text string) {
 		c, err := col.Parse(text)
 		if err != nil {
-			fyne.LogError("Error parsing color: "+text, err)
+			granio.LogError("Error parsing color: "+text, err)
 			// TODO trigger entry invalid state
 		} else {
 			p.SetColor(c)
@@ -250,10 +250,10 @@ func (p *colorAdvancedPicker) updateRGBA(r, g, b, a uint8) bool {
 	return true
 }
 
-var _ fyne.WidgetRenderer = (*colorPickerRenderer)(nil)
+var _ granio.WidgetRenderer = (*colorPickerRenderer)(nil)
 
 type colorPickerRenderer struct {
-	fyne.WidgetRenderer
+	granio.WidgetRenderer
 	picker            *colorAdvancedPicker
 	redChannel        *colorChannel
 	greenChannel      *colorChannel
@@ -265,7 +265,7 @@ type colorPickerRenderer struct {
 	preview           *colorPreview
 	alphaChannel      *colorChannel
 	hex               *userChangeEntry
-	contents          fyne.CanvasObject
+	contents          granio.CanvasObject
 }
 
 func (r *colorPickerRenderer) Refresh() {

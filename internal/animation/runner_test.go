@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func BenchmarkRunnerAllocs(b *testing.B) {
@@ -13,7 +13,7 @@ func BenchmarkRunnerAllocs(b *testing.B) {
 	// setup some animations
 	for i := 0; i < 10; i++ {
 		r.pendingAnimations = append(r.pendingAnimations, newAnim(
-			fyne.NewAnimation(1000*time.Second, func(f float32) {
+			granio.NewAnimation(1000*time.Second, func(f float32) {
 				fl = f
 			}),
 		))

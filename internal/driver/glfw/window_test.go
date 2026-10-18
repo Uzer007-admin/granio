@@ -10,19 +10,19 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/internal/scale"
-	internalTest "fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
-	"github.com/go-gl/glfw/v3.4/glfw"
+	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -79,7 +79,7 @@ func TestGLDriver_CreateSplashWindow(t *testing.T) {
 	})
 
 	// Verify that the glfw driver implements desktop.Driver.
-	var driver fyne.Driver = d
+	var driver granio.Driver = d
 	_, ok := driver.(desktop.Driver)
 	assert.True(t, ok)
 
@@ -91,7 +91,7 @@ func TestGLDriver_CreateSplashWindow(t *testing.T) {
 func TestWindow_MinSize_Fixed(t *testing.T) {
 	w := createWindowWithResizeCallback("Test")
 	r := canvas.NewRectangle(color.White)
-	minSize := fyne.NewSize(100, 100)
+	minSize := granio.NewSize(100, 100)
 	minSizePlusPadding := minSize.AddWidthHeight(theme.Padding()*2, theme.Padding()*2)
 	r.SetMinSize(minSize)
 	w.SetContent(r)
@@ -100,7 +100,7 @@ func TestWindow_MinSize_Fixed(t *testing.T) {
 
 	w = createWindow("Test")
 	runOnMain(func() {
-		r.SetMinSize(fyne.NewSize(100, 100))
+		r.SetMinSize(granio.NewSize(100, 100))
 	})
 	w.SetFixedSize(true)
 	w.SetContent(r)
@@ -115,7 +115,7 @@ func TestWindow_MinSize_Oversized(t *testing.T) {
 
 	w := createWindow("Test")
 	r := canvas.NewRectangle(color.White)
-	r.SetMinSize(fyne.NewSize(100_000, 100))
+	r.SetMinSize(granio.NewSize(100_000, 100))
 	w.SetContent(r)
 
 	width, height := w.minSizeOnScreen()
@@ -126,7 +126,7 @@ func TestWindow_MinSize_Oversized(t *testing.T) {
 func TestWindow_ToggleMainMenuByKeyboard(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
-	m := fyne.NewMainMenu(fyne.NewMenu("File"), fyne.NewMenu("Edit"), fyne.NewMenu("Help"))
+	m := granio.NewMainMenu(granio.NewMenu("File"), granio.NewMenu("Edit"), granio.NewMenu("Help"))
 	menuBar := buildMenuOverlay(m, w.window).(*MenuBar)
 	c.setMenuOverlay(menuBar)
 	w.SetContent(canvas.NewRectangle(color.Black))
@@ -262,7 +262,7 @@ func TestWindow_Cursor(t *testing.T) {
 
 	w.SetContent(container.NewVBox(e, h, b))
 	repaintWindow(w)
-	ensureCanvasSize(t, w, fyne.NewSize(72, 123))
+	ensureCanvasSize(t, w, granio.NewSize(72, 123))
 	runOnMain(func() {
 		w.moveMouse(10, float64(e.Position().Y+10))
 		textCursor := desktop.TextCursor
@@ -299,32 +299,32 @@ func TestWindow_CursorUnderInnerWindow(t *testing.T) {
 func TestWindow_HandleHoverable(t *testing.T) {
 	w := createWindow("Test")
 	h1 := &hoverableObject{Rectangle: canvas.NewRectangle(color.White)}
-	h1.SetMinSize(fyne.NewSize(10, 10))
+	h1.SetMinSize(granio.NewSize(10, 10))
 	h2 := &hoverableObject{Rectangle: canvas.NewRectangle(color.Black)}
-	h2.SetMinSize(fyne.NewSize(10, 10))
+	h2.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(container.NewHBox(h1, h2))
-	w.Resize(fyne.NewSize(30, 20))
+	w.Resize(granio.NewSize(30, 20))
 
 	repaintWindow(w)
 	runOnMain(func() {
-		require.Equal(t, fyne.NewPos(0, 0), h1.Position())
-		require.Equal(t, fyne.NewPos(14, 0), h2.Position())
+		require.Equal(t, granio.NewPos(0, 0), h1.Position())
+		require.Equal(t, granio.NewPos(14, 0), h2.Position())
 	})
 
 	runOnMain(func() {
 		w.moveMouse(9, 9)
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(5, 5),
-			AbsolutePosition: fyne.NewPos(9, 9),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(5, 5),
+			AbsolutePosition: granio.NewPos(9, 9),
 		}}, h1.popMouseInEvent())
 		assert.Nil(t, h1.popMouseMovedEvent())
 		assert.Nil(t, h1.popMouseOutEvent())
 
 		w.moveMouse(9, 8)
 		assert.Nil(t, h1.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(5, 4),
-			AbsolutePosition: fyne.NewPos(9, 8),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(5, 4),
+			AbsolutePosition: granio.NewPos(9, 8),
 		}}, h1.popMouseMovedEvent())
 		assert.Nil(t, h1.popMouseOutEvent())
 
@@ -332,18 +332,18 @@ func TestWindow_HandleHoverable(t *testing.T) {
 		assert.Nil(t, h1.popMouseInEvent())
 		assert.Nil(t, h1.popMouseMovedEvent())
 		assert.NotNil(t, h1.popMouseOutEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(5, 7),
-			AbsolutePosition: fyne.NewPos(23, 11),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(5, 7),
+			AbsolutePosition: granio.NewPos(23, 11),
 		}}, h2.popMouseInEvent())
 		assert.Nil(t, h2.popMouseMovedEvent())
 		assert.Nil(t, h2.popMouseOutEvent())
 
 		w.moveMouse(23, 10)
 		assert.Nil(t, h2.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(5, 6),
-			AbsolutePosition: fyne.NewPos(23, 10),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(5, 6),
+			AbsolutePosition: granio.NewPos(23, 10),
 		}}, h2.popMouseMovedEvent())
 		assert.Nil(t, h2.popMouseOutEvent())
 	})
@@ -354,16 +354,16 @@ func TestWindow_HandleOutsideHoverableObject(t *testing.T) {
 	test.ApplyTheme(t, internalTest.DarkTheme(theme.DefaultTheme()))
 	l := widget.NewList(
 		func() int { return 2 },
-		func() fyne.CanvasObject { return widget.NewEntry() },
-		func(widget.ListItemID, fyne.CanvasObject) {},
+		func() granio.CanvasObject { return widget.NewEntry() },
+		func(widget.ListItemID, granio.CanvasObject) {},
 	)
-	l.Resize(fyne.NewSize(200, 300))
+	l.Resize(granio.NewSize(200, 300))
 	w.SetContent(l)
 	w.SetFixedSize(true)
-	ensureCanvasSize(t, w, fyne.NewSize(45, 44))
-	w.Resize(fyne.NewSize(200, 300))
+	ensureCanvasSize(t, w, granio.NewSize(45, 44))
+	w.Resize(granio.NewSize(200, 300))
 	repaintWindow(w)
-	ensureCanvasSize(t, w, fyne.NewSize(200, 300))
+	ensureCanvasSize(t, w, granio.NewSize(200, 300))
 	repaintWindow(w)
 
 	runOnMain(func() {
@@ -391,15 +391,15 @@ func TestWindow_HandleOutsideHoverableObject(t *testing.T) {
 func TestWindow_HandleDragging(t *testing.T) {
 	w := createWindow("Test")
 	d1 := &draggableObject{Rectangle: canvas.NewRectangle(color.White)}
-	d1.SetMinSize(fyne.NewSize(10, 10))
+	d1.SetMinSize(granio.NewSize(10, 10))
 	d2 := &draggableObject{Rectangle: canvas.NewRectangle(color.Black)}
-	d2.SetMinSize(fyne.NewSize(10, 10))
+	d2.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(container.NewHBox(d1, d2))
 
 	repaintWindow(w)
 	runOnMain(func() {
-		require.Equal(t, fyne.NewPos(0, 0), d1.Position())
-		require.Equal(t, fyne.NewPos(14, 0), d2.Position())
+		require.Equal(t, granio.NewPos(0, 0), d1.Position())
+		require.Equal(t, granio.NewPos(14, 0), d2.Position())
 
 		// no drag event in simple move
 		w.moveMouse(9, 9)
@@ -455,12 +455,12 @@ func TestWindow_HandleDragging(t *testing.T) {
 		w.moveMouse(8, 8)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(4, 4),
-					AbsolutePosition: fyne.NewPos(8, 8),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(4, 4),
+					AbsolutePosition: granio.NewPos(8, 8),
 				},
-				Dragged: fyne.NewDelta(-2, -2),
+				Dragged: granio.NewDelta(-2, -2),
 			},
 			d1.popDragEvent(),
 		)
@@ -471,12 +471,12 @@ func TestWindow_HandleDragging(t *testing.T) {
 		w.moveMouse(16, 8)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(12, 4),
-					AbsolutePosition: fyne.NewPos(16, 8),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(12, 4),
+					AbsolutePosition: granio.NewPos(16, 8),
 				},
-				Dragged: fyne.NewDelta(8, 0),
+				Dragged: granio.NewDelta(8, 0),
 			},
 			d1.popDragEvent(),
 		)
@@ -487,12 +487,12 @@ func TestWindow_HandleDragging(t *testing.T) {
 		w.moveMouse(22, 6)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(18, 2),
-					AbsolutePosition: fyne.NewPos(22, 6),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(18, 2),
+					AbsolutePosition: granio.NewPos(22, 6),
 				},
-				Dragged: fyne.NewDelta(6, -2),
+				Dragged: granio.NewDelta(6, -2),
 			},
 			d1.popDragEvent(),
 		)
@@ -519,12 +519,12 @@ func TestWindow_HandleDragging(t *testing.T) {
 		assert.Nil(t, d1.popDragEvent())
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(8, 5),
-					AbsolutePosition: fyne.NewPos(26, 9),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(8, 5),
+					AbsolutePosition: granio.NewPos(26, 9),
 				},
-				Dragged: fyne.NewDelta(4, 3),
+				Dragged: granio.NewDelta(4, 3),
 			},
 			d2.popDragEvent(),
 		)
@@ -534,12 +534,12 @@ func TestWindow_HandleDragging(t *testing.T) {
 func TestWindow_DragObjectThatMoves(t *testing.T) {
 	w := createWindow("Test")
 	d1 := &draggableObject{Rectangle: canvas.NewRectangle(color.White)}
-	d1.SetMinSize(fyne.NewSize(20, 20))
+	d1.SetMinSize(granio.NewSize(20, 20))
 	w.SetContent(container.NewHBox(d1))
 
 	repaintWindow(w)
 	runOnMain(func() {
-		require.Equal(t, fyne.NewPos(0, 0), d1.Position())
+		require.Equal(t, granio.NewPos(0, 0), d1.Position())
 
 		// drag -1,-1
 		w.moveMouse(12, 12)
@@ -547,30 +547,30 @@ func TestWindow_DragObjectThatMoves(t *testing.T) {
 		w.moveMouse(10, 10)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(6, 6),
-					AbsolutePosition: fyne.NewPos(10, 10),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(6, 6),
+					AbsolutePosition: granio.NewPos(10, 10),
 				},
-				Dragged: fyne.NewDelta(-2, -2),
+				Dragged: granio.NewDelta(-2, -2),
 			},
 			d1.popDragEvent(),
 		)
 		assert.Nil(t, d1.popDragEndEvent())
 
 		// element follows
-		d1.Move(fyne.NewPos(-1, -1))
+		d1.Move(granio.NewPos(-1, -1))
 
 		// drag again -> position is relative to new element position
 		w.moveMouse(12, 12)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(9, 9),
-					AbsolutePosition: fyne.NewPos(12, 12),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(9, 9),
+					AbsolutePosition: granio.NewPos(12, 12),
 				},
-				Dragged: fyne.NewDelta(2, 2),
+				Dragged: granio.NewDelta(2, 2),
 			},
 			d1.popDragEvent(),
 		)
@@ -580,14 +580,14 @@ func TestWindow_DragObjectThatMoves(t *testing.T) {
 func TestWindow_DragIntoNewObjectKeepingFocus(t *testing.T) {
 	w := createWindow("Test")
 	d1 := &draggableMouseableObject{Rectangle: canvas.NewRectangle(color.White)}
-	d1.SetMinSize(fyne.NewSize(20, 20))
+	d1.SetMinSize(granio.NewSize(20, 20))
 	d2 := &draggableMouseableObject{Rectangle: canvas.NewRectangle(color.White)}
-	d2.SetMinSize(fyne.NewSize(20, 20))
+	d2.SetMinSize(granio.NewSize(20, 20))
 	w.SetContent(container.NewHBox(d1, d2))
 
 	repaintWindow(w)
 	runOnMain(func() {
-		require.Equal(t, fyne.NewPos(0, 0), d1.Position())
+		require.Equal(t, granio.NewPos(0, 0), d1.Position())
 
 		// drag from d1 into d2
 		w.moveMouse(11, 11)
@@ -599,7 +599,7 @@ func TestWindow_DragIntoNewObjectKeepingFocus(t *testing.T) {
 		assert.Equal(
 			t,
 			&desktop.MouseEvent{
-				PointEvent: fyne.PointEvent{Position: fyne.NewPos(7, 7), AbsolutePosition: fyne.NewPos(11, 11)},
+				PointEvent: granio.PointEvent{Position: granio.NewPos(7, 7), AbsolutePosition: granio.NewPos(11, 11)},
 				Button:     desktop.MouseButtonPrimary,
 			},
 			d1.popMouseEvent(),
@@ -607,7 +607,7 @@ func TestWindow_DragIntoNewObjectKeepingFocus(t *testing.T) {
 		assert.Equal(
 			t,
 			&desktop.MouseEvent{
-				PointEvent: fyne.PointEvent{Position: fyne.NewPos(17, 7), AbsolutePosition: fyne.NewPos(21, 11)},
+				PointEvent: granio.PointEvent{Position: granio.NewPos(17, 7), AbsolutePosition: granio.NewPos(21, 11)},
 				Button:     desktop.MouseButtonPrimary,
 			},
 			d1.popMouseEvent(),
@@ -622,13 +622,13 @@ func TestWindow_DragIntoNewObjectKeepingFocus(t *testing.T) {
 func TestWindow_NoDragEndWithoutDraggedEvent(t *testing.T) {
 	w := createWindow("Test")
 	do := &draggableMouseableObject{Rectangle: canvas.NewRectangle(color.White)}
-	do.SetMinSize(fyne.NewSize(10, 10))
+	do.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(do)
 
 	repaintWindow(w)
 
 	runOnMain(func() {
-		require.Equal(t, fyne.NewPos(4, 4), do.Position())
+		require.Equal(t, granio.NewPos(4, 4), do.Position())
 
 		w.moveMouse(9, 9)
 		// mouse down (potential drag)
@@ -645,7 +645,7 @@ func TestWindow_HoverableOnDragging(t *testing.T) {
 	w := createWindow("Test")
 	dh := &draggableHoverableObject{Rectangle: canvas.NewRectangle(color.White)}
 	c := container.NewWithoutLayout(dh)
-	dh.Resize(fyne.NewSize(20, 20))
+	dh.Resize(granio.NewSize(20, 20))
 	w.SetContent(c)
 
 	repaintWindow(w)
@@ -654,9 +654,9 @@ func TestWindow_HoverableOnDragging(t *testing.T) {
 		w.moveMouse(10, 10)
 		assert.Equal(
 			t,
-			&desktop.MouseEvent{PointEvent: fyne.PointEvent{
-				Position:         fyne.NewPos(6, 6),
-				AbsolutePosition: fyne.NewPos(10, 10),
+			&desktop.MouseEvent{PointEvent: granio.PointEvent{
+				Position:         granio.NewPos(6, 6),
+				AbsolutePosition: granio.NewPos(10, 10),
 			}},
 			dh.popMouseInEvent(),
 		)
@@ -664,12 +664,12 @@ func TestWindow_HoverableOnDragging(t *testing.T) {
 		w.moveMouse(12, 12)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(8, 8),
-					AbsolutePosition: fyne.NewPos(12, 12),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(8, 8),
+					AbsolutePosition: granio.NewPos(12, 12),
 				},
-				Dragged: fyne.NewDelta(2, 2),
+				Dragged: granio.NewDelta(2, 2),
 			},
 			dh.popDragEvent(),
 		)
@@ -678,12 +678,12 @@ func TestWindow_HoverableOnDragging(t *testing.T) {
 		w.moveMouse(20, 12)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(16, 8),
-					AbsolutePosition: fyne.NewPos(20, 12),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(16, 8),
+					AbsolutePosition: granio.NewPos(20, 12),
 				},
-				Dragged: fyne.NewDelta(8, 0),
+				Dragged: granio.NewDelta(8, 0),
 			},
 			dh.popDragEvent(),
 		)
@@ -694,12 +694,12 @@ func TestWindow_HoverableOnDragging(t *testing.T) {
 		w.moveMouse(12, 12)
 		assert.Equal(
 			t,
-			&fyne.DragEvent{
-				PointEvent: fyne.PointEvent{
-					Position:         fyne.NewPos(8, 8),
-					AbsolutePosition: fyne.NewPos(12, 12),
+			&granio.DragEvent{
+				PointEvent: granio.PointEvent{
+					Position:         granio.NewPos(8, 8),
+					AbsolutePosition: granio.NewPos(12, 12),
 				},
-				Dragged: fyne.NewDelta(-8, 0),
+				Dragged: granio.NewDelta(-8, 0),
 			},
 			dh.popDragEvent(),
 		)
@@ -728,12 +728,12 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 	dh := &draggableHoverableObject{Rectangle: canvas.NewRectangle(color.White)}
 
 	c := container.NewWithoutLayout(h, d, dh)
-	h.Resize(fyne.NewSize(50, 50))
-	h.Move(fyne.NewPos(0, 0))
-	d.Resize(fyne.NewSize(30, 30))
-	d.Move(fyne.NewPos(10, 10))
-	dh.Resize(fyne.NewSize(10, 10))
-	dh.Move(fyne.NewPos(20, 20))
+	h.Resize(granio.NewSize(50, 50))
+	h.Move(granio.NewPos(0, 0))
+	d.Resize(granio.NewSize(30, 30))
+	d.Move(granio.NewPos(10, 10))
+	dh.Resize(granio.NewSize(10, 10))
+	dh.Move(granio.NewPos(20, 20))
 
 	w.SetContent(c)
 
@@ -745,9 +745,9 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 	//  - no events by draggableHoverableObject
 	runOnMain(func() {
 		w.moveMouse(7, 7)
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(3, 3),
-			AbsolutePosition: fyne.NewPos(7, 7),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(3, 3),
+			AbsolutePosition: granio.NewPos(7, 7),
 		}}, h.popMouseInEvent())
 		assert.Nil(t, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
@@ -768,9 +768,9 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 		w.moveMouse(8, 8)
 		assert.Nil(t, h.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(4, 4),
-			AbsolutePosition: fyne.NewPos(8, 8),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(4, 4),
+			AbsolutePosition: granio.NewPos(8, 8),
 		}, Button: 1, Modifier: 0}, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
 		assert.Nil(t, d.popDragEvent())
@@ -790,9 +790,9 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 	runOnMain(func() {
 		w.moveMouse(16, 16)
 		assert.Nil(t, h.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(12, 12),
-			AbsolutePosition: fyne.NewPos(16, 16),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(12, 12),
+			AbsolutePosition: granio.NewPos(16, 16),
 		}}, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
 		assert.Nil(t, d.popDragEvent())
@@ -812,15 +812,15 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 		w.moveMouse(18, 18)
 		assert.Nil(t, h.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(14, 14),
-			AbsolutePosition: fyne.NewPos(18, 18),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(14, 14),
+			AbsolutePosition: granio.NewPos(18, 18),
 		}, Button: 1, Modifier: 0}, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
-		assert.Equal(t, &fyne.DragEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(4, 4),
-			AbsolutePosition: fyne.NewPos(18, 18),
-		}, Dragged: fyne.NewDelta(2, 2)}, d.popDragEvent())
+		assert.Equal(t, &granio.DragEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(4, 4),
+			AbsolutePosition: granio.NewPos(18, 18),
+		}, Dragged: granio.NewDelta(2, 2)}, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
 		assert.Nil(t, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
@@ -858,9 +858,9 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 		assert.NotNil(t, h.popMouseOutEvent())
 		assert.Nil(t, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(3, 3),
-			AbsolutePosition: fyne.NewPos(27, 27),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(3, 3),
+			AbsolutePosition: granio.NewPos(27, 27),
 		}}, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
 		assert.Nil(t, dh.popMouseOutEvent())
@@ -874,9 +874,9 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 	// - mouseOut by draggableHoverableObject
 	runOnMain(func() {
 		w.moveMouse(37, 37)
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(33, 33),
-			AbsolutePosition: fyne.NewPos(37, 37),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(33, 33),
+			AbsolutePosition: granio.NewPos(37, 37),
 		}}, h.popMouseInEvent())
 		assert.Nil(t, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
@@ -896,9 +896,9 @@ func TestWindow_HoverableUnderDraggable(t *testing.T) {
 	runOnMain(func() {
 		w.moveMouse(47, 47)
 		assert.Nil(t, h.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(43, 43),
-			AbsolutePosition: fyne.NewPos(47, 47),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(43, 43),
+			AbsolutePosition: granio.NewPos(47, 47),
 		}}, h.popMouseMovedEvent())
 		assert.Nil(t, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
@@ -935,12 +935,12 @@ func TestWindow_HoverableUnderDraggable_DragAcross(t *testing.T) {
 	dh := &draggableHoverableObject{Rectangle: canvas.NewRectangle(color.White)}
 
 	c := container.NewWithoutLayout(h, d, dh)
-	h.Resize(fyne.NewSize(50, 50))
-	h.Move(fyne.NewPos(0, 0))
-	d.Resize(fyne.NewSize(30, 30))
-	d.Move(fyne.NewPos(10, 10))
-	dh.Resize(fyne.NewSize(10, 10))
-	dh.Move(fyne.NewPos(20, 20))
+	h.Resize(granio.NewSize(50, 50))
+	h.Move(granio.NewPos(0, 0))
+	d.Resize(granio.NewSize(30, 30))
+	d.Move(granio.NewPos(10, 10))
+	dh.Resize(granio.NewSize(10, 10))
+	dh.Move(granio.NewPos(20, 20))
 
 	w.SetContent(c)
 	repaintWindow(w)
@@ -951,9 +951,9 @@ func TestWindow_HoverableUnderDraggable_DragAcross(t *testing.T) {
 	//  - no events by draggableHoverableObject
 	runOnMain(func() {
 		w.moveMouse(16, 16)
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(12, 12),
-			AbsolutePosition: fyne.NewPos(16, 16),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(12, 12),
+			AbsolutePosition: granio.NewPos(16, 16),
 		}}, h.popMouseInEvent())
 		assert.Nil(t, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
@@ -974,15 +974,15 @@ func TestWindow_HoverableUnderDraggable_DragAcross(t *testing.T) {
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 		w.moveMouse(18, 18)
 		assert.Nil(t, h.popMouseInEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(14, 14),
-			AbsolutePosition: fyne.NewPos(18, 18),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(14, 14),
+			AbsolutePosition: granio.NewPos(18, 18),
 		}, Button: 1, Modifier: 0}, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
-		assert.Equal(t, &fyne.DragEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(4, 4),
-			AbsolutePosition: fyne.NewPos(18, 18),
-		}, Dragged: fyne.NewDelta(2, 2)}, d.popDragEvent())
+		assert.Equal(t, &granio.DragEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(4, 4),
+			AbsolutePosition: granio.NewPos(18, 18),
+		}, Dragged: granio.NewDelta(2, 2)}, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
 		assert.Nil(t, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
@@ -1000,14 +1000,14 @@ func TestWindow_HoverableUnderDraggable_DragAcross(t *testing.T) {
 		assert.Nil(t, h.popMouseInEvent())
 		assert.Nil(t, h.popMouseMovedEvent())
 		assert.NotNil(t, h.popMouseOutEvent())
-		assert.Equal(t, &fyne.DragEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(13, 13),
-			AbsolutePosition: fyne.NewPos(27, 27),
-		}, Dragged: fyne.NewDelta(9, 9)}, d.popDragEvent())
+		assert.Equal(t, &granio.DragEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(13, 13),
+			AbsolutePosition: granio.NewPos(27, 27),
+		}, Dragged: granio.NewDelta(9, 9)}, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(3, 3),
-			AbsolutePosition: fyne.NewPos(27, 27),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(3, 3),
+			AbsolutePosition: granio.NewPos(27, 27),
 		}, Button: 1, Modifier: 0}, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
 		assert.Nil(t, dh.popMouseOutEvent())
@@ -1021,16 +1021,16 @@ func TestWindow_HoverableUnderDraggable_DragAcross(t *testing.T) {
 	// - mouseOut by draggableHoverableObject
 	runOnMain(func() {
 		w.moveMouse(37, 37)
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(33, 33),
-			AbsolutePosition: fyne.NewPos(37, 37),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(33, 33),
+			AbsolutePosition: granio.NewPos(37, 37),
 		}, Button: 1, Modifier: 0}, h.popMouseInEvent())
 		assert.Nil(t, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
-		assert.Equal(t, &fyne.DragEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(23, 23),
-			AbsolutePosition: fyne.NewPos(37, 37),
-		}, Dragged: fyne.NewDelta(10, 10)}, d.popDragEvent())
+		assert.Equal(t, &granio.DragEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(23, 23),
+			AbsolutePosition: granio.NewPos(37, 37),
+		}, Dragged: granio.NewDelta(10, 10)}, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
 		assert.Nil(t, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
@@ -1065,12 +1065,12 @@ func TestWindow_HoverableUnderDraggable_Drag_draggableHoverable(t *testing.T) {
 	dh := &draggableHoverableObject{Rectangle: canvas.NewRectangle(color.White)}
 
 	c := container.NewWithoutLayout(h, d, dh)
-	h.Resize(fyne.NewSize(50, 50))
-	h.Move(fyne.NewPos(0, 0))
-	d.Resize(fyne.NewSize(30, 30))
-	d.Move(fyne.NewPos(10, 10))
-	dh.Resize(fyne.NewSize(10, 10))
-	dh.Move(fyne.NewPos(20, 20))
+	h.Resize(granio.NewSize(50, 50))
+	h.Move(granio.NewPos(0, 0))
+	d.Resize(granio.NewSize(30, 30))
+	d.Move(granio.NewPos(10, 10))
+	dh.Resize(granio.NewSize(10, 10))
+	dh.Move(granio.NewPos(20, 20))
 
 	w.SetContent(c)
 	repaintWindow(w)
@@ -1086,9 +1086,9 @@ func TestWindow_HoverableUnderDraggable_Drag_draggableHoverable(t *testing.T) {
 		assert.Nil(t, h.popMouseOutEvent())
 		assert.Nil(t, d.popDragEvent())
 		assert.Nil(t, d.popDragEndEvent())
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(4, 4),
-			AbsolutePosition: fyne.NewPos(28, 28),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(4, 4),
+			AbsolutePosition: granio.NewPos(28, 28),
 		}}, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
 		assert.Nil(t, dh.popMouseOutEvent())
@@ -1111,10 +1111,10 @@ func TestWindow_HoverableUnderDraggable_Drag_draggableHoverable(t *testing.T) {
 		assert.Nil(t, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
 		assert.Nil(t, dh.popMouseOutEvent())
-		assert.Equal(t, &fyne.DragEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(6, 6),
-			AbsolutePosition: fyne.NewPos(30, 30),
-		}, Dragged: fyne.NewDelta(2, 2)}, dh.popDragEvent())
+		assert.Equal(t, &granio.DragEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(6, 6),
+			AbsolutePosition: granio.NewPos(30, 30),
+		}, Dragged: granio.NewDelta(2, 2)}, dh.popDragEvent())
 		assert.Nil(t, dh.popDragEndEvent())
 	})
 
@@ -1124,9 +1124,9 @@ func TestWindow_HoverableUnderDraggable_Drag_draggableHoverable(t *testing.T) {
 	//  - drag and moveOut by draggableHoverableObject
 	runOnMain(func() {
 		w.moveMouse(47, 47)
-		assert.Equal(t, &desktop.MouseEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(43, 43),
-			AbsolutePosition: fyne.NewPos(47, 47),
+		assert.Equal(t, &desktop.MouseEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(43, 43),
+			AbsolutePosition: granio.NewPos(47, 47),
 		}, Button: 1, Modifier: 0}, h.popMouseInEvent())
 		assert.Nil(t, h.popMouseMovedEvent())
 		assert.Nil(t, h.popMouseOutEvent())
@@ -1135,10 +1135,10 @@ func TestWindow_HoverableUnderDraggable_Drag_draggableHoverable(t *testing.T) {
 		assert.Nil(t, dh.popMouseInEvent())
 		assert.Nil(t, dh.popMouseMovedEvent())
 		assert.NotNil(t, dh.popMouseOutEvent())
-		assert.Equal(t, &fyne.DragEvent{PointEvent: fyne.PointEvent{
-			Position:         fyne.NewPos(23, 23),
-			AbsolutePosition: fyne.NewPos(47, 47),
-		}, Dragged: fyne.NewDelta(17, 17)}, dh.popDragEvent())
+		assert.Equal(t, &granio.DragEvent{PointEvent: granio.PointEvent{
+			Position:         granio.NewPos(23, 23),
+			AbsolutePosition: granio.NewPos(47, 47),
+		}, Dragged: granio.NewDelta(17, 17)}, dh.popDragEvent())
 		assert.Nil(t, dh.popDragEndEvent())
 	})
 
@@ -1164,12 +1164,12 @@ func TestWindow_HoverableUnderDraggable_Drag_draggableHoverable(t *testing.T) {
 func TestWindow_DragEndWithoutTappedEvent(t *testing.T) {
 	w := createWindow("Test")
 	do := &draggableTappableObject{Rectangle: canvas.NewRectangle(color.White)}
-	do.SetMinSize(fyne.NewSize(14, 14))
+	do.SetMinSize(granio.NewSize(14, 14))
 	w.SetContent(do)
 
 	repaintWindow(w)
 	runOnMain(func() {
-		require.Equal(t, fyne.NewPos(4, 4), do.Position())
+		require.Equal(t, granio.NewPos(4, 4), do.Position())
 	})
 
 	runOnMain(func() {
@@ -1190,36 +1190,36 @@ func TestWindow_DragEndWithoutTappedEvent(t *testing.T) {
 func TestWindow_Scrolled(t *testing.T) {
 	w := createWindow("Test")
 	o := &scrollable{Rectangle: canvas.NewRectangle(color.White)}
-	minSize := fyne.NewSize(100, 100)
+	minSize := granio.NewSize(100, 100)
 	o.SetMinSize(minSize)
 	w.SetContent(o)
 	ensureCanvasSize(t, w, minSize.AddWidthHeight(theme.Padding()*2, theme.Padding()*2))
 
-	w.mousePos = fyne.NewPos(50, 60)
+	w.mousePos = granio.NewPos(50, 60)
 	w.mouseScrolled(w.viewport, 10, 10)
 
-	if e, _ := o.popScrollEvent().(*fyne.ScrollEvent); assert.NotNil(t, e, "scroll event") {
-		assert.Equal(t, fyne.NewPos(50, 60), e.AbsolutePosition)
-		assert.Equal(t, fyne.NewPos(46, 56), e.Position)
+	if e, _ := o.popScrollEvent().(*granio.ScrollEvent); assert.NotNil(t, e, "scroll event") {
+		assert.Equal(t, granio.NewPos(50, 60), e.AbsolutePosition)
+		assert.Equal(t, granio.NewPos(46, 56), e.Position)
 	}
 }
 
 func TestWindow_Tapped(t *testing.T) {
 	w := createWindow("Test")
 	prop := canvas.NewRectangle(color.White)
-	prop.SetMinSize(fyne.NewSize(100, 100))
+	prop.SetMinSize(granio.NewSize(100, 100))
 	o := &tappableObject{Rectangle: canvas.NewRectangle(color.White)}
 	w.SetContent(container.NewStack(prop, o))
 
 	runOnMain(func() {
-		w.mousePos = fyne.NewPos(50, 60)
+		w.mousePos = granio.NewPos(50, 60)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Release, 0)
 
 		assert.Nil(t, o.popSecondaryTapEvent(), "no secondary tap")
-		if e, _ := o.popTapEvent().(*fyne.PointEvent); assert.NotNil(t, e, "tapped") {
-			assert.Equal(t, fyne.NewPos(50, 60), e.AbsolutePosition)
-			assert.Equal(t, fyne.NewPos(46, 56), e.Position)
+		if e, _ := o.popTapEvent().(*granio.PointEvent); assert.NotNil(t, e, "tapped") {
+			assert.Equal(t, granio.NewPos(50, 60), e.AbsolutePosition)
+			assert.Equal(t, granio.NewPos(46, 56), e.Position)
 		}
 	})
 }
@@ -1229,7 +1229,7 @@ func TestWindow_TouchScreenTappedWithMouseMovePending(t *testing.T) {
 	left := &tappableObject{Rectangle: canvas.NewRectangle(color.White)}
 	right := &tappableObject{Rectangle: canvas.NewRectangle(color.White)}
 	w.SetContent(container.NewGridWithColumns(2, left, right))
-	w.Resize(fyne.NewSize(200, 100))
+	w.Resize(granio.NewSize(200, 100))
 
 	runOnMain(func() {
 		w.moveMouse(20, 50) // the pointer comes to rest over the left object
@@ -1245,11 +1245,11 @@ func TestWindow_TouchScreenTappedWithMouseMovePending(t *testing.T) {
 
 func TestWindow_DroppedWithMouseMovePending(t *testing.T) {
 	w := createWindow("Test")
-	w.Resize(fyne.NewSize(200, 100))
+	w.Resize(granio.NewSize(200, 100))
 
 	runOnMain(func() {
-		var droppedAt fyne.Position
-		w.SetOnDropped(func(pos fyne.Position, _ []fyne.URI) {
+		var droppedAt granio.Position
+		w.SetOnDropped(func(pos granio.Position, _ []granio.URI) {
 			droppedAt = pos
 		})
 		w.moveMouse(20, 50)
@@ -1259,26 +1259,26 @@ func TestWindow_DroppedWithMouseMovePending(t *testing.T) {
 		dropped := w.viewport.SetDropCallback(nil)
 		dropped(w.viewport, []string{"file.txt"})
 
-		assert.Equal(t, fyne.NewPos(150, 50), droppedAt)
+		assert.Equal(t, granio.NewPos(150, 50), droppedAt)
 	})
 }
 
 func TestWindow_TappedSecondary(t *testing.T) {
 	w := createWindow("Test")
 	prop := canvas.NewRectangle(color.White)
-	prop.SetMinSize(fyne.NewSize(100, 100))
+	prop.SetMinSize(granio.NewSize(100, 100))
 	o := &tappableObject{Rectangle: canvas.NewRectangle(color.White)}
 	w.SetContent(container.NewStack(prop, o))
 
 	runOnMain(func() {
-		w.mousePos = fyne.NewPos(50, 60)
+		w.mousePos = granio.NewPos(50, 60)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Release, 0)
 
 		assert.Nil(t, o.popTapEvent(), "no primary tap")
-		if e, _ := o.popSecondaryTapEvent().(*fyne.PointEvent); assert.NotNil(t, e, "tapped secondary") {
-			assert.Equal(t, fyne.NewPos(50, 60), e.AbsolutePosition)
-			assert.Equal(t, fyne.NewPos(46, 56), e.Position)
+		if e, _ := o.popSecondaryTapEvent().(*granio.PointEvent); assert.NotNil(t, e, "tapped secondary") {
+			assert.Equal(t, granio.NewPos(50, 60), e.AbsolutePosition)
+			assert.Equal(t, granio.NewPos(46, 56), e.Position)
 		}
 	})
 }
@@ -1286,19 +1286,19 @@ func TestWindow_TappedSecondary(t *testing.T) {
 func TestWindow_TappedSecondary_RedispatchAfterOverlayDismiss(t *testing.T) {
 	w := createWindow("Test")
 	o := &tappableObject{Rectangle: canvas.NewRectangle(color.White)}
-	o.SetMinSize(fyne.NewSize(100, 100))
+	o.SetMinSize(granio.NewSize(100, 100))
 	w.SetContent(o)
-	ensureCanvasSize(t, w, fyne.NewSize(108, 108))
+	ensureCanvasSize(t, w, granio.NewSize(108, 108))
 
-	menu := fyne.NewMenu("", fyne.NewMenuItem("A", nil))
+	menu := granio.NewMenu("", granio.NewMenuItem("A", nil))
 	pop := widget.NewPopUpMenu(menu, w.canvas)
 
 	runOnMain(func() {
-		pop.ShowAtPosition(fyne.NewPos(0, 0))
+		pop.ShowAtPosition(granio.NewPos(0, 0))
 		assert.NotNil(t, w.canvas.Overlays().Top(), "overlay should be present")
 
 		// right-click outside the popup menu but inside the tappable object
-		w.mousePos = fyne.NewPos(80, 80)
+		w.mousePos = granio.NewPos(80, 80)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Release, 0)
 
@@ -1311,16 +1311,16 @@ func TestWindow_TappedSecondary_RedispatchAfterOverlayDismiss(t *testing.T) {
 func TestWindow_TappedSecondary_OpenMenuInsideExistingOverlay(t *testing.T) {
 	w := createWindow("Test")
 	inner := &tappableObject{Rectangle: canvas.NewRectangle(color.White)}
-	inner.SetMinSize(fyne.NewSize(100, 100))
+	inner.SetMinSize(granio.NewSize(100, 100))
 
 	pop := widget.NewModalPopUp(inner, w.canvas)
-	ensureCanvasSize(t, w, fyne.NewSize(200, 200))
+	ensureCanvasSize(t, w, granio.NewSize(200, 200))
 
 	runOnMain(func() {
 		pop.Show()
 
-		menu := fyne.NewMenu("", fyne.NewMenuItem("A", nil))
-		inner.secondaryTapAction = func(e *fyne.PointEvent) {
+		menu := granio.NewMenu("", granio.NewMenuItem("A", nil))
+		inner.secondaryTapAction = func(e *granio.PointEvent) {
 			widget.ShowPopUpMenuAtPosition(menu, w.canvas, e.AbsolutePosition)
 		}
 
@@ -1328,7 +1328,7 @@ func TestWindow_TappedSecondary_OpenMenuInsideExistingOverlay(t *testing.T) {
 
 		// right-click inside the widget under the modal popup, which opens a
 		// new pop-up menu overlay on top of the existing modal overlay
-		w.mousePos = fyne.NewPos(50, 50)
+		w.mousePos = granio.NewPos(50, 50)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Release, 0)
 
@@ -1344,10 +1344,10 @@ func TestWindow_TappedSecondary_OnPrimaryOnlyTarget(t *testing.T) {
 		tapped = true
 	})
 	w.SetContent(o)
-	ensureCanvasSize(t, w, fyne.NewSize(53, 44))
+	ensureCanvasSize(t, w, granio.NewSize(53, 44))
 
 	runOnMain(func() {
-		w.mousePos = fyne.NewPos(10, 25)
+		w.mousePos = granio.NewPos(10, 25)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton2, glfw.Release, 0)
 
@@ -1362,18 +1362,18 @@ func TestWindow_TappedSecondary_OnPrimaryOnlyTarget(t *testing.T) {
 
 func TestWindow_TappedIgnoresScrollerClip(t *testing.T) {
 	w := createWindow("Test")
-	fyne.CurrentApp().Settings().SetTheme(internalTest.DarkTheme(theme.DefaultTheme()))
+	granio.CurrentApp().Settings().SetTheme(internalTest.DarkTheme(theme.DefaultTheme()))
 	rect := canvas.NewRectangle(color.White)
-	rect.SetMinSize(fyne.NewSize(100, 100))
+	rect.SetMinSize(granio.NewSize(100, 100))
 	tapped := false
 	button := widget.NewButton("Tap", func() {
 		tapped = true
 	})
 	rect2 := canvas.NewRectangle(color.Black)
-	rect2.SetMinSize(fyne.NewSize(100, 100))
+	rect2.SetMinSize(granio.NewSize(100, 100))
 	child := container.NewGridWithColumns(1, button, rect2)
 	scroll := container.NewScroll(child)
-	scroll.Offset = fyne.NewPos(0, 50)
+	scroll.Offset = granio.NewPos(0, 50)
 
 	base := container.New(layout.NewGridLayout(1), rect, scroll)
 	w.SetContent(base)
@@ -1381,16 +1381,16 @@ func TestWindow_TappedIgnoresScrollerClip(t *testing.T) {
 		refreshWindow(w.window) // ensure any async resize is done
 	})
 
-	ensureCanvasSize(t, w, fyne.NewSize(108, 212))
+	ensureCanvasSize(t, w, granio.NewSize(108, 212))
 
 	runOnMain(func() {
-		w.mousePos = fyne.NewPos(10, 80)
+		w.mousePos = granio.NewPos(10, 80)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Release, 0)
 
 		assert.False(t, tapped, "Tapped button that was clipped")
 
-		w.mousePos = fyne.NewPos(10, 120)
+		w.mousePos = granio.NewPos(10, 120)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Release, 0)
 
@@ -1412,7 +1412,7 @@ func TestWindow_TappedAndDoubleTapped(t *testing.T) {
 	w.SetContent(but)
 
 	runOnMain(func() {
-		but.Resize(fyne.NewSquareSize(50))
+		but.Resize(granio.NewSquareSize(50))
 
 		w.moveMouse(15, 25)
 		w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
@@ -1441,7 +1441,7 @@ func TestWindow_TappedAndDoubleTapped(t *testing.T) {
 func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 	w := createWindow("Test")
 	m := &mouseableObject{Rectangle: canvas.NewRectangle(color.White)}
-	minSize := fyne.NewSize(20, 20)
+	minSize := granio.NewSize(20, 20)
 	m.SetMinSize(minSize)
 	w.SetContent(m)
 	repaintWindow(w)
@@ -1451,18 +1451,18 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 
 	// On OS X a Ctrl+Click is normally translated into a Right-Click.
 	// The well-known Ctrl+Click for extending a selection is a Cmd+Click there.
-	var superModifier, ctrlModifier fyne.KeyModifier
+	var superModifier, ctrlModifier granio.KeyModifier
 	if runtime.GOOS == "darwin" {
-		superModifier = fyne.KeyModifierControl
+		superModifier = granio.KeyModifierControl
 		ctrlModifier = 0
 	} else {
-		superModifier = fyne.KeyModifierSuper
-		ctrlModifier = fyne.KeyModifierControl
+		superModifier = granio.KeyModifierSuper
+		ctrlModifier = granio.KeyModifierControl
 	}
 
 	tests := map[string]struct {
 		modifier              glfw.ModifierKey
-		expectedEventModifier fyne.KeyModifier
+		expectedEventModifier granio.KeyModifier
 	}{
 		"no modifier key": {
 			modifier:              0,
@@ -1470,7 +1470,7 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"shift": {
 			modifier:              glfw.ModShift,
-			expectedEventModifier: fyne.KeyModifierShift,
+			expectedEventModifier: granio.KeyModifierShift,
 		},
 		"ctrl": {
 			modifier:              glfw.ModControl,
@@ -1478,7 +1478,7 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"alt": {
 			modifier:              glfw.ModAlt,
-			expectedEventModifier: fyne.KeyModifierAlt,
+			expectedEventModifier: granio.KeyModifierAlt,
 		},
 		"super": {
 			modifier:              glfw.ModSuper,
@@ -1486,19 +1486,19 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"shift+ctrl": {
 			modifier:              glfw.ModShift | glfw.ModControl,
-			expectedEventModifier: fyne.KeyModifierShift | ctrlModifier,
+			expectedEventModifier: granio.KeyModifierShift | ctrlModifier,
 		},
 		"shift+alt": {
 			modifier:              glfw.ModShift | glfw.ModAlt,
-			expectedEventModifier: fyne.KeyModifierShift | fyne.KeyModifierAlt,
+			expectedEventModifier: granio.KeyModifierShift | granio.KeyModifierAlt,
 		},
 		"shift+super": {
 			modifier:              glfw.ModShift | glfw.ModSuper,
-			expectedEventModifier: fyne.KeyModifierShift | superModifier,
+			expectedEventModifier: granio.KeyModifierShift | superModifier,
 		},
 		"ctrl+alt": {
 			modifier:              glfw.ModControl | glfw.ModAlt,
-			expectedEventModifier: ctrlModifier | fyne.KeyModifierAlt,
+			expectedEventModifier: ctrlModifier | granio.KeyModifierAlt,
 		},
 		"ctrl+super": {
 			modifier:              glfw.ModControl | glfw.ModSuper,
@@ -1506,27 +1506,27 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"alt+super": {
 			modifier:              glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: fyne.KeyModifierAlt | superModifier,
+			expectedEventModifier: granio.KeyModifierAlt | superModifier,
 		},
 		"shift+ctrl+alt": {
 			modifier:              glfw.ModShift | glfw.ModControl | glfw.ModAlt,
-			expectedEventModifier: fyne.KeyModifierShift | ctrlModifier | fyne.KeyModifierAlt,
+			expectedEventModifier: granio.KeyModifierShift | ctrlModifier | granio.KeyModifierAlt,
 		},
 		"shift+ctrl+super": {
 			modifier:              glfw.ModShift | glfw.ModControl | glfw.ModSuper,
-			expectedEventModifier: fyne.KeyModifierShift | ctrlModifier | superModifier,
+			expectedEventModifier: granio.KeyModifierShift | ctrlModifier | superModifier,
 		},
 		"shift+alt+super": {
 			modifier:              glfw.ModShift | glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: fyne.KeyModifierShift | fyne.KeyModifierAlt | superModifier,
+			expectedEventModifier: granio.KeyModifierShift | granio.KeyModifierAlt | superModifier,
 		},
 		"ctrl+alt+super": {
 			modifier:              glfw.ModControl | glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: ctrlModifier | fyne.KeyModifierAlt | superModifier,
+			expectedEventModifier: ctrlModifier | granio.KeyModifierAlt | superModifier,
 		},
 		"shift+ctrl+alt+super": {
 			modifier:              glfw.ModShift | glfw.ModControl | glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: fyne.KeyModifierShift | ctrlModifier | fyne.KeyModifierAlt | superModifier,
+			expectedEventModifier: granio.KeyModifierShift | ctrlModifier | granio.KeyModifierAlt | superModifier,
 		},
 	}
 	for name, tt := range tests {
@@ -1555,7 +1555,7 @@ func TestWindow_SetTitle(t *testing.T) {
 
 func TestWindow_SetIcon(t *testing.T) {
 	w := createWindow("Test")
-	assert.Equal(t, fyne.CurrentApp().Icon(), w.Icon())
+	assert.Equal(t, granio.CurrentApp().Icon(), w.Icon())
 
 	newIcon := theme.ComputerIcon()
 	w.SetIcon(newIcon)
@@ -1567,7 +1567,7 @@ func TestWindow_PixelSize(t *testing.T) {
 	w.SetPadded(false)
 
 	rect := &canvas.Rectangle{}
-	rect.SetMinSize(fyne.NewSize(100, 100))
+	rect.SetMinSize(granio.NewSize(100, 100))
 	w.SetContent(container.NewWithoutLayout(rect))
 	w.Canvas().Refresh(w.Content())
 
@@ -1618,7 +1618,7 @@ func TestWindow_SetPadded(t *testing.T) {
 	} else {
 		menuHeight = canvas.NewText("", color.Black).MinSize().Height + theme.Padding()*2
 	}
-	fyne.CurrentApp().Settings().SetTheme(internalTest.DarkTheme(theme.DefaultTheme()))
+	granio.CurrentApp().Settings().SetTheme(internalTest.DarkTheme(theme.DefaultTheme()))
 	tests := []struct {
 		name               string
 		padding            bool
@@ -1637,23 +1637,23 @@ func TestWindow_SetPadded(t *testing.T) {
 			w.SetPadded(tt.padding)
 			runOnMain(func() {
 				if tt.menu {
-					w.SetMainMenu(fyne.NewMainMenu(fyne.NewMenu("Test", fyne.NewMenuItem("Test", func() {}))))
+					w.SetMainMenu(granio.NewMainMenu(granio.NewMenu("Test", granio.NewMenuItem("Test", func() {}))))
 				}
 			})
 			content := canvas.NewRectangle(color.White)
 			w.SetContent(content)
-			oldCanvasSize := fyne.NewSize(100, 100)
+			oldCanvasSize := granio.NewSize(100, 100)
 			w.Resize(oldCanvasSize)
 			ensureCanvasSize(t, w, oldCanvasSize)
 
 			repaintWindow(w)
 
-			var contentSize, expectedCanvasSize fyne.Size
+			var contentSize, expectedCanvasSize granio.Size
 			runOnMain(func() {
 				contentSize = content.Size()
 				expectedCanvasSize = contentSize.
-					Add(fyne.NewSize(2*tt.expectedPad, 2*tt.expectedPad)).
-					Add(fyne.NewSize(0, tt.expectedMenuHeight))
+					Add(granio.NewSize(2*tt.expectedPad, 2*tt.expectedPad)).
+					Add(granio.NewSize(0, tt.expectedMenuHeight))
 			})
 
 			w.SetPadded(tt.padding)
@@ -1662,7 +1662,7 @@ func TestWindow_SetPadded(t *testing.T) {
 			canvas := w.Canvas()
 			runOnMain(func() {
 				assert.Equal(t, contentSize, content.Size())
-				assert.Equal(t, fyne.NewPos(tt.expectedPad, tt.expectedPad+tt.expectedMenuHeight), content.Position())
+				assert.Equal(t, granio.NewPos(tt.expectedPad, tt.expectedPad+tt.expectedMenuHeight), content.Position())
 				assert.Equal(t, expectedCanvasSize, canvas.Size())
 			})
 		})
@@ -1697,23 +1697,23 @@ func TestWindow_CollectionEmptyAreaUnfocus(t *testing.T) {
 	// navigation), but that should not stop a tap on an empty area (with no
 	// row/cell/node under the cursor) from unfocusing another currently
 	// focused widget - see https://github.com/fyne-io/fyne/issues/4770.
-	newWidgets := map[string]func() fyne.CanvasObject{
-		"List": func() fyne.CanvasObject {
+	newWidgets := map[string]func() granio.CanvasObject{
+		"List": func() granio.CanvasObject {
 			return widget.NewList(func() int { return 1 },
-				func() fyne.CanvasObject { return widget.NewLabel("Item") },
-				func(widget.ListItemID, fyne.CanvasObject) {})
+				func() granio.CanvasObject { return widget.NewLabel("Item") },
+				func(widget.ListItemID, granio.CanvasObject) {})
 		},
-		"GridWrap": func() fyne.CanvasObject {
+		"GridWrap": func() granio.CanvasObject {
 			return widget.NewGridWrap(func() int { return 1 },
-				func() fyne.CanvasObject { return widget.NewLabel("Item") },
-				func(widget.GridWrapItemID, fyne.CanvasObject) {})
+				func() granio.CanvasObject { return widget.NewLabel("Item") },
+				func(widget.GridWrapItemID, granio.CanvasObject) {})
 		},
-		"Table": func() fyne.CanvasObject {
+		"Table": func() granio.CanvasObject {
 			return widget.NewTable(func() (int, int) { return 1, 1 },
-				func() fyne.CanvasObject { return widget.NewLabel("Item") },
-				func(widget.TableCellID, fyne.CanvasObject) {})
+				func() granio.CanvasObject { return widget.NewLabel("Item") },
+				func(widget.TableCellID, granio.CanvasObject) {})
 		},
-		"Tree": func() fyne.CanvasObject {
+		"Tree": func() granio.CanvasObject {
 			return widget.NewTreeWithStrings(map[string][]string{"": {"leaf1"}})
 		},
 	}
@@ -1725,7 +1725,7 @@ func TestWindow_CollectionEmptyAreaUnfocus(t *testing.T) {
 			coll := newWidget()
 
 			w.SetContent(container.NewBorder(entry, nil, nil, nil, coll))
-			w.Resize(fyne.NewSize(200, 200))
+			w.Resize(granio.NewSize(200, 200))
 			repaintWindow(w)
 
 			w.Canvas().Focus(entry)
@@ -1745,7 +1745,7 @@ func TestWindow_CollectionEmptyAreaUnfocus(t *testing.T) {
 func TestWindow_CaptureTypedShortcut(t *testing.T) {
 	w := createWindow("Test")
 	content := &typedShortcutable{}
-	content.SetMinSize(fyne.NewSize(10, 10))
+	content.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(content)
 	repaintWindow(w)
 
@@ -1765,7 +1765,7 @@ func TestWindow_CaptureTypedShortcut(t *testing.T) {
 func TestWindow_CaptureTypedShortcutClipboard(t *testing.T) {
 	w := createWindow("Test")
 	content := &typedShortcutable{}
-	content.SetMinSize(fyne.NewSize(10, 10))
+	content.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(content)
 	repaintWindow(w)
 
@@ -1777,7 +1777,7 @@ func TestWindow_CaptureTypedShortcutClipboard(t *testing.T) {
 	w.keyPressed(nil, glfw.KeyV, 0, glfw.Release, ctrlMod())
 
 	assert.Equal(t, 1, len(content.capturedShortcuts))
-	paste, ok := content.capturedShortcuts[0].(*fyne.ShortcutPaste)
+	paste, ok := content.capturedShortcuts[0].(*granio.ShortcutPaste)
 	if assert.True(t, ok) {
 		assert.False(t, paste.Secondary)
 	}
@@ -1788,7 +1788,7 @@ func TestWindow_CaptureTypedShortcutClipboard(t *testing.T) {
 	w.keyPressed(nil, glfw.KeyInsert, 0, glfw.Release, glfw.ModShift)
 
 	assert.Equal(t, 2, len(content.capturedShortcuts))
-	paste, ok = content.capturedShortcuts[1].(*fyne.ShortcutPaste)
+	paste, ok = content.capturedShortcuts[1].(*granio.ShortcutPaste)
 	if assert.True(t, ok) {
 		assert.True(t, paste.Secondary)
 	}
@@ -1797,7 +1797,7 @@ func TestWindow_CaptureTypedShortcutClipboard(t *testing.T) {
 func TestWindow_OnlyTabAndShiftTabToCapturesTab(t *testing.T) {
 	w := createWindow("Test")
 	content := &tabbable{}
-	content.SetMinSize(fyne.NewSize(10, 10))
+	content.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(content)
 	repaintWindow(w)
 
@@ -1822,7 +1822,7 @@ func TestWindow_OnlyTabAndShiftTabToCapturesTab(t *testing.T) {
 func TestWindow_TabWithModifierToTriggersShortcut(t *testing.T) {
 	w := createWindow("Test")
 	content := &typedShortcutable{}
-	content.SetMinSize(fyne.NewSize(10, 10))
+	content.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(content)
 	repaintWindow(w)
 
@@ -1850,7 +1850,7 @@ func TestWindow_TabWithModifierToTriggersShortcut(t *testing.T) {
 func TestWindow_ManualFocus(t *testing.T) {
 	w := createWindow("Test")
 	content := &focusable{}
-	content.SetMinSize(fyne.NewSize(10, 10))
+	content.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(content)
 	repaintWindow(w)
 
@@ -1933,7 +1933,7 @@ func TestWindow_ClipboardCopy_DisabledEntry(t *testing.T) {
 func TestWindow_KeyDownOnRepeat(t *testing.T) {
 	w := createWindow("Test")
 	content := &keyableFocusable{}
-	content.SetMinSize(fyne.NewSize(10, 10))
+	content.SetMinSize(granio.NewSize(10, 10))
 	w.SetContent(content)
 	repaintWindow(w)
 
@@ -1941,12 +1941,12 @@ func TestWindow_KeyDownOnRepeat(t *testing.T) {
 
 	w.keyPressed(nil, glfw.KeyDown, 0, glfw.Press, 0)
 	require.Len(t, content.keyDownEvents, 1)
-	assert.Equal(t, fyne.KeyDown, content.keyDownEvents[0].Name)
+	assert.Equal(t, granio.KeyDown, content.keyDownEvents[0].Name)
 	assert.False(t, content.keyDownEvents[0].Repeat)
 
 	w.keyPressed(nil, glfw.KeyDown, 0, glfw.Repeat, 0)
 	require.Len(t, content.keyDownEvents, 2)
-	assert.Equal(t, fyne.KeyDown, content.keyDownEvents[1].Name)
+	assert.Equal(t, granio.KeyDown, content.keyDownEvents[1].Name)
 	assert.True(t, content.keyDownEvents[1].Repeat)
 
 	w.keyPressed(nil, glfw.KeyDown, 0, glfw.Repeat, 0)
@@ -1962,8 +1962,8 @@ func TestWindow_KeyDownOnRepeat_NoFocused(t *testing.T) {
 	w.SetContent(canvas.NewRectangle(color.Black))
 	repaintWindow(w)
 
-	var lastEvent *fyne.KeyEvent
-	w.canvas.onKeyDown = func(ev *fyne.KeyEvent) {
+	var lastEvent *granio.KeyEvent
+	w.canvas.onKeyDown = func(ev *granio.KeyEvent) {
 		lastEvent = ev
 	}
 
@@ -1975,7 +1975,7 @@ func TestWindow_KeyDownOnRepeat_NoFocused(t *testing.T) {
 	w.keyPressed(nil, glfw.KeyDown, 0, glfw.Repeat, 0)
 	require.NotNil(t, lastEvent)
 	assert.True(t, lastEvent.Repeat)
-	assert.Equal(t, fyne.KeyDown, lastEvent.Name)
+	assert.Equal(t, granio.KeyDown, lastEvent.Name)
 }
 
 func TestWindow_CloseInterception(t *testing.T) {
@@ -2074,8 +2074,8 @@ func TestWindow_SetFullScreen(t *testing.T) {
 
 func TestWindow_Shortcut(t *testing.T) {
 	testShortcut := &desktop.CustomShortcut{
-		KeyName:  fyne.Key9,
-		Modifier: fyne.KeyModifierSuper,
+		KeyName:  granio.Key9,
+		Modifier: granio.KeyModifierSuper,
 	}
 
 	w := createWindow("Test")
@@ -2083,12 +2083,12 @@ func TestWindow_Shortcut(t *testing.T) {
 	w.SetContent(content)
 
 	called := ""
-	w.Canvas().AddShortcut(testShortcut, func(fyne.Shortcut) {
+	w.Canvas().AddShortcut(testShortcut, func(granio.Shortcut) {
 		called = "canvas"
 	})
 
 	trigger := func() {
-		w.triggersShortcut("9", fyne.Key9, fyne.KeyModifierSuper)
+		w.triggersShortcut("9", granio.Key9, granio.KeyModifierSuper)
 	}
 
 	trigger()
@@ -2099,14 +2099,14 @@ func TestWindow_Shortcut(t *testing.T) {
 		return
 	}
 
-	item := fyne.NewMenuItem("Test", func() {
+	item := granio.NewMenuItem("Test", func() {
 		called = "menu"
 	})
 	item.Shortcut = testShortcut
-	file := fyne.NewMenu("File", []*fyne.MenuItem{item}...)
+	file := granio.NewMenu("File", []*granio.MenuItem{item}...)
 
 	runOnMain(func() {
-		w.SetMainMenu(fyne.NewMainMenu(file))
+		w.SetMainMenu(granio.NewMainMenu(file))
 	})
 	trigger()
 	assert.Equal(t, 0, len(content.capturedShortcuts))
@@ -2119,7 +2119,7 @@ func TestWindow_Shortcut(t *testing.T) {
 	assert.Equal(t, "menu", called)
 
 	called = "obj"
-	w.triggersShortcut("D", fyne.KeyD, fyne.KeyModifierSuper) // not in the menu
+	w.triggersShortcut("D", granio.KeyD, granio.KeyModifierSuper) // not in the menu
 	assert.Equal(t, 1, len(content.capturedShortcuts))
 	assert.Equal(t, "obj", called)
 }
@@ -2127,7 +2127,7 @@ func TestWindow_Shortcut(t *testing.T) {
 func TestWindow_RescaleContext(t *testing.T) {
 	w := createWindow("Test")
 	// Use a size that produces a float after scaling
-	w.Resize(fyne.NewSize(51, 51))
+	w.Resize(granio.NewSize(51, 51))
 	runOnMain(func() {
 		w.canvas.scale = 1.3
 		w.RescaleContext()
@@ -2216,14 +2216,14 @@ type draggableObject struct {
 	draggable
 }
 
-var _ fyne.Draggable = (*draggable)(nil)
+var _ granio.Draggable = (*draggable)(nil)
 
 type draggable struct {
 	events    []any
 	endEvents []any
 }
 
-func (d *draggable) Dragged(e *fyne.DragEvent) {
+func (d *draggable) Dragged(e *granio.DragEvent) {
 	d.events = append(d.events, e)
 }
 
@@ -2282,19 +2282,19 @@ type tappableObject struct {
 	tappable
 }
 
-var _ fyne.Tappable = (*tappable)(nil)
+var _ granio.Tappable = (*tappable)(nil)
 
 type tappable struct {
 	tapEvents          []any
 	secondaryTapEvents []any
-	secondaryTapAction func(*fyne.PointEvent)
+	secondaryTapAction func(*granio.PointEvent)
 }
 
-func (t *tappable) Tapped(e *fyne.PointEvent) {
+func (t *tappable) Tapped(e *granio.PointEvent) {
 	t.tapEvents = append(t.tapEvents, e)
 }
 
-func (t *tappable) TappedSecondary(e *fyne.PointEvent) {
+func (t *tappable) TappedSecondary(e *granio.PointEvent) {
 	t.secondaryTapEvents = append(t.secondaryTapEvents, e)
 	if t.secondaryTapAction != nil {
 		t.secondaryTapAction(e)
@@ -2318,23 +2318,23 @@ type draggableTappableObject struct {
 }
 
 var (
-	_ fyne.Focusable   = (*focusable)(nil)
-	_ fyne.Disableable = (*focusable)(nil)
+	_ granio.Focusable   = (*focusable)(nil)
+	_ granio.Disableable = (*focusable)(nil)
 )
 
 var _ desktop.Keyable = (*keyableFocusable)(nil)
 
 type keyableFocusable struct {
 	focusable
-	keyDownEvents []*fyne.KeyEvent
-	keyUpEvents   []*fyne.KeyEvent
+	keyDownEvents []*granio.KeyEvent
+	keyUpEvents   []*granio.KeyEvent
 }
 
-func (k *keyableFocusable) KeyDown(ev *fyne.KeyEvent) {
+func (k *keyableFocusable) KeyDown(ev *granio.KeyEvent) {
 	k.keyDownEvents = append(k.keyDownEvents, ev)
 }
 
-func (k *keyableFocusable) KeyUp(ev *fyne.KeyEvent) {
+func (k *keyableFocusable) KeyUp(ev *granio.KeyEvent) {
 	k.keyUpEvents = append(k.keyUpEvents, ev)
 }
 
@@ -2347,14 +2347,14 @@ type focusable struct {
 	disabled       bool
 }
 
-func (f *focusable) Tapped(*fyne.PointEvent) {
+func (f *focusable) Tapped(*granio.PointEvent) {
 	d.CanvasForObject(f).Focus(f)
 }
 
 func (*focusable) TypedRune(rune) {
 }
 
-func (*focusable) TypedKey(*fyne.KeyEvent) {
+func (*focusable) TypedKey(*granio.KeyEvent) {
 }
 
 func (f *focusable) FocusGained() {
@@ -2384,21 +2384,21 @@ func (f *focusable) Disabled() bool {
 
 type typedShortcutable struct {
 	focusable
-	capturedShortcuts []fyne.Shortcut
+	capturedShortcuts []granio.Shortcut
 }
 
-func (ts *typedShortcutable) TypedShortcut(s fyne.Shortcut) {
+func (ts *typedShortcutable) TypedShortcut(s granio.Shortcut) {
 	ts.capturedShortcuts = append(ts.capturedShortcuts, s)
 }
 
-var _ fyne.Scrollable = (*scrollable)(nil)
+var _ granio.Scrollable = (*scrollable)(nil)
 
 type scrollable struct {
 	*canvas.Rectangle
 	events []any
 }
 
-func (s *scrollable) Scrolled(e *fyne.ScrollEvent) {
+func (s *scrollable) Scrolled(e *granio.ScrollEvent) {
 	s.events = append(s.events, e)
 }
 
@@ -2424,7 +2424,7 @@ type doubleTappableButton struct {
 	onDoubleTap func()
 }
 
-func (t *doubleTappableButton) DoubleTapped(_ *fyne.PointEvent) {
+func (t *doubleTappableButton) DoubleTapped(_ *granio.PointEvent) {
 	t.onDoubleTap()
 }
 
@@ -2460,13 +2460,13 @@ func (s *safeWindow) Close() {
 	runOnMain(s.window.Close)
 }
 
-func (s *safeWindow) Resize(size fyne.Size) {
+func (s *safeWindow) Resize(size granio.Size) {
 	runOnMain(func() {
 		s.window.Resize(size)
 	})
 }
 
-func (s *safeWindow) SetContent(content fyne.CanvasObject) {
+func (s *safeWindow) SetContent(content granio.CanvasObject) {
 	runOnMain(func() {
 		s.window.SetContent(content)
 	})

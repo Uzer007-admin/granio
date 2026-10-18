@@ -3,12 +3,12 @@ package widget
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-var _ fyne.Widget = (*Separator)(nil)
+var _ granio.Widget = (*Separator)(nil)
 
 // Separator is a widget for displaying a separator with themeable color.
 //
@@ -29,10 +29,10 @@ func NewSeparator() *Separator {
 }
 
 // CreateRenderer returns a new renderer for the separator.
-func (s *Separator) CreateRenderer() fyne.WidgetRenderer {
+func (s *Separator) CreateRenderer() granio.WidgetRenderer {
 	s.ExtendBaseWidget(s)
 	th := s.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	var col color.Color
 	if s.invert {
 		col = th.Color(theme.ColorNameForeground, v)
@@ -49,26 +49,26 @@ func (s *Separator) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the minimal size of the separator.
-func (s *Separator) MinSize() fyne.Size {
+func (s *Separator) MinSize() granio.Size {
 	s.ExtendBaseWidget(s)
 	return s.BaseWidget.MinSize()
 }
 
-var _ fyne.WidgetRenderer = (*separatorRenderer)(nil)
+var _ granio.WidgetRenderer = (*separatorRenderer)(nil)
 
 type separatorRenderer struct {
-	fyne.WidgetRenderer
+	granio.WidgetRenderer
 	bar *canvas.Rectangle
 	d   *Separator
 }
 
-func (r *separatorRenderer) MinSize() fyne.Size {
-	return fyne.NewSquareSize(r.d.Theme().Size(theme.SizeNameSeparatorThickness))
+func (r *separatorRenderer) MinSize() granio.Size {
+	return granio.NewSquareSize(r.d.Theme().Size(theme.SizeNameSeparatorThickness))
 }
 
 func (r *separatorRenderer) Refresh() {
 	th := r.d.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if r.d.invert {
 		r.bar.FillColor = th.Color(theme.ColorNameForeground, v)

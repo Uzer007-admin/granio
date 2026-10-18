@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 func formatBool(in bool) (string, error) {
@@ -20,7 +20,7 @@ func formatInt(in int) (string, error) {
 	return strconv.FormatInt(int64(in), 10), nil
 }
 
-func formatURI(in fyne.URI) (string, error) {
+func formatURI(in granio.URI) (string, error) {
 	if in == nil {
 		return "", nil
 	}
@@ -49,7 +49,7 @@ func parseInt(in string) (int, error) {
 	return int(out), err
 }
 
-func parseURI(in string) (fyne.URI, error) {
+func parseURI(in string) (granio.URI, error) {
 	return storage.ParseURI(in)
 }
 

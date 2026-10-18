@@ -1,15 +1,15 @@
 package container
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // Declare conformity with Widget interface.
-var _ fyne.Widget = (*AppTabs)(nil)
+var _ granio.Widget = (*AppTabs)(nil)
 
 // AppTabs container is used to split your application into various different areas identified by tabs.
 // The tabs contain text and/or an icon and allow the user to switch between the content specified in each TabItem.
@@ -49,14 +49,14 @@ func (t *AppTabs) Append(item *TabItem) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *AppTabs) CreateRenderer() fyne.WidgetRenderer {
+func (t *AppTabs) CreateRenderer() granio.WidgetRenderer {
 	t.BaseWidget.ExtendBaseWidget(t)
 	th := t.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	r := &appTabsRenderer{
 		baseTabsRenderer: baseTabsRenderer{
-			bar:       &fyne.Container{},
+			bar:       &granio.Container{},
 			divider:   canvas.NewRectangle(th.Color(theme.ColorNameShadow, v)),
 			indicator: canvas.NewRectangle(th.Color(theme.ColorNamePrimary, v)),
 		},
@@ -121,7 +121,7 @@ func (t *AppTabs) EnableItem(item *TabItem) {
 // ExtendBaseWidget is used by an extending widget to make use of BaseWidget functionality.
 //
 // Deprecated: Support for extending containers is being removed
-func (t *AppTabs) ExtendBaseWidget(wid fyne.Widget) {
+func (t *AppTabs) ExtendBaseWidget(wid granio.Widget) {
 	t.BaseWidget.ExtendBaseWidget(wid)
 }
 
@@ -135,7 +135,7 @@ func (t *AppTabs) Hide() {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (t *AppTabs) MinSize() fyne.Size {
+func (t *AppTabs) MinSize() granio.Size {
 	t.BaseWidget.ExtendBaseWidget(t)
 	return t.BaseWidget.MinSize()
 }
@@ -264,14 +264,14 @@ func (t *AppTabs) transitioning() bool {
 }
 
 // Declare conformity with WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*appTabsRenderer)(nil)
+var _ granio.WidgetRenderer = (*appTabsRenderer)(nil)
 
 type appTabsRenderer struct {
 	baseTabsRenderer
 	appTabs *AppTabs
 }
 
-func (r *appTabsRenderer) Layout(size fyne.Size) {
+func (r *appTabsRenderer) Layout(size granio.Size) {
 	// Try render as many tabs as will fit, others will appear in the overflow
 	if len(r.appTabs.Items) == 0 {
 		r.updateTabs(0)
@@ -300,11 +300,11 @@ func (r *appTabsRenderer) Layout(size fyne.Size) {
 	}
 }
 
-func (r *appTabsRenderer) MinSize() fyne.Size {
+func (r *appTabsRenderer) MinSize() granio.Size {
 	return r.minSize(r.appTabs)
 }
 
-func (r *appTabsRenderer) Objects() []fyne.CanvasObject {
+func (r *appTabsRenderer) Objects() []granio.CanvasObject {
 	return r.objects(r.appTabs)
 }
 
@@ -320,14 +320,14 @@ func (r *appTabsRenderer) buildOverflowTabsButton() (overflow *widget.Button) {
 	overflow = &widget.Button{Icon: moreIcon(r.appTabs), Importance: widget.LowImportance, OnTapped: func() {
 		// Show pop up containing all tabs which did not fit in the tab bar
 
-		itemLen, objLen := len(r.appTabs.Items), len(r.bar.Objects[0].(*fyne.Container).Objects)
-		items := make([]*fyne.MenuItem, 0, itemLen-objLen)
+		itemLen, objLen := len(r.appTabs.Items), len(r.bar.Objects[0].(*granio.Container).Objects)
+		items := make([]*granio.MenuItem, 0, itemLen-objLen)
 		for i := objLen; i < itemLen; i++ {
 			index := i // capture
 			// FIXME MenuItem doesn't support icons (#1752)
 			// FIXME MenuItem can't show if it is the currently selected tab (#1753)
 			ti := r.appTabs.Items[i]
-			mi := fyne.NewMenuItem(ti.Text, func() {
+			mi := granio.NewMenuItem(ti.Text, func() {
 				r.appTabs.SelectIndex(index)
 				if r.appTabs.popUpMenu != nil {
 					r.appTabs.popUpMenu.Hide()
@@ -346,8 +346,8 @@ func (r *appTabsRenderer) buildOverflowTabsButton() (overflow *widget.Button) {
 	return overflow
 }
 
-func (r *appTabsRenderer) buildTabButtons(count int) *fyne.Container {
-	buttons := &fyne.Container{}
+func (r *appTabsRenderer) buildTabButtons(count int) *granio.Container {
+	buttons := &granio.Container{}
 
 	var iconPos buttonIconPosition
 	if isMobile(r.tabs) {
@@ -389,7 +389,7 @@ func (r *appTabsRenderer) buildTabButtons(count int) *fyne.Container {
 			button.importance = widget.MediumImportance
 		}
 		button.text = item.Text
-		button.textAlignment = fyne.TextAlignCenter
+		button.textAlignment = granio.TextAlignCenter
 		button.Refresh()
 		buttons.Objects = append(buttons.Objects, button)
 	}
@@ -403,10 +403,10 @@ func (r *appTabsRenderer) updateIndicator(animate bool) {
 	}
 	r.indicator.Show()
 
-	var selectedPos fyne.Position
-	var selectedSize fyne.Size
+	var selectedPos granio.Position
+	var selectedSize granio.Size
 
-	buttons := r.bar.Objects[0].(*fyne.Container).Objects
+	buttons := r.bar.Objects[0].(*granio.Container).Objects
 	if r.appTabs.current >= len(buttons) {
 		if a := r.action; a != nil {
 			selectedPos = a.Position()
@@ -418,25 +418,25 @@ func (r *appTabsRenderer) updateIndicator(animate bool) {
 		selectedSize = selected.Size()
 	}
 
-	var indicatorPos fyne.Position
-	var indicatorSize fyne.Size
+	var indicatorPos granio.Position
+	var indicatorSize granio.Size
 	th := r.appTabs.Theme()
 	pad := th.Size(theme.SizeNamePadding)
 	dividerWidth := th.Size(theme.SizeNameSeparatorThickness)
 
 	switch r.appTabs.location {
 	case TabLocationTop:
-		indicatorPos = fyne.NewPos(selectedPos.X, r.bar.MinSize().Height)
-		indicatorSize = fyne.NewSize(selectedSize.Width, dividerWidth)
+		indicatorPos = granio.NewPos(selectedPos.X, r.bar.MinSize().Height)
+		indicatorSize = granio.NewSize(selectedSize.Width, dividerWidth)
 	case TabLocationLeading:
-		indicatorPos = fyne.NewPos(r.bar.MinSize().Width, selectedPos.Y)
-		indicatorSize = fyne.NewSize(dividerWidth, selectedSize.Height)
+		indicatorPos = granio.NewPos(r.bar.MinSize().Width, selectedPos.Y)
+		indicatorSize = granio.NewSize(dividerWidth, selectedSize.Height)
 	case TabLocationBottom:
-		indicatorPos = fyne.NewPos(selectedPos.X, r.bar.Position().Y-pad)
-		indicatorSize = fyne.NewSize(selectedSize.Width, dividerWidth)
+		indicatorPos = granio.NewPos(selectedPos.X, r.bar.Position().Y-pad)
+		indicatorSize = granio.NewSize(selectedSize.Width, dividerWidth)
 	case TabLocationTrailing:
-		indicatorPos = fyne.NewPos(r.bar.Position().X-pad, selectedPos.Y)
-		indicatorSize = fyne.NewSize(dividerWidth, selectedSize.Height)
+		indicatorPos = granio.NewPos(r.bar.Position().X-pad, selectedPos.Y)
+		indicatorSize = granio.NewSize(dividerWidth, selectedSize.Height)
 	}
 
 	r.moveIndicator(indicatorPos, indicatorSize, th, animate)
@@ -463,7 +463,7 @@ func (r *appTabsRenderer) updateTabs(maxCount int) {
 
 	buttons := r.buildTabButtons(tabCount)
 
-	r.bar.Objects = []fyne.CanvasObject{buttons}
+	r.bar.Objects = []granio.CanvasObject{buttons}
 	if a := r.action; a != nil {
 		r.bar.Objects = append(r.bar.Objects, a)
 	}

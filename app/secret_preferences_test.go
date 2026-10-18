@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 // memorySecretStore keeps the protected bytes in memory so tests never touch the user's storage.
@@ -168,7 +168,7 @@ func TestSecretPreferences_WrongPasswordIsAnError(t *testing.T) {
 	a.secretPrefs.forceImmediateSave()
 
 	_, err = newTestSecretApp("io.fyne.test.secret", blob, fixedPassword("wrong"))
-	assert.ErrorIs(t, err, fyne.ErrPasswordIncorrect)
+	assert.ErrorIs(t, err, granio.ErrPasswordIncorrect)
 }
 
 func TestSecretPreferences_PasswordNotRetained(t *testing.T) {
@@ -193,10 +193,10 @@ func TestSecretPreferences_MissingPasswordIsAnError(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			blob := &memorySecretStore{}
 			_, err := newTestSecretApp("io.fyne.test.secret", blob, password)
-			assert.ErrorIs(t, err, fyne.ErrPasswordRequired)
+			assert.ErrorIs(t, err, granio.ErrPasswordRequired)
 
 			store := &encryptedStore{storage: blob, password: password}
-			assert.ErrorIs(t, store.save([]byte("secret")), fyne.ErrPasswordRequired)
+			assert.ErrorIs(t, store.save([]byte("secret")), granio.ErrPasswordRequired)
 			assert.Nil(t, blob.data)
 		})
 	}
@@ -256,11 +256,11 @@ func TestFyneApp_SecretPreferences_ErrorLeavesDataAndCanRetry(t *testing.T) {
 	}
 
 	secret, err := b.secretPreferencesFrom(newStore, nil)
-	assert.ErrorIs(t, err, fyne.ErrPasswordRequired)
+	assert.ErrorIs(t, err, granio.ErrPasswordRequired)
 	assert.Nil(t, secret)
 
 	secret, err = b.secretPreferencesFrom(newStore, fixedPassword("wrong"))
-	assert.ErrorIs(t, err, fyne.ErrPasswordIncorrect)
+	assert.ErrorIs(t, err, granio.ErrPasswordIncorrect)
 	assert.Nil(t, secret)
 	assert.Equal(t, saved, blob.data, "a failed load must not change the stored data")
 

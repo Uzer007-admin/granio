@@ -1,0 +1,11 @@
+=== RUN   TestAssessmentModifierRepeat
+=== RUN   TestAssessmentModifierRepeat/Ctrl
+    assessment_6c36517f_test.go:24: Repeat cleared a held modifier: got 0, want 2
+=== RUN   TestAssessmentModifierRepeat/Shift
+    assessment_6c36517f_test.go:24: Repeat cleared a held modifier: got 0, want 1
+--- FAIL: TestAssessmentModifierRepeat (0.00s)
+    --- FAIL: TestAssessmentModifierRepeat/Ctrl (0.00s)
+    --- FAIL: TestAssessmentModifierRepeat/Shift (0.00s)
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.720s
+FAIL

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
 func TestMap_LoadAndStore(t *testing.T) {

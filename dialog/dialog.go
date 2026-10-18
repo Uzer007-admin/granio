@@ -1,17 +1,17 @@
 // Package dialog defines standard dialog windows for application GUIs.
-package dialog // import "fyne.io/fyne/v2/dialog"
+package dialog // import "github.com/Uzer007-admin/granio/v2/dialog"
 
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 const (
@@ -26,12 +26,12 @@ type Dialog interface {
 	SetDismissText(label string)
 	SetOnClosed(closed func())
 	Refresh()
-	Resize(size fyne.Size)
+	Resize(size granio.Size)
 
 	// MinSize returns the size that this dialog should not shrink below.
 	//
 	// Since: 2.1
-	MinSize() fyne.Size
+	MinSize() granio.Size
 
 	// Dismiss instructs the dialog to close without any affirmative action.
 	//
@@ -45,13 +45,13 @@ var _ Dialog = (*dialog)(nil)
 type dialog struct {
 	callback    func(bool)
 	title       string
-	icon        fyne.Resource
-	desiredSize fyne.Size
+	icon        granio.Resource
+	desiredSize granio.Size
 
 	win     *widget.PopUp
-	content fyne.CanvasObject
+	content granio.CanvasObject
 	dismiss *widget.Button
-	parent  fyne.Window
+	parent  granio.Window
 
 	// allows derived dialogs to inject logic that runs before Show()
 	beforeShowHook func()
@@ -68,9 +68,9 @@ func (d *dialog) Hide() {
 // MinSize returns the size that this dialog should not shrink below.
 //
 // Since: 2.1
-func (d *dialog) MinSize() fyne.Size {
+func (d *dialog) MinSize() granio.Size {
 	if d.win == nil {
-		return fyne.NewSquareSize(1)
+		return granio.NewSquareSize(1)
 	}
 	return d.win.MinSize()
 }
@@ -90,7 +90,7 @@ func (d *dialog) Refresh() {
 }
 
 // Resize dialog, call this function after dialog show
-func (d *dialog) Resize(size fyne.Size) {
+func (d *dialog) Resize(size granio.Size) {
 	d.desiredSize = internal.MaxSizes(size, d.MinSize())
 	if d.win != nil { // could be called before popup is created!
 		d.win.Resize(internal.MaxSizes(size, d.MinSize()))
@@ -129,10 +129,10 @@ func (d *dialog) hideWithResponse(resp bool) {
 	}
 }
 
-func (d *dialog) create(buttons fyne.CanvasObject) {
-	label := widget.NewLabelWithStyle(d.title, fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
+func (d *dialog) create(buttons granio.CanvasObject) {
+	label := widget.NewLabelWithStyle(d.title, granio.TextAlignLeading, granio.TextStyle{Bold: true})
 
-	var image fyne.CanvasObject
+	var image granio.CanvasObject
 	if d.icon != nil {
 		image = &canvas.Image{Resource: d.icon}
 	} else {
@@ -149,25 +149,30 @@ func (d *dialog) create(buttons fyne.CanvasObject) {
 	)
 
 	d.win = widget.NewModalPopUp(content, d.parent.Canvas())
+	d.win.OnEscape = func() {
+		if d.dismiss != nil {
+			d.Dismiss()
+		}
+	}
 }
 
-func (d *dialog) setButtons(buttons fyne.CanvasObject) {
-	d.win.Content.(*fyne.Container).Objects[3] = buttons
+func (d *dialog) setButtons(buttons granio.CanvasObject) {
+	d.win.Content.(*granio.Container).Objects[3] = buttons
 	d.win.Refresh()
 }
 
-func (d *dialog) setIcon(icon fyne.Resource) {
+func (d *dialog) setIcon(icon granio.Resource) {
 	if icon == nil {
-		d.win.Content.(*fyne.Container).Objects[0] = &layout.Spacer{}
+		d.win.Content.(*granio.Container).Objects[0] = &layout.Spacer{}
 		d.win.Refresh()
 		return
 	}
-	d.win.Content.(*fyne.Container).Objects[0] = &canvas.Image{Resource: icon}
+	d.win.Content.(*granio.Container).Objects[0] = &canvas.Image{Resource: icon}
 	d.win.Refresh()
 }
 
 // The method .create() needs to be called before the dialog can be shown.
-func newDialog(title, message string, icon fyne.Resource, callback func(bool), parent fyne.Window) *dialog {
+func newDialog(title, message string, icon granio.Resource, callback func(bool), parent granio.Window) *dialog {
 	d := &dialog{content: newCenterWrappedLabel(message), title: title, icon: icon, parent: parent}
 	d.callback = callback
 
@@ -188,30 +193,30 @@ func newThemedBackground() *themedBackground {
 	return t
 }
 
-func (t *themedBackground) CreateRenderer() fyne.WidgetRenderer {
+func (t *themedBackground) CreateRenderer() granio.WidgetRenderer {
 	t.ExtendBaseWidget(t)
 	rect := canvas.NewRectangle(theme.Color(theme.ColorNameOverlayBackground))
 	rect.CornerRadius = theme.Size(theme.SizeNameDialogRadius)
-	return &themedBackgroundRenderer{rect, []fyne.CanvasObject{rect}}
+	return &themedBackgroundRenderer{rect, []granio.CanvasObject{rect}}
 }
 
 type themedBackgroundRenderer struct {
 	rect    *canvas.Rectangle
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 func (*themedBackgroundRenderer) Destroy() {
 }
 
-func (renderer *themedBackgroundRenderer) Layout(size fyne.Size) {
+func (renderer *themedBackgroundRenderer) Layout(size granio.Size) {
 	renderer.rect.Resize(size)
 }
 
-func (renderer *themedBackgroundRenderer) MinSize() fyne.Size {
+func (renderer *themedBackgroundRenderer) MinSize() granio.Size {
 	return renderer.rect.MinSize()
 }
 
-func (renderer *themedBackgroundRenderer) Objects() []fyne.CanvasObject {
+func (renderer *themedBackgroundRenderer) Objects() []granio.CanvasObject {
 	return renderer.objects
 }
 
@@ -229,31 +234,31 @@ type dialogLayout struct {
 	d *dialog
 }
 
-func (*dialogLayout) Layout(obj []fyne.CanvasObject, size fyne.Size) {
+func (*dialogLayout) Layout(obj []granio.CanvasObject, size granio.Size) {
 	btnMin := obj[3].MinSize()
 	labelMin := obj[4].MinSize()
 
 	// icon
 	iconHeight := padHeight*2 + labelMin.Height*2 - theme.Padding()
-	obj[0].Resize(fyne.NewSize(iconHeight, iconHeight))
-	obj[0].Move(fyne.NewPos(size.Width-iconHeight+theme.Padding(), -theme.Padding()))
+	obj[0].Resize(granio.NewSize(iconHeight, iconHeight))
+	obj[0].Move(granio.NewPos(size.Width-iconHeight+theme.Padding(), -theme.Padding()))
 
 	// background
-	obj[1].Move(fyne.NewPos(0, 0))
+	obj[1].Move(granio.NewPos(0, 0))
 	obj[1].Resize(size)
 
 	// buttons
 	obj[3].Resize(btnMin)
-	obj[3].Move(fyne.NewPos(size.Width/2-(btnMin.Width/2), size.Height-padHeight-btnMin.Height))
+	obj[3].Move(granio.NewPos(size.Width/2-(btnMin.Width/2), size.Height-padHeight-btnMin.Height))
 
 	// content
 	contentStart := obj[4].Position().Y + labelMin.Height + padHeight
 	contentEnd := obj[3].Position().Y - theme.Padding()
-	obj[2].Move(fyne.NewPos(padWidth/2, labelMin.Height+padHeight))
-	obj[2].Resize(fyne.NewSize(size.Width-padWidth, contentEnd-contentStart))
+	obj[2].Move(granio.NewPos(padWidth/2, labelMin.Height+padHeight))
+	obj[2].Resize(granio.NewSize(size.Width-padWidth, contentEnd-contentStart))
 }
 
-func (*dialogLayout) MinSize(obj []fyne.CanvasObject) fyne.Size {
+func (*dialogLayout) MinSize(obj []granio.CanvasObject) granio.Size {
 	contentMin := obj[2].MinSize()
 	btnMin := obj[3].MinSize()
 	labelMin := obj[4].MinSize()
@@ -261,5 +266,5 @@ func (*dialogLayout) MinSize(obj []fyne.CanvasObject) fyne.Size {
 	width := max(contentMin.Width, btnMin.Width, labelMin.Width) + padWidth
 	height := contentMin.Height + btnMin.Height + labelMin.Height + theme.Padding() + padHeight*2
 
-	return fyne.NewSize(width, height)
+	return granio.NewSize(width, height)
 }

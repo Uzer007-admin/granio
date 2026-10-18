@@ -3,11 +3,11 @@ package container_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -61,7 +61,7 @@ func TestDocTabs_Hidden_AsChild(t *testing.T) {
 
 func TestDocTabs_Resize_Empty(t *testing.T) {
 	tabs := container.NewDocTabs()
-	tabs.Resize(fyne.NewSize(10, 10))
+	tabs.Resize(granio.NewSize(10, 10))
 	size := tabs.Size()
 	assert.Equal(t, float32(10), size.Height)
 	assert.Equal(t, float32(10), size.Width)

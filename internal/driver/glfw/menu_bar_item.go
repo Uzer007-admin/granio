@@ -1,24 +1,24 @@
 package glfw
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
-	publicWidget "fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	publicWidget "github.com/Uzer007-admin/granio/v2/widget"
 )
 
 var (
-	_ fyne.Widget       = (*menuBarItem)(nil)
+	_ granio.Widget     = (*menuBarItem)(nil)
 	_ desktop.Hoverable = (*menuBarItem)(nil)
-	_ fyne.Focusable    = (*menuBarItem)(nil)
+	_ granio.Focusable  = (*menuBarItem)(nil)
 )
 
-// menuBarItem is a widget for displaying an item for a fyne.Menu in a MenuBar.
+// menuBarItem is a widget for displaying an item for a granio.Menu in a MenuBar.
 type menuBarItem struct {
 	widget.Base
-	Menu   *fyne.Menu
+	Menu   *granio.Menu
 	Parent *MenuBar
 
 	active  bool
@@ -37,12 +37,12 @@ func (i *menuBarItem) Child() *publicWidget.Menu {
 }
 
 // CreateRenderer returns a new renderer for the menu bar item.
-func (i *menuBarItem) CreateRenderer() fyne.WidgetRenderer {
+func (i *menuBarItem) CreateRenderer() granio.WidgetRenderer {
 	background := canvas.NewRectangle(theme.Color(theme.ColorNameHover))
 	background.CornerRadius = theme.SelectionRadiusSize()
 	background.Hide()
 	text := canvas.NewText(i.Menu.Label, theme.Color(theme.ColorNameForeground))
-	objects := []fyne.CanvasObject{background, text}
+	objects := []granio.CanvasObject{background, text}
 
 	return &menuBarItemRenderer{
 		widget.NewBaseRenderer(objects),
@@ -104,25 +104,25 @@ func (i *menuBarItem) MouseOut() {
 
 // Tapped toggles the activation state of the menu bar.
 // It shows the item’s menu if the bar is activated and hides it if the bar is deactivated.
-func (i *menuBarItem) Tapped(*fyne.PointEvent) {
+func (i *menuBarItem) Tapped(*granio.PointEvent) {
 	i.Parent.toggleItem(i)
 }
 
-func (i *menuBarItem) TypedKey(event *fyne.KeyEvent) {
+func (i *menuBarItem) TypedKey(event *granio.KeyEvent) {
 	switch event.Name {
-	case fyne.KeyLeft:
+	case granio.KeyLeft:
 		if !i.Child().DeactivateLastSubmenu() {
 			i.Parent.canvas.FocusPrevious()
 		}
-	case fyne.KeyRight:
+	case granio.KeyRight:
 		if !i.Child().ActivateLastSubmenu() {
 			i.Parent.canvas.FocusNext()
 		}
-	case fyne.KeyDown:
+	case granio.KeyDown:
 		i.Child().ActivateNext()
-	case fyne.KeyUp:
+	case granio.KeyUp:
 		i.Child().ActivatePrevious()
-	case fyne.KeyEnter, fyne.KeyReturn, fyne.KeySpace:
+	case granio.KeyEnter, granio.KeyReturn, granio.KeySpace:
 		i.Child().TriggerLast()
 	}
 }
@@ -137,18 +137,18 @@ type menuBarItemRenderer struct {
 	background *canvas.Rectangle
 }
 
-func (r *menuBarItemRenderer) Layout(size fyne.Size) {
+func (r *menuBarItemRenderer) Layout(size granio.Size) {
 	padding := r.padding()
 
 	r.text.TextSize = theme.TextSize()
 	r.text.Color = theme.Color(theme.ColorNameForeground)
 	r.text.Resize(r.text.MinSize())
-	r.text.Move(fyne.NewPos(padding.Width/2, padding.Height/2))
+	r.text.Move(granio.NewPos(padding.Width/2, padding.Height/2))
 
 	r.background.Resize(size)
 }
 
-func (r *menuBarItemRenderer) MinSize() fyne.Size {
+func (r *menuBarItemRenderer) MinSize() granio.Size {
 	return r.text.MinSize().Add(r.padding())
 }
 
@@ -167,6 +167,6 @@ func (r *menuBarItemRenderer) Refresh() {
 	canvas.Refresh(r.i)
 }
 
-func (*menuBarItemRenderer) padding() fyne.Size {
-	return fyne.NewSize(theme.InnerPadding()*2, theme.InnerPadding())
+func (*menuBarItemRenderer) padding() granio.Size {
+	return granio.NewSize(theme.InnerPadding()*2, theme.InnerPadding())
 }

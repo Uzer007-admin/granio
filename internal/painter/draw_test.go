@@ -4,9 +4,9 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,13 +29,13 @@ func TestPaint_GetCornerRadius(t *testing.T) {
 
 func TestPaint_GetMaximumRadius(t *testing.T) {
 	cases := []struct {
-		size fyne.Size
+		size granio.Size
 		want float32
 	}{
-		{fyne.NewSize(10, 20), 5},
-		{fyne.NewSize(30, 30), 15},
-		{fyne.NewSize(0, 0), 0},
-		{fyne.NewSize(100, 50), 25},
+		{granio.NewSize(10, 20), 5},
+		{granio.NewSize(30, 30), 15},
+		{granio.NewSize(0, 0), 0},
+		{granio.NewSize(100, 50), 25},
 	}
 	for _, c := range cases {
 		got := painter.GetMaximumRadius(c.size)
@@ -48,27 +48,27 @@ func TestPaint_GetMaximumRadius(t *testing.T) {
 func TestPaint_GetMaximumCornerRadius(t *testing.T) {
 	cases := []struct {
 		radius, adjW, adjH float32
-		size               fyne.Size
+		size               granio.Size
 		want               float32
 	}{
-		{5, 5, 5, fyne.NewSquareSize(10), 5},
-		{10, 2, 2, fyne.NewSquareSize(10), 8},
-		{20, 0, 0, fyne.NewSquareSize(20), 20},
-		{15, 5, 10, fyne.NewSquareSize(20), 10},
-		{30, 2, 10, fyne.NewSquareSize(20), 10},
-		{8, 4, 4, fyne.NewSquareSize(16), 8},
-		{12, 6, 6, fyne.NewSize(24, 16), 10},
-		{16, 8, 8, fyne.NewSize(32, 16), 8},
-		{20, 10, 5, fyne.NewSize(40, 20), 15},
-		{10, 5, 5, fyne.NewSize(40, 20), 10},
-		{10, 20, 5, fyne.NewSize(20, 40), 10},
-		{13, 5, 2, fyne.NewSize(17, 20), 12},
-		{13, 2, 5, fyne.NewSize(17, 20), 13},
-		{canvas.RadiusMaximum, 3, 5, fyne.NewSize(36, 16), 11},
-		{canvas.RadiusMaximum, canvas.RadiusMaximum, canvas.RadiusMaximum, fyne.NewSize(36, 16), 8},
-		{canvas.RadiusMaximum, 0, 0, fyne.NewSize(10, 14), 10},
-		{canvas.RadiusMaximum, 1, 0, fyne.NewSize(10, 14), 9},
-		{canvas.RadiusMaximum, canvas.RadiusMaximum, 4, fyne.NewSize(30, 20), 15},
+		{5, 5, 5, granio.NewSquareSize(10), 5},
+		{10, 2, 2, granio.NewSquareSize(10), 8},
+		{20, 0, 0, granio.NewSquareSize(20), 20},
+		{15, 5, 10, granio.NewSquareSize(20), 10},
+		{30, 2, 10, granio.NewSquareSize(20), 10},
+		{8, 4, 4, granio.NewSquareSize(16), 8},
+		{12, 6, 6, granio.NewSize(24, 16), 10},
+		{16, 8, 8, granio.NewSize(32, 16), 8},
+		{20, 10, 5, granio.NewSize(40, 20), 15},
+		{10, 5, 5, granio.NewSize(40, 20), 10},
+		{10, 20, 5, granio.NewSize(20, 40), 10},
+		{13, 5, 2, granio.NewSize(17, 20), 12},
+		{13, 2, 5, granio.NewSize(17, 20), 13},
+		{canvas.RadiusMaximum, 3, 5, granio.NewSize(36, 16), 11},
+		{canvas.RadiusMaximum, canvas.RadiusMaximum, canvas.RadiusMaximum, granio.NewSize(36, 16), 8},
+		{canvas.RadiusMaximum, 0, 0, granio.NewSize(10, 14), 10},
+		{canvas.RadiusMaximum, 1, 0, granio.NewSize(10, 14), 9},
+		{canvas.RadiusMaximum, canvas.RadiusMaximum, 4, granio.NewSize(30, 20), 15},
 	}
 	for _, c := range cases {
 		got := painter.GetMaximumCornerRadius(c.radius, c.adjW, c.adjH, c.size)
@@ -135,7 +135,7 @@ func TestShadow_ShadowPaddings_OffsetOnlyLeft(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 3,
-		Offset:     fyne.NewPos(-5, 0),
+		Offset:     granio.NewPos(-5, 0),
 		Variant:    canvas.BoxShadow,
 	}
 	expected := [4]float32{8, 3, 0, 3}
@@ -150,7 +150,7 @@ func TestShadow_ShadowPaddings_OffsetOnlyRight(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 2,
-		Offset:     fyne.NewPos(6, 0),
+		Offset:     granio.NewPos(6, 0),
 		Variant:    canvas.DropShadow,
 	}
 	expected := [4]float32{0, 2, 8, 2}
@@ -165,7 +165,7 @@ func TestShadow_ShadowPaddings_OffsetOnlyTop(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 5,
-		Offset:     fyne.NewPos(0, -4),
+		Offset:     granio.NewPos(0, -4),
 		Variant:    canvas.BoxShadow,
 	}
 	expected := [4]float32{5, 9, 5, 1}
@@ -180,7 +180,7 @@ func TestShadow_ShadowPaddings_OffsetOnlyBottom(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 1,
-		Offset:     fyne.NewPos(0, 7),
+		Offset:     granio.NewPos(0, 7),
 		Variant:    canvas.DropShadow,
 	}
 	expected := [4]float32{1, 0, 1, 8}
@@ -195,7 +195,7 @@ func TestShadow_ShadowPaddings_OffsetLeftTop(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 4,
-		Offset:     fyne.NewPos(-3, -2),
+		Offset:     granio.NewPos(-3, -2),
 		Variant:    canvas.DropShadow,
 	}
 	expected := [4]float32{7, 6, 1, 2}
@@ -210,7 +210,7 @@ func TestShadow_ShadowPaddings_OffsetLeftBottom(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 2,
-		Offset:     fyne.NewPos(-4, 5),
+		Offset:     granio.NewPos(-4, 5),
 		Variant:    canvas.BoxShadow,
 	}
 	expected := [4]float32{6, 0, 0, 7}
@@ -225,7 +225,7 @@ func TestShadow_ShadowPaddings_OffsetRightTop(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 3,
-		Offset:     fyne.NewPos(3, -2),
+		Offset:     granio.NewPos(3, -2),
 	}
 	expected := [4]float32{0, 5, 6, 1}
 	pads := painter.GetShadowPaddings(b)
@@ -239,7 +239,7 @@ func TestShadow_ShadowPaddings_OffsetLeftBottom2(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 4,
-		Offset:     fyne.NewPos(-2, 3),
+		Offset:     granio.NewPos(-2, 3),
 		Variant:    canvas.DropShadow,
 	}
 	expected := [4]float32{6, 1, 2, 7}
@@ -254,7 +254,7 @@ func TestShadow_ShadowPaddings_OffsetRightBottom(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 2,
-		Offset:     fyne.NewPos(4, 5),
+		Offset:     granio.NewPos(4, 5),
 		Variant:    canvas.DropShadow,
 	}
 	expected := [4]float32{0, 0, 6, 7}
@@ -269,7 +269,7 @@ func TestShadow_ShadowPaddings_NoOffsetOnlyBlurRadius(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 5,
-		Offset:     fyne.NewPos(0, 0),
+		Offset:     granio.NewPos(0, 0),
 		Variant:    canvas.BoxShadow,
 	}
 	expected := [4]float32{5, 5, 5, 5}
@@ -284,7 +284,7 @@ func TestShadow_ShadowPaddings_NoOffsetOnlyBlurRadius2(t *testing.T) {
 	b := canvas.Shadow{
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 9,
-		Offset:     fyne.NewPos(0, 0),
+		Offset:     granio.NewPos(0, 0),
 		Variant:    canvas.BoxShadow,
 	}
 	expected := [4]float32{9, 9, 9, 9}
@@ -300,7 +300,7 @@ func TestShadow_ShadowPaddings_OffsetAndSpread(t *testing.T) {
 		Color:      color.NRGBA{0, 0, 0, 128},
 		BlurRadius: 9,
 		Spread:     10,
-		Offset:     fyne.NewPos(1, -1),
+		Offset:     granio.NewPos(1, -1),
 		Variant:    canvas.BoxShadow,
 	}
 	expected := [4]float32{18, 20, 20, 18}

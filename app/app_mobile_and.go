@@ -22,9 +22,9 @@ import (
 	"time"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/internal/scheduler"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/internal/scheduler"
 )
 
 func (a *fyneApp) OpenURL(url *url.URL) error {
@@ -38,7 +38,7 @@ func (a *fyneApp) OpenURL(url *url.URL) error {
 	return nil
 }
 
-func (a *fyneApp) SendNotification(n *fyne.Notification) {
+func (a *fyneApp) SendNotification(n *granio.Notification) {
 	titleStr := C.CString(n.Title)
 	defer C.free(unsafe.Pointer(titleStr))
 	contentStr := C.CString(n.Content)
@@ -55,7 +55,7 @@ func (a *fyneApp) SendNotification(n *fyne.Notification) {
 // to register the FyneNotificationReceiver in AndroidManifest.xml; if it is
 // missing the Java bridge returns false and we fall back to the in-process
 // scheduler with cache persistence.
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	if !when.After(time.Now()) {
 		return nil, errors.New("scheduled delivery time must be in the future")
 	}
@@ -82,7 +82,7 @@ func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*f
 	if !ok {
 		return a.scheduleViaScheduler(n, when)
 	}
-	return fyne.NewScheduledNotification(id, n, when), nil
+	return granio.NewScheduledNotification(id, n, when), nil
 }
 
 func (a *fyneApp) CancelScheduledNotification(id string) error {

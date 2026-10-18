@@ -14,15 +14,15 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/painter/software"
-	"fyne.io/fyne/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v2/internal/test"
 )
 
 // AssertCanvasTappableAt asserts that the canvas is tappable at the given position.
-func AssertCanvasTappableAt(t *testing.T, c fyne.Canvas, pos fyne.Position) bool {
+func AssertCanvasTappableAt(t *testing.T, c granio.Canvas, pos granio.Position) bool {
 	if o, _ := findTappable(c, pos); o == nil {
 		t.Errorf("No tappable found at %#v", pos)
 		return false
@@ -38,7 +38,7 @@ func AssertCanvasTappableAt(t *testing.T, c fyne.Canvas, pos fyne.Position) bool
 // This path is also reported, thus the file can be used as new master.
 //
 // Since 2.3
-func AssertObjectRendersToImage(t *testing.T, masterFilename string, o fyne.CanvasObject, msgAndArgs ...any) bool {
+func AssertObjectRendersToImage(t *testing.T, masterFilename string, o granio.CanvasObject, msgAndArgs ...any) bool {
 	c := NewCanvasWithPainter(software.NewPainter())
 	c.SetPadded(false)
 	size := internal.MaxSizes(o.MinSize(), o.Size())
@@ -60,7 +60,7 @@ func AssertObjectRendersToImage(t *testing.T, masterFilename string, o fyne.Canv
 // The only exception to this are text elements which do not contain line breaks unless the text includes them.
 //
 // Since 2.3
-func AssertObjectRendersToMarkup(t *testing.T, masterFilename string, o fyne.CanvasObject, msgAndArgs ...any) bool {
+func AssertObjectRendersToMarkup(t *testing.T, masterFilename string, o granio.CanvasObject, msgAndArgs ...any) bool {
 	c := NewCanvas()
 	c.SetPadded(false)
 	size := internal.MaxSizes(o.MinSize(), o.Size())
@@ -86,7 +86,7 @@ func AssertImageMatches(t *testing.T, masterFilename string, img image.Image, ms
 // This path is also reported, thus the file can be used as new master.
 //
 // Since 2.3
-func AssertRendersToImage(t *testing.T, masterFilename string, c fyne.Canvas, msgAndArgs ...any) bool {
+func AssertRendersToImage(t *testing.T, masterFilename string, c granio.Canvas, msgAndArgs ...any) bool {
 	return AssertImageMatches(t, masterFilename, c.Capture(), msgAndArgs...)
 }
 
@@ -102,7 +102,7 @@ func AssertRendersToImage(t *testing.T, masterFilename string, c fyne.Canvas, ms
 // The only exception to this are text elements which do not contain line breaks unless the text includes them.
 //
 // Since: 2.0
-func AssertRendersToMarkup(t *testing.T, masterFilename string, c fyne.Canvas, msgAndArgs ...any) bool {
+func AssertRendersToMarkup(t *testing.T, masterFilename string, c granio.Canvas, msgAndArgs ...any) bool {
 	wd, err := os.Getwd()
 	require.NoError(t, err)
 
@@ -132,9 +132,9 @@ func AssertRendersToMarkup(t *testing.T, masterFilename string, c fyne.Canvas, m
 }
 
 // ApplyTheme sets the given theme and waits for it to be applied to the current app.
-func ApplyTheme(t *testing.T, theme fyne.Theme) {
-	require.IsType(t, &app{}, fyne.CurrentApp())
-	a, _ := fyne.CurrentApp().(*app)
+func ApplyTheme(t *testing.T, theme granio.Theme) {
+	require.IsType(t, &app{}, granio.CurrentApp())
+	a, _ := granio.CurrentApp().(*app)
 	a.Settings().SetTheme(theme)
 	for a.lastAppliedTheme() != theme {
 		time.Sleep(5 * time.Millisecond)
@@ -146,14 +146,14 @@ func ApplyTheme(t *testing.T, theme fyne.Theme) {
 // The widget renderer is automatically destroyed when the test ends.
 //
 // Since: 2.5
-func TempWidgetRenderer(t *testing.T, wid fyne.Widget) fyne.WidgetRenderer {
+func TempWidgetRenderer(t *testing.T, wid granio.Widget) granio.WidgetRenderer {
 	t.Cleanup(func() { cache.DestroyRenderer(wid) })
 	return cache.Renderer(wid)
 }
 
 // WithTestTheme runs a function with the testTheme temporarily set.
 func WithTestTheme(t *testing.T, f func()) {
-	settings := fyne.CurrentApp().Settings()
+	settings := granio.CurrentApp().Settings()
 	current := settings.Theme()
 	ApplyTheme(t, NewTheme())
 	defer ApplyTheme(t, current)

@@ -4,34 +4,34 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Line)(nil)
+var _ granio.CanvasObject = (*Line)(nil)
 
 // Line describes a colored line primitive in a Fyne canvas.
 // Lines are special as they can have a negative width or height to indicate
 // an inverse slope (i.e. slope up vs down).
 type Line struct {
-	Position1 fyne.Position // The current top-left position of the Line
-	Position2 fyne.Position // The current bottom-right position of the Line
-	Hidden    bool          // Is this Line currently hidden
+	Position1 granio.Position // The current top-left position of the Line
+	Position2 granio.Position // The current bottom-right position of the Line
+	Hidden    bool            // Is this Line currently hidden
 
 	StrokeColor color.Color // The line stroke color
 	StrokeWidth float32     // The stroke width of the line
 }
 
 // Size returns the current size of bounding box for this line object
-func (l *Line) Size() fyne.Size {
-	return fyne.NewSize(
+func (l *Line) Size() granio.Size {
+	return granio.NewSize(
 		float32(math.Abs(float64(l.Position2.X)-float64(l.Position1.X))),
 		float32(math.Abs(float64(l.Position2.Y)-float64(l.Position1.Y))),
 	)
 }
 
 // Resize sets a new bottom-right position for the line object, then it will then be refreshed.
-func (l *Line) Resize(size fyne.Size) {
+func (l *Line) Resize(size granio.Size) {
 	if size == l.Size() {
 		return
 	}
@@ -50,12 +50,12 @@ func (l *Line) Resize(size fyne.Size) {
 }
 
 // Position gets the current top-left position of this line object, relative to its parent / canvas
-func (l *Line) Position() fyne.Position {
-	return fyne.NewPos(min(l.Position1.X, l.Position2.X), min(l.Position1.Y, l.Position2.Y))
+func (l *Line) Position() granio.Position {
+	return granio.NewPos(min(l.Position1.X, l.Position2.X), min(l.Position1.Y, l.Position2.Y))
 }
 
 // Move the line object to a new position, relative to its parent / canvas
-func (l *Line) Move(pos fyne.Position) {
+func (l *Line) Move(pos granio.Position) {
 	oldPos := l.Position()
 	if oldPos == pos {
 		return
@@ -71,8 +71,8 @@ func (l *Line) Move(pos fyne.Position) {
 
 // MinSize for a Line simply returns Size{1, 1} as there is no
 // explicit content
-func (*Line) MinSize() fyne.Size {
-	return fyne.NewSize(1, 1)
+func (*Line) MinSize() granio.Size {
+	return granio.NewSize(1, 1)
 }
 
 // Visible returns true if this line// Show will set this circle to be visible is visible, false otherwise

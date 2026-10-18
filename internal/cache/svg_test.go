@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,7 +52,7 @@ func addFileToCache(path string, w, h int) image.Image {
 }
 
 func addToCache(name, content string, w, h int) image.Image {
-	resource := fyne.NewStaticResource(name, []byte(content))
+	resource := granio.NewStaticResource(name, []byte(content))
 	tex := image.NewNRGBA(image.Rect(0, 0, w, h))
 	SetSvg(resource.Name(), nil, tex, w, h)
 	return tex

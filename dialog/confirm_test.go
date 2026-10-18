@@ -5,10 +5,10 @@ import (
 	"os"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -76,20 +76,20 @@ func TestDialog_ConfirmCallbackOnlyOnConfirm(t *testing.T) {
 func TestConfirmDialog_Resize(t *testing.T) {
 	window := test.NewWindow(nil)
 	defer window.Close()
-	window.Resize(fyne.NewSize(600, 400))
+	window.Resize(granio.NewSize(600, 400))
 	d := NewConfirm("Test", "Test", nil, window)
 
 	d.Show() // we cannot check window size if not shown
 
 	// Test resize - normal size scenario
-	size := fyne.NewSize(300, 180) // normal size to fit (600,400)
+	size := granio.NewSize(300, 180) // normal size to fit (600,400)
 	d.Resize(size)
 	expectedWidth := float32(300)
 	assert.Equal(t, expectedWidth, d.win.Content.Size().Width)
 	expectedHeight := float32(180)
 	assert.Equal(t, expectedHeight, d.win.Content.Size().Height)
 	// Test resize - normal size scenario again
-	size = fyne.NewSize(310, 280) // normal size to fit (600,400)
+	size = granio.NewSize(310, 280) // normal size to fit (600,400)
 	d.Resize(size)
 	expectedWidth = 310
 	assert.Equal(t, expectedWidth, d.win.Content.Size().Width)
@@ -98,7 +98,7 @@ func TestConfirmDialog_Resize(t *testing.T) {
 	d.Hide()
 
 	// Test resize - greater than max size scenario
-	size = fyne.NewSize(800, 600)
+	size = granio.NewSize(800, 600)
 	d.Resize(size)
 	d.Show()
 	expectedWidth = 600                                // since win width only 600
@@ -110,7 +110,7 @@ func TestConfirmDialog_Resize(t *testing.T) {
 	d.Hide()
 
 	// Test again - tiny size
-	size = fyne.NewSize(1, 1)
+	size = granio.NewSize(1, 1)
 	d.Resize(size)
 	d.Show()
 	expectedWidth = d.win.Content.MinSize().Width
@@ -123,7 +123,7 @@ func TestConfirmDialog_Resize(t *testing.T) {
 func TestConfirm_Importance(t *testing.T) {
 	test.NewTempApp(t)
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	size := fyne.NewSize(200, 300)
+	size := granio.NewSize(200, 300)
 	w.Resize(size)
 
 	d := NewConfirm("Delete me?", "This is dangerous!", nil, w)
@@ -140,7 +140,7 @@ func TestConfirm_Importance_Blur(t *testing.T) {
 	data, _ := os.ReadFile("./testdata/Capitalised.txt")
 	code.SetText(string(data))
 	w := test.NewTempWindow(t, code)
-	size := fyne.NewSize(480, 320)
+	size := granio.NewSize(480, 320)
 	w.Resize(size)
 
 	d := NewConfirm("Delete me?", "This is dangerous!", nil, w)

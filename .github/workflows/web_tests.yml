@@ -8,10 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-go@v6
+          submodules: recursive
+      - name: Apply local submodule patches
+        run: python scripts/apply-patches.py
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
 
@@ -19,5 +22,5 @@ jobs:
         env:
           GOOS: js
           GOARCH: wasm
-        working-directory: cmd/fyne_demo
+        working-directory: cmd/granio_demo
         run: go build

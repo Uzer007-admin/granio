@@ -1,0 +1,2 @@
+01:01:05.011291 - SPEECH OUTPUT: 'Screen reader on.'{'established': False}
+01:01:06.834388 - SPEECH OUTPUT: 'CJK input entry.'{'established': False}

@@ -1,0 +1,86 @@
+ok  	fyne.io/fyne/v2	(cached)
+ok  	fyne.io/fyne/v2/app	35.271s
+?   	fyne.io/fyne/v2/cache	[no test files]
+ok  	fyne.io/fyne/v2/canvas	20.318s
+?   	fyne.io/fyne/v2/cmd/fyne	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/commands	(cached)
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/commands	5.233s
+?   	fyne.io/fyne/v2/cmd/fyne/internal/mobile	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres	(cached)
+?   	fyne.io/fyne/v2/cmd/fyne/internal/templates	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/util	(cached)
+ok  	fyne.io/fyne/v2/cmd/fyne_demo	7.540s
+?   	fyne.io/fyne/v2/cmd/fyne_demo/data	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_demo/tutorials	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_gallery	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings/data	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne_settings/settings	8.671s
+?   	fyne.io/fyne/v2/cmd/hello	[no test files]
+ok  	fyne.io/fyne/v2/container	9.087s
+ok  	fyne.io/fyne/v2/data/binding	2.130s
+ok  	fyne.io/fyne/v2/data/validation	(cached)
+ok  	fyne.io/fyne/v2/dialog	38.868s
+ok  	fyne.io/fyne/v2/driver	(cached)
+ok  	fyne.io/fyne/v2/driver/desktop	2.019s
+?   	fyne.io/fyne/v2/driver/embedded	[no test files]
+?   	fyne.io/fyne/v2/driver/mobile	[no test files]
+ok  	fyne.io/fyne/v2/driver/software	4.123s
+ok  	fyne.io/fyne/v2/internal	9.911s
+ok  	fyne.io/fyne/v2/internal/animation	(cached)
+ok  	fyne.io/fyne/v2/internal/app	3.627s
+ok  	fyne.io/fyne/v2/internal/async	8.756s
+?   	fyne.io/fyne/v2/internal/build	[no test files]
+ok  	fyne.io/fyne/v2/internal/cache	(cached)
+ok  	fyne.io/fyne/v2/internal/color	(cached)
+ok  	fyne.io/fyne/v2/internal/driver	3.295s
+ok  	fyne.io/fyne/v2/internal/driver/common	8.906s
+ok  	fyne.io/fyne/v2/internal/driver/embedded	2.275s
+--- FAIL: TestNativeFrameRates (2.41s)
+    frame_rate_test.go:26: target=120Hz observed=48 animation ticks in 400ms
+    frame_rate_test.go:26: target=144Hz observed=58 animation ticks in 400ms
+    frame_rate_test.go:26: target=160Hz observed=63 animation ticks in 400ms
+    frame_rate_test.go:26: target=180Hz observed=70 animation ticks in 400ms
+    frame_rate_test.go:26: target=240Hz observed=76 animation ticks in 400ms
+    frame_rate_test.go:25: 
+        	Error Trace:	X:/fyne/internal/driver/glfw/frame_rate_test.go:25
+        	Error:      	"66" is not greater than or equal to "84"
+        	Test:       	TestNativeFrameRates
+        	Messages:   	requested 280Hz
+2026/10/13 17:13:52 Fyne error:  Window content is wider or taller than the maximum supported size and has been clamped; consider wrapping, truncation, or scrolling
+2026/10/13 17:13:52   At: X:/fyne/internal/driver/glfw/window.go:69
+FAIL
+FAIL	fyne.io/fyne/v2/internal/driver/glfw	64.537s
+ok  	fyne.io/fyne/v2/internal/driver/mobile	10.260s
+?   	fyne.io/fyne/v2/internal/driver/mobile/app	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/key	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/paint	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/size	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/touch	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/gl	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/mobileinit	[no test files]
+?   	fyne.io/fyne/v2/internal/goos	[no test files]
+ok  	fyne.io/fyne/v2/internal/metadata	(cached)
+ok  	fyne.io/fyne/v2/internal/painter	16.754s
+?   	fyne.io/fyne/v2/internal/painter/geom	[no test files]
+ok  	fyne.io/fyne/v2/internal/painter/gl	4.218s
+ok  	fyne.io/fyne/v2/internal/painter/software	16.120s
+ok  	fyne.io/fyne/v2/internal/repository	35.981s
+ok  	fyne.io/fyne/v2/internal/repository/mime	(cached)
+?   	fyne.io/fyne/v2/internal/scale	[no test files]
+ok  	fyne.io/fyne/v2/internal/scheduler	(cached)
+ok  	fyne.io/fyne/v2/internal/svg	(cached)
+ok  	fyne.io/fyne/v2/internal/test	2.627s
+ok  	fyne.io/fyne/v2/internal/theme	(cached)
+ok  	fyne.io/fyne/v2/internal/widget	2.364s
+ok  	fyne.io/fyne/v2/lang	(cached)
+ok  	fyne.io/fyne/v2/layout	2.873s
+ok  	fyne.io/fyne/v2/storage	2.400s
+ok  	fyne.io/fyne/v2/storage/repository	(cached)
+ok  	fyne.io/fyne/v2/test	3.110s
+ok  	fyne.io/fyne/v2/theme	2.383s
+ok  	fyne.io/fyne/v2/tools/playground	2.068s
+ok  	fyne.io/fyne/v2/widget	41.996s
+FAIL

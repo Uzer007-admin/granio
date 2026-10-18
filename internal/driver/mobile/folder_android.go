@@ -19,12 +19,12 @@ import (
 	"strings"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
-func canListURI(uri fyne.URI) bool {
+func canListURI(uri granio.URI) bool {
 	uriStr := C.CString(uri.String())
 	defer C.free(unsafe.Pointer(uriStr))
 	listable := false
@@ -37,7 +37,7 @@ func canListURI(uri fyne.URI) bool {
 	return listable
 }
 
-func createListableURI(uri fyne.URI) error {
+func createListableURI(uri granio.URI) error {
 	uriStr := C.CString(uri.String())
 	defer C.free(unsafe.Pointer(uriStr))
 
@@ -53,7 +53,7 @@ func createListableURI(uri fyne.URI) error {
 	return errors.New("failed to create directory")
 }
 
-func listURI(uri fyne.URI) ([]fyne.URI, error) {
+func listURI(uri granio.URI) ([]granio.URI, error) {
 	uriStr := C.CString(uri.String())
 	defer C.free(unsafe.Pointer(uriStr))
 
@@ -69,7 +69,7 @@ func listURI(uri fyne.URI) ([]fyne.URI, error) {
 	}
 
 	parts := strings.Split(result, "|")
-	var list []fyne.URI
+	var list []granio.URI
 	for _, part := range parts {
 		if len(part) == 0 {
 			continue

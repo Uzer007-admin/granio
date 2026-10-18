@@ -1,0 +1,22 @@
+{
+  "OS": {
+    "Caption": "Майкрософт Windows 11 Pro",
+    "Version": "10.0.26300",
+    "BuildNumber": "26300"
+  },
+  "CPU": {
+    "Name": "13th Gen Intel(R) Core(TM) i5-13400",
+    "NumberOfCores": 10,
+    "NumberOfLogicalProcessors": 16
+  },
+  "RAM": {
+    "TotalPhysicalMemory": 68448337920
+  },
+  "GPU": {
+    "Name": "NVIDIA GeForce RTX 4080 SUPER",
+    "DriverVersion": "32.0.16.1692",
+    "CurrentHorizontalResolution": 2560,
+    "CurrentVerticalResolution": 1440,
+    "CurrentRefreshRate": 360
+  }
+}

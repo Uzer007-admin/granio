@@ -6,12 +6,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // segmentDump renders the segments as "text|style" pairs so that tests can
@@ -103,7 +103,7 @@ func TestRichTextEntry_Backspace_AcrossSegments(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("a **b** c")
 	e.CursorRow, e.CursorColumn = 0, 3
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 
 	assert.Equal(t, "a  c", e.Text)
 	// the emptied segment stays at the cursor, but it does not keep the bold
@@ -254,7 +254,7 @@ func TestRichTextEntry_Renders(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("# Title\n\nBody **text**")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(200, 100))
+	w.Resize(granio.NewSize(200, 100))
 
 	e.FocusGained()
 	e.TypedRune('!')
@@ -266,7 +266,7 @@ func TestRichTextEntry_MouseRowAcrossHeights(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("# Heading\n\nBody\n\nMore")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(300, 200))
+	w.Resize(granio.NewSize(300, 200))
 
 	provider := e.textProvider()
 	e.syncSelectable()
@@ -276,7 +276,7 @@ func TestRichTextEntry_MouseRowAcrossHeights(t *testing.T) {
 	for row := 0; row < provider.rows(); row++ {
 		y, height := provider.rowGeometry(row)
 		mid := y + height/2 + innerPad - lineSpace
-		got, _ := e.sel.getRowCol(fyne.NewPos(1, mid))
+		got, _ := e.sel.getRowCol(granio.NewPos(1, mid))
 		assert.Equal(t, row, got, "row %d at y %v", row, mid)
 	}
 }
@@ -286,14 +286,14 @@ func TestRichTextEntry_MouseColumnUsesSegmentSize(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("# Heading")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(300, 200))
+	w.Resize(granio.NewSize(300, 200))
 	e.syncSelectable()
 
 	th := e.Theme()
 	provider := e.textProvider()
 	// clicking just past the fourth character of the large heading text
 	x := provider.lineSizeToColumn(4, 0, th.Size(theme.SizeNameText), th.Size(theme.SizeNameInnerPadding)).Width
-	_, col := e.sel.getRowCol(fyne.NewPos(x+1, 2))
+	_, col := e.sel.getRowCol(granio.NewPos(x+1, 2))
 	assert.Equal(t, 4, col)
 }
 
@@ -301,7 +301,7 @@ func TestRichTextEntry_ReturnLeavesHeading(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("# Title")
 	e.CursorRow, e.CursorColumn = 0, 5
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "body")
 
 	assert.Equal(t, "Title\nbody", e.Text)
@@ -311,12 +311,12 @@ func TestRichTextEntry_ReturnLeavesHeading(t *testing.T) {
 func TestRichTextEntry_ReturnLeavesHeadingHeight(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("# Title")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(300, 200))
+	w.Resize(granio.NewSize(300, 200))
 	e.CursorRow, e.CursorColumn = 0, 5
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 
-	lineHeight := fyne.MeasureText("M", theme.TextSize(), fyne.TextStyle{}).Height
+	lineHeight := granio.MeasureText("M", theme.TextSize(), granio.TextStyle{}).Height
 	_, headingHeight := e.textProvider().rowGeometry(0)
 	_, height := e.textProvider().rowGeometry(1)
 	assert.Greater(t, headingHeight, lineHeight)
@@ -332,7 +332,7 @@ func TestRichTextEntry_ReturnLeavesMinorHeading(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("### Title")
 	e.CursorRow, e.CursorColumn = 0, 5
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "body")
 
 	assert.Equal(t, []string{"Title\n|b", "body|"}, segmentDump(e))
@@ -342,7 +342,7 @@ func TestRichTextEntry_ReturnLeavesMinorHeading(t *testing.T) {
 	e.MultiLine = true
 	e.TypeMarkdown = true
 	typeString(e, "### Title")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "body")
 
 	assert.Equal(t, []string{"Title\n|b", "body|"}, segmentDump(e))
@@ -353,7 +353,7 @@ func TestRichTextEntry_ReturnKeepsInlineStyle(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("**bold**")
 	e.CursorRow, e.CursorColumn = 0, 4
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "more")
 
 	assert.Equal(t, "bold\nmore", e.Text)
@@ -366,7 +366,7 @@ func TestRichTextEntry_Wrapping(t *testing.T) {
 	e := NewRichTextEntry()
 	e.SetText("one two three four five six seven eight nine ten")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(120, 200))
+	w.Resize(granio.NewSize(120, 200))
 	e.Refresh()
 
 	provider := e.textProvider()
@@ -419,7 +419,7 @@ func TestRichTextEntry_QuoteIndent(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("body\n\n> quoted\n\nafter")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(300, 200))
+	w.Resize(granio.NewSize(300, 200))
 	e.Refresh()
 
 	th := e.Theme()
@@ -477,7 +477,7 @@ func TestRichTextEntry_ListReturnAddsItem(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one\n- two")
 	e.CursorRow, e.CursorColumn = 0, 3 // the end of the first item
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "new")
 
 	assert.Equal(t, "one\nnew\ntwo", e.Text)
@@ -489,7 +489,7 @@ func TestRichTextEntry_ListReturnSplitsItem(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one two")
 	e.CursorRow, e.CursorColumn = 0, 3
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 
 	assert.Equal(t, "one\n two", e.Text)
 	assert.Equal(t, []string{"one\n", " two"}, itemTexts(t, e, 0))
@@ -499,8 +499,8 @@ func TestRichTextEntry_ListReturnOnEmptyItemLeaves(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one")
 	e.CursorRow, e.CursorColumn = 0, 3
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn}) // an item to type the next entry in
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn}) // nothing was typed, so the list ends
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn}) // an item to type the next entry in
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn}) // nothing was typed, so the list ends
 	typeString(e, "after")
 
 	assert.Equal(t, "one\nafter", e.Text)
@@ -512,7 +512,7 @@ func TestRichTextEntry_ListBackspaceJoinsItems(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one\n- two")
 	e.CursorRow, e.CursorColumn = 1, 0 // the start of the second item
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 
 	assert.Equal(t, "onetwo", e.Text)
 	assert.Equal(t, []string{"onetwo"}, itemTexts(t, e, 0))
@@ -522,7 +522,7 @@ func TestRichTextEntry_ListBackspaceLeavesFirstItem(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one\n- two")
 	e.CursorRow, e.CursorColumn = 0, 0
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 
 	assert.Equal(t, "one\ntwo", e.Text)
 	assert.Equal(t, "one\n", e.Segments()[0].Textual()) // the item is out of the list now
@@ -536,7 +536,7 @@ func TestRichTextEntry_ListDeleteSelectionJoinsItems(t *testing.T) {
 	e.CursorRow, e.CursorColumn = 2, 3
 	e.syncSelectable()
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDelete})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyDelete})
 
 	assert.Equal(t, "onee", e.Text)
 	assert.Equal(t, []string{"onee"}, itemTexts(t, e, 0))
@@ -547,7 +547,7 @@ func TestRichTextEntry_MarkdownMode_List(t *testing.T) {
 	e.TypeMarkdown = true
 
 	typeString(e, "- one")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "two")
 
 	assert.Equal(t, "one\ntwo\n", e.Text) // the bullets are drawn, not typed
@@ -559,7 +559,7 @@ func TestRichTextEntry_MarkdownMode_OrderedList(t *testing.T) {
 	e.TypeMarkdown = true
 
 	typeString(e, "1. first")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "second")
 
 	list := e.Segments()[0].(*ListSegment)
@@ -576,16 +576,16 @@ func TestRichTextEntry_MarkdownMode_CodeFence(t *testing.T) {
 	e.TypeMarkdown = true
 
 	typeString(e, "```")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "x := 1")
 
 	code, ok := e.Segments()[0].(*CodeBlockSegment)
 	assert.True(t, ok, "typing a fence opens a code block")
 	assert.Equal(t, "x := 1\n", code.Text)
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "```")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "after")
 
 	assert.Equal(t, "x := 1\n", code.Text) // the fence closed the block
@@ -603,8 +603,8 @@ func TestRichTextEntry_CodeBlockEdits(t *testing.T) {
 	typeString(e, "X")
 	assert.Equal(t, "codeX\n", code.Text)
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	assert.Equal(t, "cod\n", code.Text)
 	assert.Equal(t, "intro\ncod\nafter", e.Text)
 }
@@ -614,7 +614,7 @@ func TestRichTextEntry_BlocksLayOutInRows(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("intro\n\n- one\n- two\n\n```\ncode\nhere\n```\n\nafter")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(300, 300))
+	w.Resize(granio.NewSize(300, 300))
 	e.Refresh()
 
 	provider := e.richProvider()
@@ -636,12 +636,12 @@ func TestRichTextEntry_CodeFenceLeavesLineBelow(t *testing.T) {
 	e := NewRichTextEntry()
 	e.TypeMarkdown = true
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 
 	typeString(e, "intro")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "```")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 
 	// the new block has a single line, with an empty one below the panel
 	provider := e.richProvider()
@@ -651,7 +651,7 @@ func TestRichTextEntry_CodeFenceLeavesLineBelow(t *testing.T) {
 	assert.Equal(t, 1, e.CursorRow)
 
 	typeString(e, "x := 1")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	typeString(e, "after")
 
 	code, ok := e.Segments()[1].(*CodeBlockSegment)
@@ -670,7 +670,7 @@ func TestRichTextEntry_ListItemWrapIndents(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("- an item with enough words in it to wrap onto a second line")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(150, 200))
+	w.Resize(granio.NewSize(150, 200))
 	e.Refresh()
 
 	provider := e.richProvider()
@@ -682,7 +682,7 @@ func TestRichTextEntry_ListDeleteJoinsItems(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one\n- two")
 	e.CursorRow, e.CursorColumn = 0, 3 // the end of the first item
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDelete})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyDelete})
 
 	assert.Equal(t, "onetwo", e.Text)
 	assert.Equal(t, []string{"onetwo"}, itemTexts(t, e, 0))
@@ -695,15 +695,15 @@ func TestRichTextEntry_BackspaceRemovesEmptyCodeBlock(t *testing.T) {
 	e := NewRichTextEntry()
 	e.TypeMarkdown = true
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 
 	typeString(e, "intro")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "```")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	assert.IsType(t, &CodeBlockSegment{}, e.Segments()[1], "the fence opened a block")
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	typeString(e, "x")
 
 	// the block is gone, leaving the line it was on to be typed in plain text
@@ -716,8 +716,8 @@ func TestRichTextEntry_BackspaceKeepsCodeBlockWithContent(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("intro\n\n```\ncode\n```\n\nafter")
 	e.CursorRow, e.CursorColumn = 1, 4
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn}) // an empty line inside the block
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn}) // an empty line inside the block
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 
 	code, ok := e.Segments()[1].(*CodeBlockSegment)
 	assert.True(t, ok, "a block with code in it stays")
@@ -729,15 +729,15 @@ func TestRichTextEntry_BackspaceClearsEmptyStyle(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("intro\n\n# Title")
 	e.CursorRow, e.CursorColumn = 1, 5
 	for range "Title" {
-		e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+		e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	}
 	assert.Equal(t, []string{"intro\n|", "|bh1"}, segmentDump(e))
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace}) // the empty heading loses its style
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace}) // the empty heading loses its style
 	assert.Equal(t, "intro\n", e.Text)
 	assert.Equal(t, []string{"intro\n|", "|"}, segmentDump(e))
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace}) // and then the line goes as usual
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace}) // and then the line goes as usual
 	assert.Equal(t, "intro", e.Text)
 }
 
@@ -748,7 +748,7 @@ func TestRichTextEntry_DeleteClearsEmptyStyle(t *testing.T) {
 	typeString(e, "> ")
 	assert.True(t, e.StyleAtCursor().QuotingDepth > 0)
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDelete})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyDelete})
 	typeString(e, "plain")
 
 	assert.Equal(t, "plain", e.Text)
@@ -762,8 +762,8 @@ func TestRichTextEntry_BackspaceDropsEmptyMarks(t *testing.T) {
 	typeString(e, "*hi*")
 	assert.Equal(t, []string{"hi|i", "|"}, segmentDump(e))
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	assert.Equal(t, []string{"|"}, segmentDump(e))
 
 	// the italic went with the text that it styled
@@ -778,8 +778,8 @@ func TestRichTextEntry_BackspaceDropsEmptyMarks_MidLine(t *testing.T) {
 
 	typeString(e, "a ~~hi~~ b")
 	e.CursorColumn = 4 // just after the struck through "hi"
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	typeString(e, "xyz")
 
 	assert.Equal(t, "a xyz b", e.Text)
@@ -793,8 +793,8 @@ func TestRichTextEntry_BackspaceDropsEmptyMarks_InHeading(t *testing.T) {
 	typeString(e, "# T *hi*")
 	assert.Equal(t, []string{"T |bh1", "hi|bih1", "|bh1"}, segmentDump(e))
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	typeString(e, "xyz")
 
 	// the style of the line remains, only the marks within it are dropped
@@ -806,7 +806,7 @@ func TestRichTextEntry_DeleteDropsEmptyMarks(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("a `b` c")
 	e.CursorRow, e.CursorColumn = 0, 2
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDelete})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyDelete})
 	typeString(e, "xyz")
 
 	assert.Equal(t, "a xyz c", e.Text)
@@ -819,7 +819,7 @@ func TestRichTextEntry_BackspaceDropsEmptyMarks_InList(t *testing.T) {
 	e.CursorRow, e.CursorColumn = 1, 3
 
 	for range "two" {
-		e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+		e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	}
 	typeString(e, "xyz")
 
@@ -834,14 +834,14 @@ func TestRichTextEntry_BackspaceJoinsBlankLineToItem(t *testing.T) {
 	e := NewRichTextEntry()
 	e.TypeMarkdown = true
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 
 	typeString(e, "- one")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn}) // an empty line below the list
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn}) // an empty line below the list
 	assert.Equal(t, 1, e.CursorRow)
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	typeString(e, "X")
 
 	// the blank line is gone and the cursor carried on at the end of the item
@@ -856,10 +856,10 @@ func TestRichTextEntry_BackspaceJoinsLineToItem(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("- one\n\nafter")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 	e.CursorRow, e.CursorColumn = 1, 0
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 
 	assert.Equal(t, "oneafter", e.Text)
 	assert.Equal(t, []string{"oneafter"}, itemTexts(t, e, 0))
@@ -872,10 +872,10 @@ func TestRichTextEntry_BackspaceJoinsLineToCodeBlock(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("```\ncode\n```\n\nafter")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 	e.CursorRow, e.CursorColumn = 1, 0 // the line below the block
 
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 
 	code, ok := e.Segments()[0].(*CodeBlockSegment)
 	assert.True(t, ok)
@@ -889,7 +889,7 @@ func TestRichTextEntry_SelectionDrawsOverCodePanel(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("intro\n\n```\ncode\n```")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 	e.FocusGained()
 	e.selectAll()
 	e.sel.Refresh()
@@ -927,7 +927,7 @@ func TestRichTextEntry_SelectionEndsWithoutHighlights(t *testing.T) {
 
 	e := NewRichTextEntryFromMarkdown("```\ncode\n```")
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(250, 200))
+	w.Resize(granio.NewSize(250, 200))
 	e.FocusGained()
 	e.selectAll()
 	e.sel.Refresh()
@@ -958,18 +958,18 @@ func TestRichTextEntry_MarkdownOfTypedBlocks(t *testing.T) {
 	e.TypeMarkdown = true
 
 	typeString(e, "Notes")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "- one")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "two with **bold**")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn}) // an empty item closes the list
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn}) // an empty item closes the list
 	typeString(e, "```")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "x := 1")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "```")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "after")
 
 	assert.Equal(t, "Notes\n\n- one\n- two with **bold**\n\n```\nx := 1\n```\n\nafter", e.Markdown())
@@ -980,7 +980,7 @@ func TestRichTextEntry_MarkdownOfTypedOrderedList(t *testing.T) {
 	e.TypeMarkdown = true
 
 	typeString(e, "3. third")
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 	typeString(e, "fourth")
 
 	assert.Equal(t, "3. third\n4. fourth", e.Markdown())
@@ -996,18 +996,18 @@ func TestRichTextEntry_SelectedText_ListMarkers(t *testing.T) {
 	}
 
 	selectRange(0, 0, 4, 6)
-	e.TypedShortcut(&fyne.ShortcutCopy{Clipboard: clipboard})
+	e.TypedShortcut(&granio.ShortcutCopy{Clipboard: clipboard})
 	assert.Equal(t, "Intro\n• one\n• two\n1. first\n2. second", clipboard.Content())
 	assert.Equal(t, clipboard.Content(), e.SelectedText())
 
 	// an item that is only partly selected is copied without its marker
 	selectRange(1, 1, 2, 3)
-	e.TypedShortcut(&fyne.ShortcutCopy{Clipboard: clipboard})
+	e.TypedShortcut(&granio.ShortcutCopy{Clipboard: clipboard})
 	assert.Equal(t, "ne\n• two", clipboard.Content())
 
 	// stopping at the start of an item does not include its marker
 	selectRange(1, 0, 2, 0)
-	e.TypedShortcut(&fyne.ShortcutCopy{Clipboard: clipboard})
+	e.TypedShortcut(&granio.ShortcutCopy{Clipboard: clipboard})
 	assert.Equal(t, "• one\n", clipboard.Content())
 }
 
@@ -1018,17 +1018,17 @@ func TestRichTextEntry_UndoShortcut(t *testing.T) {
 	e.TypedRune('X')
 	assert.Equal(t, "a bX c", e.Text)
 
-	e.TypedShortcut(&fyne.ShortcutUndo{})
+	e.TypedShortcut(&granio.ShortcutUndo{})
 	assert.Equal(t, "a b c", e.Text)
 	assert.Equal(t, []string{"a |", "b|b", " c|"}, segmentDump(e))
 
-	e.TypedShortcut(&fyne.ShortcutRedo{})
+	e.TypedShortcut(&granio.ShortcutRedo{})
 	assert.Equal(t, "a bX c", e.Text)
 	assert.Equal(t, []string{"a |", "bX|b", " c|"}, segmentDump(e))
 }
 
-func styleShortcut(key fyne.KeyName) fyne.Shortcut {
-	return &desktop.CustomShortcut{KeyName: key, Modifier: fyne.KeyModifierShortcutDefault}
+func styleShortcut(key granio.KeyName) granio.Shortcut {
+	return &desktop.CustomShortcut{KeyName: key, Modifier: granio.KeyModifierShortcutDefault}
 }
 
 func selectRange(e *RichTextEntry, from, to int) {
@@ -1046,7 +1046,7 @@ func TestRichTextEntry_StyleShortcut(t *testing.T) {
 	e.OnChanged = func(string) { changed++ }
 	selectRange(e, 6, 11)
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, "hello world", e.Text)
 	assert.Equal(t, []string{"hello |", "world|b"}, segmentDump(e))
 	assert.Equal(t, "hello **world**", e.Markdown())
@@ -1057,13 +1057,13 @@ func TestRichTextEntry_StyleShortcut(t *testing.T) {
 	assert.Equal(t, 11, end)
 	assert.Equal(t, 11, e.CursorTextOffset())
 
-	e.TypedShortcut(styleShortcut(fyne.KeyI))
+	e.TypedShortcut(styleShortcut(granio.KeyI))
 	assert.Equal(t, []string{"hello |", "world|bi"}, segmentDump(e))
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, []string{"hello |", "world|i"}, segmentDump(e))
 
-	e.TypedShortcut(styleShortcut(fyne.KeyI))
+	e.TypedShortcut(styleShortcut(granio.KeyI))
 	assert.Equal(t, []string{"hello world|"}, segmentDump(e))
 }
 
@@ -1072,12 +1072,12 @@ func TestRichTextEntry_StyleShortcut_Decoration(t *testing.T) {
 	e.SetText("hello world")
 	selectRange(e, 0, 5)
 
-	e.TypedShortcut(styleShortcut(fyne.KeyU))
+	e.TypedShortcut(styleShortcut(granio.KeyU))
 	assert.True(t, e.Segments()[0].(*TextSegment).Style.TextStyle.Underline)
-	e.TypedShortcut(styleShortcut(fyne.KeyU))
+	e.TypedShortcut(styleShortcut(granio.KeyU))
 	assert.False(t, e.Segments()[0].(*TextSegment).Style.TextStyle.Underline)
 
-	strike := &desktop.CustomShortcut{KeyName: fyne.KeyX, Modifier: fyne.KeyModifierShortcutDefault | fyne.KeyModifierShift}
+	strike := &desktop.CustomShortcut{KeyName: granio.KeyX, Modifier: granio.KeyModifierShortcutDefault | granio.KeyModifierShift}
 	e.TypedShortcut(strike)
 	assert.Equal(t, []string{"hello|s", " world|"}, segmentDump(e))
 	assert.Equal(t, "~~hello~~ world", e.Markdown())
@@ -1090,10 +1090,10 @@ func TestRichTextEntry_StyleShortcut_Mixed(t *testing.T) {
 	selectRange(e, 0, 5)
 
 	// part of the selection is not bold, so all of it becomes bold
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, []string{"a b c|b"}, segmentDump(e))
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, []string{"a b c|"}, segmentDump(e))
 }
 
@@ -1102,7 +1102,7 @@ func TestRichTextEntry_StyleShortcut_Backwards(t *testing.T) {
 	e.SetText("hello world")
 	selectRange(e, 11, 6)
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, []string{"hello |", "world|b"}, segmentDump(e))
 
 	start, end := e.sel.selection()
@@ -1116,14 +1116,14 @@ func TestRichTextEntry_StyleShortcut_Typing(t *testing.T) {
 	e.SetText("ab")
 	e.CursorRow, e.CursorColumn = 0, 1
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.True(t, e.StyleAtCursor().TextStyle.Bold)
 	e.TypedRune('X')
 	e.TypedRune('Y')
 	assert.Equal(t, "aXYb", e.Text)
 	assert.Equal(t, []string{"a|", "XY|b", "b|"}, segmentDump(e))
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.False(t, e.StyleAtCursor().TextStyle.Bold)
 	e.TypedRune('Z')
 	assert.Equal(t, "aXYZb", e.Text)
@@ -1135,8 +1135,8 @@ func TestRichTextEntry_StyleShortcut_TypingToggledBack(t *testing.T) {
 	e.SetText("ab")
 	e.CursorRow, e.CursorColumn = 0, 1
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.False(t, e.StyleAtCursor().TextStyle.Bold)
 	e.TypedRune('X')
 	assert.Equal(t, "aXb", e.Markdown())
@@ -1147,7 +1147,7 @@ func TestRichTextEntry_StyleShortcut_Heading(t *testing.T) {
 	selectRange(e, 0, 5)
 
 	// a heading is always bold
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, "# Title\n\nbody", e.Markdown())
 	for _, seg := range e.Segments() {
 		if text, ok := seg.(*TextSegment); ok && strings.Contains(text.Text, "T") {
@@ -1162,7 +1162,7 @@ func TestRichTextEntry_StyleShortcut_Disabled(t *testing.T) {
 	selectRange(e, 0, 5)
 	e.Disable()
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, []string{"hello world|"}, segmentDump(e))
 }
 
@@ -1173,16 +1173,16 @@ func TestRichTextEntry_StyleShortcut_Undo(t *testing.T) {
 	e.TypedRune('!')
 
 	selectRange(e, 0, 5)
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	assert.Equal(t, []string{"hello|b", " world!|"}, segmentDump(e))
 
-	e.TypedShortcut(&fyne.ShortcutUndo{})
+	e.TypedShortcut(&granio.ShortcutUndo{})
 	assert.Equal(t, []string{"hello world!|"}, segmentDump(e))
 
-	e.TypedShortcut(&fyne.ShortcutUndo{})
+	e.TypedShortcut(&granio.ShortcutUndo{})
 	assert.Equal(t, []string{"hello world|"}, segmentDump(e))
 
-	e.TypedShortcut(&fyne.ShortcutRedo{})
-	e.TypedShortcut(&fyne.ShortcutRedo{})
+	e.TypedShortcut(&granio.ShortcutRedo{})
+	e.TypedShortcut(&granio.ShortcutRedo{})
 	assert.Equal(t, []string{"hello|b", " world!|"}, segmentDump(e))
 }

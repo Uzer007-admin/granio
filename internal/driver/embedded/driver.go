@@ -5,12 +5,12 @@ import (
 	"math"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/embedded"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/cache"
-	intdriver "fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/embedded"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
 )
 
 type noosDriver struct {
@@ -18,15 +18,15 @@ type noosDriver struct {
 	queue  chan funcData
 	render func(image.Image)
 	run    func(func())
-	size   func() fyne.Size
+	size   func() granio.Size
 	done   bool
 
-	wins    []fyne.Window
+	wins    []granio.Window
 	current int
 	device  noosDevice
 }
 
-func (n *noosDriver) CreateWindow(_ string) fyne.Window {
+func (n *noosDriver) CreateWindow(_ string) granio.Window {
 	w := newWindow(n)
 	n.wins = append(n.wins, w)
 	n.current = len(n.wins) - 1
@@ -37,30 +37,30 @@ func (n *noosDriver) CreateWindow(_ string) fyne.Window {
 	return w
 }
 
-func (n *noosDriver) AllWindows() []fyne.Window {
+func (n *noosDriver) AllWindows() []granio.Window {
 	return n.wins
 }
 
-func (*noosDriver) RenderedTextSize(text string, fontSize float32, style fyne.TextStyle, source fyne.Resource) (size fyne.Size, baseline float32) {
+func (*noosDriver) RenderedTextSize(text string, fontSize float32, style granio.TextStyle, source granio.Resource) (size granio.Size, baseline float32) {
 	return painter.RenderedTextSize(text, fontSize, style, source)
 }
 
-func (*noosDriver) CanvasForObject(obj fyne.CanvasObject) fyne.Canvas {
+func (*noosDriver) CanvasForObject(obj granio.CanvasObject) granio.Canvas {
 	return cache.GetCanvasForObject(obj)
 }
 
-func (n *noosDriver) AbsolutePositionForObject(o fyne.CanvasObject) fyne.Position {
+func (n *noosDriver) AbsolutePositionForObject(o granio.CanvasObject) granio.Position {
 	c := n.CanvasForObject(o)
 	if c == nil {
-		return fyne.NewPos(0, 0)
+		return granio.NewPos(0, 0)
 	}
 
-	pos := intdriver.AbsolutePositionForObject(o, []fyne.CanvasObject{c.Content()})
+	pos := intdriver.AbsolutePositionForObject(o, []granio.CanvasObject{c.Content()})
 	inset, _ := c.InteractiveArea()
 	return pos.Subtract(inset)
 }
 
-func (n *noosDriver) Device() fyne.Device {
+func (n *noosDriver) Device() granio.Device {
 	return &n.device
 }
 
@@ -99,17 +99,17 @@ func (n *noosDriver) doRun() {
 
 				n.renderWindow(n.wins[n.current])
 			case *embedded.KeyEvent:
-				keyEvent := &fyne.KeyEvent{Name: t.Name}
+				keyEvent := &granio.KeyEvent{Name: t.Name}
 
 				if t.Direction == embedded.KeyReleased {
 					// No desktop events so key/up down not reported
 					continue // ignore key up in other core events
 				}
 
-				if t.Name == fyne.KeyTab {
+				if t.Name == granio.KeyTab {
 					captures := false
 
-					if ent, ok := w.Canvas().Focused().(fyne.Tabbable); ok {
+					if ent, ok := w.Canvas().Focused().(granio.Tabbable); ok {
 						captures = ent.AcceptsTab()
 					}
 					if !captures {
@@ -146,20 +146,20 @@ func (n *noosDriver) handleTouchDown(ev *embedded.TouchDownEvent, w *noosWindow)
 }
 
 func (n *noosDriver) handleTouchMove(ev *embedded.TouchMoveEvent, w *noosWindow) {
-	w.c.tapMove(ev.Position, ev.ID, func(wid fyne.Draggable, ev *fyne.DragEvent) {
+	w.c.tapMove(ev.Position, ev.ID, func(wid granio.Draggable, ev *granio.DragEvent) {
 		wid.Dragged(ev)
 	})
 	n.renderWindow(w)
 }
 
 func (n *noosDriver) handleTouchUp(ev *embedded.TouchUpEvent, w *noosWindow) {
-	w.c.tapUp(ev.Position, ev.ID, func(wid fyne.Tappable, ev *fyne.PointEvent) {
+	w.c.tapUp(ev.Position, ev.ID, func(wid granio.Tappable, ev *granio.PointEvent) {
 		wid.Tapped(ev)
-	}, func(wid fyne.SecondaryTappable, ev *fyne.PointEvent) {
+	}, func(wid granio.SecondaryTappable, ev *granio.PointEvent) {
 		wid.TappedSecondary(ev)
-	}, func(wid fyne.DoubleTappable, ev *fyne.PointEvent) {
+	}, func(wid granio.DoubleTappable, ev *granio.PointEvent) {
 		wid.DoubleTapped(ev)
-	}, func(wid fyne.Draggable, ev *fyne.DragEvent) {
+	}, func(wid granio.Draggable, ev *granio.DragEvent) {
 		if math.Abs(float64(ev.Dragged.DX)) <= tapMoveEndThreshold && math.Abs(float64(ev.Dragged.DY)) <= tapMoveEndThreshold {
 			wid.DragEnd()
 			return
@@ -194,11 +194,11 @@ func (n *noosDriver) Quit() {
 	}()
 }
 
-func (*noosDriver) StartAnimation(*fyne.Animation) {
+func (*noosDriver) StartAnimation(*granio.Animation) {
 	// no animations on embedded
 }
 
-func (*noosDriver) StopAnimation(*fyne.Animation) {
+func (*noosDriver) StopAnimation(*granio.Animation) {
 	// no animations on embedded
 }
 
@@ -222,16 +222,16 @@ func (n *noosDriver) DoFromGoroutine(fn func(), wait bool) {
 }
 
 // TODO add some caching to stop allocating images...
-func (n *noosDriver) renderWindow(w fyne.Window) {
+func (n *noosDriver) renderWindow(w granio.Window) {
 	img := w.Canvas().Capture()
 
 	n.render(img)
 }
 
-func NewNoOSDriver(render func(img image.Image), run func(func()), events chan embedded.Event, size func() fyne.Size) fyne.Driver {
+func NewNoOSDriver(render func(img image.Image), run func(func()), events chan embedded.Event, size func() granio.Size) granio.Driver {
 	return &noosDriver{
 		events: events, queue: make(chan funcData), size: size,
-		render: render, run: run, wins: make([]fyne.Window, 0),
+		render: render, run: run, wins: make([]granio.Window, 0),
 	}
 }
 

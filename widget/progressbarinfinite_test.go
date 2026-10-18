@@ -4,16 +4,16 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
 	"github.com/stretchr/testify/assert"
 )
 
-var globalProgressInfRenderer fyne.WidgetRenderer
+var globalProgressInfRenderer granio.WidgetRenderer
 
 func BenchmarkProgressbarInf(b *testing.B) {
-	var renderer fyne.WidgetRenderer
+	var renderer granio.WidgetRenderer
 	widget := &ProgressBarInfinite{}
 	b.ReportAllocs()
 
@@ -78,7 +78,7 @@ func TestProgressBarInfinite_Reshown(t *testing.T) {
 func TestInfiniteProgressRenderer_Layout(t *testing.T) {
 	bar := NewProgressBarInfinite()
 	width := float32(100.0)
-	bar.Resize(fyne.NewSize(width, 10))
+	bar.Resize(granio.NewSize(width, 10))
 
 	render := test.TempWidgetRenderer(t, bar).(*infProgressRenderer)
 

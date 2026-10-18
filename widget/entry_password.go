@@ -1,16 +1,16 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
 	_ desktop.Cursorable = (*passwordRevealer)(nil)
-	_ fyne.Tappable      = (*passwordRevealer)(nil)
-	_ fyne.Widget        = (*passwordRevealer)(nil)
+	_ granio.Tappable    = (*passwordRevealer)(nil)
+	_ granio.Widget      = (*passwordRevealer)(nil)
 )
 
 type passwordRevealer struct {
@@ -30,7 +30,7 @@ func newPasswordRevealer(e *Entry) *passwordRevealer {
 	return pr
 }
 
-func (r *passwordRevealer) CreateRenderer() fyne.WidgetRenderer {
+func (r *passwordRevealer) CreateRenderer() granio.WidgetRenderer {
 	return &passwordRevealerRenderer{
 		WidgetRenderer: NewSimpleRenderer(r.icon),
 		icon:           r.icon,
@@ -42,7 +42,7 @@ func (*passwordRevealer) Cursor() desktop.Cursor {
 	return desktop.DefaultCursor
 }
 
-func (r *passwordRevealer) Tapped(*fyne.PointEvent) {
+func (r *passwordRevealer) Tapped(*granio.PointEvent) {
 	if r.entry.Disabled() {
 		return
 	}
@@ -50,28 +50,28 @@ func (r *passwordRevealer) Tapped(*fyne.PointEvent) {
 	r.entry.setFieldsAndRefresh(func() {
 		r.entry.Password = !r.entry.Password
 	})
-	if c := fyne.CurrentApp().Driver().CanvasForObject(r); c != nil {
-		c.Focus(r.entry.super().(fyne.Focusable))
+	if c := granio.CurrentApp().Driver().CanvasForObject(r); c != nil {
+		c.Focus(r.entry.super().(granio.Focusable))
 	}
 }
 
-var _ fyne.WidgetRenderer = (*passwordRevealerRenderer)(nil)
+var _ granio.WidgetRenderer = (*passwordRevealerRenderer)(nil)
 
 type passwordRevealerRenderer struct {
-	fyne.WidgetRenderer
+	granio.WidgetRenderer
 	entry *Entry
 	icon  *canvas.Image
 }
 
-func (r *passwordRevealerRenderer) Layout(size fyne.Size) {
+func (r *passwordRevealerRenderer) Layout(size granio.Size) {
 	iconSize := r.entry.Theme().Size(theme.SizeNameInlineIcon)
-	r.icon.Resize(fyne.NewSquareSize(iconSize))
-	r.icon.Move(fyne.NewPos((size.Width-iconSize)/2, (size.Height-iconSize)/2))
+	r.icon.Resize(granio.NewSquareSize(iconSize))
+	r.icon.Move(granio.NewPos((size.Width-iconSize)/2, (size.Height-iconSize)/2))
 }
 
-func (r *passwordRevealerRenderer) MinSize() fyne.Size {
+func (r *passwordRevealerRenderer) MinSize() granio.Size {
 	iconSize := r.entry.Theme().Size(theme.SizeNameInlineIcon)
-	return fyne.NewSquareSize(iconSize + r.entry.Theme().Size(theme.SizeNameInnerPadding)*2)
+	return granio.NewSquareSize(iconSize + r.entry.Theme().Size(theme.SizeNameInnerPadding)*2)
 }
 
 func (r *passwordRevealerRenderer) Refresh() {

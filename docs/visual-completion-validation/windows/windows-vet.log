@@ -1,0 +1,7 @@
+internal\driver\glfw\clipboard_data_windows.go:165:51: possible misuse of unsafe.Pointer
+internal\driver\glfw\clipboard_data_windows.go:175:54: possible misuse of unsafe.Pointer
+internal\driver\glfw\clipboard_data_windows.go:322:28: possible misuse of unsafe.Pointer
+internal\driver\glfw\ime_reconversion_windows.go:65:26: possible misuse of unsafe.Pointer
+internal\driver\glfw\ime_reconversion_windows.go:69:29: possible misuse of unsafe.Pointer
+internal\driver\glfw\ime_reconversion_windows.go:75:25: possible misuse of unsafe.Pointer
+internal\driver\glfw\ime_reconversion_windows.go:79:33: possible misuse of unsafe.Pointer

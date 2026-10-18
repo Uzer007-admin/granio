@@ -1,0 +1,32 @@
+Date: 2026-10-12 MSK
+[16:03:16.500] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[16:03:16.500] Command line: weston --backend=headless-backend.so --use-pixman --scale=2 --width=1280 --height=720 --idle-time=0 --no-config --socket=visual-stack --log=/tmp/fyne-visual-stack.8JMLgacN/logs/weston.txt
+[16:03:16.500] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[16:03:16.500] Flight recorder: enabled
+[16:03:16.500] Starting with no config file.
+[16:03:16.500] Output repaint window is 7 ms maximum.
+[16:03:16.500] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[16:03:16.500] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[16:03:16.500] Color manager: no-op
+[16:03:16.500] Output 'headless' using color profile: built-in default sRGB SDR profile
+[16:03:16.500] Output 'headless' enabled with head(s) headless
+[16:03:16.500] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[16:03:16.500] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[16:03:16.500] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[16:03:16.500] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[16:03:16.500] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[16:03:19.246] caught signal 15
+[16:03:19.246] panel surface gone
+[16:03:19.246] background surface gone

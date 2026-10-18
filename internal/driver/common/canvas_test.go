@@ -7,15 +7,15 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/painter/gl"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestCanvas_walkTree(t *testing.T) {
@@ -28,13 +28,13 @@ func TestCanvas_walkTree(t *testing.T) {
 	rightObj2 := canvas.NewRectangle(color.Gray16{Y: 20})
 	rightCol := container.NewWithoutLayout(rightObj1, rightObj2)
 	content := container.NewWithoutLayout(leftCol, rightCol)
-	content.Move(fyne.NewPos(17, 42))
-	leftCol.Move(fyne.NewPos(300, 400))
-	leftObj1.Move(fyne.NewPos(1, 2))
-	leftObj2.Move(fyne.NewPos(20, 30))
-	rightObj1.Move(fyne.NewPos(500, 600))
-	rightObj2.Move(fyne.NewPos(60, 70))
-	rightCol.Move(fyne.NewPos(7, 8))
+	content.Move(granio.NewPos(17, 42))
+	leftCol.Move(granio.NewPos(300, 400))
+	leftObj1.Move(granio.NewPos(1, 2))
+	leftObj2.Move(granio.NewPos(20, 30))
+	rightObj1.Move(granio.NewPos(500, 600))
+	rightObj2.Move(granio.NewPos(60, 70))
+	rightCol.Move(granio.NewPos(7, 8))
 
 	tree := &renderCacheTree{root: &RenderCacheNode{obj: content}}
 	c := &Canvas{}
@@ -42,7 +42,7 @@ func TestCanvas_walkTree(t *testing.T) {
 	c.SetContentTreeAndFocusMgr(&canvas.Rectangle{FillColor: theme.Color(theme.ColorNameBackground)})
 
 	type nodeInfo struct {
-		obj                                     fyne.CanvasObject
+		obj                                     granio.CanvasObject
 		lastBeforeCallIndex, lastAfterCallIndex int
 	}
 
@@ -69,28 +69,28 @@ func TestCanvas_walkTree(t *testing.T) {
 	// test that first walk calls the hooks correctly
 	//
 	type beforeCall struct {
-		obj    fyne.CanvasObject
-		parent fyne.CanvasObject
-		pos    fyne.Position
+		obj    granio.CanvasObject
+		parent granio.CanvasObject
+		pos    granio.Position
 	}
 	beforeCalls := []beforeCall{}
 	type afterCall struct {
-		obj    fyne.CanvasObject
-		parent fyne.CanvasObject
+		obj    granio.CanvasObject
+		parent granio.CanvasObject
 	}
 	afterCalls := []afterCall{}
 
 	var i int
-	c.walkTree(tree, func(node *RenderCacheNode, pos fyne.Position) {
-		var parent fyne.CanvasObject
+	c.walkTree(tree, func(node *RenderCacheNode, pos granio.Position) {
+		var parent granio.CanvasObject
 		if node.parent != nil {
 			parent = node.parent.obj
 		}
 		i++
 		updateInfoBefore(node, i)
 		beforeCalls = append(beforeCalls, beforeCall{obj: node.obj, parent: parent, pos: pos})
-	}, func(node *RenderCacheNode, _ fyne.Position) {
-		var parent fyne.CanvasObject
+	}, func(node *RenderCacheNode, _ granio.Position) {
+		var parent granio.CanvasObject
 		if node.parent != nil {
 			parent = node.parent.obj
 		}
@@ -101,13 +101,13 @@ func TestCanvas_walkTree(t *testing.T) {
 	})
 
 	assert.Equal(t, []beforeCall{
-		{obj: content, pos: fyne.NewPos(17, 42)},
-		{obj: leftCol, parent: content, pos: fyne.NewPos(317, 442)},
-		{obj: leftObj1, parent: leftCol, pos: fyne.NewPos(318, 444)},
-		{obj: leftObj2, parent: leftCol, pos: fyne.NewPos(337, 472)},
-		{obj: rightCol, parent: content, pos: fyne.NewPos(24, 50)},
-		{obj: rightObj1, parent: rightCol, pos: fyne.NewPos(524, 650)},
-		{obj: rightObj2, parent: rightCol, pos: fyne.NewPos(84, 120)},
+		{obj: content, pos: granio.NewPos(17, 42)},
+		{obj: leftCol, parent: content, pos: granio.NewPos(317, 442)},
+		{obj: leftObj1, parent: leftCol, pos: granio.NewPos(318, 444)},
+		{obj: leftObj2, parent: leftCol, pos: granio.NewPos(337, 472)},
+		{obj: rightCol, parent: content, pos: granio.NewPos(24, 50)},
+		{obj: rightObj1, parent: rightCol, pos: granio.NewPos(524, 650)},
+		{obj: rightObj2, parent: rightCol, pos: granio.NewPos(84, 120)},
 	}, beforeCalls, "calls before children hook with the correct node and position")
 	assert.Equal(t, []afterCall{
 		{obj: leftObj1, parent: leftCol},
@@ -126,10 +126,10 @@ func TestCanvas_walkTree(t *testing.T) {
 	secondRunAfterPainterData := []nodeInfo{}
 	nodes := []*RenderCacheNode{}
 
-	c.walkTree(tree, func(node *RenderCacheNode, _ fyne.Position) {
+	c.walkTree(tree, func(node *RenderCacheNode, _ granio.Position) {
 		secondRunBeforePainterData = append(secondRunBeforePainterData, painterData[node])
 		nodes = append(nodes, node)
-	}, func(node *RenderCacheNode, _ fyne.Position) {
+	}, func(node *RenderCacheNode, _ granio.Position) {
 		secondRunAfterPainterData = append(secondRunAfterPainterData, painterData[node])
 	})
 
@@ -174,11 +174,11 @@ func TestCanvas_walkTree(t *testing.T) {
 	thirdRunAfterPainterData := []nodeInfo{}
 
 	i = 0
-	c.walkTree(tree, func(node *RenderCacheNode, _ fyne.Position) {
+	c.walkTree(tree, func(node *RenderCacheNode, _ granio.Position) {
 		i++
 		updateInfoBefore(node, i)
 		thirdRunBeforePainterData = append(thirdRunBeforePainterData, painterData[node])
-	}, func(node *RenderCacheNode, _ fyne.Position) {
+	}, func(node *RenderCacheNode, _ granio.Position) {
 		i++
 		updateInfoAfter(node, i)
 		thirdRunAfterPainterData = append(thirdRunAfterPainterData, painterData[node])
@@ -219,12 +219,12 @@ func TestCanvas_walkTree(t *testing.T) {
 	nodes = []*RenderCacheNode{}
 
 	i = 0
-	c.walkTree(tree, func(node *RenderCacheNode, _ fyne.Position) {
+	c.walkTree(tree, func(node *RenderCacheNode, _ granio.Position) {
 		i++
 		updateInfoBefore(node, i)
 		fourthRunBeforePainterData = append(fourthRunBeforePainterData, painterData[node])
 		nodes = append(nodes, node)
-	}, func(node *RenderCacheNode, _ fyne.Position) {
+	}, func(node *RenderCacheNode, _ granio.Position) {
 		i++
 		updateInfoAfter(node, i)
 		fourthRunAfterPainterData = append(fourthRunAfterPainterData, painterData[node])
@@ -301,12 +301,12 @@ func TestCanvas_walkTree(t *testing.T) {
 	nodes = []*RenderCacheNode{}
 
 	i = 0
-	c.walkTree(tree, func(node *RenderCacheNode, _ fyne.Position) {
+	c.walkTree(tree, func(node *RenderCacheNode, _ granio.Position) {
 		i++
 		updateInfoBefore(node, i)
 		fifthRunBeforePainterData = append(fifthRunBeforePainterData, painterData[node])
 		nodes = append(nodes, node)
-	}, func(node *RenderCacheNode, _ fyne.Position) {
+	}, func(node *RenderCacheNode, _ granio.Position) {
 		i++
 		updateInfoAfter(node, i)
 		fifthRunAfterPainterData = append(fifthRunAfterPainterData, painterData[node])
@@ -376,7 +376,7 @@ func TestCanvas_OverlayStack(t *testing.T) {
 	assert.Equal(t, 0, len(o.List()))
 }
 
-func deleteAt(c *fyne.Container, index int) {
+func deleteAt(c *granio.Container, index int) {
 	if index < len(c.Objects)-1 {
 		c.Objects = append(c.Objects[:index], c.Objects[index+1:]...)
 	} else {
@@ -385,19 +385,19 @@ func deleteAt(c *fyne.Container, index int) {
 	c.Refresh()
 }
 
-func insert(c *fyne.Container, object fyne.CanvasObject, index int) {
-	tail := append([]fyne.CanvasObject{object}, c.Objects[index:]...)
+func insert(c *granio.Container, object granio.CanvasObject, index int) {
+	tail := append([]granio.CanvasObject{object}, c.Objects[index:]...)
 	c.Objects = append(c.Objects[:index], tail...)
 	c.Refresh()
 }
 
-func Prepend(c *fyne.Container, object fyne.CanvasObject) {
-	c.Objects = append([]fyne.CanvasObject{object}, c.Objects...)
+func Prepend(c *granio.Container, object granio.CanvasObject) {
+	c.Objects = append([]granio.CanvasObject{object}, c.Objects...)
 	c.Refresh()
 }
 
 type dummyCanvas struct {
-	fyne.Canvas
+	granio.Canvas
 }
 
 func (dummyCanvas) Scale() float32 {

@@ -1,51 +1,51 @@
 // Package app provides app implementations for working with Fyne graphical interfaces.
 // The fastest way to get started is to call app.New() which will normally load a new desktop application.
 // If the "ci" tag is passed to go (go run -tags ci myapp.go) it will run an in-memory application.
-package app // import "fyne.io/fyne/v2/app"
+package app // import "github.com/Uzer007-admin/granio/v2/app"
 
 import (
 	"strconv"
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
-	intRepo "fyne.io/fyne/v2/internal/repository"
-	"fyne.io/fyne/v2/internal/scheduler"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/internal/scheduler"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 // Declare conformity with App interface
-var _ fyne.App = (*fyneApp)(nil)
+var _ granio.App = (*fyneApp)(nil)
 
 type fyneApp struct {
-	driver    fyne.Driver
-	clipboard fyne.Clipboard
-	icon      fyne.Resource
+	driver    granio.Driver
+	clipboard granio.Clipboard
+	icon      granio.Resource
 	uniqueID  string
 	missingID bool // true if the developer did not supply their own ID
 
-	cache     fyne.Cache
-	cloud     fyne.CloudProvider
+	cache     granio.Cache
+	cloud     granio.CloudProvider
 	lifecycle app.Lifecycle
 	settings  *settings
-	storage   fyne.Storage
-	prefs     fyne.Preferences
+	storage   granio.Storage
+	prefs     granio.Preferences
 	scheduler *scheduler.Scheduler
 
 	secretPrefs     *secretPreferences
 	secretPrefsLock sync.Mutex
 }
 
-func (a *fyneApp) CloudProvider() fyne.CloudProvider {
+func (a *fyneApp) CloudProvider() granio.CloudProvider {
 	return a.cloud
 }
 
-func (a *fyneApp) Icon() fyne.Resource {
+func (a *fyneApp) Icon() granio.Resource {
 	if a.icon != nil {
 		return a.icon
 	}
@@ -56,7 +56,7 @@ func (a *fyneApp) Icon() fyne.Resource {
 	return a.Metadata().Icon
 }
 
-func (a *fyneApp) SetIcon(icon fyne.Resource) {
+func (a *fyneApp) SetIcon(icon granio.Resource) {
 	a.icon = icon
 }
 
@@ -73,15 +73,17 @@ func (a *fyneApp) UniqueID() string {
 	return a.uniqueID
 }
 
-func (a *fyneApp) NewWindow(title string) fyne.Window {
+func (a *fyneApp) NewWindow(title string) granio.Window {
 	return a.driver.CreateWindow(title)
 }
 
 func (a *fyneApp) Run() {
 	go a.lifecycle.RunEventQueue(a.driver.DoFromGoroutine)
+	<-a.lifecycle.EventQueueReady()
 
 	if !a.driver.Device().IsMobile() {
 		a.settings.watchSettings()
+		defer a.settings.stopWatching()
 	}
 
 	if !build.MigratedToFyneDo() && build.HasHints {
@@ -95,38 +97,38 @@ func (a *fyneApp) Quit() {
 		window.Close()
 	}
 
-	a.driver.Quit()
 	a.settings.stopWatching()
+	a.driver.Quit()
 }
 
-func (a *fyneApp) Driver() fyne.Driver {
+func (a *fyneApp) Driver() granio.Driver {
 	return a.driver
 }
 
 // Settings returns the application settings currently configured.
-func (a *fyneApp) Settings() fyne.Settings {
+func (a *fyneApp) Settings() granio.Settings {
 	return a.settings
 }
 
-func (a *fyneApp) Storage() fyne.Storage {
+func (a *fyneApp) Storage() granio.Storage {
 	return a.storage
 }
 
-func (a *fyneApp) Preferences() fyne.Preferences {
+func (a *fyneApp) Preferences() granio.Preferences {
 	if a.missingID {
-		fyne.LogError("Preferences API requires a unique ID, use app.NewWithID() or the FyneApp.toml ID field", nil)
+		granio.LogError("Preferences API requires a unique ID, use app.NewWithID() or the FyneApp.toml ID field", nil)
 	}
 	return a.prefs
 }
 
-func (a *fyneApp) SecretPreferences(password []byte) (fyne.Preferences, error) {
+func (a *fyneApp) SecretPreferences(password []byte) (granio.Preferences, error) {
 	if a.missingID {
-		fyne.LogError("SecretPreferences API requires a unique ID, use app.NewWithID() or the FyneApp.toml ID field", nil)
+		granio.LogError("SecretPreferences API requires a unique ID, use app.NewWithID() or the FyneApp.toml ID field", nil)
 	}
 	return a.secretPreferencesFrom(a.newSecretStore, password)
 }
 
-func (a *fyneApp) secretPreferencesFrom(newStore func([]byte) secretStore, password []byte) (fyne.Preferences, error) {
+func (a *fyneApp) secretPreferencesFrom(newStore func([]byte) secretStore, password []byte) (granio.Preferences, error) {
 	a.secretPrefsLock.Lock()
 	defer a.secretPrefsLock.Unlock()
 	if a.secretPrefs == nil { // created on first use as the fallback store needs the password
@@ -139,7 +141,7 @@ func (a *fyneApp) secretPreferencesFrom(newStore func([]byte) secretStore, passw
 	return a.secretPrefs, nil
 }
 
-func (a *fyneApp) Lifecycle() fyne.Lifecycle {
+func (a *fyneApp) Lifecycle() granio.Lifecycle {
 	return &a.lifecycle
 }
 
@@ -151,16 +153,16 @@ func (a *fyneApp) newDefaultPreferences() *preferences {
 	return p
 }
 
-func (a *fyneApp) Cache() fyne.Cache {
+func (a *fyneApp) Cache() granio.Cache {
 	return a.cache
 }
 
-func (a *fyneApp) Clipboard() fyne.Clipboard {
+func (a *fyneApp) Clipboard() granio.Clipboard {
 	return a.clipboard
 }
 
 // New returns a new application instance with the default driver and no unique ID (unless specified in FyneApp.toml)
-func New() fyne.App {
+func New() granio.App {
 	if meta.ID == "" {
 		checkLocalMetadata() // if no ID passed, check if it was in toml
 		if meta.ID == "" {
@@ -185,7 +187,7 @@ func makeStoreDocs(id string, s *store) *internal.Docs {
 	if !exists || err != nil {
 		err = storage.CreateListable(uri)
 		if err != nil {
-			fyne.LogError("Failed to create app storage space", err)
+			granio.LogError("Failed to create app storage space", err)
 		}
 	}
 
@@ -193,9 +195,9 @@ func makeStoreDocs(id string, s *store) *internal.Docs {
 	return &internal.Docs{RootDocURI: docRoot}
 }
 
-func newAppWithDriver(d fyne.Driver, clipboard fyne.Clipboard, id string) fyne.App {
+func newAppWithDriver(d granio.Driver, clipboard granio.Clipboard, id string) granio.App {
 	newApp := &fyneApp{uniqueID: id, clipboard: clipboard, driver: d}
-	fyne.SetCurrentApp(newApp)
+	granio.SetCurrentApp(newApp)
 
 	newApp.prefs = newApp.newDefaultPreferences()
 	newApp.lifecycle.InitEventQueue()
@@ -228,7 +230,7 @@ func newAppWithDriver(d fyne.Driver, clipboard fyne.Clipboard, id string) fyne.A
 
 // marker interface to pass system tray to supporting drivers
 type systrayDriver interface {
-	SetSystemTrayMenu(*fyne.Menu)
-	SetSystemTrayIcon(fyne.Resource)
-	SetSystemTrayWindow(fyne.Window)
+	SetSystemTrayMenu(*granio.Menu)
+	SetSystemTrayIcon(granio.Resource)
+	SetSystemTrayWindow(granio.Window)
 }

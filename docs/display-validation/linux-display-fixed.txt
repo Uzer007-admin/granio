@@ -1,0 +1,57 @@
+dbus-daemon[2355140]: [session uid=0 pid=2355140] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=0 pid=2355412 comm="/tmp/go-build2478427262/b001/glfw.test -test.panic")
+dbus-daemon[2355140]: [session uid=0 pid=2355140] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2355447]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2355412 comm="/tmp/go-build2478427262/b001/glfw.test -test.panic")
+dbus-daemon[2355447]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+=== RUN   TestNativeDisplayResolutionMatrix
+=== RUN   TestNativeDisplayResolutionMatrix/2048x1080-scale1
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(2048,1080) scale={Policy:1 SystemScale:1 UserScale:1 EffectiveScale:1 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/2048x1080-scale1.25
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(2048,1080) scale={Policy:1 SystemScale:1 UserScale:1.25 EffectiveScale:1.25 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/2048x1080-scale2
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(2048,1080) scale={Policy:1 SystemScale:1 UserScale:2 EffectiveScale:2 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/2560x1440-scale1
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(2560,1440) scale={Policy:1 SystemScale:1 UserScale:1 EffectiveScale:1 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/2560x1440-scale1.25
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(2560,1440) scale={Policy:1 SystemScale:1 UserScale:1.25 EffectiveScale:1.25 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/2560x1440-scale2
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(2560,1440) scale={Policy:1 SystemScale:1 UserScale:2 EffectiveScale:2 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/3840x2160-scale1
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(3840,2160) scale={Policy:1 SystemScale:1 UserScale:1 EffectiveScale:1 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/3840x2160-scale1.25
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(3840,2160) scale={Policy:1 SystemScale:1 UserScale:1.25 EffectiveScale:1.25 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/3840x2160-scale2
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(3840,2160) scale={Policy:1 SystemScale:1 UserScale:2 EffectiveScale:2 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/5120x2880-scale1
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(5120,2880) scale={Policy:1 SystemScale:1 UserScale:1 EffectiveScale:1 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/5120x2880-scale1.25
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(5120,2880) scale={Policy:1 SystemScale:1 UserScale:1.25 EffectiveScale:1.25 FramebufferScale:1}
+=== RUN   TestNativeDisplayResolutionMatrix/5120x2880-scale2
+    display_matrix_test.go:72: sample origin={31 80 130 255} centre={31 80 130 255} corner={31 80 130 255}
+    display_matrix_test.go:77: framebuffer=(0,0)-(5120,2880) scale={Policy:1 SystemScale:1 UserScale:2 EffectiveScale:2 FramebufferScale:1}
+--- PASS: TestNativeDisplayResolutionMatrix (2.30s)
+    --- PASS: TestNativeDisplayResolutionMatrix/2048x1080-scale1 (0.10s)
+    --- PASS: TestNativeDisplayResolutionMatrix/2048x1080-scale1.25 (0.13s)
+    --- PASS: TestNativeDisplayResolutionMatrix/2048x1080-scale2 (0.11s)
+    --- PASS: TestNativeDisplayResolutionMatrix/2560x1440-scale1 (0.14s)
+    --- PASS: TestNativeDisplayResolutionMatrix/2560x1440-scale1.25 (0.10s)
+    --- PASS: TestNativeDisplayResolutionMatrix/2560x1440-scale2 (0.10s)
+    --- PASS: TestNativeDisplayResolutionMatrix/3840x2160-scale1 (0.16s)
+    --- PASS: TestNativeDisplayResolutionMatrix/3840x2160-scale1.25 (0.26s)
+    --- PASS: TestNativeDisplayResolutionMatrix/3840x2160-scale2 (0.19s)
+    --- PASS: TestNativeDisplayResolutionMatrix/5120x2880-scale1 (0.42s)
+    --- PASS: TestNativeDisplayResolutionMatrix/5120x2880-scale1.25 (0.31s)
+    --- PASS: TestNativeDisplayResolutionMatrix/5120x2880-scale2 (0.28s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	3.541s

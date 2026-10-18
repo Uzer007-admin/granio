@@ -1,0 +1,19 @@
+{
+  "status": "Go exit=0; RAF requested=256, delivered=254",
+  "log": "2026/10/12 19:52:09 Fyne error:  Failed to create fyne cache space\n2026/10/12 19:52:09   Cause: mkdir fyne/: not implemented on js\n2026/10/12 19:52:09   At: /tmp/fyne-display.sjARHDVs/src/app/cache.go:28\n2026/10/12 19:52:09 Fyne error:  Failed to create app cache space\n2026/10/12 19:52:09   Cause: mkdir fyne/io.fyne.visual-gallery: not implemented on js\n2026/10/12 19:52:09   At: /tmp/fyne-display.sjARHDVs/src/app/cache.go:34\ngallery capture=(0,0)-(1440,1100) text=84 table=10000x3\n",
+  "idle": {
+    "before": {
+      "requested": 4,
+      "delivered": 4
+    },
+    "after": {
+      "requested": 4,
+      "delivered": 4
+    }
+  },
+  "resized": {
+    "requested": 7,
+    "delivered": 7
+  },
+  "page_errors": []
+}

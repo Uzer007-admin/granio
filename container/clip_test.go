@@ -5,20 +5,20 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestClip_Refresh(t *testing.T) {
 	hello := widget.NewLabel("Hello Fyne!")
 	clip := container.NewClip(hello)
-	clip.Resize(fyne.NewSize(28, 20))
+	clip.Resize(granio.NewSize(28, 20))
 
 	w := test.NewWindow(container.NewWithoutLayout(clip))
-	w.Resize(fyne.NewSquareSize(50))
+	w.Resize(granio.NewSquareSize(50))
 
 	clip.Content = canvas.NewRectangle(color.White)
 	clip.Refresh()
@@ -32,9 +32,9 @@ func TestClip_Refresh(t *testing.T) {
 func TestClip(t *testing.T) {
 	hello := widget.NewLabel("Hello Fyne!")
 	clip := container.NewClip(hello)
-	clip.Resize(fyne.NewSize(28, 20))
+	clip.Resize(granio.NewSize(28, 20))
 
 	w := test.NewWindow(container.NewWithoutLayout(clip))
-	w.Resize(fyne.NewSquareSize(50))
+	w.Resize(granio.NewSquareSize(50))
 	test.AssertImageMatches(t, "clip/text.png", w.Canvas().Capture().(*image.NRGBA))
 }

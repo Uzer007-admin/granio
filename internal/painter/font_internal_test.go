@@ -5,8 +5,8 @@ package painter
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 	"github.com/go-text/typesetting/font"
 	"github.com/go-text/typesetting/shaping"
 	"github.com/stretchr/testify/assert"
@@ -46,7 +46,7 @@ func TestWalkStringSharedLineAscent(t *testing.T) {
 		var y float32
 		found := false
 		adv := float32(0)
-		walkString(faces, s, float32ToFixed266(24), fyne.TextStyle{}, &adv, 1, func(_ shaping.Output, _, ry float32) {
+		walkString(faces, s, float32ToFixed266(24), granio.TextStyle{}, &adv, 1, func(_ shaping.Output, _, ry float32) {
 			y = ry
 			found = true
 		})
@@ -69,7 +69,7 @@ func TestWalkStringSharedLineAscent(t *testing.T) {
 	for _, s := range []string{"A⌘", "⌘A", "A⌘A⌘"} {
 		var ys []float32
 		adv := float32(0)
-		walkString(faces, s, float32ToFixed266(24), fyne.TextStyle{}, &adv, 1, func(_ shaping.Output, _, y float32) {
+		walkString(faces, s, float32ToFixed266(24), granio.TextStyle{}, &adv, 1, func(_ shaping.Output, _, y float32) {
 			ys = append(ys, y)
 		})
 
@@ -96,7 +96,7 @@ func TestWalkStringKeycapSequences(t *testing.T) {
 	shape := func(s string) []shaping.Output {
 		var runs []shaping.Output
 		adv := float32(0)
-		walkString(faces, s, float32ToFixed266(24), fyne.TextStyle{}, &adv, 1,
+		walkString(faces, s, float32ToFixed266(24), granio.TextStyle{}, &adv, 1,
 			func(run shaping.Output, _, _ float32) {
 				runs = append(runs, run)
 			})
@@ -127,7 +127,7 @@ func TestWalkStringKeycapInText(t *testing.T) {
 
 	var runs []shaping.Output
 	adv := float32(0)
-	walkString(faces, "1 1️⃣ 1", float32ToFixed266(24), fyne.TextStyle{}, &adv, 1,
+	walkString(faces, "1 1️⃣ 1", float32ToFixed266(24), granio.TextStyle{}, &adv, 1,
 		func(run shaping.Output, _, _ float32) {
 			runs = append(runs, run)
 		})

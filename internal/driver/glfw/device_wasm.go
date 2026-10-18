@@ -7,7 +7,7 @@ import (
 	"strings"
 	"syscall/js"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 var (
@@ -46,7 +46,7 @@ func (*glDevice) IsMobile() bool {
 	return isMobile
 }
 
-func (*glDevice) SystemScaleForWindow(w fyne.Window) float32 {
+func (*glDevice) SystemScaleForWindow(w granio.Window) float32 {
 	// Get the scale information from the web browser directly
 	return float32(js.Global().Get("devicePixelRatio").Float())
 }

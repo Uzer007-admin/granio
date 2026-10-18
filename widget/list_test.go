@@ -6,29 +6,29 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestList_Bind(t *testing.T) {
 	c := widget.NewList(
 		func() int { return 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return widget.NewLabel("Item")
-		}, func(i widget.ListItemID, o fyne.CanvasObject) {
+		}, func(i widget.ListItemID, o granio.CanvasObject) {
 			o.(*widget.Label).SetText(strconv.Itoa(i))
 		},
 	)
 	assert.Equal(t, 5, c.Length()) // TODO check rendered count
 
 	val := binding.NewStringList()
-	c.Bind(val, func(di binding.DataItem, o fyne.CanvasObject) {
+	c.Bind(val, func(di binding.DataItem, o granio.CanvasObject) {
 		str, _ := di.(binding.String).Get()
 		o.(*widget.Label).SetText(str)
 	})
@@ -66,7 +66,7 @@ func TestList_ThemeOverride(t *testing.T) {
 	normal := test.Theme()
 	bg := canvas.NewRectangle(normal.Color(theme.ColorNameBackground, theme.VariantDark))
 	w.SetContent(container.NewStack(bg, container.NewThemeOverride(list, normal)))
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 	test.AssertImageMatches(t, "list/list_initial.png", w.Canvas().Capture())
 }
 
@@ -80,7 +80,7 @@ func TestList_Resize(t *testing.T) {
 		resizeCounts = append(resizeCounts, row.resizeCount)
 	}
 
-	l.Resize(fyne.NewSize(250, 200)) // changing width only
+	l.Resize(granio.NewSize(250, 200)) // changing width only
 	var newRefreshCounts []int
 	var newResizeCounts []int
 	for _, row := range rows {
@@ -106,25 +106,25 @@ func TestList_Resize(t *testing.T) {
 	assert.True(t, resizeCountAllGreaterOrEqual)
 }
 
-func setupList(t *testing.T) (*widget.List, fyne.Window, []*resizeRefreshCountingLabel) {
+func setupList(t *testing.T) (*widget.List, granio.Window, []*resizeRefreshCountingLabel) {
 	var rows []*resizeRefreshCountingLabel
 	test.NewTempApp(t)
 	list := widget.NewList(
 		func() int {
 			return 25
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			row := newResizeRefreshCountingLabel("Test Item 55")
 			rows = append(rows, row)
 			return row
 		},
-		func(id widget.ListItemID, o fyne.CanvasObject) {
+		func(id widget.ListItemID, o granio.CanvasObject) {
 			o.(*resizeRefreshCountingLabel).SetText(fmt.Sprintf("Test Item %d", id))
 		},
 	)
 	w := test.NewTempWindow(t, list)
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 
 	return list, w, rows
 }
@@ -147,7 +147,7 @@ func (r *resizeRefreshCountingLabel) Refresh() {
 	r.Label.Refresh()
 }
 
-func (r *resizeRefreshCountingLabel) Resize(s fyne.Size) {
+func (r *resizeRefreshCountingLabel) Resize(s granio.Size) {
 	r.resizeCount++
 	r.Label.Resize(s)
 }

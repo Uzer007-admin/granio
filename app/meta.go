@@ -1,10 +1,10 @@
 package app
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-var meta = fyne.AppMetadata{
+var meta = granio.AppMetadata{
 	ID:         "",
 	Name:       "",
 	Version:    "0.0.1",
@@ -16,7 +16,7 @@ var meta = fyne.AppMetadata{
 
 // SetMetadata overrides the packaged application metadata.
 // This data can be used in many places like notifications and about screens.
-func SetMetadata(m fyne.AppMetadata) {
+func SetMetadata(m granio.AppMetadata) {
 	meta = m
 
 	if meta.Custom == nil {
@@ -27,7 +27,7 @@ func SetMetadata(m fyne.AppMetadata) {
 	}
 }
 
-func (*fyneApp) Metadata() fyne.AppMetadata {
+func (*fyneApp) Metadata() granio.AppMetadata {
 	if meta.ID == "" && meta.Name == "" {
 		checkLocalMetadata()
 	}

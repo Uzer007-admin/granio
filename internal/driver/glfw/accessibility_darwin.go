@@ -15,8 +15,8 @@ import "C"
 import (
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 )
 
 var accessibilityElements = make(map[*window][]C.AccessibilityElementRef)
@@ -49,17 +49,17 @@ func (w *window) updateAccessibility() {
 
 	var rootElements []C.AccessibilityElementRef
 	if w.canvas.Content() != nil {
-		contentRoots := w.collectAccessibilityElements(w.canvas.Content(), fyne.NewPos(0, 0), nil, 0)
+		contentRoots := w.collectAccessibilityElements(w.canvas.Content(), granio.NewPos(0, 0), nil, 0)
 		rootElements = append(rootElements, contentRoots...)
 	}
 
 	if w.canvas.menu != nil {
-		menuRoots := w.collectAccessibilityElements(w.canvas.menu, fyne.NewPos(0, 0), nil, 0)
+		menuRoots := w.collectAccessibilityElements(w.canvas.menu, granio.NewPos(0, 0), nil, 0)
 		rootElements = append(rootElements, menuRoots...)
 	}
 
 	for _, overlay := range w.canvas.Overlays().List() {
-		overlayRoots := w.collectAccessibilityElements(overlay, fyne.NewPos(0, 0), nil, 0)
+		overlayRoots := w.collectAccessibilityElements(overlay, granio.NewPos(0, 0), nil, 0)
 		rootElements = append(rootElements, overlayRoots...)
 	}
 
@@ -76,8 +76,8 @@ func (w *window) updateAccessibility() {
 }
 
 func (w *window) collectAccessibilityElements(
-	obj fyne.CanvasObject,
-	pos fyne.Position,
+	obj granio.CanvasObject,
+	pos granio.Position,
 	parent C.AccessibilityElementRef,
 	depth int,
 ) []C.AccessibilityElementRef {
@@ -89,7 +89,7 @@ func (w *window) collectAccessibilityElements(
 	var result []C.AccessibilityElementRef
 
 	// Check if this object is accessible
-	accessible, ok := obj.(fyne.Accessible)
+	accessible, ok := obj.(granio.Accessible)
 	if !ok {
 		return nil
 	}
@@ -130,7 +130,7 @@ func (w *window) collectAccessibilityElements(
 		childParent = currentElement
 	}
 
-	if cont, ok := obj.(*fyne.Container); ok {
+	if cont, ok := obj.(*granio.Container); ok {
 		for _, child := range cont.Objects {
 			childResults := w.collectAccessibilityElements(child, objPos, childParent, depth+1)
 			if parent == nil && currentElement == nil {

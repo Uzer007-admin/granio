@@ -1,9 +1,9 @@
 package canvas
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Blur)(nil)
+var _ granio.CanvasObject = (*Blur)(nil)
 
 // Blur creates a rectangular blur region on the output.
 // All objects drawn under this will be blurred, any above will not be affected.
@@ -28,7 +28,7 @@ func (b *Blur) Hide() {
 }
 
 // Move the blur to a new position, relative to its parent / canvas
-func (b *Blur) Move(pos fyne.Position) {
+func (b *Blur) Move(pos granio.Position) {
 	if b.Position() == pos {
 		return
 	}
@@ -43,7 +43,7 @@ func (b *Blur) Refresh() {
 }
 
 // Resize on a blur updates the new size of this object.
-func (b *Blur) Resize(s fyne.Size) {
+func (b *Blur) Resize(s granio.Size) {
 	if s == b.Size() {
 		return
 	}

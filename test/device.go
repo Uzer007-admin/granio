@@ -3,16 +3,16 @@ package test
 import (
 	"runtime"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type device struct{}
 
 // Declare conformity with Device
-var _ fyne.Device = (*device)(nil)
+var _ granio.Device = (*device)(nil)
 
-func (*device) Orientation() fyne.DeviceOrientation {
-	return fyne.OrientationVertical
+func (*device) Orientation() granio.DeviceOrientation {
+	return granio.OrientationVertical
 }
 
 func (*device) HasKeyboard() bool {
@@ -23,11 +23,11 @@ func (d *device) SystemScale() float32 {
 	return d.SystemScaleForWindow(nil)
 }
 
-func (*device) SystemScaleForWindow(fyne.Window) float32 {
+func (*device) SystemScaleForWindow(granio.Window) float32 {
 	return 1
 }
 
-func (*device) Locale() fyne.Locale {
+func (*device) Locale() granio.Locale {
 	return "en"
 }
 

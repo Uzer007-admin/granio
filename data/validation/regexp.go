@@ -5,17 +5,17 @@ import (
 	"errors"
 	"regexp"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // NewRegexp creates a new validator that uses regular expression parsing.
 // The validator will return nil if valid, otherwise returns an error with a reason text.
 //
 // Since: 1.4
-func NewRegexp(regexpstr, reason string) fyne.StringValidator {
+func NewRegexp(regexpstr, reason string) granio.StringValidator {
 	expression, err := regexp.Compile(regexpstr)
 	if err != nil {
-		fyne.LogError("Regexp did not compile", err)
+		granio.LogError("Regexp did not compile", err)
 		return nil
 	}
 

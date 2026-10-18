@@ -1,0 +1,39 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/internal/driver/glfw
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkFrameEnsureMinSize-16    	    6150	     96208 ns/op	     144 B/op	       2 allocs/op
+BenchmarkFrameEnsureMinSize-16    	    6506	    100082 ns/op	     144 B/op	       2 allocs/op
+BenchmarkFrameEnsureMinSize-16    	    6428	    101626 ns/op	     144 B/op	       2 allocs/op
+BenchmarkFrameWalkTrees-16        	   26264	     22917 ns/op	     144 B/op	       2 allocs/op
+--- BENCH: BenchmarkFrameWalkTrees-16
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+BenchmarkFrameWalkTrees-16        	   24885	     22568 ns/op	     144 B/op	       2 allocs/op
+--- BENCH: BenchmarkFrameWalkTrees-16
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+BenchmarkFrameWalkTrees-16        	   28926	     21501 ns/op	     144 B/op	       2 allocs/op
+--- BENCH: BenchmarkFrameWalkTrees-16
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+BenchmarkRunOnMain-16             	   70569	      8915 ns/op	      18 B/op	       0 allocs/op
+BenchmarkRunOnMain-16             	   71356	      8557 ns/op	      18 B/op	       0 allocs/op
+BenchmarkRunOnMain-16             	   66973	      8593 ns/op	      18 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	8.266s
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/internal/cache
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkGetFontMetrics-16    	   43881	     13605 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetFontMetrics-16    	   44229	     13782 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetFontMetrics-16    	   43857	     13732 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/cache	2.484s

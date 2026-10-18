@@ -5,10 +5,10 @@ package container_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestAppTabs_ApplyTheme(t *testing.T) {
@@ -19,7 +19,7 @@ func TestAppTabs_ApplyTheme(t *testing.T) {
 	)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToImage(t, "apptabs/desktop/single_initial.png", c)
@@ -37,7 +37,7 @@ func TestAppTabs_ChangeItemContent(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "apptabs/desktop/change_content_initial.xml", c)

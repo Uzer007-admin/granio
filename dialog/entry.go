@@ -1,9 +1,9 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // EntryDialog is a variation of a dialog which prompts the user to enter some text.
@@ -47,7 +47,7 @@ func (i *EntryDialog) SetOnClosed(callback func()) {
 // text and clicks the "confirm" button. May be nil.
 //
 // Deprecated: Use dialog.NewForm() with a widget.Entry inside instead.
-func NewEntryDialog(title, message string, onConfirm func(string), parent fyne.Window) *EntryDialog {
+func NewEntryDialog(title, message string, onConfirm func(string), parent granio.Window) *EntryDialog {
 	i := &EntryDialog{entry: widget.NewEntry()}
 	items := []*widget.FormItem{widget.NewFormItem(message, i.entry)}
 	i.FormDialog = NewForm(title, lang.L("OK"), lang.L("Cancel"), items, func(ok bool) {
@@ -70,6 +70,6 @@ func NewEntryDialog(title, message string, onConfirm func(string), parent fyne.W
 // ShowEntryDialog creates a new entry dialog and shows it immediately.
 //
 // Deprecated: Use dialog.ShowForm() with a widget.Entry inside instead.
-func ShowEntryDialog(title, message string, onConfirm func(string), parent fyne.Window) {
+func ShowEntryDialog(title, message string, onConfirm func(string), parent granio.Window) {
 	NewEntryDialog(title, message, onConfirm, parent).Show()
 }

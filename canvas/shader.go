@@ -3,11 +3,11 @@ package canvas
 import (
 	"image"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Shader)(nil)
+var _ granio.CanvasObject = (*Shader)(nil)
 
 // Shader describes a canvas object that is drawn using a custom GLSL fragment
 // shader. The shader is rendered inside the object's bounds, respecting the
@@ -74,7 +74,7 @@ func (s *Shader) Hide() {
 }
 
 // Move the shader object to a new position, relative to its parent / canvas.
-func (s *Shader) Move(pos fyne.Position) {
+func (s *Shader) Move(pos granio.Position) {
 	if s.Position() == pos {
 		return
 	}
@@ -90,7 +90,7 @@ func (s *Shader) Refresh() {
 }
 
 // Resize on a shader updates the new size of this object.
-func (s *Shader) Resize(size fyne.Size) {
+func (s *Shader) Resize(size granio.Size) {
 	if size == s.Size() {
 		return
 	}

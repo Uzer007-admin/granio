@@ -6,12 +6,12 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/scale"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/anthonynsimon/bild/blur"
 
@@ -20,10 +20,10 @@ import (
 
 type gradient interface {
 	Generate(int, int) image.Image
-	Size() fyne.Size
+	Size() granio.Size
 }
 
-func drawBlur(c fyne.Canvas, blurObj *canvas.Blur, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawBlur(c granio.Canvas, blurObj *canvas.Blur, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	if blurObj.Radius == 0 {
 		return
 	}
@@ -45,7 +45,7 @@ func drawBlur(c fyne.Canvas, blurObj *canvas.Blur, pos fyne.Position, base *imag
 	draw.Draw(base, base.Bounds(), blurred, image.Point{}, draw.Over)
 }
 
-func drawArc(c fyne.Canvas, arc *canvas.Arc, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawArc(c granio.Canvas, arc *canvas.Arc, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(arc)
 	scaledWidth := scale.ToScreenCoordinate(c, arc.Size().Width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, arc.Size().Height+pad*2)
@@ -67,7 +67,7 @@ func drawArc(c fyne.Canvas, arc *canvas.Arc, pos fyne.Position, base *image.NRGB
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawCircle(c fyne.Canvas, circle *canvas.Circle, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawCircle(c granio.Canvas, circle *canvas.Circle, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(circle)
 	scaledWidth := scale.ToScreenCoordinate(c, circle.Size().Width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, circle.Size().Height+pad*2)
@@ -93,7 +93,7 @@ func drawCircle(c fyne.Canvas, circle *canvas.Circle, pos fyne.Position, base *i
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawGradient(c fyne.Canvas, g gradient, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawGradient(c granio.Canvas, g gradient, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	bounds := g.Size()
 	width := scale.ToScreenCoordinate(c, bounds.Width)
 	height := scale.ToScreenCoordinate(c, bounds.Height)
@@ -101,7 +101,7 @@ func drawGradient(c fyne.Canvas, g gradient, pos fyne.Position, base *image.NRGB
 	drawTex(scale.ToScreenCoordinate(c, pos.X), scale.ToScreenCoordinate(c, pos.Y), width, height, base, tex, clip, 1.0)
 }
 
-func drawImage(c fyne.Canvas, img *canvas.Image, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawImage(c granio.Canvas, img *canvas.Image, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	bounds := img.Size()
 	if bounds.IsZero() {
 		return
@@ -171,7 +171,7 @@ func drawPixels(x, y, width, height int, mode canvas.ImageScale, base *image.NRG
 		draw.ApproxBiLinear.Scale(scaledImg, scaledBounds, origImg, origImg.Bounds(), draw.Over, nil)
 	default:
 		if mode != canvas.ImageScaleSmooth {
-			fyne.LogError(fmt.Sprintf("Invalid canvas.ImageScale value (%d), using canvas.ImageScaleSmooth as default value", mode), nil)
+			granio.LogError(fmt.Sprintf("Invalid canvas.ImageScale value (%d), using canvas.ImageScaleSmooth as default value", mode), nil)
 		}
 		draw.CatmullRom.Scale(scaledImg, scaledBounds, origImg, origImg.Bounds(), draw.Over, nil)
 	}
@@ -183,7 +183,7 @@ func drawPixels(x, y, width, height int, mode canvas.ImageScale, base *image.NRG
 	drawTex(x, y, width, height, base, scaledImg, clip, alpha)
 }
 
-func drawBezierCurve(c fyne.Canvas, bezierCurve *canvas.BezierCurve, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawBezierCurve(c granio.Canvas, bezierCurve *canvas.BezierCurve, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(bezierCurve)
 	scaledWidth := scale.ToScreenCoordinate(c, bezierCurve.Size().Width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, bezierCurve.Size().Height+pad*2)
@@ -205,7 +205,7 @@ func drawBezierCurve(c fyne.Canvas, bezierCurve *canvas.BezierCurve, pos fyne.Po
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawLine(c fyne.Canvas, line *canvas.Line, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawLine(c granio.Canvas, line *canvas.Line, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(line)
 	scaledWidth := scale.ToScreenCoordinate(c, line.Size().Width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, line.Size().Height+pad*2)
@@ -239,7 +239,7 @@ func drawTex(x, y, width, height int, base *image.NRGBA, tex image.Image, clip i
 	}
 }
 
-func drawText(c fyne.Canvas, text *canvas.Text, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawText(c granio.Canvas, text *canvas.Text, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	bounds := text.MinSize()
 	width := scale.ToScreenCoordinate(c, bounds.Width+painter.VectorPad(text)) // potentially italic overspill
 	height := scale.ToScreenCoordinate(c, bounds.Height+painter.TextVectorPad) // space below for descenders / underline
@@ -257,9 +257,9 @@ func drawText(c fyne.Canvas, text *canvas.Text, pos fyne.Position, base *image.N
 	offsetX := float32(0)
 	offsetY := float32(0)
 	switch text.Alignment {
-	case fyne.TextAlignTrailing:
+	case granio.TextAlignTrailing:
 		offsetX = size.Width - bounds.Width
-	case fyne.TextAlignCenter:
+	case granio.TextAlignCenter:
 		offsetX = (size.Width - bounds.Width) / 2
 	}
 	if size.Height > bounds.Height {
@@ -275,19 +275,19 @@ func drawText(c fyne.Canvas, text *canvas.Text, pos fyne.Position, base *image.N
 	if text.TextStyle.Underline || text.TextStyle.Strikethrough {
 		_, baseline := cache.GetFontMetrics(text.Text, text.TextSize, text.TextStyle, text.FontSource)
 		line := canvas.NewLine(textColor)
-		line.Resize(fyne.NewSize(bounds.Width, 0))
+		line.Resize(granio.NewSize(bounds.Width, 0))
 		if text.TextStyle.Underline {
-			underlinePos := fyne.NewPos(pos.X, pos.Y+baseline+painter.UnderlineOffsetFromBaseline)
+			underlinePos := granio.NewPos(pos.X, pos.Y+baseline+painter.UnderlineOffsetFromBaseline)
 			drawLine(c, line, underlinePos, base, clip)
 		}
 		if text.TextStyle.Strikethrough {
-			strikePos := fyne.NewPos(pos.X, pos.Y+baseline*painter.StrikethroughToBaselineFactor)
+			strikePos := granio.NewPos(pos.X, pos.Y+baseline*painter.StrikethroughToBaselineFactor)
 			drawLine(c, line, strikePos, base, clip)
 		}
 	}
 }
 
-func drawRaster(c fyne.Canvas, rast *canvas.Raster, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawRaster(c granio.Canvas, rast *canvas.Raster, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	bounds := rast.Size()
 	if bounds.IsZero() {
 		return
@@ -304,7 +304,7 @@ func drawRaster(c fyne.Canvas, rast *canvas.Raster, pos fyne.Position, base *ima
 	}
 }
 
-func drawOblongStroke(c fyne.Canvas, obj fyne.CanvasObject, width, height float32, shadow canvas.Shadow, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawOblongStroke(c granio.Canvas, obj granio.CanvasObject, width, height float32, shadow canvas.Shadow, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(obj)
 	scaledWidth := scale.ToScreenCoordinate(c, width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, height+pad*2)
@@ -316,7 +316,7 @@ func drawOblongStroke(c fyne.Canvas, obj fyne.CanvasObject, width, height float3
 	})
 
 	if painter.IsShadowVisible(shadow) {
-		drawShadow(c, obj, fyne.NewSize(width, height), shadow, pad, base, clip, pos)
+		drawShadow(c, obj, granio.NewSize(width, height), shadow, pad, base, clip, pos)
 	}
 
 	// the clip intersect above cannot be negative, so we may need to compensate
@@ -330,7 +330,7 @@ func drawOblongStroke(c fyne.Canvas, obj fyne.CanvasObject, width, height float3
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawPolygon(c fyne.Canvas, polygon *canvas.RegularPolygon, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawPolygon(c granio.Canvas, polygon *canvas.RegularPolygon, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(polygon)
 	scaledWidth := scale.ToScreenCoordinate(c, polygon.Size().Width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, polygon.Size().Height+pad*2)
@@ -352,7 +352,7 @@ func drawPolygon(c fyne.Canvas, polygon *canvas.RegularPolygon, pos fyne.Positio
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawArbitraryPolygon(c fyne.Canvas, polygon *canvas.ArbitraryPolygon, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawArbitraryPolygon(c granio.Canvas, polygon *canvas.ArbitraryPolygon, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	pad := painter.VectorPad(polygon)
 	scaledWidth := scale.ToScreenCoordinate(c, polygon.Size().Width+pad*2)
 	scaledHeight := scale.ToScreenCoordinate(c, polygon.Size().Height+pad*2)
@@ -374,7 +374,7 @@ func drawArbitraryPolygon(c fyne.Canvas, polygon *canvas.ArbitraryPolygon, pos f
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawRectangle(c fyne.Canvas, rect *canvas.Rectangle, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawRectangle(c granio.Canvas, rect *canvas.Rectangle, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	topRightRadius := painter.GetCornerRadius(rect.TopRightCornerRadius, rect.CornerRadius)
 	topLeftRadius := painter.GetCornerRadius(rect.TopLeftCornerRadius, rect.CornerRadius)
 	bottomRightRadius := painter.GetCornerRadius(rect.BottomRightCornerRadius, rect.CornerRadius)
@@ -382,7 +382,7 @@ func drawRectangle(c fyne.Canvas, rect *canvas.Rectangle, pos fyne.Position, bas
 	drawOblong(c, rect, rect.FillColor, rect.StrokeColor, rect.StrokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, rect.Aspect, rect.Shadow, pos, base, clip)
 }
 
-func drawOblong(c fyne.Canvas, obj fyne.CanvasObject, fill, stroke color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, aspect float32, shadow canvas.Shadow, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawOblong(c granio.Canvas, obj granio.CanvasObject, fill, stroke color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, aspect float32, shadow canvas.Shadow, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	width, height := obj.Size().Components()
 	if aspect != 0 {
 		frameAspect := width / height
@@ -412,7 +412,7 @@ func drawOblong(c fyne.Canvas, obj fyne.CanvasObject, fill, stroke color.Color, 
 	bounds := clip.Intersect(image.Rect(scaledX, scaledY, scaledX+scaledWidth, scaledY+scaledHeight))
 
 	if painter.IsShadowVisible(shadow) {
-		drawShadow(c, obj, fyne.NewSize(width, height), shadow, 0, base, clip, pos)
+		drawShadow(c, obj, granio.NewSize(width, height), shadow, 0, base, clip, pos)
 	}
 
 	if fillRectFastPath(base, bounds, fill) {
@@ -449,7 +449,7 @@ func fillRectFastPath(base *image.NRGBA, bounds image.Rectangle, fill color.Colo
 	return true
 }
 
-func drawEllipse(c fyne.Canvas, ellipse *canvas.Ellipse, pos fyne.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawEllipse(c granio.Canvas, ellipse *canvas.Ellipse, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	// when rotated, the ellipse needs more space
 	// add half the difference between width and height as padding
 	// with padding the final size is a square
@@ -490,7 +490,7 @@ func drawEllipse(c fyne.Canvas, ellipse *canvas.Ellipse, pos fyne.Position, base
 	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
 }
 
-func drawShadow(c fyne.Canvas, obj fyne.CanvasObject, objSize fyne.Size, shadow canvas.Shadow, pad float32, base *image.NRGBA, clip image.Rectangle, pos fyne.Position) {
+func drawShadow(c granio.Canvas, obj granio.CanvasObject, objSize granio.Size, shadow canvas.Shadow, pad float32, base *image.NRGBA, clip image.Rectangle, pos granio.Position) {
 	shadowOffset := shadow.Offset
 	shadowBlurRadius := shadow.BlurRadius
 	shadowSpread := shadow.Spread

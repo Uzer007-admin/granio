@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/lang"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/lang"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,17 +18,17 @@ import (
 func Test_Menu_Empty(t *testing.T) {
 	// Discarding log output for tests
 	// The following method logs an error:
-	// bar := buildMenuOverlay(fyne.NewMainMenu(), w.window)
+	// bar := buildMenuOverlay(granio.NewMainMenu(), w.window)
 	log.SetOutput(io.Discard)
 	t.Cleanup(func() { log.SetOutput(os.Stderr) })
 	w := createWindow("Menu Test")
-	bar := buildMenuOverlay(fyne.NewMainMenu(), w.window)
+	bar := buildMenuOverlay(granio.NewMainMenu(), w.window)
 	assert.Nil(t, bar) // no bar but does not crash
 }
 
 func Test_Menu_AddsQuit(t *testing.T) {
 	w := createWindow("Menu Test")
-	mainMenu := fyne.NewMainMenu(fyne.NewMenu("File"))
+	mainMenu := granio.NewMainMenu(granio.NewMenu("File"))
 	bar := buildMenuOverlay(mainMenu, w.window)
 	assert.NotNil(t, bar)
 	assert.Equal(t, 1, len(mainMenu.Items))
@@ -39,7 +39,7 @@ func Test_Menu_AddsQuit(t *testing.T) {
 func Test_Menu_LeaveQuit(t *testing.T) {
 	w := createWindow("Menu Test")
 	quitFunc := func() {}
-	mainMenu := fyne.NewMainMenu(fyne.NewMenu("File", fyne.NewMenuItem(lang.L("Quit"), quitFunc)))
+	mainMenu := granio.NewMainMenu(granio.NewMenu("File", granio.NewMenuItem(lang.L("Quit"), quitFunc)))
 	bar := buildMenuOverlay(mainMenu, w.window)
 	assert.NotNil(t, bar)
 	assert.Equal(t, 1, len(mainMenu.Items[0].Items)) // no separator added
@@ -48,7 +48,7 @@ func Test_Menu_LeaveQuit(t *testing.T) {
 
 func Test_Menu_LeaveQuit_AddAction(t *testing.T) {
 	w := createWindow("Menu Test")
-	mainMenu := fyne.NewMainMenu(fyne.NewMenu("File", fyne.NewMenuItem(lang.L("Quit"), nil)))
+	mainMenu := granio.NewMainMenu(granio.NewMenu("File", granio.NewMenuItem(lang.L("Quit"), nil)))
 	bar := buildMenuOverlay(mainMenu, w.window)
 	assert.NotNil(t, bar)
 	assert.Equal(t, 1, len(mainMenu.Items[0].Items))    // no separator added
@@ -59,10 +59,10 @@ func Test_Menu_CustomQuit(t *testing.T) {
 	w := createWindow("Menu Test")
 
 	quitFunc := func() {}
-	quitItem := fyne.NewMenuItem("Beenden", quitFunc)
+	quitItem := granio.NewMenuItem("Beenden", quitFunc)
 	quitItem.IsQuit = true
 
-	mainMenu := fyne.NewMainMenu(fyne.NewMenu("File", quitItem))
+	mainMenu := granio.NewMainMenu(granio.NewMenu("File", quitItem))
 	bar := buildMenuOverlay(mainMenu, w.window)
 
 	assert.NotNil(t, bar)
@@ -72,9 +72,9 @@ func Test_Menu_CustomQuit(t *testing.T) {
 
 func Test_Menu_CustomQuit_NoAction(t *testing.T) {
 	w := createWindow("Menu Test")
-	quitItem := fyne.NewMenuItem("Beenden", nil)
+	quitItem := granio.NewMenuItem("Beenden", nil)
 	quitItem.IsQuit = true
-	mainMenu := fyne.NewMainMenu(fyne.NewMenu("File", quitItem))
+	mainMenu := granio.NewMainMenu(granio.NewMenu("File", quitItem))
 	bar := buildMenuOverlay(mainMenu, w.window)
 
 	assert.NotNil(t, bar)

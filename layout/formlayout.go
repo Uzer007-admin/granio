@@ -1,15 +1,15 @@
 package layout
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const formLayoutCols = 2
 
 // Declare conformity with Layout interface
-var _ fyne.Layout = (*formLayout)(nil)
+var _ granio.Layout = (*formLayout)(nil)
 
 // formLayout is two column grid where each row has a label and a widget.
 type formLayout struct{}
@@ -18,7 +18,7 @@ type formLayout struct{}
 // This includes the width of the label column (maximum width of all labels),
 // the width of the content column (maximum width of all content cells and remaining space in container)
 // and the total minimum height of the form.
-func (*formLayout) calculateTableSizes(objects []fyne.CanvasObject, containerWidth float32) (labelWidth float32, contentWidth float32, height float32) {
+func (*formLayout) calculateTableSizes(objects []granio.CanvasObject, containerWidth float32) (labelWidth float32, contentWidth float32, height float32) {
 	if len(objects)%formLayoutCols != 0 {
 		return 0, 0, 0
 	}
@@ -58,7 +58,7 @@ func (*formLayout) calculateTableSizes(objects []fyne.CanvasObject, containerWid
 }
 
 // Layout is called to pack all child objects into a table format with two columns.
-func (f *formLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
+func (f *formLayout) Layout(objects []granio.CanvasObject, size granio.Size) {
 	labelWidth, contentWidth, _ := f.calculateTableSizes(objects, size.Width)
 
 	y := float32(0)
@@ -66,9 +66,9 @@ func (f *formLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 	innerPadding := theme.InnerPadding()
 
 	// Calculate size and position of object. Position and size is returned (instead of calling Move() and Resize()) to make inlineable.
-	objectLayout := func(obj fyne.CanvasObject, offset, width, rowHeight, itemHeight float32) (fyne.Position, fyne.Size) {
-		pos := fyne.NewPos(offset, y)
-		size := fyne.NewSize(width, rowHeight)
+	objectLayout := func(obj granio.CanvasObject, offset, width, rowHeight, itemHeight float32) (granio.Position, granio.Size) {
+		pos := granio.NewPos(offset, y)
+		size := granio.NewSize(width, rowHeight)
 		if _, ok := obj.(*canvas.Text); ok {
 			pos = pos.AddXY(innerPadding, innerPadding)
 			size.Width -= innerPadding * 2
@@ -119,15 +119,15 @@ func (f *formLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 // MinSize finds the smallest size that satisfies all the child objects.
 // For a FormLayout this is the width of the widest label and content items and the height is
 // the sum of all column children combined with padding between each.
-func (f *formLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
+func (f *formLayout) MinSize(objects []granio.CanvasObject) granio.Size {
 	labelWidth, contentWidth, height := f.calculateTableSizes(objects, 0)
-	return fyne.Size{
+	return granio.Size{
 		Width:  labelWidth + contentWidth + theme.Padding(),
 		Height: height,
 	}
 }
 
 // NewFormLayout returns a new FormLayout instance
-func NewFormLayout() fyne.Layout {
+func NewFormLayout() granio.Layout {
 	return &formLayout{}
 }

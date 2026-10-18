@@ -1,0 +1,270 @@
+[
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 6560,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/6560#issuecomment-5899538653",
+        "body": "There is not actually an active vulnerability here - No fyne code uses TIFF and so that is not compiled in or executed.\n\nAn end-user is more than welcome to require the newer version of the image library which will settle the problem for their users.\n\nWe cannot just jump to 1.25 yet - Ideally we wouldn't until next summer when Debian Forky updates standard stable to 1.26, but we cannot wait that long. \n\nThe problem comes from Golang.org/x packages **auto-upgrading** the go requirement when there is no need to - but I am getting nowhere explaining the challenges with the Go team. Their versioning policy is not compatible with ours in some cases :(",
+        "author": "andydotxyz"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 6486,
+    "comments": []
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 6579,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/6579#issuecomment-6068014630",
+        "body": "It's a side-effect of https://github.com/fyne-io/fyne/issues/5760, because now it falls back to the CLI version even without error, meaning it should be addressed in go-locale AFAICT.",
+        "author": "sdassow"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 5486,
+    "comments": []
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 5457,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5457#issuecomment-2615054196",
+        "body": "One is nailed :) the other has been an issue for years and I was hopeful it was covered by race work but it seems not.",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5457#issuecomment-2615153756",
+        "body": "Nice one. Yeah, indeed. I think there also is one or two more inside the glfw tests that haven't been added to this list yet. We really need to get these squashed once for all :)",
+        "author": "Jacalz"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 4976,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-2196561818",
+        "body": "The tests are not failing locally for me.\r\nI don't think this can be a blocker until we know what the actual cause is...",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-2197236454",
+        "body": "Did you test on Linux?",
+        "author": "Jacalz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-2197548449",
+        "body": "Yes, Debian stable.",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-2198660512",
+        "body": "Re-confirmed on latest develop - no test failures",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-2198665347",
+        "body": "Something strange is definitely going on. Will try to investigate when I have time. Not really a nice bug to have because it makes it a lot harder to do testing locally.",
+        "author": "Jacalz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-2198753101",
+        "body": "I'm sure it is frustrating - but so far we don't have reports of this failing for anyone else.",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/4976#issuecomment-3572493815",
+        "body": "Interesting, I now do see this - apparently a 4-5px horizontal shift on the shortcut output when symbol font is used.\nI suspect that tracks down where it is being caused and what the trigger is :)",
+        "author": "andydotxyz"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 3681,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1445187768",
+        "body": "Does it have similar issue on m1 or is it a m2 only problem? I will try on my other arm64 devices to see. ",
+        "author": "Bluebugs"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1447122070",
+        "body": "You're right the same is happening on M1 - it seems the tests have not been run there recently!",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1447124560",
+        "body": "Interestingly (?) It seems to have started when the go-text-renderer was swapped in!",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1447360685",
+        "body": "I have tested it on my pinebook pro and the result are similar to M1 and M2. It seems to be a arm64 vs amd64 difference. Maybe another reason to bring the M1 as a github runner to get this kind of things picked up early.\r\n\r\nIs there any visual change that can be seen between an Intel Mac and a Arm Mac btw? Or are this subtle change that only our tests are picking?",
+        "author": "Bluebugs"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1447806565",
+        "body": "I cannot see any change. It seems to relate to precision as a couple of tests fail because 5.0 != 5.0000005 iirc",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1448434395",
+        "body": "Are those tests using proper float comparison logic?",
+        "author": "Bluebugs"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1448702039",
+        "body": "Indeed not, across the CPUs we test with it has been consistent.\r\nIt may, however, be indicative of potential issue in the text raster rendering so worth exploring further.",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/3681#issuecomment-1448706919",
+        "body": "The following is one of a few failed images in `canvas/testdata/text` - it seems to only affect long text, not the shorter ones?...\r\n\r\n![layout_long_center_large](https://user-images.githubusercontent.com/294436/221953370-2b46e997-6065-4425-b7f8-17caab3643fd.png)\r\n",
+        "author": "andydotxyz"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 5333,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2556549271",
+        "body": "Does the operating system you are using not provide language setting at a central location?\r\n\r\nMany apps are (finally) moving to a model where (like light/dark mode before it) the setting matches across all apps...",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2556679016",
+        "body": "Hi Andy,\r\n\r\nThanks for your answer.\r\n\r\nI agree with your design philosophy, but I'm working on a client app for an API and the language in this case is defined by user settings. Maybe you could give me the instruction for the right way to do this with the lang package and I'll implement it on my side. If you really don't think it could be a nice to have feature. Actually, the default behaviour could stay as it is now.\r\n\r\nThanks in advance for your precious help.\r\n\r\nKind regards.",
+        "author": "halsten-dev"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2557229236",
+        "body": "There is a PR being worked on to support this - if you're able to build from a Fyne fork you could try to work with it. - https://github.com/fyne-io/fyne/pull/5026\r\n\r\nIt is also possible to implement this feature without any API support from Fyne in a slightly hacky way. I recently did so to add a lanugage selector to my app because users were asking for it (mostly to force the app to English despite system language). You can load only the translation for the desired language, but in a `fyne.Resource` that is named as if it were the translation file for the system language.",
+        "author": "dweymouth"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2557518925",
+        "body": "Hi Drew,\r\n\r\nIndeed I need a language selector too. I'm happy to see that I'm not the only one in this situation.\r\n\r\nThanks for your insight. I guess I can close this feature request. I will wait for this to be available. I will manage things differently for the moment.\r\n\r\nThanks a lot.\r\n\r\nKind regards, Happy Xmas to all of you. ",
+        "author": "halsten-dev"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2558247374",
+        "body": "Maybe we do need to find a clean way to help settings be applied per-app.\nAs long as it doesn't take us down the road where developers are forcing their preference on edit users like we got with light/dark mode before.",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2558444500",
+        "body": "That's it. Just as an extra feature. Thanks for amazing work.",
+        "author": "halsten-dev"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2558540492",
+        "body": "IMO, theme variant and language should be able to (and default to) follow system settings, while at the same time providing the ability to override it programmatically (so you CAN offer users the ability to set an exception for the app they use).\r\n\r\nSo theme variant might be `system`, `light`, `dark` and lang might be empty/unset (= pick the system default) or a value of your choice.",
+        "author": "aksdb"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2558571986",
+        "body": "Yes indeed, that is how theme operates already and what the language defaults to.\n\nThough it is worth noting that Apple devices (macOS and iOS) already have per-app language settings and we are seeing apps prompt users to go to system settings instead of including in the app itself...",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2559004552",
+        "body": "My point was rather, that currently it is the only possible option to follow system defaults. For themes this can be worked around by implementing a very simple custom theme that inherits from the default theme but allows overriding the variant (as the `fyne_demo` does). \r\n\r\nFor fonts though, fyne currently relies on the `locale` package to determine the available locales and doesn't allow any programmatic override. On Unix, the `locale` package honors the `LANG` env var, so I can more or less customize it for myself, but that is not very user friendly and I wouldn't want to tell my users \"please launch my program using this env var if you want a different language\". In a reasonably complex application, I have settings menus, so I don't think offering a language override in there is a bad thing.\r\n\r\nBut just to reiterate this: it's only about developers have the _choice_ to offer that. The default should always be to simply follow system settings. For simple apps or when devs don't care, the app should behave as sane as possible. But for more complicated use-cases, having the ability to intervene and offer the user customizations beyond their system wide settings would be nice to have.\r\n\r\n---\r\n\r\nAdding my end-user perspective here, although I am obviously more of a power-user and therefore probably not a representative example:\r\n\r\nMy system language is typically German; simply because I got used to it and many people around me have their system in German. If I want to help them, it's easier for me to know the German terms for all the menus etc. However, complex/\"professional\" software tools I use I almost exclusively use in English. It's so much easier to get help online or find blueprints if you work with the English terms that I don't want to translate things back and forth and lose information on the way. Sometimes I also just switch the language temporarily to look something up. If I had to switch the whole OS locale every time, I would go mad.\r\n\r\nSimilar with themes: my eyes can't stand dark themes most of the time, but individual apps - depending on their color schemes - look better (= less exhausting) in dark mode. So I have most of my system in light mode but individual apps in dark mode (or vice versa). If every app forced me to have a unified light/dark mode, I would also be angry.\r\n\r\nSo obviously, if I develop an application, I try to give my users the same kind of freedom I would expect: sane defaults but lots of customization if they need it.",
+        "author": "aksdb"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2559282498",
+        "body": "> For themes this can be worked around by implementing a very simple custom theme that inherits from the default theme but allows overriding the variant (as the fyne_demo does).\r\n\r\nThat isn't a workaround, that is the API provided to control theme and variant.\r\n\r\n> The default should always be to simply follow system settings. For simple apps or when devs don't care, the app should behave as sane as possible. But for more complicated use-cases, having the ability to intervene and offer the user customizations beyond their system wide settings would be nice to have.\r\n\r\nYes. I think your long message basically says we are in agreement.\r\n\r\nI was just pointing out that many OS are now handling this per-app so it is worth checking if the work has not already been done for you.\r\n",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2561218461",
+        "body": "How I personally do it. https://github.com/alexballas/go2tv/blob/main/internal/gui/gui.go#L247-L256\r\nJust overriding the environmental variable seems to do the trick for me.\r\n",
+        "author": "alexballas"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2561271217",
+        "body": "@alexballas FYI that may only work on Linux, I believe on Windows and Mac, the language setting is communicated through OS APIs, not env vars\r\n\r\nThis is how I did it, if anyone's curious: https://github.com/dweymouth/supersonic/pull/510/files#diff-2873f79a86c0d8b3335cd7731b0ecf7dd4301eb19a82ef7a1cba7589b5252261R50",
+        "author": "dweymouth"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2561467341",
+        "body": "thank you @dweymouth! That did the trick for me. Just pushed something similar to your code here. https://github.com/alexballas/go2tv/blob/devel/internal/gui/gui.go#L252-L265\r\n\r\nA bit simplistic given the limited number of languages my app supports, but does the trick :) ",
+        "author": "alexballas"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-2578124120",
+        "body": "~~I think what's currently missing, in comparison to theme handling, is a way to override/replace the locale retrieval. One would have to override the `fyne.Device` (so one can implement their own `Locale()` function), which is currently not possible.~~\r\n\r\n~~If it would be possible to somehow modularize this part (differently) so one can implement their own locale detection strategy, that would be very helpful (and could, just like for `fyne.Theme`, also be used to implement a less dynamic strategy).~~\r\n\r\nActually ... no, fiddling with the `Device` would be wrong. The `Device` _is_ the right abstraction to provide the system locale and the approach in PR #5026 is likely the best one to solve this issue. Then the default points to whatever the system decides but you can override it if needed/wanted.",
+        "author": "aksdb"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/5333#issuecomment-4067452205",
+        "body": "I use `lang.AddTranslationsForLocale([]byte(\"{}\"), lang.SystemLocale())` to workaround this but this causes a bunch of \"Translation failure\" messages at runtime",
+        "author": "kuche1"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/fyne",
+    "issue": 6509,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/6509#issuecomment-5463785002",
+        "body": "I agree that this is a bug, but if the way things are rendered can change because of a cache clean, there is another latent bug, since the cache state should only impact performance, not behavior. A cache that is aggressively cleaned should only be able to cause extra CPU work to re-rasterize or re-fetch something before painting again.",
+        "author": "dweymouth"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/6509#issuecomment-5464066539",
+        "body": "You're right that there's a second bug, and it's in Fyne, not downstream. It predates #6465 — the cache-deadline regression just makes it easy to hit.\n\n**A renderer recreated after cache expiry is never laid out.**\n\n`cache.Renderer` creates a renderer when one is missing but never calls `Layout` on it, and `BaseWidget.Resize` returns early when the size is unchanged — which it always is in this situation, since only the renderer was thrown away. So nothing lays the new renderer out.\n\nThat matters because most widgets rebuild their canvas objects in `CreateRenderer`. `widget.Label` is the clearest case:\n\n```go\nfunc (l *Label) CreateRenderer() fyne.WidgetRenderer {\n\tl.provider = NewRichTextWithText(l.Text) // fresh, size {0,0}\n\t...\n}\n\nfunc (r *labelRenderer) Layout(s fyne.Size) {\n\tr.l.selection.Resize(s)\n\tr.l.provider.Resize(s) // the only thing that ever sizes the provider\n}\n```\n\n`labelRenderer.Refresh` doesn't size the provider either, so the label keeps a zero-sized `RichText` until something resizes the label to a *different* size. With `TextAlignCenter` the text is then centred inside width 0 and lands half its width to the left of where it belongs. Same label, before and after one `Capture()` in the downstream failure:\n\n```\nbefore: *widget.Label    size={139.69 35.08}\n          *widget.RichText size={139.69 35.08}\n            *canvas.Text   pos={8 8}      abs={102.16 156.46}\n\nafter:  *widget.Label    size={139.69 35.08}\n          *widget.RichText size={0 0}\n            *canvas.Text   pos={-61.84 8} abs={32.31 156.46}\n```\n\nThat is the entire difference in the golden-image failure; no downstream state is involved.\n\n**Minimal reproduction, no downstream code.** Fails on 2.8.1, 2.8.0, 2.7.1 and 2.6.3, so it is independent of the cache-deadline bug. Run with `FYNE_CACHE=10ms`:\n\n```go\nfunc TestLabelLosesLayoutWhenRendererIsRecreated(t *testing.T) {\n\t_ = test.NewApp()\n\n\tlabel := widget.NewLabelWithStyle(\"Drop images here\", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})\n\tw := test.NewWindow(label)\n\tw.Resize(fyne.NewSize(300, 100))\n\n\tbefore := test.WidgetRenderer(label).Objects()[0].Size() // the RichText provider\n\n\t// Idle past cache.ValidDuration, then paint: Capture calls cache.Clean(true),\n\t// which destroys the expired renderer, and the paint that follows recreates it.\n\ttime.Sleep(50 * time.Millisecond)\n\tw.Canvas().Capture()\n\n\tafter := test.WidgetRenderer(label).Objects()[0].Size()\n\tassert.Equal(t, before, after) // {292 92} -> {0 0}\n}\n```\n\n**How the two compose.** On its own this is largely invisible, because a visible widget is marked alive by every paint and so never expires. The deadline bug removes that protection: `drawSingleFrame` paints first and calls `cache.Clean` last, so after an idle gap a frame marks visible widgets alive from the stale `cachedNow`, `Clean` destroys them, and the next frame recreates their renderers unlaid-out. The mis-render then persists until something resizes those widgets.\n\n**Candidate fix** — lay out on creation when the widget already has a size:\n\n```go\nfunc Renderer(wid fyne.Widget) fyne.WidgetRenderer {\n\trenderer, ok := CachedRenderer(wid)\n\tif !ok && wid != nil {\n\t\trenderer = wid.CreateRenderer()\n\t\trinfo := &rendererInfo{renderer: renderer}\n\t\trinfo.setAlive()\n\t\trenderers.Store(wid, rinfo)\n\n\t\t// A widget that already has a size is being re-rendered after its\n\t\t// previous renderer was destroyed; Resize will not lay it out again.\n\t\tif size := wid.Size(); !size.IsZero() {\n\t\t\trenderer.Layout(size)\n\t\t}\n\t}\n\n\treturn renderer\n}\n```\n\nWith only that patch on top of 2.8.1 — the cache-deadline bug still present — the test above passes and the downstream suite passes under `FYNE_CACHE=100ms`. Happy to open a PR for it separately from the deadline fix if that's useful.\n",
+        "author": "frathe"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/6509#issuecomment-5469769745",
+        "body": "That makes sense to me but I want to get @andydotxyz 's thoughts on this as well",
+        "author": "dweymouth"
+      },
+      {
+        "url": "https://github.com/fyne-io/fyne/issues/6509#issuecomment-5470864291",
+        "body": "Yup makes sense to me. Probably worth fixing the underlying issue first so we can test thoroughly then return to the timing related first bug",
+        "author": "andydotxyz"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/apps",
+    "issue": 5,
+    "comments": [
+      {
+        "url": "https://github.com/fyne-io/apps/issues/5#issuecomment-945878790",
+        "body": "I remember having the same issue with node.js, At that time, the resolution became using nvm, and I stopped using node for end user apps due to the complications for support. \r\n\r\nI’m told that this is likely due to developers using homebrew , those folders don’t exist on Mac until created by homebrew. While this may be ok on OSX, on unix and linux, it is not – that folder is already used for installing ports, as in ‘sudo make install’, and is owned by root. \r\n\r\n I think this breaks your  cross-platform goals. ",
+        "author": "darkoverlordofdata"
+      },
+      {
+        "url": "https://github.com/fyne-io/apps/issues/5#issuecomment-948001630",
+        "body": "The folder is platform specific, on macOS we use `/Applications`.\r\nWe need to improve this to call out to sudo or su on Linux computers I think. macOS and Windows privilege escalation is handled already.",
+        "author": "andydotxyz"
+      },
+      {
+        "url": "https://github.com/fyne-io/apps/issues/5#issuecomment-948670719",
+        "body": "Thanks. I can build manually. Other than this glitch, fyne does work fine on my arm Chromebook. ",
+        "author": "darkoverlordofdata"
+      }
+    ]
+  },
+  {
+    "repository": "fyne-io/apps",
+    "issue": 2,
+    "comments": []
+  }
+]

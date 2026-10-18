@@ -3,7 +3,7 @@
 package mobile
 
 import (
-	fyneDriver "fyne.io/fyne/v2/driver"
+	fyneDriver "github.com/Uzer007-admin/granio/v2/driver"
 )
 
 // Assert we are satisfying the driver.NativeWindow interface

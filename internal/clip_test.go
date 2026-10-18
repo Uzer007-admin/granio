@@ -5,39 +5,39 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestClipStack_Intersect(t *testing.T) {
-	p1 := fyne.NewPos(5, 25)
-	s1 := fyne.NewSize(100, 100)
+	p1 := granio.NewPos(5, 25)
+	s1 := granio.NewSize(100, 100)
 	c := &ClipStack{
 		clips: []*ClipItem{
 			{p1, s1},
 		},
 	}
 
-	p2 := fyne.NewPos(25, 0)
-	s2 := fyne.NewSize(50, 50)
+	p2 := granio.NewPos(25, 0)
+	s2 := granio.NewSize(50, 50)
 	i := c.Push(p2, s2)
 
-	assert.Equal(t, fyne.NewPos(25, 25), i.pos)
-	assert.Equal(t, fyne.NewSize(50, 25), i.size)
+	assert.Equal(t, granio.NewPos(25, 25), i.pos)
+	assert.Equal(t, granio.NewSize(50, 25), i.size)
 	assert.Len(t, c.clips, 2)
 
 	_ = c.Pop()
-	p2 = fyne.NewPos(50, 50)
-	s2 = fyne.NewSize(150, 50)
+	p2 = granio.NewPos(50, 50)
+	s2 = granio.NewSize(150, 50)
 	i = c.Push(p2, s2)
 
-	assert.Equal(t, fyne.NewPos(50, 50), i.pos)
-	assert.Equal(t, fyne.NewSize(55, 50), i.size)
+	assert.Equal(t, granio.NewPos(50, 50), i.pos)
+	assert.Equal(t, granio.NewSize(55, 50), i.size)
 	assert.Len(t, c.clips, 2)
 }
 
 func TestClipStack_Pop(t *testing.T) {
-	p := fyne.NewPos(5, 5)
-	s := fyne.NewSize(100, 100)
+	p := granio.NewPos(5, 5)
+	s := granio.NewSize(100, 100)
 	c := &ClipStack{
 		clips: []*ClipItem{
 			{p, s},
@@ -52,8 +52,8 @@ func TestClipStack_Pop(t *testing.T) {
 
 func TestClipStack_Push(t *testing.T) {
 	c := &ClipStack{}
-	p := fyne.NewPos(5, 5)
-	s := fyne.NewSize(100, 100)
+	p := granio.NewPos(5, 5)
+	s := granio.NewSize(100, 100)
 
 	i := c.Push(p, s)
 	assert.Equal(t, p, i.pos)

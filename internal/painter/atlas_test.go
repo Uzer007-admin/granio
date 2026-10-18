@@ -12,9 +12,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
 )
 
 // fakeAtlasTexture records what a GlyphAtlas asks of its texture. live is what
@@ -55,7 +55,7 @@ func TestGlyphAtlas_TextQuadsCachesGlyphs(t *testing.T) {
 	var a painter.GlyphAtlas
 	tex := &fakeAtlasTexture{}
 
-	quads, ok := a.TextQuads(nil, text, fyne.NewPos(10, 20), 1, -wide, wide, tex)
+	quads, ok := a.TextQuads(nil, text, granio.NewPos(10, 20), 1, -wide, wide, tex)
 	require.True(t, ok)
 	assert.Len(t, quads, 7, "one quad per inked glyph; the space has none")
 	assert.LessOrEqual(t, tex.uploads, 7, "at most one bitmap per inked glyph")
@@ -67,7 +67,7 @@ func TestGlyphAtlas_TextQuadsCachesGlyphs(t *testing.T) {
 	}
 
 	uploads := tex.uploads
-	again, ok := a.TextQuads(nil, text, fyne.NewPos(10, 20), 1, -wide, wide, tex)
+	again, ok := a.TextQuads(nil, text, granio.NewPos(10, 20), 1, -wide, wide, tex)
 	require.True(t, ok)
 	assert.Equal(t, quads, again)
 	assert.Equal(t, uploads, tex.uploads, "a string seen before uploads nothing")
@@ -84,7 +84,7 @@ func TestGlyphAtlas_TextQuadsSurvivesReset(t *testing.T) {
 		text := canvas.NewText(s, color.White)
 		text.TextSize = 400
 
-		quads, ok := a.TextQuads(nil, text, fyne.Position{}, 1, -wide, wide, tex)
+		quads, ok := a.TextQuads(nil, text, granio.Position{}, 1, -wide, wide, tex)
 		require.True(t, ok, s)
 		for _, q := range quads {
 			assert.True(t, slices.Contains(tex.live, slot(&a, q)), "%q has a quad sampling %v, which is not live", s, slot(&a, q))
@@ -106,15 +106,15 @@ func TestGlyphAtlas_GrowsBeforeThrashing(t *testing.T) {
 	}
 	styles := []struct {
 		size  float32
-		style fyne.TextStyle
+		style granio.TextStyle
 	}{
-		{14, fyne.TextStyle{}},
-		{14, fyne.TextStyle{Bold: true}},
-		{14, fyne.TextStyle{Italic: true}},
-		{14, fyne.TextStyle{Monospace: true}},
-		{24, fyne.TextStyle{Bold: true}},
-		{18, fyne.TextStyle{Bold: true}},
-		{11, fyne.TextStyle{}},
+		{14, granio.TextStyle{}},
+		{14, granio.TextStyle{Bold: true}},
+		{14, granio.TextStyle{Italic: true}},
+		{14, granio.TextStyle{Monospace: true}},
+		{24, granio.TextStyle{Bold: true}},
+		{18, granio.TextStyle{Bold: true}},
+		{11, granio.TextStyle{}},
 	}
 	const scale = 4
 	var a painter.GlyphAtlas
@@ -123,7 +123,7 @@ func TestGlyphAtlas_GrowsBeforeThrashing(t *testing.T) {
 		for _, s := range styles {
 			text := canvas.NewText(string(chars), color.White)
 			text.TextSize, text.TextStyle = s.size, s.style
-			_, ok := a.TextQuads(nil, text, fyne.Position{}, scale, -wide, wide, tex)
+			_, ok := a.TextQuads(nil, text, granio.Position{}, scale, -wide, wide, tex)
 			require.True(t, ok)
 		}
 	}
@@ -148,11 +148,11 @@ func TestGlyphAtlas_TextQuadsSkipsHiddenGlyphs(t *testing.T) {
 
 	var all painter.GlyphAtlas
 	allTex := &fakeAtlasTexture{}
-	full, ok := all.TextQuads(nil, text, fyne.NewPos(-20, 0), 1, -wide, wide, allTex)
+	full, ok := all.TextQuads(nil, text, granio.NewPos(-20, 0), 1, -wide, wide, allTex)
 	require.True(t, ok)
 	var visible painter.GlyphAtlas
 	visibleTex := &fakeAtlasTexture{}
-	culled, ok := visible.TextQuads(nil, text, fyne.NewPos(-20, 0), 1, minX, maxX, visibleTex)
+	culled, ok := visible.TextQuads(nil, text, granio.NewPos(-20, 0), 1, minX, maxX, visibleTex)
 	require.True(t, ok)
 
 	var want []image.Rectangle
@@ -181,11 +181,11 @@ func BenchmarkGlyphAtlas_TextQuadsLongLine(b *testing.B) {
 	var a painter.GlyphAtlas
 	tex := &fakeAtlasTexture{}
 	var quads []painter.GlyphQuad
-	quads, _ = a.TextQuads(quads[:0], text, fyne.Position{}, 1, 0, 1920, tex)
+	quads, _ = a.TextQuads(quads[:0], text, granio.Position{}, 1, 0, 1920, tex)
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		quads, _ = a.TextQuads(quads[:0], text, fyne.Position{}, 1, 0, 1920, tex)
+		quads, _ = a.TextQuads(quads[:0], text, granio.Position{}, 1, 0, 1920, tex)
 	}
 	b.ReportMetric(float64(len(quads)), "quads/op")
 }
@@ -216,14 +216,14 @@ func TestGlyphAtlas_TextQuadsSubpixel(t *testing.T) {
 	var a painter.GlyphAtlas
 	tex := &fakeAtlasTexture{}
 
-	at10, ok := a.TextQuads(nil, text, fyne.NewPos(10, 0), 1, -wide, wide, tex)
+	at10, ok := a.TextQuads(nil, text, granio.NewPos(10, 0), 1, -wide, wide, tex)
 	require.True(t, ok)
 	require.Len(t, at10, 12)
 	assert.Greater(t, tex.uploads, 1, "the l lands at more than one sub-pixel position")
 	assert.LessOrEqual(t, tex.uploads, 4, "one bitmap per position at most, and 1x has four")
 
 	uploads := tex.uploads
-	at13, ok := a.TextQuads(nil, text, fyne.NewPos(13, 0), 1, -wide, wide, tex)
+	at13, ok := a.TextQuads(nil, text, granio.NewPos(13, 0), 1, -wide, wide, tex)
 	require.True(t, ok)
 	assert.Equal(t, uploads, tex.uploads, "a whole pixel move reuses every bitmap")
 	for i := range at10 {
@@ -257,7 +257,7 @@ func TestGlyphAtlas_MatchesDrawString(t *testing.T) {
 		text := canvas.NewText(s, color.White)
 		tex := &cpuAtlasTexture{img: image.NewRGBA(image.Rect(0, 0, painter.AtlasSize, painter.AtlasSize))}
 		var a painter.GlyphAtlas
-		quads, ok := a.TextQuads(nil, text, fyne.Position{}, scale, -wide, wide, tex)
+		quads, ok := a.TextQuads(nil, text, granio.Position{}, scale, -wide, wide, tex)
 		require.True(t, ok)
 
 		size, _ := painter.RenderedTextSize(s, text.TextSize, text.TextStyle, nil)

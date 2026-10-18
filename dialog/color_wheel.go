@@ -7,20 +7,20 @@ import (
 	"math"
 	"math/cmplx"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/painter/geom"
-	internalwidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
+	internalwidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 var (
-	_ fyne.Widget    = (*colorWheel)(nil)
-	_ fyne.Tappable  = (*colorWheel)(nil)
-	_ fyne.Draggable = (*colorWheel)(nil)
+	_ granio.Widget    = (*colorWheel)(nil)
+	_ granio.Tappable  = (*colorWheel)(nil)
+	_ granio.Draggable = (*colorWheel)(nil)
 )
 
 // colorWheel displays a circular color gradient and triggers the callback when tapped.
@@ -62,7 +62,7 @@ func (*colorWheel) Cursor() desktop.Cursor {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (a *colorWheel) CreateRenderer() fyne.WidgetRenderer {
+func (a *colorWheel) CreateRenderer() granio.WidgetRenderer {
 	raster := &canvas.Raster{
 		Generator: a.generator,
 	}
@@ -70,7 +70,7 @@ func (a *colorWheel) CreateRenderer() fyne.WidgetRenderer {
 	x := canvas.NewLine(color.Black)
 	y := canvas.NewLine(color.Black)
 	return &colorWheelRenderer{
-		BaseRenderer: internalwidget.NewBaseRenderer([]fyne.CanvasObject{background, raster, x, y}),
+		BaseRenderer: internalwidget.NewBaseRenderer([]granio.CanvasObject{background, raster, x, y}),
 		area:         a,
 		background:   background,
 		raster:       raster,
@@ -80,7 +80,7 @@ func (a *colorWheel) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (a *colorWheel) MinSize() fyne.Size {
+func (a *colorWheel) MinSize() granio.Size {
 	a.ExtendBaseWidget(a)
 	return a.BaseWidget.MinSize()
 }
@@ -98,12 +98,12 @@ func (a *colorWheel) SetHSLA(hue, saturation, lightness int, alpha uint8) {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any change handler.
-func (a *colorWheel) Tapped(event *fyne.PointEvent) {
+func (a *colorWheel) Tapped(event *granio.PointEvent) {
 	a.trigger(event.Position)
 }
 
 // Dragged is called when a pointer drag event is captured and triggers any change handler
-func (a *colorWheel) Dragged(event *fyne.DragEvent) {
+func (a *colorWheel) Dragged(event *granio.DragEvent) {
 	a.trigger(event.Position)
 }
 
@@ -133,8 +133,8 @@ func (a *colorWheel) colorAt(x, y, w, h int) color.Color {
 	}
 }
 
-func (a *colorWheel) locationForPosition(pos fyne.Position) (x, y int) {
-	can := fyne.CurrentApp().Driver().CanvasForObject(a)
+func (a *colorWheel) locationForPosition(pos granio.Position) (x, y int) {
+	can := granio.CurrentApp().Driver().CanvasForObject(a)
 	x, y = int(pos.X), int(pos.Y)
 	if can != nil {
 		x, y = can.PixelCoordinateForPosition(pos)
@@ -151,7 +151,7 @@ func (a *colorWheel) selection(width, height float32) (x, y float32) {
 	return float32(real(c) + w/2), float32(imag(c) + h/2)
 }
 
-func (a *colorWheel) trigger(pos fyne.Position) {
+func (a *colorWheel) trigger(pos granio.Position) {
 	x, y := a.locationForPosition(pos)
 	if c, f := a.cache, a.onChange; c != nil && f != nil {
 		b := c.Bounds()
@@ -180,19 +180,19 @@ type colorWheelRenderer struct {
 	x, y       *canvas.Line
 }
 
-func (r *colorWheelRenderer) Layout(size fyne.Size) {
+func (r *colorWheelRenderer) Layout(size granio.Size) {
 	x, y := r.area.selection(size.Width, size.Height)
-	r.x.Position1 = fyne.NewPos(0, y)
-	r.x.Position2 = fyne.NewPos(size.Width, y)
-	r.y.Position1 = fyne.NewPos(x, 0)
-	r.y.Position2 = fyne.NewPos(x, size.Height)
-	r.raster.Move(fyne.NewPos(0, 0))
+	r.x.Position1 = granio.NewPos(0, y)
+	r.x.Position2 = granio.NewPos(size.Width, y)
+	r.y.Position1 = granio.NewPos(x, 0)
+	r.y.Position2 = granio.NewPos(x, size.Height)
+	r.raster.Move(granio.NewPos(0, 0))
 	r.raster.Resize(size)
 	r.background.Resize(size)
 }
 
-func (r *colorWheelRenderer) MinSize() fyne.Size {
-	return internal.MaxSizes(r.raster.MinSize(), fyne.NewSize(128, 128)) //revive:disable-line:add-constant
+func (r *colorWheelRenderer) MinSize() granio.Size {
+	return internal.MaxSizes(r.raster.MinSize(), granio.NewSize(128, 128)) //revive:disable-line:add-constant
 }
 
 func (r *colorWheelRenderer) Refresh() {

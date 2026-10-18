@@ -4,8 +4,8 @@ import (
 	"log"
 	"runtime"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 // Receives a function as parameter, to lazily get the error code only when
 // needed, avoiding unneeded overhead.
 func logGLError(getError func() uint32) {
-	if build.Mode != fyne.BuildDebug {
+	if build.Mode != granio.BuildDebug {
 		return
 	}
 

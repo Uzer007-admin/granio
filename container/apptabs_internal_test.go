@@ -3,9 +3,9 @@ package container
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -14,7 +14,7 @@ func TestAppTabs_tabButtonRenderer_SetText(t *testing.T) {
 	item := &TabItem{Text: "Test", Content: widget.NewLabel("Content")}
 	tabs := NewAppTabs(item)
 	tabRenderer := cache.Renderer(tabs).(*appTabsRenderer)
-	button := tabRenderer.bar.Objects[0].(*fyne.Container).Objects[0].(*tabButton)
+	button := tabRenderer.bar.Objects[0].(*granio.Container).Objects[0].(*tabButton)
 	renderer := cache.Renderer(button).(*tabButtonRenderer)
 
 	assert.Equal(t, "Test", renderer.label.Text)
@@ -25,7 +25,7 @@ func TestAppTabs_tabButtonRenderer_SetText(t *testing.T) {
 
 	item.Text = "Replace"
 	tabs.Refresh()
-	button = tabRenderer.bar.Objects[0].(*fyne.Container).Objects[0].(*tabButton)
+	button = tabRenderer.bar.Objects[0].(*granio.Container).Objects[0].(*tabButton)
 	renderer = cache.Renderer(button).(*tabButtonRenderer)
 	assert.Equal(t, "Replace", renderer.label.Text)
 }
@@ -53,14 +53,14 @@ func Test_tabButtonRenderer_EmptyDeleteAdd(t *testing.T) {
 	tabs := NewAppTabs()
 
 	// ensure enough space for buttons to be created.
-	tabs.Resize(fyne.NewSize(300, 200))
+	tabs.Resize(granio.NewSize(300, 200))
 
 	tabRenderer := cache.Renderer(tabs).(*appTabsRenderer)
-	assert.Equal(t, 0, len(tabRenderer.bar.Objects[0].(*fyne.Container).Objects))
+	assert.Equal(t, 0, len(tabRenderer.bar.Objects[0].(*granio.Container).Objects))
 
 	tabs.Append(item1)
-	assert.Equal(t, 1, len(tabRenderer.bar.Objects[0].(*fyne.Container).Objects))
+	assert.Equal(t, 1, len(tabRenderer.bar.Objects[0].(*granio.Container).Objects))
 
 	tabs.Remove(item1)
-	assert.Equal(t, 0, len(tabRenderer.bar.Objects[0].(*fyne.Container).Objects))
+	assert.Equal(t, 0, len(tabRenderer.bar.Objects[0].(*granio.Container).Objects))
 }

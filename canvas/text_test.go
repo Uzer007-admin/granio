@@ -8,10 +8,10 @@ import (
 	"os"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -25,13 +25,13 @@ func TestText_FontSource(t *testing.T) {
 	text := canvas.NewText("Test", color.NRGBA{0, 0, 0, 0xff})
 	c := test.NewWindow(text).Canvas()
 
-	text.FontSource = test.Theme().Font(fyne.TextStyle{Bold: true})
+	text.FontSource = test.Theme().Font(granio.TextStyle{Bold: true})
 	img1 := c.Capture()
-	text.FontSource = test.Theme().Font(fyne.TextStyle{Italic: true})
+	text.FontSource = test.Theme().Font(granio.TextStyle{Italic: true})
 	img2 := c.Capture()
 	assert.NotEqual(t, img1.(*image.NRGBA).Pix, img2.(*image.NRGBA).Pix)
 
-	text.FontSource = fyne.NewStaticResource("corrupt", []byte{})
+	text.FontSource = granio.NewStaticResource("corrupt", []byte{})
 	assert.NotPanics(t, func() {
 		test.NewWindow(text).Canvas().Capture()
 	})
@@ -64,68 +64,68 @@ func TestText_Layout(t *testing.T) {
 
 	for name, tt := range map[string]struct {
 		text  string
-		align fyne.TextAlign
-		size  fyne.Size
+		align granio.TextAlign
+		size  granio.Size
 	}{
 		"short_leading_small": {
 			text:  "abc",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(1, 1),
 		},
 		"short_leading_large": {
 			text:  "abc",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(500, 101),
 		},
 		"long_leading_small": {
 			text:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(1, 1),
 		},
 		"long_leading_large": {
 			text:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(500, 101),
 		},
 		"short_center_small": {
 			text:  "abc",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(1, 1),
 		},
 		"short_center_large": {
 			text:  "abc",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(500, 101),
 		},
 		"long_center_small": {
 			text:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(1, 1),
 		},
 		"long_center_large": {
 			text:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(500, 101),
 		},
 		"short_trailing_small": {
 			text:  "abc",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(1, 1),
 		},
 		"short_trailing_large": {
 			text:  "abc",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(500, 101),
 		},
 		"long_trailing_small": {
 			text:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(1, 1),
 		},
 		"long_trailing_large": {
 			text:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(500, 101),
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -143,68 +143,68 @@ func TestText_CarriageReturn(t *testing.T) {
 
 	for name, tt := range map[string]struct {
 		text  string
-		align fyne.TextAlign
-		size  fyne.Size
+		align granio.TextAlign
+		size  granio.Size
 	}{
 		"short_leading_small": {
 			text:  "\ra\rb\rc\r",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(1, 1),
 		},
 		"short_leading_large": {
 			text:  "\ra\rb\rc\r",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(500, 101),
 		},
 		"long_leading_small": {
 			text:  "\ra\rb\rc\rd\re\rf\rg\rh\ri\rj\rk\rl\rm\rn\ro\rp\rq\rr\rs\rt\ru\rv\rw\rx\ry\rz\rA\rB\rC\rD\rE\rF\rG\rH\rI\rJ\rK\rL\rM\rN\rO\rP\rQ\rR\rS\rT\rU\rV\rW\rX\rY\rZ\r",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(1, 1),
 		},
 		"long_leading_large": {
 			text:  "\ra\rb\rc\rd\re\rf\rg\rh\ri\rj\rk\rl\rm\rn\ro\rp\rq\rr\rs\rt\ru\rv\rw\rx\ry\rz\rA\rB\rC\rD\rE\rF\rG\rH\rI\rJ\rK\rL\rM\rN\rO\rP\rQ\rR\rS\rT\rU\rV\rW\rX\rY\rZ\r",
-			align: fyne.TextAlignLeading,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignLeading,
+			size:  granio.NewSize(500, 101),
 		},
 		"short_center_small": {
 			text:  "\ra\rb\rc\r",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(1, 1),
 		},
 		"short_center_large": {
 			text:  "\ra\rb\rc\r",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(500, 101),
 		},
 		"long_center_small": {
 			text:  "\ra\rb\rc\rd\re\rf\rg\rh\ri\rj\rk\rl\rm\rn\ro\rp\rq\rr\rs\rt\ru\rv\rw\rx\ry\rz\rA\rB\rC\rD\rE\rF\rG\rH\rI\rJ\rK\rL\rM\rN\rO\rP\rQ\rR\rS\rT\rU\rV\rW\rX\rY\rZ\r",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(1, 1),
 		},
 		"long_center_large": {
 			text:  "\ra\rb\rc\rd\re\rf\rg\rh\ri\rj\rk\rl\rm\rn\ro\rp\rq\rr\rs\rt\ru\rv\rw\rx\ry\rz\rA\rB\rC\rD\rE\rF\rG\rH\rI\rJ\rK\rL\rM\rN\rO\rP\rQ\rR\rS\rT\rU\rV\rW\rX\rY\rZ\r",
-			align: fyne.TextAlignCenter,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignCenter,
+			size:  granio.NewSize(500, 101),
 		},
 		"short_trailing_small": {
 			text:  "\ra\rb\rc\r",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(1, 1),
 		},
 		"short_trailing_large": {
 			text:  "\ra\rb\rc\r",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(500, 101),
 		},
 		"long_trailing_small": {
 			text:  "\ra\rb\rc\rd\re\rf\rg\rh\ri\rj\rk\rl\rm\rn\ro\rp\rq\rr\rs\rt\ru\rv\rw\rx\ry\rz\rA\rB\rC\rD\rE\rF\rG\rH\rI\rJ\rK\rL\rM\rN\rO\rP\rQ\rR\rS\rT\rU\rV\rW\rX\rY\rZ\r",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(1, 1),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(1, 1),
 		},
 		"long_trailing_large": {
 			text:  "\ra\rb\rc\rd\re\rf\rg\rh\ri\rj\rk\rl\rm\rn\ro\rp\rq\rr\rs\rt\ru\rv\rw\rx\ry\rz\rA\rB\rC\rD\rE\rF\rG\rH\rI\rJ\rK\rL\rM\rN\rO\rP\rQ\rR\rS\rT\rU\rV\rW\rX\rY\rZ\r",
-			align: fyne.TextAlignTrailing,
-			size:  fyne.NewSize(500, 101),
+			align: granio.TextAlignTrailing,
+			size:  granio.NewSize(500, 101),
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

@@ -7,14 +7,14 @@ import (
 	"runtime"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/painter/software"
-	internalTest "fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func makeTestImage(w, h int) image.Image {
@@ -28,7 +28,7 @@ func TestPainter_paintArc(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_arc_full.png", p.Paint(c))
@@ -83,7 +83,7 @@ func TestPainter_paintBlur(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(container.NewStack(img, container.NewPadded(obj)))
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	if runtime.GOOS == "darwin" {
@@ -100,7 +100,7 @@ func TestPainter_paintCircle(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_circle.png", p.Paint(c))
@@ -115,7 +115,7 @@ func TestPainter_paintCircleStroke(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_circle_stroke.png", p.Paint(c))
@@ -125,16 +125,16 @@ func TestPainter_paintCircle_shadow(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	obj := canvas.NewCircle(color.NRGBA{R: 0, G: 0, B: 0, A: 150})
 	obj.Shadow.Color = color.White
-	obj.Shadow.Offset = fyne.NewPos(-10, -5)
+	obj.Shadow.Offset = granio.NewPos(-10, -5)
 	obj.Shadow.BlurRadius = 3
 	obj.Shadow.Variant = canvas.DropShadow
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
-	obj.Resize(fyne.NewSize(150, 150))
-	obj.Move(fyne.NewPos(20, 20))
+	c.Resize(granio.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
+	obj.Resize(granio.NewSize(150, 150))
+	obj.Move(granio.NewPos(20, 20))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_circle_drop_shadow.png", p.Paint(c))
@@ -147,16 +147,16 @@ func TestPainter_paintCircle_shadow(t *testing.T) {
 func TestPainter_paintGradient_clipped(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	g := canvas.NewRadialGradient(color.NRGBA{R: 200, G: 0, B: 0, A: 255}, color.NRGBA{R: 0, G: 0, B: 200, A: 255})
-	g.SetMinSize(fyne.NewSize(100, 100))
+	g.SetMinSize(granio.NewSize(100, 100))
 	scroll := container.NewScroll(g)
-	scroll.Move(fyne.NewPos(10, 10))
-	scroll.Resize(fyne.NewSize(50, 50))
-	scroll.Scrolled(&fyne.ScrollEvent{Scrolled: fyne.NewDelta(-30, -30)})
+	scroll.Move(granio.NewPos(10, 10))
+	scroll.Resize(granio.NewSize(50, 50))
+	scroll.Scrolled(&granio.ScrollEvent{Scrolled: granio.NewDelta(-30, -30)})
 	cont := container.NewWithoutLayout(scroll)
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(cont)
-	c.Resize(fyne.NewSize(70, 70))
+	c.Resize(granio.NewSize(70, 70))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_gradient_clipped.png", p.Paint(c))
@@ -168,7 +168,7 @@ func TestPainter_paintImage(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -182,7 +182,7 @@ func TestPainter_paintImageAlpha(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -193,16 +193,16 @@ func TestPainter_paintImage_clipped(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	img := canvas.NewImageFromImage(makeTestImage(5, 5))
 	img.ScaleMode = canvas.ImageScalePixels
-	img.SetMinSize(fyne.NewSize(100, 100))
+	img.SetMinSize(granio.NewSize(100, 100))
 	scroll := container.NewScroll(img)
-	scroll.Move(fyne.NewPos(10, 10))
-	scroll.Resize(fyne.NewSize(50, 50))
-	scroll.Scrolled(&fyne.ScrollEvent{Scrolled: fyne.NewDelta(-15, -15)})
+	scroll.Move(granio.NewPos(10, 10))
+	scroll.Resize(granio.NewSize(50, 50))
+	scroll.Scrolled(&granio.ScrollEvent{Scrolled: granio.NewDelta(-15, -15)})
 	cont := container.NewWithoutLayout(scroll)
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(cont)
-	c.Resize(fyne.NewSize(70, 70))
+	c.Resize(granio.NewSize(70, 70))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_image_clipped.png", p.Paint(c))
@@ -215,7 +215,7 @@ func TestPainter_paintImage_scalePixels(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -229,7 +229,7 @@ func TestPainter_paintImage_scaleSmooth(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -243,7 +243,7 @@ func TestPainter_paintImage_scaleFastest(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -254,7 +254,7 @@ func TestPainter_paintImage_stretchX(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(canvas.NewImageFromImage(makeTestImage(3, 3)))
-	c.Resize(fyne.NewSize(100, 50))
+	c.Resize(granio.NewSize(100, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -265,7 +265,7 @@ func TestPainter_paintImage_stretchY(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(canvas.NewImageFromImage(makeTestImage(3, 3)))
-	c.Resize(fyne.NewSize(50, 100))
+	c.Resize(granio.NewSize(50, 100))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -280,7 +280,7 @@ func TestPainter_paintImage_contain(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -296,7 +296,7 @@ func TestPainter_paintImage_containX(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(100, 50))
+	c.Resize(granio.NewSize(100, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -312,7 +312,7 @@ func TestPainter_paintImage_containY(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 100))
+	c.Resize(granio.NewSize(50, 100))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -327,13 +327,13 @@ func TestPainter_paintImage_cover(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(250, 375))
+	c.Resize(granio.NewSize(250, 375))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
 	test.AssertImageMatches(t, "draw_image_cover_vertical.png", target)
 
-	c.Resize(fyne.NewSize(375, 250))
+	c.Resize(granio.NewSize(375, 250))
 
 	target = p.Paint(c)
 	test.AssertImageMatches(t, "draw_image_cover_horizontal.png", target)
@@ -347,7 +347,7 @@ func TestPainter_paintLine(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_line.png", p.Paint(c))
@@ -361,11 +361,11 @@ func TestPainter_paintLine_thin(t *testing.T) {
 		lines[i] = canvas.NewLine(color.RGBA{R: 255, G: 0, B: 0, A: 255})
 		lines[i].StrokeWidth = sw
 		x := float32(i * 20)
-		lines[i].Position1 = fyne.NewPos(x, 10)
-		lines[i].Position2 = fyne.NewPos(x+15, 10)
+		lines[i].Position1 = granio.NewPos(x, 10)
+		lines[i].Position2 = granio.NewPos(x+15, 10)
 	}
 	c.SetContent(container.NewWithoutLayout(lines[0], lines[1], lines[2], lines[3], lines[4]))
-	c.Resize(fyne.NewSize(109, 28))
+	c.Resize(granio.NewSize(109, 28))
 
 	p := software.NewPainter()
 	test.AssertImageMatches(t, "draw_line_thin.png", p.Paint(c))
@@ -373,13 +373,13 @@ func TestPainter_paintLine_thin(t *testing.T) {
 
 func TestPainter_paintLinearBezierCurve(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
-	obj := canvas.NewLinearBezierCurve(fyne.NewPos(20, 40), fyne.NewPos(40, 60), color.Black)
+	obj := canvas.NewLinearBezierCurve(granio.NewPos(20, 40), granio.NewPos(40, 60), color.Black)
 	obj.StrokeWidth = 6
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_bezier_curve_linear.png", p.Paint(c))
@@ -393,12 +393,12 @@ func TestPainter_paintLinearBezierCurve_thin(t *testing.T) {
 		lines[i] = &canvas.BezierCurve{StrokeColor: color.RGBA{R: 255, G: 0, B: 0, A: 255}}
 		lines[i].StrokeWidth = sw
 		x := float32(i * 20)
-		lines[i].StartPoint = fyne.NewPos(x, 10)
-		lines[i].EndPoint = fyne.NewPos(x+15, 10)
-		lines[i].Resize(fyne.NewSize(109, 28))
+		lines[i].StartPoint = granio.NewPos(x, 10)
+		lines[i].EndPoint = granio.NewPos(x+15, 10)
+		lines[i].Resize(granio.NewSize(109, 28))
 	}
 	c.SetContent(container.NewWithoutLayout(lines[0], lines[1], lines[2], lines[3], lines[4]))
-	c.Resize(fyne.NewSize(109, 28))
+	c.Resize(granio.NewSize(109, 28))
 
 	p := software.NewPainter()
 	test.AssertImageMatches(t, "draw_bezier_curve_linear_thin.png", p.Paint(c))
@@ -406,13 +406,13 @@ func TestPainter_paintLinearBezierCurve_thin(t *testing.T) {
 
 func TestPainter_paintQuadraticBezierCurve(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
-	obj := canvas.NewQuadraticBezierCurve(fyne.NewPos(0, 0), fyne.NewPos(10, 50), fyne.NewPos(70, 30), color.Black)
+	obj := canvas.NewQuadraticBezierCurve(granio.NewPos(0, 0), granio.NewPos(10, 50), granio.NewPos(70, 30), color.Black)
 	obj.StrokeWidth = 6
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_bezier_curve_quadratic.png", p.Paint(c))
@@ -426,13 +426,13 @@ func TestPainter_paintQuadraticBezierCurve_thin(t *testing.T) {
 		lines[i] = &canvas.BezierCurve{StrokeColor: color.RGBA{R: 255, G: 0, B: 0, A: 255}}
 		lines[i].StrokeWidth = sw
 		x := float32(i * 20)
-		lines[i].StartPoint = fyne.NewPos(x, 10)
-		lines[i].ControlPoints = []fyne.Position{fyne.NewPos(x+5, 5)}
-		lines[i].EndPoint = fyne.NewPos(x+15, 10)
-		lines[i].Resize(fyne.NewSize(109, 28))
+		lines[i].StartPoint = granio.NewPos(x, 10)
+		lines[i].ControlPoints = []granio.Position{granio.NewPos(x+5, 5)}
+		lines[i].EndPoint = granio.NewPos(x+15, 10)
+		lines[i].Resize(granio.NewSize(109, 28))
 	}
 	c.SetContent(container.NewWithoutLayout(lines[0], lines[1], lines[2], lines[3], lines[4]))
-	c.Resize(fyne.NewSize(109, 28))
+	c.Resize(granio.NewSize(109, 28))
 
 	p := software.NewPainter()
 	test.AssertImageMatches(t, "draw_bezier_curve_quadratic_thin.png", p.Paint(c))
@@ -440,13 +440,13 @@ func TestPainter_paintQuadraticBezierCurve_thin(t *testing.T) {
 
 func TestPainter_paintCubicBezierCurve(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
-	obj := canvas.NewCubicBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(35, 60), fyne.NewPos(70, 40), fyne.NewPos(30, 10), color.Black)
+	obj := canvas.NewCubicBezierCurve(granio.NewPos(10, 10), granio.NewPos(35, 60), granio.NewPos(70, 40), granio.NewPos(30, 10), color.Black)
 	obj.StrokeWidth = 6
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_bezier_curve_cubic.png", p.Paint(c))
@@ -460,13 +460,13 @@ func TestPainter_paintCubicBezierCurve_thin(t *testing.T) {
 		lines[i] = &canvas.BezierCurve{StrokeColor: color.RGBA{R: 255, G: 0, B: 0, A: 255}}
 		lines[i].StrokeWidth = sw
 		x := float32(i * 20)
-		lines[i].StartPoint = fyne.NewPos(x, 10)
-		lines[i].ControlPoints = []fyne.Position{fyne.NewPos(x+5, 18), fyne.NewPos(x+8, 3)}
-		lines[i].EndPoint = fyne.NewPos(x+15, 10)
-		lines[i].Resize(fyne.NewSize(109, 28))
+		lines[i].StartPoint = granio.NewPos(x, 10)
+		lines[i].ControlPoints = []granio.Position{granio.NewPos(x+5, 18), granio.NewPos(x+8, 3)}
+		lines[i].EndPoint = granio.NewPos(x+15, 10)
+		lines[i].Resize(granio.NewSize(109, 28))
 	}
 	c.SetContent(container.NewWithoutLayout(lines[0], lines[1], lines[2], lines[3], lines[4]))
-	c.Resize(fyne.NewSize(109, 28))
+	c.Resize(granio.NewSize(109, 28))
 
 	p := software.NewPainter()
 	test.AssertImageMatches(t, "draw_bezier_curve_cubic_thin.png", p.Paint(c))
@@ -479,7 +479,7 @@ func TestPainter_paintPolygon(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(150+2*theme.Padding(), 150+2*theme.Padding()))
+	c.Resize(granio.NewSize(150+2*theme.Padding(), 150+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_polygon_3.png", p.Paint(c))
@@ -518,7 +518,7 @@ func TestPainter_paintRaster(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -533,7 +533,7 @@ func TestPainter_paintRaster_offsetBounds(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(50, 50))
+	c.Resize(granio.NewSize(50, 50))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -554,7 +554,7 @@ func TestPainter_paintRaster_scaled(t *testing.T) {
 	c.SetPadded(false)
 	c.SetContent(img)
 	c.SetScale(5.0)
-	c.Resize(fyne.NewSize(5, 5))
+	c.Resize(granio.NewSize(5, 5))
 	p := software.NewPainter()
 
 	target := p.Paint(c)
@@ -564,36 +564,36 @@ func TestPainter_paintRaster_scaled(t *testing.T) {
 func TestPainter_paintRectangle_clipped(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	red1 := canvas.NewRectangle(color.NRGBA{R: 200, G: 0, B: 0, A: 255})
-	red1.SetMinSize(fyne.NewSize(20, 20))
+	red1.SetMinSize(granio.NewSize(20, 20))
 	red2 := canvas.NewRectangle(color.NRGBA{R: 150, G: 0, B: 0, A: 255})
-	red2.SetMinSize(fyne.NewSize(20, 20))
+	red2.SetMinSize(granio.NewSize(20, 20))
 	red3 := canvas.NewRectangle(color.NRGBA{R: 100, G: 0, B: 0, A: 255})
-	red3.SetMinSize(fyne.NewSize(20, 20))
+	red3.SetMinSize(granio.NewSize(20, 20))
 	reds := container.NewHBox(red1, red2, red3)
 	green1 := canvas.NewRectangle(color.NRGBA{R: 0, G: 200, B: 0, A: 255})
-	green1.SetMinSize(fyne.NewSize(20, 20))
+	green1.SetMinSize(granio.NewSize(20, 20))
 	green2 := canvas.NewRectangle(color.NRGBA{R: 0, G: 150, B: 0, A: 255})
-	green2.SetMinSize(fyne.NewSize(20, 20))
+	green2.SetMinSize(granio.NewSize(20, 20))
 	green3 := canvas.NewRectangle(color.NRGBA{R: 0, G: 100, B: 0, A: 255})
-	green3.SetMinSize(fyne.NewSize(20, 20))
+	green3.SetMinSize(granio.NewSize(20, 20))
 	greens := container.NewHBox(green1, green2, green3)
 	blue1 := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 200, A: 255})
-	blue1.SetMinSize(fyne.NewSize(20, 20))
+	blue1.SetMinSize(granio.NewSize(20, 20))
 	blue2 := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 150, A: 255})
-	blue2.SetMinSize(fyne.NewSize(20, 20))
+	blue2.SetMinSize(granio.NewSize(20, 20))
 	blue3 := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 100, A: 255})
-	blue3.SetMinSize(fyne.NewSize(20, 20))
+	blue3.SetMinSize(granio.NewSize(20, 20))
 	blues := container.NewHBox(blue1, blue2, blue3)
 	box := container.NewVBox(reds, greens, blues)
 	scroll := container.NewScroll(box)
-	scroll.Move(fyne.NewPos(10, 10))
-	scroll.Resize(fyne.NewSize(50, 50))
-	scroll.Scrolled(&fyne.ScrollEvent{Scrolled: fyne.NewDelta(-10, -10)})
+	scroll.Move(granio.NewPos(10, 10))
+	scroll.Resize(granio.NewSize(50, 50))
+	scroll.Scrolled(&granio.ScrollEvent{Scrolled: granio.NewDelta(-10, -10)})
 	cont := container.NewWithoutLayout(scroll)
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(cont)
-	c.Resize(fyne.NewSize(70, 70))
+	c.Resize(granio.NewSize(70, 70))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_rect_clipped.png", p.Paint(c))
@@ -608,7 +608,7 @@ func TestPainter_paintRectangle_stroke(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_rectangle_stroke.png", p.Paint(c))
@@ -636,7 +636,7 @@ func TestPainter_paintRectangle_perCornerRadius(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_rectangle_per_corner_radius.png", p.Paint(c))
@@ -660,16 +660,16 @@ func TestPainter_paintRectangle_shadow(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	obj := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 0, A: 150})
 	obj.Shadow.Color = &color.RGBA{R: 0xFF, G: 0x33, B: 0x33, A: 0xFF}
-	obj.Shadow.Offset = fyne.NewPos(3, -4)
+	obj.Shadow.Offset = granio.NewPos(3, -4)
 	obj.Shadow.BlurRadius = 8
 	obj.Shadow.Variant = canvas.BoxShadow
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
-	obj.Resize(fyne.NewSize(150, 150))
-	obj.Move(fyne.NewPos(12, 18))
+	c.Resize(granio.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
+	obj.Resize(granio.NewSize(150, 150))
+	obj.Move(granio.NewPos(12, 18))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_rectangle_box_shadow.png", p.Paint(c))
@@ -693,15 +693,15 @@ func TestPainter_paintRectangle_stroke_shadow(t *testing.T) {
 	obj.StrokeWidth = 2
 	obj.StrokeColor = color.White
 	obj.Shadow.Color = &color.RGBA{R: 0xFF, G: 0x33, B: 0x33, A: 0xFF}
-	obj.Shadow.Offset = fyne.NewPos(0, 0)
+	obj.Shadow.Offset = granio.NewPos(0, 0)
 	obj.Shadow.BlurRadius = 10
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
-	obj.Resize(fyne.NewSize(150, 150))
-	obj.Move(fyne.NewPos(15, 15))
+	c.Resize(granio.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
+	obj.Resize(granio.NewSize(150, 150))
+	obj.Move(granio.NewPos(15, 15))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_rectangle_stroke_drop_shadow.png", p.Paint(c))
@@ -724,16 +724,16 @@ func TestPainter_paintRectangle_shadow_spread(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	obj := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 0, A: 150})
 	obj.Shadow.Color = &color.RGBA{R: 0xFF, G: 0x33, B: 0x33, A: 0xFF}
-	obj.Shadow.Offset = fyne.NewPos(-5, 5)
+	obj.Shadow.Offset = granio.NewPos(-5, 5)
 	obj.Shadow.BlurRadius = 5
 	obj.Shadow.Variant = canvas.DropShadow
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
-	obj.Resize(fyne.NewSize(150, 150))
-	obj.Move(fyne.NewPos(18, 12))
+	c.Resize(granio.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
+	obj.Resize(granio.NewSize(150, 150))
+	obj.Move(granio.NewPos(18, 12))
 	p := software.NewPainter()
 
 	obj.Shadow.Spread = 0
@@ -753,16 +753,16 @@ func TestPainter_paintCircle_shadow_spread(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	obj := canvas.NewCircle(color.NRGBA{R: 0, G: 0, B: 0, A: 150})
 	obj.Shadow.Color = &color.RGBA{R: 0xFF, G: 0x33, B: 0x33, A: 0xFF}
-	obj.Shadow.Offset = fyne.NewPos(5, -5)
+	obj.Shadow.Offset = granio.NewPos(5, -5)
 	obj.Shadow.BlurRadius = 7
 	obj.Shadow.Variant = canvas.BoxShadow
 
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
-	obj.Resize(fyne.NewSize(150, 150))
-	obj.Move(fyne.NewPos(12, 18))
+	c.Resize(granio.NewSize(170+2*theme.Padding(), 170+2*theme.Padding()))
+	obj.Resize(granio.NewSize(150, 150))
+	obj.Move(granio.NewPos(12, 18))
 	p := software.NewPainter()
 
 	obj.Shadow.Spread = 0
@@ -781,14 +781,14 @@ func TestPainter_paintCircle_shadow_spread(t *testing.T) {
 func TestPainter_paintText_clipped(t *testing.T) {
 	test.ApplyTheme(t, test.Theme())
 	scroll := container.NewScroll(widget.NewLabel("some text\nis here\nand here"))
-	scroll.Move(fyne.NewPos(10, 10))
-	scroll.Resize(fyne.NewSize(50, 50))
-	scroll.Scrolled(&fyne.ScrollEvent{Scrolled: fyne.NewDelta(-10, -10)})
+	scroll.Move(granio.NewPos(10, 10))
+	scroll.Resize(granio.NewSize(50, 50))
+	scroll.Scrolled(&granio.ScrollEvent{Scrolled: granio.NewDelta(-10, -10)})
 	cont := container.NewWithoutLayout(scroll)
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(cont)
-	c.Resize(fyne.NewSize(70, 70))
+	c.Resize(granio.NewSize(70, 70))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_text_clipped.png", p.Paint(c))
@@ -803,7 +803,7 @@ func TestPainter_paintText_boldItalicClip(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(text)
-	c.Resize(fyne.NewSize(70, text.MinSize().Height))
+	c.Resize(granio.NewSize(70, text.MinSize().Height))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_text_bolditalic.png", p.Paint(c))
@@ -816,7 +816,7 @@ func TestPainter_paintText_scale2(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(text)
-	c.Resize(fyne.NewSize(70, text.MinSize().Height))
+	c.Resize(granio.NewSize(70, text.MinSize().Height))
 
 	c.SetScale(2)
 	p := software.NewPainter()
@@ -831,42 +831,42 @@ func TestPainter_paintArbitraryPolygon(t *testing.T) {
 	c.SetPadded(true)
 
 	// Simple Triangle
-	trianglePoints := []fyne.Position{
-		fyne.NewPos(50, 10),
-		fyne.NewPos(90, 90),
-		fyne.NewPos(10, 90),
+	trianglePoints := []granio.Position{
+		granio.NewPos(50, 10),
+		granio.NewPos(90, 90),
+		granio.NewPos(10, 90),
 	}
 	poly := canvas.NewArbitraryPolygon(trianglePoints, color.Black)
-	poly.Resize(fyne.NewSize(100, 100))
+	poly.Resize(granio.NewSize(100, 100))
 	c.SetContent(poly)
-	c.Resize(fyne.NewSize(100+2*theme.Padding(), 100+2*theme.Padding()))
+	c.Resize(granio.NewSize(100+2*theme.Padding(), 100+2*theme.Padding()))
 	test.AssertImageMatches(t, "draw_arbitrary_polygon_triangle.png", p.Paint(c))
 
 	// Concave Shape (F-shape)
-	concavePoints := []fyne.Position{
-		fyne.NewPos(10, 10),
-		fyne.NewPos(90, 10),
-		fyne.NewPos(90, 30),
-		fyne.NewPos(40, 30),
-		fyne.NewPos(40, 45),
-		fyne.NewPos(80, 45),
-		fyne.NewPos(80, 65),
-		fyne.NewPos(40, 65),
-		fyne.NewPos(40, 90),
-		fyne.NewPos(10, 90),
+	concavePoints := []granio.Position{
+		granio.NewPos(10, 10),
+		granio.NewPos(90, 10),
+		granio.NewPos(90, 30),
+		granio.NewPos(40, 30),
+		granio.NewPos(40, 45),
+		granio.NewPos(80, 45),
+		granio.NewPos(80, 65),
+		granio.NewPos(40, 65),
+		granio.NewPos(40, 90),
+		granio.NewPos(10, 90),
 	}
 	poly.Points = concavePoints
 	poly.FillColor = color.NRGBA{R: 0, G: 0, B: 255, A: 255}
 	test.AssertImageMatches(t, "draw_arbitrary_polygon_concave.png", p.Paint(c))
 
 	// Heart with Mixed Corner Radii
-	heartPoints := []fyne.Position{
-		fyne.NewPos(50, 25),
-		fyne.NewPos(80, 5),
-		fyne.NewPos(100, 40),
-		fyne.NewPos(50, 95),
-		fyne.NewPos(0, 40),
-		fyne.NewPos(20, 5),
+	heartPoints := []granio.Position{
+		granio.NewPos(50, 25),
+		granio.NewPos(80, 5),
+		granio.NewPos(100, 40),
+		granio.NewPos(50, 95),
+		granio.NewPos(0, 40),
+		granio.NewPos(20, 5),
 	}
 
 	poly.Points = heartPoints
@@ -875,11 +875,11 @@ func TestPainter_paintArbitraryPolygon(t *testing.T) {
 	test.AssertImageMatches(t, "draw_arbitrary_polygon_mixed_radii.png", p.Paint(c))
 
 	// Maximum Vertices (16) - a rough circle
-	maxPoints := []fyne.Position{
-		fyne.NewPos(50, 10), fyne.NewPos(65, 13), fyne.NewPos(78, 22), fyne.NewPos(87, 35),
-		fyne.NewPos(90, 50), fyne.NewPos(87, 65), fyne.NewPos(78, 78), fyne.NewPos(65, 87),
-		fyne.NewPos(50, 90), fyne.NewPos(35, 87), fyne.NewPos(22, 78), fyne.NewPos(13, 65),
-		fyne.NewPos(10, 50), fyne.NewPos(13, 35), fyne.NewPos(22, 22), fyne.NewPos(35, 13),
+	maxPoints := []granio.Position{
+		granio.NewPos(50, 10), granio.NewPos(65, 13), granio.NewPos(78, 22), granio.NewPos(87, 35),
+		granio.NewPos(90, 50), granio.NewPos(87, 65), granio.NewPos(78, 78), granio.NewPos(65, 87),
+		granio.NewPos(50, 90), granio.NewPos(35, 87), granio.NewPos(22, 78), granio.NewPos(13, 65),
+		granio.NewPos(10, 50), granio.NewPos(13, 35), granio.NewPos(22, 22), granio.NewPos(35, 13),
 	}
 	poly.Points = maxPoints
 	poly.CornerRadii = nil // Reset
@@ -895,10 +895,10 @@ func TestPainter_paintArbitraryPolygon(t *testing.T) {
 	test.AssertImageMatches(t, "draw_arbitrary_polygon_stroke_fill_rounded.png", p.Paint(c))
 
 	// Triangle with normalized points
-	poly.Points = []fyne.Position{
-		fyne.NewPos(0.5, 0.1),
-		fyne.NewPos(0.9, 0.9),
-		fyne.NewPos(0.1, 0.9),
+	poly.Points = []granio.Position{
+		granio.NewPos(0.5, 0.1),
+		granio.NewPos(0.9, 0.9),
+		granio.NewPos(0.1, 0.9),
 	}
 	poly.NormalizedPoints = true
 	test.AssertImageMatches(t, "draw_arbitrary_polygon_stroke_fill_rounded.png", p.Paint(c))
@@ -911,19 +911,19 @@ func TestPainter_paintEllipse(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(true)
 	c.SetContent(obj)
-	c.Resize(fyne.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
+	c.Resize(granio.NewSize(70+2*theme.Padding(), 70+2*theme.Padding()))
 	p := software.NewPainter()
 
 	test.AssertImageMatches(t, "draw_circle.png", p.Paint(c))
 
-	obj.Resize(fyne.NewSize(70, 35))
+	obj.Resize(granio.NewSize(70, 35))
 	test.AssertImageMatches(t, "draw_ellipse_wide.png", p.Paint(c))
 
 	obj.StrokeColor = color.RGBA{R: 0xFF, G: 0x33, B: 0x33, A: 0xFF}
 	obj.StrokeWidth = 4
 	test.AssertImageMatches(t, "draw_ellipse_wide_stroke.png", p.Paint(c))
 
-	obj.Resize(fyne.NewSize(35, 70))
+	obj.Resize(granio.NewSize(35, 70))
 	obj.StrokeWidth = 0
 	test.AssertImageMatches(t, "draw_ellipse_narrow.png", p.Paint(c))
 

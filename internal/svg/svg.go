@@ -14,11 +14,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fyne-io/oksvg"
+	"github.com/Uzer007-admin/granio-oksvg"
 	"github.com/srwiley/rasterx"
 
-	"fyne.io/fyne/v2"
-	col "fyne.io/fyne/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
 )
 
 const (
@@ -110,7 +110,7 @@ func IsFileSVG(path string) bool {
 }
 
 // IsResourceSVG checks if the resource is an SVG or not.
-func IsResourceSVG(res fyne.Resource) bool {
+func IsResourceSVG(res granio.Resource) bool {
 	if IsFileSVG(res.Name()) {
 		return true
 	}

@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -35,7 +35,7 @@ func TestEllipse_Resize(t *testing.T) {
 	assert.True(t, start.Height == 0)
 	assert.True(t, start.Width == 0)
 
-	ellipse.Resize(fyne.NewSize(targetWidth, targetHeight))
+	ellipse.Resize(granio.NewSize(targetWidth, targetHeight))
 	target := ellipse.Size()
 	assert.True(t, target.Height == targetHeight)
 	assert.True(t, target.Width == targetWidth)
@@ -43,12 +43,12 @@ func TestEllipse_Resize(t *testing.T) {
 
 func TestEllipse_Move(t *testing.T) {
 	ellipse := canvas.NewEllipse(color.White)
-	ellipse.Resize(fyne.NewSize(80, 50))
+	ellipse.Resize(granio.NewSize(80, 50))
 
-	start := fyne.Position{X: 0, Y: 0}
+	start := granio.Position{X: 0, Y: 0}
 	assert.Equal(t, ellipse.Position(), start)
 
-	target := fyne.Position{X: 10, Y: 75}
+	target := granio.Position{X: 10, Y: 75}
 	ellipse.Move(target)
 	assert.Equal(t, ellipse.Position(), target)
 }
@@ -60,17 +60,17 @@ func TestEllipse_Stroke(t *testing.T) {
 		StrokeWidth: 2,
 	}
 
-	ellipse.Resize(fyne.NewSize(50, 90))
+	ellipse.Resize(granio.NewSize(50, 90))
 	test.AssertObjectRendersToMarkup(t, "ellipse.xml", ellipse)
 
 	c := software.NewCanvas()
 	c.SetContent(ellipse)
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 
-	ellipse.Resize(fyne.NewSize(50, 30))
+	ellipse.Resize(granio.NewSize(50, 30))
 	test.AssertRendersToImage(t, "ellipse_stroke.png", c)
 
-	ellipse.Resize(fyne.NewSize(30, 50))
+	ellipse.Resize(granio.NewSize(30, 50))
 	ellipse.StrokeWidth = 0
 	test.AssertRendersToImage(t, "ellipse.png", c)
 }

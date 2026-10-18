@@ -3,26 +3,26 @@ package mobile
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 type menuLabel struct {
 	widget.BaseWidget
 
-	menu   *fyne.Menu
-	bar    *fyne.Container
+	menu   *granio.Menu
+	bar    *granio.Container
 	canvas *canvas
 }
 
-func (m *menuLabel) Tapped(*fyne.PointEvent) {
-	pos := fyne.CurrentApp().Driver().AbsolutePositionForObject(m)
+func (m *menuLabel) Tapped(*granio.PointEvent) {
+	pos := granio.CurrentApp().Driver().AbsolutePositionForObject(m)
 	menu := widget.NewPopUpMenu(m.menu, m.canvas)
-	menu.ShowAtPosition(fyne.NewPos(pos.X+m.Size().Width, pos.Y))
+	menu.ShowAtPosition(granio.NewPos(pos.X+m.Size().Width, pos.Y))
 
 	menuDismiss := menu.OnDismiss // this dismisses the menu stack
 	menu.OnDismiss = func() {
@@ -32,21 +32,21 @@ func (m *menuLabel) Tapped(*fyne.PointEvent) {
 	}
 }
 
-func (m *menuLabel) CreateRenderer() fyne.WidgetRenderer {
+func (m *menuLabel) CreateRenderer() granio.WidgetRenderer {
 	label := widget.NewLabel(m.menu.Label)
 	box := container.NewHBox(layout.NewSpacer(), label, layout.NewSpacer(), widget.NewIcon(theme.MenuExpandIcon()))
 
-	return &menuLabelRenderer{menu: m, content: box, objects: []fyne.CanvasObject{box}}
+	return &menuLabelRenderer{menu: m, content: box, objects: []granio.CanvasObject{box}}
 }
 
-func newMenuLabel(item *fyne.Menu, parent *fyne.Container, c *canvas) *menuLabel {
+func newMenuLabel(item *granio.Menu, parent *granio.Container, c *canvas) *menuLabel {
 	l := &menuLabel{menu: item, bar: parent, canvas: c}
 	l.ExtendBaseWidget(l)
 	return l
 }
 
-func (c *canvas) showMenu(menu *fyne.MainMenu) {
-	var panel *fyne.Container
+func (c *canvas) showMenu(menu *granio.MainMenu) {
+	var panel *granio.Container
 	top := container.NewHBox(widget.NewButtonWithIcon("", theme.CancelIcon(), func() {
 		panel.Hide()
 		c.setMenu(nil)
@@ -64,16 +64,16 @@ func (c *canvas) showMenu(menu *fyne.MainMenu) {
 
 	safePos, safeSize := c.InteractiveArea()
 	bg.Move(safePos)
-	bg.Resize(fyne.NewSize(panel.MinSize().Width+theme.Padding(), safeSize.Height))
+	bg.Resize(granio.NewSize(panel.MinSize().Width+theme.Padding(), safeSize.Height))
 	panel.Move(safePos)
-	panel.Resize(fyne.NewSize(panel.MinSize().Width+theme.Padding(), safeSize.Height))
-	shadow.Resize(fyne.NewSize(theme.Padding()/2, safeSize.Height))
-	shadow.Move(fyne.NewPos(panel.Size().Width+safePos.X, safePos.Y))
+	panel.Resize(granio.NewSize(panel.MinSize().Width+theme.Padding(), safeSize.Height))
+	shadow.Resize(granio.NewSize(theme.Padding()/2, safeSize.Height))
+	shadow.Move(granio.NewPos(panel.Size().Width+safePos.X, safePos.Y))
 
 	c.setMenu(container.NewWithoutLayout(bg, panel, shadow))
 }
 
-func (d *driver) findMenu(win *window) *fyne.MainMenu {
+func (d *driver) findMenu(win *window) *granio.MainMenu {
 	if win.menu != nil {
 		return win.menu
 	}
@@ -98,8 +98,8 @@ func (d *driver) findMenu(win *window) *fyne.MainMenu {
 
 type menuLabelRenderer struct {
 	menu    *menuLabel
-	content *fyne.Container
-	objects []fyne.CanvasObject
+	content *granio.Container
+	objects []granio.CanvasObject
 }
 
 func (*menuLabelRenderer) BackgroundColor() color.Color {
@@ -109,15 +109,15 @@ func (*menuLabelRenderer) BackgroundColor() color.Color {
 func (*menuLabelRenderer) Destroy() {
 }
 
-func (m *menuLabelRenderer) Layout(size fyne.Size) {
+func (m *menuLabelRenderer) Layout(size granio.Size) {
 	m.content.Resize(size)
 }
 
-func (m *menuLabelRenderer) MinSize() fyne.Size {
+func (m *menuLabelRenderer) MinSize() granio.Size {
 	return m.content.MinSize()
 }
 
-func (m *menuLabelRenderer) Objects() []fyne.CanvasObject {
+func (m *menuLabelRenderer) Objects() []granio.CanvasObject {
 	return m.objects
 }
 

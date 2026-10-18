@@ -1,0 +1,117 @@
+{
+  "Capabilities": {
+    "OSBackdrops": 63,
+    "RendererBackdrops": 63,
+    "OSKnown": true,
+    "RendererKnown": true,
+    "SurfaceKnown": true,
+    "TransparentSurface": true,
+    "AlphaSurface": true,
+    "CompositorAvailable": true,
+    "AlphaBits": 8,
+    "CanChangeWithoutRecreate": true,
+    "Generation": 1,
+    "OSBuild": 26300,
+    "Backend": 2
+  },
+  "Samples": [
+    {
+      "Mode": 1,
+      "Status": {
+        "RequestID": 2,
+        "Phase": 1,
+        "Requested": 1,
+        "Selected": 1,
+        "Backend": 2,
+        "SurfaceReady": true,
+        "NativeAccepted": true,
+        "Reason": 0,
+        "NativeCode": 0,
+        "PreparedFrames": 2,
+        "FirstFrameBeforeShow": false
+      },
+      "RedBase": [
+        240,
+        243,
+        249
+      ],
+      "BlueBase": [
+        240,
+        243,
+        249
+      ],
+      "BackgroundDelta": 0,
+      "AlphaError": 1
+    },
+    {
+      "Mode": 2,
+      "Status": {
+        "RequestID": 3,
+        "Phase": 1,
+        "Requested": 2,
+        "Selected": 2,
+        "Backend": 2,
+        "SurfaceReady": true,
+        "NativeAccepted": true,
+        "Reason": 0,
+        "NativeCode": 0,
+        "PreparedFrames": 2,
+        "FirstFrameBeforeShow": false
+      },
+      "RedBase": [
+        213,
+        219,
+        228
+      ],
+      "BlueBase": [
+        213,
+        219,
+        228
+      ],
+      "BackgroundDelta": 0,
+      "AlphaError": 1
+    },
+    {
+      "Mode": 3,
+      "Status": {
+        "RequestID": 4,
+        "Phase": 1,
+        "Requested": 3,
+        "Selected": 3,
+        "Backend": 2,
+        "SurfaceReady": true,
+        "NativeAccepted": true,
+        "Reason": 0,
+        "NativeCode": 0,
+        "PreparedFrames": 2,
+        "FirstFrameBeforeShow": false
+      },
+      "RedBase": [
+        242,
+        138,
+        132
+      ],
+      "BlueBase": [
+        139,
+        153,
+        244
+      ],
+      "BackgroundDelta": 76.66666666666667,
+      "AlphaError": 0.75
+    }
+  ],
+  "AcrylicCheckerDeviation": 0.4485622573984974,
+  "RawCheckerDeviation": 118.99957688813669,
+  "FirstShowBase": [
+    240,
+    243,
+    249
+  ],
+  "OpaqueBase": [
+    68,
+    68,
+    68
+  ],
+  "FirstFramePrepared": true,
+  "NativeWindowPreserved": true
+}

@@ -5,11 +5,11 @@ import (
 	"image/color"
 	"image/draw"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Raster)(nil)
+var _ granio.CanvasObject = (*Raster)(nil)
 
 // Raster describes a raster image area that can render in a Fyne canvas
 type Raster struct {
@@ -39,7 +39,7 @@ func (r *Raster) Hide() {
 }
 
 // Move the raster to a new position, relative to its parent / canvas
-func (r *Raster) Move(pos fyne.Position) {
+func (r *Raster) Move(pos granio.Position) {
 	if r.Position() == pos {
 		return
 	}
@@ -51,7 +51,7 @@ func (r *Raster) Move(pos fyne.Position) {
 
 // Resize on a raster image causes the new size to be set and then calls Refresh.
 // This causes the underlying data to be recalculated and a new output to be drawn.
-func (r *Raster) Resize(s fyne.Size) {
+func (r *Raster) Resize(s granio.Size) {
 	if s == r.Size() {
 		return
 	}

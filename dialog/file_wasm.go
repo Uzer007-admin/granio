@@ -3,14 +3,14 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func (f *fileDialog) loadPlaces() []fyne.CanvasObject {
+func (f *fileDialog) loadPlaces() []granio.CanvasObject {
 	return nil
 }
 
-func isHidden(file fyne.URI) bool {
+func isHidden(file granio.URI) bool {
 	return false
 }
 
@@ -28,6 +28,6 @@ func (f *fileDialog) getPlaces() []favoriteItem {
 	return []favoriteItem{}
 }
 
-func getFavoriteLocation(homeURI fyne.URI, name string) (fyne.URI, error) {
+func getFavoriteLocation(homeURI granio.URI, name string) (granio.URI, error) {
 	return nil, nil
 }

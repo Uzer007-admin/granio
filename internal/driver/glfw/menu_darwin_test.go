@@ -10,8 +10,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
 )
 
 func TestDarwinMenu(t *testing.T) {
@@ -34,34 +34,34 @@ func TestDarwinMenu(t *testing.T) {
 		assert.True(t, testNSMenuItemIsSeparatorItem(item), "item is expected to be a separator")
 	}
 
-	itemNew := fyne.NewMenuItem("New", func() { lastAction = "new" })
-	itemNew.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyN, Modifier: fyne.KeyModifierShortcutDefault}
-	itemOpen := fyne.NewMenuItem("Open", func() { lastAction = "open" })
-	itemOpen.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyO, Modifier: fyne.KeyModifierAlt}
-	itemRecent := fyne.NewMenuItem("Recent", nil)
-	itemFoo := fyne.NewMenuItem("Foo", func() { lastAction = "foo" })
-	itemRecent.ChildMenu = fyne.NewMenu("", itemFoo)
-	itemAbout := fyne.NewMenuItem("About", func() { lastAction = "about" })
-	menuFile := fyne.NewMenu("File", itemNew, itemOpen, fyne.NewMenuItemSeparator(), itemRecent, itemAbout)
+	itemNew := granio.NewMenuItem("New", func() { lastAction = "new" })
+	itemNew.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyN, Modifier: granio.KeyModifierShortcutDefault}
+	itemOpen := granio.NewMenuItem("Open", func() { lastAction = "open" })
+	itemOpen.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyO, Modifier: granio.KeyModifierAlt}
+	itemRecent := granio.NewMenuItem("Recent", nil)
+	itemFoo := granio.NewMenuItem("Foo", func() { lastAction = "foo" })
+	itemRecent.ChildMenu = granio.NewMenu("", itemFoo)
+	itemAbout := granio.NewMenuItem("About", func() { lastAction = "about" })
+	menuFile := granio.NewMenu("File", itemNew, itemOpen, granio.NewMenuItemSeparator(), itemRecent, itemAbout)
 
-	itemHelp := fyne.NewMenuItem("Help", func() { lastAction = "Help!!!" })
-	itemHelp.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyH, Modifier: fyne.KeyModifierControl}
-	itemHelpMe := fyne.NewMenuItem("Help Me", func() { lastAction = "Help me!!!" })
-	itemHelpMe.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyH, Modifier: fyne.KeyModifierShift}
-	menuHelp := fyne.NewMenu("Help", itemHelp, itemHelpMe)
+	itemHelp := granio.NewMenuItem("Help", func() { lastAction = "Help!!!" })
+	itemHelp.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyH, Modifier: granio.KeyModifierControl}
+	itemHelpMe := granio.NewMenuItem("Help Me", func() { lastAction = "Help me!!!" })
+	itemHelpMe.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyH, Modifier: granio.KeyModifierShift}
+	menuHelp := granio.NewMenu("Help", itemHelp, itemHelpMe)
 
-	itemHelloWorld := fyne.NewMenuItem("Hello World", func() { lastAction = "Hello World!" })
-	itemHelloWorld.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyH, Modifier: fyne.KeyModifierControl | fyne.KeyModifierAlt | fyne.KeyModifierShift | fyne.KeyModifierSuper}
-	itemPrefs := fyne.NewMenuItem("Preferences", func() { lastAction = "prefs" })
-	itemMore := fyne.NewMenuItem("More", func() { lastAction = "more" })
-	itemMorePrefs := fyne.NewMenuItem("Preferences…", func() { lastAction = "more prefs" })
-	menuMore := fyne.NewMenu("More Stuff", itemHelloWorld, itemPrefs, itemMore, itemMorePrefs)
+	itemHelloWorld := granio.NewMenuItem("Hello World", func() { lastAction = "Hello World!" })
+	itemHelloWorld.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyH, Modifier: granio.KeyModifierControl | granio.KeyModifierAlt | granio.KeyModifierShift | granio.KeyModifierSuper}
+	itemPrefs := granio.NewMenuItem("Preferences", func() { lastAction = "prefs" })
+	itemMore := granio.NewMenuItem("More", func() { lastAction = "more" })
+	itemMorePrefs := granio.NewMenuItem("Preferences…", func() { lastAction = "more prefs" })
+	menuMore := granio.NewMenu("More Stuff", itemHelloWorld, itemPrefs, itemMore, itemMorePrefs)
 
-	itemSettings := fyne.NewMenuItem("Settings", func() { lastAction = "settings" })
-	itemMoreSetings := fyne.NewMenuItem("Settings…", func() { lastAction = "more settings" })
-	menuSettings := fyne.NewMenu("Settings", itemSettings, fyne.NewMenuItemSeparator(), itemMoreSetings)
+	itemSettings := granio.NewMenuItem("Settings", func() { lastAction = "settings" })
+	itemMoreSetings := granio.NewMenuItem("Settings…", func() { lastAction = "more settings" })
+	menuSettings := granio.NewMenu("Settings", itemSettings, granio.NewMenuItemSeparator(), itemMoreSetings)
 
-	mainMenu := fyne.NewMainMenu(menuFile, menuHelp, menuMore, menuSettings)
+	mainMenu := granio.NewMainMenu(menuFile, menuHelp, menuMore, menuSettings)
 	runOnMain(func() {
 		setupNativeMenu(w.window, mainMenu)
 	})
@@ -137,119 +137,119 @@ func TestDarwinMenu_specialKeyShortcuts(t *testing.T) {
 	defer setExceptionCallback(nil)
 
 	for name, tt := range map[string]struct {
-		key     fyne.KeyName
+		key     granio.KeyName
 		wantKey string
 	}{
 		"Backspace": {
-			key:     fyne.KeyBackspace,
+			key:     granio.KeyBackspace,
 			wantKey: "\x08", // NSBackspaceCharacter
 		},
 		"Delete": {
-			key:     fyne.KeyDelete,
+			key:     granio.KeyDelete,
 			wantKey: "\x7f", // NSDeleteCharacter
 		},
 		"Down": {
-			key:     fyne.KeyDown,
+			key:     granio.KeyDown,
 			wantKey: "\uf701", // NSDownArrowFunctionKey
 		},
 		"End": {
-			key:     fyne.KeyEnd,
+			key:     granio.KeyEnd,
 			wantKey: "\uf72b", // NSEndFunctionKey
 		},
 		"Enter": {
-			key:     fyne.KeyEnter,
+			key:     granio.KeyEnter,
 			wantKey: "\x03", // NSEnterCharacter
 		},
 		"Escape": {
-			key:     fyne.KeyEscape,
+			key:     granio.KeyEscape,
 			wantKey: "\x1b", // escape
 		},
 		"F10": {
-			key:     fyne.KeyF10,
+			key:     granio.KeyF10,
 			wantKey: "\uf70d", // NSF10FunctionKey
 		},
 		"F11": {
-			key:     fyne.KeyF11,
+			key:     granio.KeyF11,
 			wantKey: "\uf70e", // NSF11FunctionKey
 		},
 		"F12": {
-			key:     fyne.KeyF12,
+			key:     granio.KeyF12,
 			wantKey: "\uf70f", // NSF12FunctionKey
 		},
 		"F1": {
-			key:     fyne.KeyF1,
+			key:     granio.KeyF1,
 			wantKey: "\uf704", // NSF1FunctionKey
 		},
 		"F2": {
-			key:     fyne.KeyF2,
+			key:     granio.KeyF2,
 			wantKey: "\uf705", // NSF2FunctionKey
 		},
 		"F3": {
-			key:     fyne.KeyF3,
+			key:     granio.KeyF3,
 			wantKey: "\uf706", // NSF3FunctionKey
 		},
 		"F4": {
-			key:     fyne.KeyF4,
+			key:     granio.KeyF4,
 			wantKey: "\uf707", // NSF4FunctionKey
 		},
 		"F5": {
-			key:     fyne.KeyF5,
+			key:     granio.KeyF5,
 			wantKey: "\uf708", // NSF5FunctionKey
 		},
 		"F6": {
-			key:     fyne.KeyF6,
+			key:     granio.KeyF6,
 			wantKey: "\uf709", // NSF6FunctionKey
 		},
 		"F7": {
-			key:     fyne.KeyF7,
+			key:     granio.KeyF7,
 			wantKey: "\uf70a", // NSF7FunctionKey
 		},
 		"F8": {
-			key:     fyne.KeyF8,
+			key:     granio.KeyF8,
 			wantKey: "\uf70b", // NSF8FunctionKey
 		},
 		"F9": {
-			key:     fyne.KeyF9,
+			key:     granio.KeyF9,
 			wantKey: "\uf70c", // NSF9FunctionKey
 		},
 		"Home": {
-			key:     fyne.KeyHome,
+			key:     granio.KeyHome,
 			wantKey: "\uf729", // NSHomeFunctionKey
 		},
 		"Insert": {
-			key:     fyne.KeyInsert,
+			key:     granio.KeyInsert,
 			wantKey: "\uf727", // NSInsertFunctionKey
 		},
 		"Left": {
-			key:     fyne.KeyLeft,
+			key:     granio.KeyLeft,
 			wantKey: "\uf702", // NSLeftArrowFunctionKey
 		},
 		"PageDown": {
-			key:     fyne.KeyPageDown,
+			key:     granio.KeyPageDown,
 			wantKey: "\uf72d", // NSPageDownFunctionKey
 		},
 		"PageUp": {
-			key:     fyne.KeyPageUp,
+			key:     granio.KeyPageUp,
 			wantKey: "\uf72c", // NSPageUpFunctionKey
 		},
 		"Return": {
-			key:     fyne.KeyReturn,
+			key:     granio.KeyReturn,
 			wantKey: "\n",
 		},
 		"Right": {
-			key:     fyne.KeyRight,
+			key:     granio.KeyRight,
 			wantKey: "\uf703", // NSRightArrowFunctionKey
 		},
 		"Space": {
-			key:     fyne.KeySpace,
+			key:     granio.KeySpace,
 			wantKey: " ",
 		},
 		"Tab": {
-			key:     fyne.KeyTab,
+			key:     granio.KeyTab,
 			wantKey: "\t",
 		},
 		"Up": {
-			key:     fyne.KeyUp,
+			key:     granio.KeyUp,
 			wantKey: "\uf700", // NSUpArrowFunctionKey
 		},
 	} {
@@ -258,10 +258,10 @@ func TestDarwinMenu_specialKeyShortcuts(t *testing.T) {
 				resetMainMenu()
 			})
 			w := createWindow("Test")
-			item := fyne.NewMenuItem("Special", func() {})
-			item.Shortcut = &desktop.CustomShortcut{KeyName: tt.key, Modifier: fyne.KeyModifierShortcutDefault}
-			menu := fyne.NewMenu("Special", item)
-			mainMenu := fyne.NewMainMenu(menu)
+			item := granio.NewMenuItem("Special", func() {})
+			item.Shortcut = &desktop.CustomShortcut{KeyName: tt.key, Modifier: granio.KeyModifierShortcutDefault}
+			menu := granio.NewMenu("Special", item)
+			mainMenu := granio.NewMainMenu(menu)
 			runOnMain(func() {
 				setupNativeMenu(w.window, mainMenu)
 			})
@@ -284,8 +284,8 @@ func TestDarwinMenu_focusChangeUpdatesNativeMenu(t *testing.T) {
 	w1 := createWindow("Test1")
 	w2 := createWindow("Test2")
 
-	menu1 := fyne.NewMainMenu(fyne.NewMenu("Menu1", fyne.NewMenuItem("Item1", func() {})))
-	menu2 := fyne.NewMainMenu(fyne.NewMenu("Menu2", fyne.NewMenuItem("Item2", func() {})))
+	menu1 := granio.NewMainMenu(granio.NewMenu("Menu1", granio.NewMenuItem("Item1", func() {})))
+	menu2 := granio.NewMainMenu(granio.NewMenu("Menu2", granio.NewMenuItem("Item2", func() {})))
 
 	runOnMain(func() {
 		w1.SetMainMenu(menu1)

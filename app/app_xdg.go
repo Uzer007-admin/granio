@@ -9,25 +9,23 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/godbus/dbus/v5"
-	"github.com/rymdport/portal/notification"
-	"github.com/rymdport/portal/openuri"
-	portalSettings "github.com/rymdport/portal/settings"
-	"github.com/rymdport/portal/settings/appearance"
+	"github.com/Uzer007-admin/dbus/v5"
+	"github.com/Uzer007-admin/dbus/v5/desktopportal/notification"
+	"github.com/Uzer007-admin/dbus/v5/desktopportal/openuri"
+	"github.com/Uzer007-admin/dbus/v5/desktopportal/settings/appearance"
 
-	"fyne.io/fyne/v2"
-	internalapp "fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-const systemTheme = fyne.ThemeVariant(99)
+const systemTheme = granio.ThemeVariant(99)
 
 func (*fyneApp) OpenURL(u *url.URL) error {
 	if build.IsFlatpak {
 		err := openuri.OpenURI("", u.String(), nil)
 		if err != nil {
-			fyne.LogError("Opening url in portal failed", err)
+			granio.LogError("Opening url in portal failed", err)
 		}
 		return err
 	}
@@ -38,7 +36,7 @@ func (*fyneApp) OpenURL(u *url.URL) error {
 }
 
 // fetch color variant from dbus portal desktop settings.
-func findFreedesktopColorScheme() fyne.ThemeVariant {
+func findFreedesktopColorScheme() granio.ThemeVariant {
 	colorScheme, err := appearance.GetColorScheme()
 	if err != nil {
 		return systemTheme
@@ -47,7 +45,7 @@ func findFreedesktopColorScheme() fyne.ThemeVariant {
 	return colorSchemeToThemeVariant(colorScheme)
 }
 
-func colorSchemeToThemeVariant(colorScheme appearance.ColorScheme) fyne.ThemeVariant {
+func colorSchemeToThemeVariant(colorScheme appearance.ColorScheme) granio.ThemeVariant {
 	switch colorScheme {
 	case appearance.Light:
 		return theme.VariantLight
@@ -59,18 +57,18 @@ func colorSchemeToThemeVariant(colorScheme appearance.ColorScheme) fyne.ThemeVar
 	return theme.VariantLight
 }
 
-func (a *fyneApp) SendNotification(n *fyne.Notification) {
+func (a *fyneApp) SendNotification(n *granio.Notification) {
 	if build.IsFlatpak {
 		err := a.sendNotificationThroughPortal(n)
 		if err != nil {
-			fyne.LogError("Sending notification using portal failed", err)
+			granio.LogError("Sending notification using portal failed", err)
 		}
 		return
 	}
 
 	conn, err := dbus.SessionBus() // shared connection, don't close
 	if err != nil {
-		fyne.LogError("Unable to connect to session D-Bus", err)
+		granio.LogError("Unable to connect to session D-Bus", err)
 		return
 	}
 
@@ -81,13 +79,13 @@ func (a *fyneApp) SendNotification(n *fyne.Notification) {
 	call := obj.Call("org.freedesktop.Notifications.Notify", 0, a.uniqueID, uint32(0),
 		appIcon, n.Title, n.Content, []string{}, map[string]dbus.Variant{}, timeout)
 	if call.Err != nil {
-		fyne.LogError("Failed to send message to bus", call.Err)
+		granio.LogError("Failed to send message to bus", call.Err)
 	}
 }
 
 // The freedesktop notification spec has no scheduling primitive, so scheduled
 // notifications use the in-process scheduler with cache-backed persistence.
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	return a.scheduleViaScheduler(n, when)
 }
 
@@ -99,7 +97,7 @@ func (a *fyneApp) CancelScheduledNotification(id string) error {
 var notificationID atomic.Uint64
 
 // See https://flatpak.github.io/xdg-desktop-portal/docs/#gdbus-org.freedesktop.portal.Notification.
-func (a *fyneApp) sendNotificationThroughPortal(n *fyne.Notification) error {
+func (a *fyneApp) sendNotificationThroughPortal(n *granio.Notification) error {
 	return notification.Add(
 		uint(notificationID.Add(1)),
 		notification.Content{
@@ -112,7 +110,7 @@ func (a *fyneApp) sendNotificationThroughPortal(n *fyne.Notification) error {
 
 // SetSystemTrayMenu creates a system tray item and attaches the specified menu.
 // By default, this will use the application icon.
-func (a *fyneApp) SetSystemTrayMenu(menu *fyne.Menu) {
+func (a *fyneApp) SetSystemTrayMenu(menu *granio.Menu) {
 	if desk, ok := a.Driver().(systrayDriver); ok { // don't use this on mobile tag
 		desk.SetSystemTrayMenu(menu)
 	}
@@ -120,7 +118,7 @@ func (a *fyneApp) SetSystemTrayMenu(menu *fyne.Menu) {
 
 // SetSystemTrayIcon sets a custom image for the system tray icon.
 // You should have previously called `SetSystemTrayMenu` to initialise the menu icon.
-func (a *fyneApp) SetSystemTrayIcon(icon fyne.Resource) {
+func (a *fyneApp) SetSystemTrayIcon(icon granio.Resource) {
 	if desk, ok := a.Driver().(systrayDriver); ok { // don't use this on mobile tag
 		desk.SetSystemTrayIcon(icon)
 	}
@@ -128,37 +126,19 @@ func (a *fyneApp) SetSystemTrayIcon(icon fyne.Resource) {
 
 // SetSystemTrayWindow assigns a window to be shown with the system tray menu is tapped.
 // You should have previously called `SetSystemTrayMenu` to initialise the menu icon.
-func (a *fyneApp) SetSystemTrayWindow(w fyne.Window) {
+func (a *fyneApp) SetSystemTrayWindow(w granio.Window) {
 	a.Driver().(systrayDriver).SetSystemTrayWindow(w)
 }
 
 func watchTheme(s *settings) {
-	go func() {
-		// Theme lookup hangs on some desktops. Update theme variant cache from within goroutine.
-		themeVariant := findFreedesktopColorScheme()
-		if themeVariant != systemTheme {
-			internalapp.CurrentVariant.Store(uint64(themeVariant))
-			fyne.Do(func() { s.applyVariant(themeVariant) })
-		}
-
-		err := portalSettings.OnSignalSettingChanged(func(changed portalSettings.Changed) {
-			if changed.Namespace == appearance.Namespace && changed.Key == "color-scheme" {
-				themeVariant := colorSchemeToThemeVariant(appearance.ColorScheme(changed.Value.(uint32))) //gosec:disable G115 -- Probably okay to cast uint32 to uint8 here.
-				internalapp.CurrentVariant.Store(uint64(themeVariant))
-				fyne.Do(func() { s.applyVariant(themeVariant) })
-			}
-		})
-		if err != nil {
-			fyne.LogError("failed to watch theme settings", err)
-		}
-	}()
+	s.startSystemAppearance()
 }
 
 func (*fyneApp) registerRepositories() {
 	// no-op
 }
 
-func (s *settings) applyVariant(variant fyne.ThemeVariant) {
+func (s *settings) applyVariant(variant granio.ThemeVariant) {
 	s.variant = variant
 	s.apply()
 }

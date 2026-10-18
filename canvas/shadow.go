@@ -3,7 +3,7 @@ package canvas
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // ShadowVariant indicates a variation of a shadow.
@@ -29,9 +29,9 @@ const (
 //
 // Since: 2.8
 type Shadow struct {
-	Color      color.Color   // Color of the shadow.
-	BlurRadius float32       // A value of 0 produces no blur, while larger values produce bigger and lighter shadow.
-	Spread     float32       // Spread of the shadow (how far out to draw before fading - negative values make it smaller).
-	Offset     fyne.Position // Offset of the shadow relative to the content. Positive values move the shadow to the right (x) and down (y) of the element.
-	Variant    ShadowVariant // Variation of shadow (DropShadow or BoxShadow).
+	Color      color.Color     // Color of the shadow.
+	BlurRadius float32         // A value of 0 produces no blur, while larger values produce bigger and lighter shadow.
+	Spread     float32         // Spread of the shadow (how far out to draw before fading - negative values make it smaller).
+	Offset     granio.Position // Offset of the shadow relative to the content. Positive values move the shadow to the right (x) and down (y) of the element.
+	Variant    ShadowVariant   // Variation of shadow (DropShadow or BoxShadow).
 }

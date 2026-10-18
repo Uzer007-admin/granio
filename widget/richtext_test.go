@@ -7,15 +7,15 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-func richTextRenderTexts(rich fyne.Widget) []*canvas.Text {
+func richTextRenderTexts(rich granio.Widget) []*canvas.Text {
 	renderer := cache.Renderer(rich).(*textRenderer)
 	texts := make([]*canvas.Text, len(renderer.Objects()))
 	for i, obj := range renderer.Objects() {
@@ -41,9 +41,9 @@ func richTextRowTexts(rich *RichText) []string {
 
 func trailingBoldErrorSegment() *TextSegment {
 	return &TextSegment{Style: RichTextStyle{
-		Alignment: fyne.TextAlignTrailing,
+		Alignment: granio.TextAlignTrailing,
 		ColorName: theme.ColorNameError,
-		TextStyle: fyne.TextStyle{Bold: true},
+		TextStyle: granio.TextStyle{Bold: true},
 	}}
 }
 
@@ -65,40 +65,40 @@ func TestText_Alignment(t *testing.T) {
 	seg := trailingBoldErrorSegment()
 	seg.Text = "Test"
 	text := NewRichText(seg)
-	assert.Equal(t, fyne.TextAlignTrailing, test.TempWidgetRenderer(t, text).Objects()[0].(*canvas.Text).Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, test.TempWidgetRenderer(t, text).Objects()[0].(*canvas.Text).Alignment)
 }
 
 func TestText_AlignmentInline(t *testing.T) {
 	seg1 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignTrailing,
+			Alignment: granio.TextAlignTrailing,
 		},
 		Text: "Thing 1",
 	}
 	seg2 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignTrailing,
+			Alignment: granio.TextAlignTrailing,
 			Inline:    true,
 		},
 		Text: "Thing 2",
 	}
 	seg3 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignTrailing,
+			Alignment: granio.TextAlignTrailing,
 			Inline:    true,
 		},
 		Text: "Thing 3",
 	}
 	text := NewRichText(seg1, seg2, seg3)
-	text.Resize(fyne.NewSize(150, 50))
+	text.Resize(granio.NewSize(150, 50))
 
 	r := test.TempWidgetRenderer(t, text)
 	obj1 := r.Objects()[0].(*canvas.Text)
 	right1 := obj1.Position().X + obj1.Size().Width
-	assert.Equal(t, fyne.TextAlignTrailing, obj1.Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, obj1.Alignment)
 	obj3 := r.Objects()[2].(*canvas.Text)
 	right3 := obj3.Position().X + obj3.Size().Width
-	assert.Equal(t, fyne.TextAlignTrailing, obj3.Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, obj3.Alignment)
 
 	assert.Equal(t, right1, right3)
 }
@@ -106,41 +106,41 @@ func TestText_AlignmentInline(t *testing.T) {
 func TestText_AlignmentInlineCenter(t *testing.T) {
 	seg1 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignCenter,
+			Alignment: granio.TextAlignCenter,
 		},
 		Text: "MMM",
 	}
 	seg2 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignCenter,
+			Alignment: granio.TextAlignCenter,
 			Inline:    true,
 		},
 		Text: "MMM",
 	}
 	seg3 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignCenter,
+			Alignment: granio.TextAlignCenter,
 			Inline:    true,
 		},
 		Text: "MMM",
 	}
 	seg4 := &TextSegment{
 		Style: RichTextStyle{
-			Alignment: fyne.TextAlignCenter,
+			Alignment: granio.TextAlignCenter,
 			Inline:    true,
 		},
 		Text: "MMM",
 	}
 	text := NewRichText(seg1, seg2, seg3, seg4)
-	text.Resize(fyne.NewSize(150, 50))
+	text.Resize(granio.NewSize(150, 50))
 
 	r := test.TempWidgetRenderer(t, text)
 	obj1 := r.Objects()[0].(*canvas.Text)
 	left1 := obj1.Position().X
-	assert.Equal(t, fyne.TextAlignCenter, obj1.Alignment)
+	assert.Equal(t, granio.TextAlignCenter, obj1.Alignment)
 	obj3 := r.Objects()[2].(*canvas.Text)
 	left3 := obj3.Position().X
-	assert.Equal(t, fyne.TextAlignCenter, obj3.Alignment)
+	assert.Equal(t, granio.TextAlignCenter, obj3.Alignment)
 
 	assert.Equal(t, left1, left3)
 }
@@ -222,10 +222,10 @@ func TestText_Scroll(t *testing.T) {
 
 	text4 := NewRichTextWithText("test1\ntest2")
 	text4.Scroll = widget.ScrollVerticalOnly
-	text4.Wrapping = fyne.TextWrapBreak
+	text4.Wrapping = granio.TextWrapBreak
 
-	text3.Resize(fyne.NewSize(32, 32))
-	text4.Resize(fyne.NewSize(32, 32))
+	text3.Resize(granio.NewSize(32, 32))
+	text4.Resize(granio.NewSize(32, 32))
 	assert.Less(t, text4.MinSize().Width, text3.MinSize().Width)
 	assert.Equal(t, text4.MinSize().Height, text3.MinSize().Height)
 
@@ -443,7 +443,7 @@ func TestText_Multiline(t *testing.T) {
 	)
 
 	w := test.NewTempWindow(t, text)
-	w.Resize(fyne.NewSize(64, 90))
+	w.Resize(granio.NewSize(64, 90))
 	test.AssertImageMatches(t, "richtext/richtext_multiline.png", w.Canvas().Capture())
 }
 
@@ -540,21 +540,21 @@ func TestText_splitLines(t *testing.T) {
 }
 
 func TestText_lineBounds(t *testing.T) {
-	measurer := func(text []rune) fyne.Size {
-		return fyne.MeasureText(string(text), 14, fyne.TextStyle{})
+	measurer := func(text []rune) granio.Size {
+		return granio.MeasureText(string(text), 14, granio.TextStyle{})
 	}
 	tests := []struct {
 		name     string
 		text     string
-		wrap     fyne.TextWrap
-		trunc    fyne.TextTruncation
+		wrap     granio.TextWrap
+		trunc    granio.TextTruncation
 		want     [][2]int
 		ellipses int
 	}{
 		{
 			name: "Empty_WrapOff",
 			text: "",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 0},
 			},
@@ -562,7 +562,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Empty_Truncate",
 			text: "",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 0},
 			},
@@ -570,7 +570,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Empty_TruncateClip",
 			text:  "",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 0},
 			},
@@ -578,7 +578,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Empty_WrapBreak",
 			text: "",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 0},
 			},
@@ -586,7 +586,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Empty_WrapWord",
 			text: "",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 0},
 			},
@@ -594,7 +594,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Short_WrapOff",
 			text: "foobar",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 6},
 			},
@@ -602,7 +602,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Short_Truncate",
 			text: "foobar",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 6},
 			},
@@ -610,7 +610,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Single_Short_TruncateClip",
 			text:  "foobar",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 6},
 			},
@@ -618,7 +618,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Single_Short_TruncateEllipsis",
 			text:  "foobar",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 6},
 			},
@@ -627,7 +627,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Short_WrapBreak",
 			text: "foobar",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 6},
 			},
@@ -635,7 +635,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Short_WrapWord",
 			text: "foobar",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 6},
 			},
@@ -643,7 +643,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Long_WrapOff",
 			text: "foobar foobar",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 13},
 			},
@@ -651,7 +651,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Long_Truncate",
 			text: "foobar foobar",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 10},
 			},
@@ -659,7 +659,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Single_Long_TruncateClip",
 			text:  "foobar foobar",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 10},
 			},
@@ -667,7 +667,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Single_Long_TruncateEllipsis",
 			text:  "foobar foobar",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 9},
 			},
@@ -676,7 +676,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Long_WrapBreak",
 			text: "foobar foobar",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 10},
 				{10, 13},
@@ -685,7 +685,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Single_Long_WrapWord",
 			text: "foobar foobar",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 6},
 				{7, 13},
@@ -694,7 +694,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Short_WrapOff",
 			text: "foo\nbar",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -703,7 +703,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Short_Truncate",
 			text: "foo\nbar",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -712,7 +712,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Short_TruncateClip",
 			text:  "foo\nbar",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -721,7 +721,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Short_TruncateEllipsis",
 			text:  "foo\nbar",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -731,7 +731,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Short_WrapBreak",
 			text: "foo\nbar",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -740,7 +740,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Short_WrapWord",
 			text: "foo\nbar",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -749,7 +749,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Long_WrapOff",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 6},
 				{7, 27},
@@ -759,7 +759,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Long_Truncate",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -769,7 +769,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Long_TruncateClip",
 			text:  "foobar\nfoobar foobar foobar\nfoobar foobar",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -779,7 +779,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Long_TruncateEllipsis",
 			text:  "foobar\nfoobar foobar foobar\nfoobar foobar",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 6},
 				{7, 16},
@@ -790,7 +790,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Long_WrapBreak",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -802,7 +802,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Long_WrapWord",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 6},
 				{7, 13},
@@ -815,7 +815,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Contiguous_Long_WrapOff",
 			text: "foobar\nfoobarfoobarfoobar\nfoobarfoobar\n",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 6},
 				{7, 25},
@@ -826,7 +826,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Contiguous_Long_Truncate",
 			text: "foobar\nfoobarfoobarfoobar\nfoobarfoobar\n",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -837,7 +837,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Contiguous_Long_TruncateClip",
 			text:  "foobar\nfoobarfoobarfoobar\nfoobarfoobar\n",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -848,7 +848,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Contiguous_Long_TruncateEllipsis",
 			text:  "foobar\nfoobarfoobarfoobar\nfoobarfoobar\n",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 6},
 				{7, 15},
@@ -860,7 +860,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Contiguous_Long_WrapBreak",
 			text: "foobar\nfoobarfoobarfoobar\nfoobarfoobar\n",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -873,7 +873,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Contiguous_Long_WrapWord",
 			text: "foobar\nfoobarfoobarfoobar\nfoobarfoobar\n",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -886,7 +886,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Short_WrapOff",
 			text: "foo\nbar\n",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -896,7 +896,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Short_Truncate",
 			text: "foo\nbar\n",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -906,7 +906,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Short_TruncateClip",
 			text:  "foo\nbar\n",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -916,7 +916,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Short_TruncateEllipsis",
 			text:  "foo\nbar\n",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -926,7 +926,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Short_WrapBreak",
 			text: "foo\nbar\n",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -936,7 +936,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Short_WrapWord",
 			text: "foo\nbar\n",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -946,8 +946,8 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Short_WrapTruncateClip",
 			text:  "foo\nbar\nbaz",
-			wrap:  fyne.TextWrapBreak,
-			trunc: fyne.TextTruncateClip,
+			wrap:  granio.TextWrapBreak,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -956,8 +956,8 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Short_WrapTruncateEllipsis",
 			text:  "foo\nbar\nbaz",
-			wrap:  fyne.TextWrapBreak,
-			trunc: fyne.TextTruncateEllipsis,
+			wrap:  granio.TextWrapBreak,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 3},
 				{4, 7},
@@ -967,7 +967,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Long_WrapOff",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar\n",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 6},
 				{7, 27},
@@ -978,7 +978,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Long_Truncate",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar\n",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -989,7 +989,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Long_TruncateClip",
 			text:  "foobar\nfoobar foobar foobar\nfoobar foobar\n",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -1000,7 +1000,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Long_TruncateEllipsis",
 			text:  "foobar\nfoobar foobar foobar\nfoobar foobar\n",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 6},
 				{7, 16},
@@ -1012,7 +1012,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Long_WrapBreak",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar\n",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 6},
 				{7, 17},
@@ -1025,7 +1025,7 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name: "Multiple_Trailing_Long_WrapWord",
 			text: "foobar\nfoobar foobar foobar\nfoobar foobar\n",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 6},
 				{7, 13},
@@ -1039,8 +1039,8 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Long_WrapTruncateClip",
 			text:  "foo\nfoobar foobar foobar\nbaz",
-			wrap:  fyne.TextWrapBreak,
-			trunc: fyne.TextTruncateClip,
+			wrap:  granio.TextWrapBreak,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 3},
 				{4, 14},
@@ -1049,8 +1049,8 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Long_WrapTruncateEllipsis",
 			text:  "foo\nfoobar foobar foobar\nbazzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
-			wrap:  fyne.TextWrapBreak,
-			trunc: fyne.TextTruncateEllipsis,
+			wrap:  granio.TextWrapBreak,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 3},
 				{4, 14},
@@ -1061,8 +1061,8 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multiple_Trailing_Long_WrapWordTruncateEllipsis",
 			text:  "foo\nfoobar foobar foobar\nbaz",
-			wrap:  fyne.TextWrapWord,
-			trunc: fyne.TextTruncateEllipsis,
+			wrap:  granio.TextWrapWord,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 3},
 				{4, 10},
@@ -1073,8 +1073,8 @@ func TestText_lineBounds(t *testing.T) {
 		{
 			name:  "Multi_byte_ellipsis_not_truncated",
 			text:  "🪃 234",
-			trunc: fyne.TextTruncateEllipsis,
-			wrap:  fyne.TextWrapOff,
+			trunc: granio.TextTruncateEllipsis,
+			wrap:  granio.TextWrapOff,
 			want: [][2]int{
 				{0, 5},
 			},
@@ -1087,7 +1087,7 @@ func TestText_lineBounds(t *testing.T) {
 			richText := NewRichTextWithText(tt.text)
 			richText.Wrapping = tt.wrap
 			richText.Truncation = tt.trunc
-			got, _ := lineBounds(richText, richText.Segments[0], 76, fyne.NewSize(76, 64), measurer)
+			got, _ := lineBounds(richText, richText.Segments[0], 76, granio.NewSize(76, 64), measurer)
 			for i, wantRow := range tt.want {
 				assert.Equal(t, wantRow[0], got[i].segBegin)
 				assert.Equal(t, wantRow[1], got[i].segEnd)
@@ -1102,21 +1102,21 @@ func TestText_lineBounds(t *testing.T) {
 }
 
 func TestText_lineBounds_hyperlinks(t *testing.T) {
-	measurer := func(text []rune) fyne.Size {
-		return fyne.MeasureText(string(text), 14, fyne.TextStyle{})
+	measurer := func(text []rune) granio.Size {
+		return granio.MeasureText(string(text), 14, granio.TextStyle{})
 	}
 	tests := []struct {
 		name     string
 		text     string
-		wrap     fyne.TextWrap
-		trunc    fyne.TextTruncation
+		wrap     granio.TextWrap
+		trunc    granio.TextTruncation
 		want     [][2]int
 		ellipses int
 	}{
 		{
 			name: "Hyperlink_Truncate",
 			text: "this is a long link",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 9},
 			},
@@ -1124,7 +1124,7 @@ func TestText_lineBounds_hyperlinks(t *testing.T) {
 		{
 			name:  "Hyperlink_TruncateClip",
 			text:  "this is a long link",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 9},
 			},
@@ -1132,7 +1132,7 @@ func TestText_lineBounds_hyperlinks(t *testing.T) {
 		{
 			name:  "Hyperlink_TruncateEllipsis",
 			text:  "this is a long link",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 8},
 			},
@@ -1141,7 +1141,7 @@ func TestText_lineBounds_hyperlinks(t *testing.T) {
 		{
 			name: "Hyperlink_WrapBreak",
 			text: "this is a long link",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 9},
 				{9, 17},
@@ -1150,7 +1150,7 @@ func TestText_lineBounds_hyperlinks(t *testing.T) {
 		{
 			name: "Hyperlink_WrapWord",
 			text: "this is a long link",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 9},
 				{10, 14},
@@ -1165,7 +1165,7 @@ func TestText_lineBounds_hyperlinks(t *testing.T) {
 			richText := NewRichText(&HyperlinkSegment{Text: tt.text, URL: u})
 			richText.Wrapping = tt.wrap
 			richText.Truncation = tt.trunc
-			got, _ := lineBounds(richText, richText.Segments[0], 50, fyne.NewSize(50, 64), measurer)
+			got, _ := lineBounds(richText, richText.Segments[0], 50, granio.NewSize(50, 64), measurer)
 			for i, wantRow := range tt.want {
 				assert.Equal(t, wantRow[0], got[i].segBegin)
 				assert.Equal(t, wantRow[1], got[i].segEnd)
@@ -1183,14 +1183,14 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 	tests := []struct {
 		name  string
 		text  string
-		wrap  fyne.TextWrap
-		trunc fyne.TextTruncation
+		wrap  granio.TextWrap
+		trunc granio.TextTruncation
 		want  [][2]int
 	}{
 		{
 			name: "IM_WrapOff",
 			text: "iiiiiiiiiimmmmmmmmmm",
-			wrap: fyne.TextWrapOff,
+			wrap: granio.TextWrapOff,
 			want: [][2]int{
 				{0, 20},
 			},
@@ -1198,7 +1198,7 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 		{
 			name: "IM_Truncate",
 			text: "iiiiiiiiiimmmmmmmmmm",
-			wrap: fyne.TextWrap(fyne.TextTruncateClip),
+			wrap: granio.TextWrap(granio.TextTruncateClip),
 			want: [][2]int{
 				{0, 12},
 			},
@@ -1206,7 +1206,7 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 		{
 			name:  "IM_TruncateClip",
 			text:  "iiiiiiiiiimmmmmmmmmm",
-			trunc: fyne.TextTruncateClip,
+			trunc: granio.TextTruncateClip,
 			want: [][2]int{
 				{0, 12},
 			},
@@ -1214,7 +1214,7 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 		{
 			name:  "IM_TruncateEllipsis",
 			text:  "iiiiiiiiiimmmmmmmmmm",
-			trunc: fyne.TextTruncateEllipsis,
+			trunc: granio.TextTruncateEllipsis,
 			want: [][2]int{
 				{0, 9},
 			},
@@ -1222,7 +1222,7 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 		{
 			name: "IM_WrapBreak",
 			text: "iiiiiiiiiimmmmmmmmmm",
-			wrap: fyne.TextWrapBreak,
+			wrap: granio.TextWrapBreak,
 			want: [][2]int{
 				{0, 12},
 				{12, 16},
@@ -1232,7 +1232,7 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 		{
 			name: "IM_WrapWord",
 			text: "iiiiiiiiiimmmmmmmmmm",
-			wrap: fyne.TextWrapWord,
+			wrap: granio.TextWrapWord,
 			want: [][2]int{
 				{0, 12},
 				{12, 16},
@@ -1241,16 +1241,16 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 		},
 	}
 	textSize := float32(10)
-	textStyle := fyne.TextStyle{}
-	measurer := func(text []rune) fyne.Size {
-		return fyne.MeasureText(string(text), textSize, textStyle)
+	textStyle := granio.TextStyle{}
+	measurer := func(text []rune) granio.Size {
+		return granio.MeasureText(string(text), textSize, textStyle)
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			richText := NewRichTextWithText(tt.text)
 			richText.Wrapping = tt.wrap
 			richText.Truncation = tt.trunc
-			got, _ := lineBounds(richText, richText.Segments[0], 46, fyne.NewSize(46, 184), measurer)
+			got, _ := lineBounds(richText, richText.Segments[0], 46, granio.NewSize(46, 184), measurer)
 			for i, wantRow := range tt.want {
 				assert.Equal(t, wantRow[0], got[i].segBegin)
 				assert.Equal(t, wantRow[1], got[i].segEnd)
@@ -1260,13 +1260,13 @@ func TestText_lineBounds_variable_char_width(t *testing.T) {
 }
 
 func TestText_lineBounds_small_firstWidth(t *testing.T) {
-	measurer := func(text []rune) fyne.Size {
-		return fyne.MeasureText(string(text), 14, fyne.TextStyle{})
+	measurer := func(text []rune) granio.Size {
+		return granio.MeasureText(string(text), 14, granio.TextStyle{})
 	}
 	richText := NewRichTextWithText("foobar")
-	richText.Wrapping = fyne.TextWrapWord
-	richText.Truncation = fyne.TextTruncateOff
-	got, _ := lineBounds(richText, richText.Segments[0], 0.1, fyne.NewSize(64, 20), measurer)
+	richText.Wrapping = granio.TextWrapWord
+	richText.Truncation = granio.TextTruncateOff
+	got, _ := lineBounds(richText, richText.Segments[0], 0.1, granio.NewSize(64, 20), measurer)
 	assert.Equal(t, 0, got[0].segBegin)
 	assert.Equal(t, 0, got[0].segEnd)
 	assert.Equal(t, 0, got[1].segBegin)
@@ -1275,15 +1275,15 @@ func TestText_lineBounds_small_firstWidth(t *testing.T) {
 
 func TestText_Truncate_Segments(t *testing.T) {
 	for name, tt := range map[string]struct {
-		trunc fyne.TextTruncation
+		trunc granio.TextTruncation
 		width float32
 		want  []string
 	}{
-		"Clip":                     {fyne.TextTruncateClip, 120, []string{"Normal ", "Bold", " a", "second line of t"}},
-		"ClipInEarlierSegment":     {fyne.TextTruncateClip, 93, []string{"Normal ", "Bol", "second line"}},
-		"Ellipsis":                 {fyne.TextTruncateEllipsis, 120, []string{"Normal ", "Bold", " …", "second line of …"}},
-		"EllipsisNoRoomLeft":       {fyne.TextTruncateEllipsis, 105, []string{"Normal ", "Bol…", "second line …"}},
-		"EllipsisInEarlierSegment": {fyne.TextTruncateEllipsis, 93, []string{"Normal ", "B…", "second li…"}},
+		"Clip":                     {granio.TextTruncateClip, 120, []string{"Normal ", "Bold", " a", "second line of t"}},
+		"ClipInEarlierSegment":     {granio.TextTruncateClip, 93, []string{"Normal ", "Bol", "second line"}},
+		"Ellipsis":                 {granio.TextTruncateEllipsis, 120, []string{"Normal ", "Bold", " …", "second line of …"}},
+		"EllipsisNoRoomLeft":       {granio.TextTruncateEllipsis, 105, []string{"Normal ", "Bol…", "second line …"}},
+		"EllipsisInEarlierSegment": {granio.TextTruncateEllipsis, 93, []string{"Normal ", "B…", "second li…"}},
 	} {
 		t.Run(name, func(t *testing.T) {
 			text := NewRichText(
@@ -1292,7 +1292,7 @@ func TestText_Truncate_Segments(t *testing.T) {
 				&TextSegment{Text: " and more\nsecond line of text", Style: RichTextStyleInline},
 			)
 			text.Truncation = tt.trunc
-			text.Resize(fyne.NewSize(tt.width, 100))
+			text.Resize(granio.NewSize(tt.width, 100))
 
 			var got []string
 			for _, obj := range richTextRenderTexts(text) {
@@ -1305,13 +1305,13 @@ func TestText_Truncate_Segments(t *testing.T) {
 
 func TestText_Truncate_ParagraphSpacing(t *testing.T) {
 	md := "Normal **Bold** and some text, which is long enough to be truncated.\n\n> A quote"
-	for _, trunc := range []fyne.TextTruncation{fyne.TextTruncateClip, fyne.TextTruncateEllipsis} {
+	for _, trunc := range []granio.TextTruncation{granio.TextTruncateClip, granio.TextTruncateEllipsis} {
 		full := NewRichTextFromMarkdown(md)
 		full.Truncation = trunc
-		full.Resize(fyne.NewSize(1000, 100))
+		full.Resize(granio.NewSize(1000, 100))
 		text := NewRichTextFromMarkdown(md)
 		text.Truncation = trunc
-		text.Resize(fyne.NewSize(200, 100))
+		text.Resize(granio.NewSize(200, 100))
 
 		// the quote should not move up when the paragraph above it is truncated
 		assert.Len(t, text.rowBounds, len(full.rowBounds))
@@ -1326,19 +1326,19 @@ func TestText_WrapTruncate_Segments(t *testing.T) {
 	md := "Normal **Bold** *Italic* [Link](https://fyne.io/) and some `Code`.\n" +
 		"This styled row should also wrap as expected, but only *when required*."
 	full := NewRichTextFromMarkdown(md)
-	full.Wrapping = fyne.TextWrapWord
-	full.Resize(fyne.NewSize(200, 1000))
+	full.Wrapping = granio.TextWrapWord
+	full.Resize(granio.NewSize(200, 1000))
 	want := richTextRowTexts(full)
 
-	for _, trunc := range []fyne.TextTruncation{fyne.TextTruncateClip, fyne.TextTruncateEllipsis} {
+	for _, trunc := range []granio.TextTruncation{granio.TextTruncateClip, granio.TextTruncateEllipsis} {
 		for height := float32(0); height <= 160; height += 5 {
 			text := NewRichTextFromMarkdown(md)
-			text.Wrapping = fyne.TextWrapWord
+			text.Wrapping = granio.TextWrapWord
 			text.Truncation = trunc
 			if height < text.MinSize().Height {
 				continue // too short to show any of the text
 			}
-			text.Resize(fyne.NewSize(200, height))
+			text.Resize(granio.NewSize(200, height))
 
 			// the rows shown should be the start of the full text, ending where it was truncated
 			got := richTextRowTexts(text)
@@ -1349,7 +1349,7 @@ func TestText_WrapTruncate_Segments(t *testing.T) {
 			assert.Equal(t, want[:last], got[:last], "truncation %d at height %v", trunc, height)
 			assert.True(t, strings.HasPrefix(want[last], strings.TrimSuffix(got[last], ellipsisChar)),
 				"truncation %d at height %v: %q is not the start of %q", trunc, height, got[last], want[last])
-			if trunc == fyne.TextTruncateEllipsis && len(got) < len(want) {
+			if trunc == granio.TextTruncateEllipsis && len(got) < len(want) {
 				assert.True(t, strings.HasSuffix(got[last], ellipsisChar), "truncation %d at height %v", trunc, height)
 			}
 		}
@@ -1359,9 +1359,9 @@ func TestText_WrapTruncate_Segments(t *testing.T) {
 func TestText_howManyRunesFit(t *testing.T) {
 	maxWidth := float32(46)
 	textSize := float32(10)
-	textStyle := fyne.TextStyle{}
-	measurer := func(text []rune) fyne.Size {
-		return fyne.MeasureText(string(text), textSize, textStyle)
+	textStyle := granio.TextStyle{}
+	measurer := func(text []rune) granio.Size {
+		return granio.MeasureText(string(text), textSize, textStyle)
 	}
 	charWidth := measurer([]rune("z")).Width
 	for name, tt := range map[string]struct {

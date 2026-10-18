@@ -4,14 +4,14 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -34,7 +34,7 @@ func TestShowPopUp(t *testing.T) {
 	test.NewTempApp(t)
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 	require.Nil(t, w.Canvas().Overlays().Top())
 
 	label := NewLabel("Hi")
@@ -52,8 +52,8 @@ func TestShowPopUp(t *testing.T) {
 
 func TestShowPopUpAtPosition(t *testing.T) {
 	c := test.NewCanvas()
-	c.Resize(fyne.NewSize(100, 100))
-	pos := fyne.NewPos(6, 9)
+	c.Resize(granio.NewSize(100, 100))
+	pos := granio.NewPos(6, 9)
 	label := NewLabel("Hi")
 	ShowPopUpAtPosition(label, c, pos)
 	pop := c.Overlays().Top().(*widget.OverlayContainer).Content
@@ -65,14 +65,14 @@ func TestShowPopUpAtPosition(t *testing.T) {
 }
 
 func TestShowPopUpAtRelativePosition(t *testing.T) {
-	pos := fyne.NewPos(6, 9)
+	pos := granio.NewPos(6, 9)
 	label := NewLabel("Hi")
 	parent1 := NewLabel("Parent1")
 	parent2 := NewLabel("Parent2")
 	w := test.NewTempWindow(
-		t, &fyne.Container{Layout: layout.NewVBoxLayout(), Objects: []fyne.CanvasObject{parent1, parent2}},
+		t, &granio.Container{Layout: layout.NewVBoxLayout(), Objects: []granio.CanvasObject{parent1, parent2}},
 	)
-	w.Resize(fyne.NewSize(100, 200))
+	w.Resize(granio.NewSize(100, 200))
 
 	ShowPopUpAtRelativePosition(label, w.Canvas(), pos, parent2)
 	pop := w.Canvas().Overlays().Top().(*widget.OverlayContainer).Content
@@ -80,7 +80,7 @@ func TestShowPopUpAtRelativePosition(t *testing.T) {
 		assert.True(t, pop.Visible())
 		assert.Len(t, w.Canvas().Overlays().List(), 1)
 		areaPos, _ := w.Canvas().InteractiveArea()
-		assert.Equal(t, pos.Add(parent2.Position()).Add(fyne.NewPos(theme.Padding(), theme.Padding())).Subtract(areaPos), pop.(*PopUp).Position())
+		assert.Equal(t, pos.Add(parent2.Position()).Add(granio.NewPos(theme.Padding(), theme.Padding())).Subtract(areaPos), pop.(*PopUp).Position())
 	}
 }
 
@@ -88,7 +88,7 @@ func TestShowModalPopUp(t *testing.T) {
 	test.NewTempApp(t)
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(200, 199))
+	w.Resize(granio.NewSize(200, 199))
 	require.Nil(t, w.Canvas().Overlays().Top())
 
 	label := NewLabel("Hi")
@@ -106,7 +106,7 @@ func TestShowModalPopUp(t *testing.T) {
 
 func TestPopUp_Show(t *testing.T) {
 	c := test.NewCanvas()
-	cSize := fyne.NewSize(100, 100)
+	cSize := granio.NewSize(100, 100)
 	c.Resize(cSize)
 	label := NewLabel("Hi")
 	pop := NewPopUp(label, c)
@@ -121,11 +121,11 @@ func TestPopUp_Show(t *testing.T) {
 
 func TestPopUp_ShowAtPosition(t *testing.T) {
 	c := test.NewCanvas()
-	cSize := fyne.NewSize(100, 100)
+	cSize := granio.NewSize(100, 100)
 	c.Resize(cSize)
 	label := NewLabel("Hi")
 	pop := NewPopUp(label, c)
-	pos := fyne.NewPos(6, 9)
+	pos := granio.NewPos(6, 9)
 	require.Nil(t, c.Overlays().Top())
 
 	pop.ShowAtPosition(pos)
@@ -169,7 +169,7 @@ func TestPopUp_OnDismiss_TapOutside(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewTempWindow(t, NewLabel(""))
 	c := win.Canvas()
-	win.Resize(fyne.NewSize(120, 30))
+	win.Resize(granio.NewSize(120, 30))
 	pop := NewPopUp(label, c)
 
 	dismissed := false
@@ -184,7 +184,7 @@ func TestPopUp_OnDismiss_TapOutside(t *testing.T) {
 	assert.True(t, pop.Visible())
 	assert.False(t, dismissed)
 
-	test.TapCanvas(c, fyne.NewPos(100, 20))
+	test.TapCanvas(c, granio.NewPos(100, 20))
 	assert.False(t, pop.Visible())
 	assert.True(t, dismissed)
 }
@@ -206,11 +206,11 @@ func TestPopUp_Move(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(70, 70))
+	win.Resize(granio.NewSize(70, 70))
 	pop := NewPopUp(label, win.Canvas())
 	defer pop.Hide()
 
-	pos := fyne.NewPos(10, 10)
+	pos := granio.NewPos(10, 10)
 	pop.Move(pos)
 	pop.Show()
 
@@ -227,12 +227,12 @@ func TestPopUp_Move_Constrained(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(60, 48))
+	win.Resize(granio.NewSize(60, 48))
 	pop := NewPopUp(label, win.Canvas())
 	pop.Show()
 	defer pop.Hide()
 
-	pos := fyne.NewPos(30, 20)
+	pos := granio.NewPos(30, 20)
 	pop.Move(pos)
 
 	innerPos := pop.Position()
@@ -251,12 +251,12 @@ func TestPopUp_Move_ConstrainedWindowToSmall(*testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(10, 5))
+	win.Resize(granio.NewSize(10, 5))
 	pop := NewPopUp(label, win.Canvas())
 	pop.Show()
 	defer pop.Hide()
 
-	pos := fyne.NewPos(20, 10)
+	pos := granio.NewPos(20, 10)
 	pop.Move(pos)
 
 	// innerPos := pop.Position()
@@ -269,13 +269,13 @@ func TestPopUp_Resize(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(80, 80))
+	win.Resize(granio.NewSize(80, 80))
 
 	pop := NewPopUp(label, win.Canvas())
 	pop.Show()
 	defer pop.Hide()
 
-	size := fyne.NewSize(60, 50)
+	size := granio.NewSize(60, 50)
 	pop.Resize(size)
 	assert.Equal(t, size, pop.Content.Size())
 
@@ -288,14 +288,14 @@ func TestPopUp_Tapped(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewTempWindow(t, NewLabel(""))
 	c := win.Canvas()
-	win.Resize(fyne.NewSize(120, 30))
+	win.Resize(granio.NewSize(120, 30))
 	pop := NewPopUp(label, c)
 	pop.Show()
 
 	assert.True(t, pop.Visible())
 	test.Tap(pop)
 	assert.True(t, pop.Visible())
-	test.TapCanvas(c, fyne.NewPos(100, 20))
+	test.TapCanvas(c, granio.NewPos(100, 20))
 	assert.False(t, pop.Visible())
 	assert.Empty(t, test.Canvas().Overlays().List())
 }
@@ -304,14 +304,14 @@ func TestPopUp_TappedSecondary(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewTempWindow(t, NewLabel(""))
 	c := win.Canvas()
-	win.Resize(fyne.NewSize(120, 30))
+	win.Resize(granio.NewSize(120, 30))
 	pop := NewPopUp(label, c)
 	pop.Show()
 
 	assert.True(t, pop.Visible())
 	test.TapSecondary(pop)
 	assert.True(t, pop.Visible())
-	test.TapCanvas(c, fyne.NewPos(100, 20))
+	test.TapCanvas(c, granio.NewPos(100, 20))
 	assert.False(t, pop.Visible())
 	assert.Empty(t, test.Canvas().Overlays().List())
 }
@@ -354,15 +354,15 @@ func TestPopUp_Stacked(t *testing.T) {
 func TestPopUp_Layout(t *testing.T) {
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(80, 80))
+	win.Resize(granio.NewSize(80, 80))
 
 	content := NewLabel("Hi")
 	pop := NewPopUp(content, win.Canvas())
-	pos := fyne.NewPos(6, 9)
+	pos := granio.NewPos(6, 9)
 	pop.ShowAtPosition(pos)
 	defer pop.Hide()
 
-	size := fyne.NewSize(60, 50)
+	size := granio.NewSize(60, 50)
 	pop.Resize(size)
 	r := cache.Renderer(pop)
 	require.GreaterOrEqual(t, len(r.Objects()), 2)
@@ -379,7 +379,7 @@ func TestPopUp_Layout(t *testing.T) {
 func TestPopUp_ApplyThemeOnShow(t *testing.T) {
 	test.NewTempApp(t)
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(200, 300))
+	w.Resize(granio.NewSize(200, 300))
 
 	pop := NewPopUp(NewLabel("Label"), w.Canvas())
 
@@ -397,7 +397,7 @@ func TestPopUp_ApplyThemeOnShow(t *testing.T) {
 func TestPopUp_ResizeOnShow(t *testing.T) {
 	test.NewTempApp(t)
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	size := fyne.NewSize(200, 300)
+	size := granio.NewSize(200, 300)
 	w.Resize(size)
 
 	pop := NewPopUp(NewLabel("Label"), w.Canvas())
@@ -407,7 +407,7 @@ func TestPopUp_ResizeOnShow(t *testing.T) {
 	assert.Equal(t, fullSize, w.Canvas().Overlays().Top().Size())
 	pop.Hide()
 
-	size = fyne.NewSize(500, 500)
+	size = granio.NewSize(500, 500)
 	w.Resize(size)
 	_, fullSize = w.Canvas().InteractiveArea()
 	pop.Show()
@@ -420,17 +420,17 @@ func TestPopUp_ResizeBeforeShow_CanvasSizeZero(t *testing.T) {
 
 	// Simulate canvas size {0,0}
 	rect := canvas.NewRectangle(color.Black)
-	rect.SetMinSize(fyne.NewSize(0, 0))
+	rect.SetMinSize(granio.NewSize(0, 0))
 	w := test.NewTempWindow(t, rect)
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(0, 0))
+	w.Resize(granio.NewSize(0, 0))
 	assert.Zero(t, w.Canvas().Size())
 
 	pop := NewPopUp(NewLabel("Label"), w.Canvas())
-	popBgSize := fyne.NewSize(200, 200)
+	popBgSize := granio.NewSize(200, 200)
 	pop.Resize(popBgSize)
 
-	winSize := fyne.NewSize(300, 300)
+	winSize := granio.NewSize(300, 300)
 	w.Resize(winSize)
 	pop.Show()
 
@@ -445,13 +445,13 @@ func TestPopUp_ResizeBeforeShow_CanvasSizeZero(t *testing.T) {
 func TestModalPopUp_Tapped(t *testing.T) {
 	label := NewLabel("Hi")
 	c := test.Canvas().(software.WindowlessCanvas)
-	c.Resize(fyne.NewSquareSize(200))
+	c.Resize(granio.NewSquareSize(200))
 	pop := NewModalPopUp(label, c)
 	pop.Show()
 	defer pop.Hide()
 
 	assert.True(t, pop.Visible())
-	test.TapCanvas(c, fyne.NewSquareOffsetPos(195))
+	test.TapCanvas(c, granio.NewSquareOffsetPos(195))
 	assert.True(t, pop.Visible())
 	assert.Len(t, test.Canvas().Overlays().List(), 1)
 	assert.Equal(t, pop, test.Canvas().Overlays().List()[0].(*widget.OverlayContainer).Content)
@@ -474,11 +474,11 @@ func TestModalPopUp_Resize(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(80, 80))
+	win.Resize(granio.NewSize(80, 80))
 
 	pop := NewModalPopUp(label, win.Canvas())
 
-	size := fyne.NewSize(50, 48)
+	size := granio.NewSize(50, 48)
 	pop.Resize(size)
 	assert.Equal(t, size, pop.Content.Size())
 	pop.Show()
@@ -496,30 +496,30 @@ func TestModalPopUp_TappedInside(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewWindow(NewLabel("OK"))
 	defer win.Close()
-	win.Resize(fyne.NewSize(80, 80))
+	win.Resize(granio.NewSize(80, 80))
 
 	pop := NewPopUp(label, win.Canvas())
 	pop.Show()
 	defer pop.Hide()
 
-	size := fyne.NewSize(50, 48)
+	size := granio.NewSize(50, 48)
 	pop.Resize(size)
-	pop.Move(fyne.NewPos(10, 10))
+	pop.Move(granio.NewPos(10, 10))
 	assert.Equal(t, size, pop.Content.Size())
 
-	pop.Tapped(&fyne.PointEvent{Position: fyne.NewPos(30, 30)})
+	pop.Tapped(&granio.PointEvent{Position: granio.NewPos(30, 30)})
 	assert.False(t, pop.Hidden)
-	test.TapCanvas(win.Canvas(), fyne.NewPos(5, 5))
+	test.TapCanvas(win.Canvas(), granio.NewPos(5, 5))
 	assert.True(t, pop.Hidden)
 }
 
 func TestModalPopUp_Resize_Constrained(t *testing.T) {
 	label := NewLabel("Hi")
 	win := test.NewTempWindow(t, NewLabel("OK"))
-	win.Resize(fyne.NewSize(80, 80))
+	win.Resize(granio.NewSize(80, 80))
 	pop := NewModalPopUp(label, win.Canvas())
 
-	pop.Resize(fyne.NewSize(90, 100))
+	pop.Resize(granio.NewSize(90, 100))
 	pop.Show()
 	_, safe := win.Canvas().InteractiveArea()
 
@@ -532,7 +532,7 @@ func TestModalPopUp_Resize_Constrained(t *testing.T) {
 func TestModalPopUp_ApplyThemeOnShow(t *testing.T) {
 	test.NewTempApp(t)
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(200, 300))
+	w.Resize(granio.NewSize(200, 300))
 
 	pop := NewModalPopUp(NewLabel("Label"), w.Canvas())
 
@@ -550,7 +550,7 @@ func TestModalPopUp_ApplyThemeOnShow(t *testing.T) {
 func TestModalPopUp_ResizeOnShow(t *testing.T) {
 	test.NewTempApp(t)
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(200, 300))
+	w.Resize(granio.NewSize(200, 300))
 
 	pop := NewModalPopUp(NewLabel("Label"), w.Canvas())
 	size := pop.MinSize()
@@ -559,7 +559,7 @@ func TestModalPopUp_ResizeOnShow(t *testing.T) {
 	assert.Equal(t, size, pop.Size())
 	pop.Hide()
 
-	w.Resize(fyne.NewSize(500, 500))
+	w.Resize(granio.NewSize(500, 500))
 	pop.Show()
 	fullPos, fullSize := w.Canvas().InteractiveArea()
 	assert.Equal(t, fullPos, w.Canvas().Overlays().Top().Position())
@@ -584,11 +584,11 @@ func TestModalPopUp_ResizeOnShow(t *testing.T) {
 func TestNewPopUpMenu_NilCanvas_NoPanic(t *testing.T) {
 	test.NewTempApp(t)
 
-	menu := fyne.NewMenu(
+	menu := granio.NewMenu(
 		"",
-		fyne.NewMenuItem("a", func() {}),
-		fyne.NewMenuItem("b", func() {}),
-		fyne.NewMenuItem("c", func() {}),
+		granio.NewMenuItem("a", func() {}),
+		granio.NewMenuItem("b", func() {}),
+		granio.NewMenuItem("c", func() {}),
 	)
 
 	defer func() {
@@ -601,15 +601,15 @@ func TestNewPopUpMenu_NilCanvas_NoPanic(t *testing.T) {
 	if pop == nil {
 		return
 	}
-	pop.ShowAtPosition(fyne.NewPos(0, 0))
+	pop.ShowAtPosition(granio.NewPos(0, 0))
 }
 
 func TestShowPopUpMenuAtPosition_NilCanvas_NoPanic(t *testing.T) {
 	test.NewTempApp(t)
 
-	menu := fyne.NewMenu(
+	menu := granio.NewMenu(
 		"",
-		fyne.NewMenuItem("only", func() {}),
+		granio.NewMenuItem("only", func() {}),
 	)
 
 	defer func() {
@@ -618,7 +618,7 @@ func TestShowPopUpMenuAtPosition_NilCanvas_NoPanic(t *testing.T) {
 		}
 	}()
 
-	ShowPopUpMenuAtPosition(menu, nil, fyne.NewPos(0, 0))
+	ShowPopUpMenuAtPosition(menu, nil, granio.NewPos(0, 0))
 }
 
 func TestModelPopUp_ResizeBeforeShow_CanvasSizeZero(t *testing.T) {
@@ -626,17 +626,17 @@ func TestModelPopUp_ResizeBeforeShow_CanvasSizeZero(t *testing.T) {
 
 	// Simulate canvas size {0,0}
 	rect := canvas.NewRectangle(color.Black)
-	rect.SetMinSize(fyne.NewSize(0, 0))
+	rect.SetMinSize(granio.NewSize(0, 0))
 	w := test.NewTempWindow(t, rect)
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(0, 0))
+	w.Resize(granio.NewSize(0, 0))
 	assert.Zero(t, w.Canvas().Size())
 
 	pop := NewModalPopUp(NewLabel("Label"), w.Canvas())
-	popBgSize := fyne.NewSize(200, 200)
+	popBgSize := granio.NewSize(200, 200)
 	pop.Resize(popBgSize)
 
-	winSize := fyne.NewSize(300, 300)
+	winSize := granio.NewSize(300, 300)
 	w.Resize(winSize)
 	pop.Show()
 

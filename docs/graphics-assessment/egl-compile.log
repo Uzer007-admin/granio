@@ -1,0 +1,7 @@
+# graphicsprobe/egl
+./package.go:2097:78: could not determine what C.AHardwareBuffer refers to
+./package.go:1722:108: could not determine what C.EGLClientPixmapHI refers to
+./package.go:1510:83: could not determine what C.wl_display refers to
+./package.go:2574:83: could not determine what C.wl_resource refers to
+FAIL	graphicsprobe/egl [build failed]
+FAIL

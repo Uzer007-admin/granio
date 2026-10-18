@@ -1,10 +1,10 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // FormDialog is a simple dialog window for displaying FormItems inside a form.
@@ -47,7 +47,7 @@ func (d *FormDialog) setSubmitState(err error) {
 // validation state of the items added to the form dialog.
 //
 // Since: 2.0
-func NewForm(title, confirm, dismiss string, items []*widget.FormItem, callback func(bool), parent fyne.Window) *FormDialog {
+func NewForm(title, confirm, dismiss string, items []*widget.FormItem, callback func(bool), parent granio.Window) *FormDialog {
 	form := widget.NewForm(items...)
 
 	d := &dialog{content: form, callback: callback, title: title, parent: parent}
@@ -82,6 +82,6 @@ func NewForm(title, confirm, dismiss string, items []*widget.FormItem, callback 
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
 //
 // Since: 2.0
-func ShowForm(title, confirm, dismiss string, content []*widget.FormItem, callback func(bool), parent fyne.Window) {
+func ShowForm(title, confirm, dismiss string, content []*widget.FormItem, callback func(bool), parent granio.Window) {
 	NewForm(title, confirm, dismiss, content, callback, parent).Show()
 }

@@ -2,8 +2,8 @@
 
 package theme
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func setupSystemTheme(fallback fyne.Theme) fyne.Theme {
+func setupSystemTheme(fallback granio.Theme) granio.Theme {
 	return fallback
 }

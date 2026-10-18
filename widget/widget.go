@@ -1,28 +1,38 @@
 // Package widget defines the UI widgets within the Fyne toolkit.
-package widget // import "fyne.io/fyne/v2/widget"
+package widget // import "github.com/Uzer007-admin/granio/v2/widget"
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	internalWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // BaseWidget provides a helper that handles basic widget behaviours.
 type BaseWidget struct {
 	noCopy noCopy // so `go vet` can complain if a widget is passed by value (copied)
 
-	size     fyne.Size
-	position fyne.Position
+	size     granio.Size
+	position granio.Position
 	Hidden   bool
 
-	impl       fyne.Widget
-	themeCache fyne.Theme
+	impl            granio.Widget
+	themeCache      granio.Theme
+	rendererCreated bool
+}
+
+// RestoreRendererLayout tracks renderer creation and lays out replacements.
+// It is called by the framework's renderer cache.
+func (w *BaseWidget) RestoreRendererLayout(renderer granio.WidgetRenderer) {
+	if w.rendererCreated {
+		renderer.Layout(w.Size())
+	}
+	w.rendererCreated = true
 }
 
 // ExtendBaseWidget is used by an extending widget to make use of BaseWidget functionality.
-func (w *BaseWidget) ExtendBaseWidget(wid fyne.Widget) {
+func (w *BaseWidget) ExtendBaseWidget(wid granio.Widget) {
 	if w.super() != nil {
 		return
 	}
@@ -31,13 +41,13 @@ func (w *BaseWidget) ExtendBaseWidget(wid fyne.Widget) {
 }
 
 // Size gets the current size of this widget.
-func (w *BaseWidget) Size() fyne.Size {
+func (w *BaseWidget) Size() granio.Size {
 	return w.size
 }
 
 // Resize sets a new size for a widget.
 // Note this should not be used if the widget is being managed by a Layout within a Container.
-func (w *BaseWidget) Resize(size fyne.Size) {
+func (w *BaseWidget) Resize(size granio.Size) {
 	if size == w.Size() {
 		return
 	}
@@ -52,13 +62,13 @@ func (w *BaseWidget) Resize(size fyne.Size) {
 }
 
 // Position gets the current position of this widget, relative to its parent.
-func (w *BaseWidget) Position() fyne.Position {
+func (w *BaseWidget) Position() granio.Position {
 	return w.position
 }
 
 // Move the widget to a new position, relative to its parent.
 // Note this should not be used if the widget is being managed by a Layout within a Container.
-func (w *BaseWidget) Move(pos fyne.Position) {
+func (w *BaseWidget) Move(pos granio.Position) {
 	if w.Position() == pos {
 		return
 	}
@@ -68,12 +78,12 @@ func (w *BaseWidget) Move(pos fyne.Position) {
 }
 
 // MinSize for the widget - it should never be resized below this value.
-func (w *BaseWidget) MinSize() fyne.Size {
+func (w *BaseWidget) MinSize() granio.Size {
 	impl := w.super()
 
 	r := cache.Renderer(impl)
 	if r == nil {
-		return fyne.Size{}
+		return granio.Size{}
 	}
 
 	return r.MinSize()
@@ -131,7 +141,7 @@ func (w *BaseWidget) Refresh() {
 // This will be the app theme in most cases, or a widget specific theme if it is inside a ThemeOverride container.
 //
 // Since: 2.5
-func (w *BaseWidget) Theme() fyne.Theme {
+func (w *BaseWidget) Theme() granio.Theme {
 	cached := w.themeCache
 	if cached != nil {
 		return cached
@@ -149,7 +159,7 @@ func (w *BaseWidget) Theme() fyne.Theme {
 
 // super will return the actual object that this represents.
 // If extended then this is the extending widget, otherwise it is nil.
-func (w *BaseWidget) super() fyne.Widget {
+func (w *BaseWidget) super() granio.Widget {
 	return w.impl
 }
 
@@ -197,10 +207,10 @@ func (w *DisableableWidget) Disabled() bool {
 }
 
 // NewSimpleRenderer creates a new SimpleRenderer to render a widget using a
-// single fyne.CanvasObject.
+// single granio.CanvasObject.
 //
 // Since: 2.1
-func NewSimpleRenderer(object fyne.CanvasObject) fyne.WidgetRenderer {
+func NewSimpleRenderer(object granio.CanvasObject) granio.WidgetRenderer {
 	return internalWidget.NewSimpleRenderer(object)
 }
 

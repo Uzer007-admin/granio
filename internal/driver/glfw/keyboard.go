@@ -3,18 +3,18 @@
 package glfw
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func hideVirtualKeyboard() {
-	if d, ok := fyne.CurrentDevice().(*glDevice); ok {
+	if d, ok := granio.CurrentDevice().(*glDevice); ok {
 		d.hideVirtualKeyboard()
 	}
 }
 
-func handleKeyboard(obj fyne.Focusable) {
+func handleKeyboard(obj granio.Focusable) {
 	isDisabled := false
-	if disWid, ok := obj.(fyne.Disableable); ok {
+	if disWid, ok := obj.(granio.Disableable); ok {
 		isDisabled = disWid.Disabled()
 	}
 	if obj != nil && !isDisabled {
@@ -25,7 +25,7 @@ func handleKeyboard(obj fyne.Focusable) {
 }
 
 func showVirtualKeyboard() {
-	if d, ok := fyne.CurrentDevice().(*glDevice); ok {
+	if d, ok := granio.CurrentDevice().(*glDevice); ok {
 		d.showVirtualKeyboard()
 	}
 }

@@ -8,48 +8,48 @@ import (
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/internal/app"
-	intdriver "fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-var _ fyne.Canvas = (*canvas)(nil)
+var _ granio.Canvas = (*canvas)(nil)
 
 type canvas struct {
 	common.Canvas
-	content        fyne.CanvasObject
+	content        granio.CanvasObject
 	device         *device
 	initialized    bool
 	lastTapDown    map[int]time.Time
-	lastTapDownPos map[int]fyne.Position
-	lastTapDelta   map[int]fyne.Delta
-	menu           fyne.CanvasObject
+	lastTapDownPos map[int]granio.Position
+	lastTapDelta   map[int]granio.Delta
+	menu           granio.CanvasObject
 	padded         bool
 	scale          float32
-	size           fyne.Size
+	size           granio.Size
 	touched        map[int]mobile.Touchable
-	windowHead     *fyne.Container
+	windowHead     *granio.Container
 
-	dragOffset     fyne.Position
-	dragStart      fyne.Position
-	dragging       fyne.Draggable
-	draggingOuter  fyne.Draggable
+	dragOffset     granio.Position
+	dragStart      granio.Position
+	dragging       granio.Draggable
+	draggingOuter  granio.Draggable
 	otherDirection container.ScrollDirection
 
-	onTypedKey  func(event *fyne.KeyEvent)
+	onTypedKey  func(event *granio.KeyEvent)
 	onTypedRune func(rune)
 
 	touchCancelFunc context.CancelFunc
 	touchCancelLock sync.Mutex
-	touchLastTapped fyne.CanvasObject
+	touchLastTapped granio.CanvasObject
 	touchTapCount   int
 }
 
-func newCanvas(dev fyne.Device) fyne.Canvas {
+func newCanvas(dev granio.Device) granio.Canvas {
 	d, _ := dev.(*device)
 	ret := &canvas{
 		Canvas: common.Canvas{
@@ -58,8 +58,8 @@ func newCanvas(dev fyne.Device) fyne.Canvas {
 		},
 		device:         d,
 		lastTapDown:    make(map[int]time.Time),
-		lastTapDownPos: make(map[int]fyne.Position),
-		lastTapDelta:   make(map[int]fyne.Delta),
+		lastTapDownPos: make(map[int]granio.Position),
+		lastTapDelta:   make(map[int]granio.Delta),
 		padded:         true,
 		scale:          dev.SystemScaleForWindow(nil), // we don't need a window parameter on mobile,
 		touched:        make(map[int]mobile.Touchable),
@@ -72,13 +72,13 @@ func (c *canvas) Capture() image.Image {
 	return c.Painter().Capture(c)
 }
 
-func (c *canvas) Content() fyne.CanvasObject {
+func (c *canvas) Content() granio.CanvasObject {
 	return c.content
 }
 
-func (c *canvas) InteractiveArea() (fyne.Position, fyne.Size) {
-	var pos fyne.Position
-	var size fyne.Size
+func (c *canvas) InteractiveArea() (granio.Position, granio.Size) {
+	var pos granio.Position
+	var size granio.Size
 	if c.device == nil {
 		// running in test mode
 		size = c.Size()
@@ -87,7 +87,7 @@ func (c *canvas) InteractiveArea() (fyne.Position, fyne.Size) {
 		safeTop := float32(c.device.safeTop) / c.scale
 		safeRight := float32(c.device.safeRight) / c.scale
 		safeBottom := float32(c.device.safeBottom) / c.scale
-		pos = fyne.NewPos(safeLeft, safeTop)
+		pos = granio.NewPos(safeLeft, safeTop)
 		size = c.size.SubtractWidthHeight(safeLeft+safeRight, safeTop+safeBottom)
 	}
 	if c.windowHeadIsDisplacing() {
@@ -98,11 +98,11 @@ func (c *canvas) InteractiveArea() (fyne.Position, fyne.Size) {
 	return pos, size
 }
 
-func (c *canvas) MinSize() fyne.Size {
+func (c *canvas) MinSize() granio.Size {
 	return c.size // TODO check
 }
 
-func (c *canvas) OnTypedKey() func(*fyne.KeyEvent) {
+func (c *canvas) OnTypedKey() func(*granio.KeyEvent) {
 	return c.onTypedKey
 }
 
@@ -110,11 +110,11 @@ func (c *canvas) OnTypedRune() func(rune) {
 	return c.onTypedRune
 }
 
-func (c *canvas) PixelCoordinateForPosition(pos fyne.Position) (x, y int) {
+func (c *canvas) PixelCoordinateForPosition(pos granio.Position) (x, y int) {
 	return int(pos.X * c.scale), int(pos.Y * c.scale)
 }
 
-func (c *canvas) Resize(size fyne.Size) {
+func (c *canvas) Resize(size granio.Size) {
 	if size == c.size {
 		return
 	}
@@ -126,13 +126,13 @@ func (c *canvas) Scale() float32 {
 	return c.scale
 }
 
-func (c *canvas) SetContent(content fyne.CanvasObject) {
+func (c *canvas) SetContent(content granio.CanvasObject) {
 	c.applyContent(content)
 	c.sizeContent(c.Size()) // fixed window size for mobile, cannot stretch to new content
 	c.SetDirty()
 }
 
-func (c *canvas) SetOnTypedKey(typed func(*fyne.KeyEvent)) {
+func (c *canvas) SetOnTypedKey(typed func(*granio.KeyEvent)) {
 	c.onTypedKey = typed
 }
 
@@ -140,11 +140,11 @@ func (c *canvas) SetOnTypedRune(typed func(rune)) {
 	c.onTypedRune = typed
 }
 
-func (c *canvas) Size() fyne.Size {
+func (c *canvas) Size() granio.Size {
 	return c.size
 }
 
-func (c *canvas) applyContent(content fyne.CanvasObject) {
+func (c *canvas) applyContent(content granio.CanvasObject) {
 	c.content = content
 	c.SetContentTreeAndFocusMgr(content)
 }
@@ -158,12 +158,12 @@ func (c *canvas) applyThemeOutOfTreeObjects() {
 	}
 }
 
-func (c *canvas) findObjectAtPositionMatching(pos fyne.Position, test func(object fyne.CanvasObject) bool) (fyne.CanvasObject, fyne.Position, int) {
+func (c *canvas) findObjectAtPositionMatching(pos granio.Position, test func(object granio.CanvasObject) bool) (granio.CanvasObject, granio.Position, int) {
 	if c.menu != nil {
 		return intdriver.FindObjectAtPositionMatching(pos, test, c.Overlays().Top(), c.menu)
 	}
 
-	var wh fyne.CanvasObject
+	var wh granio.CanvasObject
 	if c.windowHead != nil {
 		wh = c.windowHead
 	}
@@ -175,12 +175,12 @@ func (c *canvas) overlayChanged() {
 	c.SetDirty()
 }
 
-func (c *canvas) setMenu(menu fyne.CanvasObject) {
+func (c *canvas) setMenu(menu granio.CanvasObject) {
 	c.menu = menu
 	c.SetMenuTreeAndFocusMgr(menu)
 }
 
-func (c *canvas) setWindowHead(head *fyne.Container) {
+func (c *canvas) setWindowHead(head *granio.Container) {
 	if c.padded {
 		head = container.NewPadded(head)
 	}
@@ -188,7 +188,7 @@ func (c *canvas) setWindowHead(head *fyne.Container) {
 	c.SetMobileWindowHeadTree(head)
 }
 
-func (c *canvas) sizeContent(size fyne.Size) {
+func (c *canvas) sizeContent(size granio.Size) {
 	if c.content == nil { // window may not be configured yet
 		return
 	}
@@ -197,10 +197,10 @@ func (c *canvas) sizeContent(size fyne.Size) {
 	areaPos, areaSize := c.InteractiveArea()
 
 	if c.windowHead != nil {
-		var headSize fyne.Size
+		var headSize granio.Size
 		headPos := areaPos
 		if c.windowHeadIsDisplacing() {
-			headSize = fyne.NewSize(areaSize.Width, c.windowHead.MinSize().Height)
+			headSize = granio.NewSize(areaSize.Width, c.windowHead.MinSize().Height)
 			headPos = headPos.SubtractXY(0, headSize.Height)
 		} else {
 			headSize = c.windowHead.MinSize()
@@ -215,23 +215,23 @@ func (c *canvas) sizeContent(size fyne.Size) {
 	}
 
 	if c.padded {
-		c.content.Resize(areaSize.Subtract(fyne.NewSize(theme.Padding()*2, theme.Padding()*2)))
-		c.content.Move(areaPos.Add(fyne.NewPos(theme.Padding(), theme.Padding())))
+		c.content.Resize(areaSize.Subtract(granio.NewSize(theme.Padding()*2, theme.Padding()*2)))
+		c.content.Move(areaPos.Add(granio.NewPos(theme.Padding(), theme.Padding())))
 	} else {
 		c.content.Resize(areaSize)
 		c.content.Move(areaPos)
 	}
 }
 
-func (c *canvas) tapDown(pos fyne.Position, tapID int) {
+func (c *canvas) tapDown(pos granio.Position, tapID int) {
 	c.lastTapDown[tapID] = time.Now()
 	c.lastTapDownPos[tapID] = pos
 	c.dragging = nil
 	c.draggingOuter = nil
 
-	co, objPos, layer := c.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
+	co, objPos, layer := c.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
 		switch object.(type) {
-		case mobile.Touchable, fyne.Focusable:
+		case mobile.Touchable, granio.Focusable:
 			return true
 		}
 
@@ -248,14 +248,14 @@ func (c *canvas) tapDown(pos fyne.Position, tapID int) {
 	}
 
 	if layer != 1 { // 0 - overlay, 1 - window head / menu, 2 - content
-		if wid, ok := co.(fyne.Focusable); !ok || wid != c.Focused() {
+		if wid, ok := co.(granio.Focusable); !ok || wid != c.Focused() {
 			c.Unfocus()
 		}
 	}
 }
 
-func (c *canvas) tapMove(pos fyne.Position, tapID int,
-	dragCallback func(fyne.Draggable, *fyne.DragEvent),
+func (c *canvas) tapMove(pos granio.Position, tapID int,
+	dragCallback func(granio.Draggable, *granio.DragEvent),
 ) {
 	previousPos := c.lastTapDownPos[tapID]
 	deltaX := pos.X - previousPos.X
@@ -265,11 +265,11 @@ func (c *canvas) tapMove(pos fyne.Position, tapID int,
 		return
 	}
 	c.lastTapDownPos[tapID] = pos
-	offset := fyne.Delta{DX: deltaX, DY: deltaY}
+	offset := granio.Delta{DX: deltaX, DY: deltaY}
 	c.lastTapDelta[tapID] = offset
 
-	co, objPos, _ := c.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
-		if _, ok := object.(fyne.Draggable); ok {
+	co, objPos, _ := c.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
+		if _, ok := object.(granio.Draggable); ok {
 			return true
 		} else if _, ok := object.(mobile.Touchable); ok {
 			return true
@@ -277,7 +277,7 @@ func (c *canvas) tapMove(pos fyne.Position, tapID int,
 
 		return false
 	})
-	var scrollOtherDirection fyne.CanvasObject
+	var scrollOtherDirection granio.CanvasObject
 	if scr, ok := co.(*container.Scroll); ok {
 		switch scr.Direction {
 		case container.ScrollHorizontalOnly:
@@ -286,7 +286,7 @@ func (c *canvas) tapMove(pos fyne.Position, tapID int,
 			c.otherDirection = container.ScrollHorizontalOnly
 		}
 		if c.otherDirection != container.ScrollBoth {
-			scrollOtherDirection, _, _ = c.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
+			scrollOtherDirection, _, _ = c.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
 				if scr, ok := object.(*container.Scroll); ok {
 					return scr.Direction == c.otherDirection || scr.Direction == container.ScrollBoth
 				}
@@ -308,7 +308,7 @@ func (c *canvas) tapMove(pos fyne.Position, tapID int,
 	}
 
 	if c.dragging == nil {
-		drag, ok := co.(fyne.Draggable)
+		drag, ok := co.(granio.Draggable)
 		if !ok {
 			return
 		}
@@ -317,12 +317,12 @@ func (c *canvas) tapMove(pos fyne.Position, tapID int,
 		c.dragOffset = previousPos.Subtract(objPos)
 		c.dragStart = co.Position()
 		if scrollOtherDirection != nil {
-			c.draggingOuter, _ = scrollOtherDirection.(fyne.Draggable)
+			c.draggingOuter, _ = scrollOtherDirection.(granio.Draggable)
 		}
 	}
 
-	ev := &fyne.DragEvent{}
-	draggedObjDelta := c.dragStart.Subtract(c.dragging.(fyne.CanvasObject).Position())
+	ev := &granio.DragEvent{}
+	draggedObjDelta := c.dragStart.Subtract(c.dragging.(granio.CanvasObject).Position())
 	ev.Position = pos.Subtract(c.dragOffset).Add(draggedObjDelta)
 	ev.Dragged = offset
 
@@ -337,16 +337,16 @@ func (c *canvas) tapMove(pos fyne.Position, tapID int,
 	}
 }
 
-func (c *canvas) tapUp(pos fyne.Position, tapID int,
-	tapCallback func(fyne.Tappable, *fyne.PointEvent),
-	tapAltCallback func(fyne.SecondaryTappable, *fyne.PointEvent),
-	doubleTapCallback func(fyne.DoubleTappable, *fyne.PointEvent),
-	dragCallback func(fyne.Draggable, *fyne.DragEvent),
+func (c *canvas) tapUp(pos granio.Position, tapID int,
+	tapCallback func(granio.Tappable, *granio.PointEvent),
+	tapAltCallback func(granio.SecondaryTappable, *granio.PointEvent),
+	doubleTapCallback func(granio.DoubleTappable, *granio.PointEvent),
+	dragCallback func(granio.Draggable, *granio.DragEvent),
 ) {
 	if c.dragging != nil {
 		previousDelta := c.lastTapDelta[tapID]
-		ev := &fyne.DragEvent{Dragged: previousDelta}
-		draggedObjDelta := c.dragStart.Subtract(c.dragging.(fyne.CanvasObject).Position())
+		ev := &granio.DragEvent{Dragged: previousDelta}
+		draggedObjDelta := c.dragStart.Subtract(c.dragging.(granio.CanvasObject).Position())
 		ev.Position = pos.Subtract(c.dragOffset).Add(draggedObjDelta)
 		ev.AbsolutePosition = pos
 		dragCallback(c.dragging, ev)
@@ -374,14 +374,14 @@ func (c *canvas) tapUp(pos fyne.Position, tapID int,
 		return
 	}
 
-	co, objPos, _ := c.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
-		if _, ok := object.(fyne.Tappable); ok {
+	co, objPos, _ := c.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
+		if _, ok := object.(granio.Tappable); ok {
 			return true
-		} else if _, ok := object.(fyne.SecondaryTappable); ok {
+		} else if _, ok := object.(granio.SecondaryTappable); ok {
 			return true
 		} else if _, ok := object.(mobile.Touchable); ok {
 			return true
-		} else if _, ok := object.(fyne.DoubleTappable); ok {
+		} else if _, ok := object.(granio.DoubleTappable); ok {
 			return true
 		}
 
@@ -397,13 +397,13 @@ func (c *canvas) tapUp(pos fyne.Position, tapID int,
 		c.touched[tapID] = nil
 	}
 
-	ev := &fyne.PointEvent{
+	ev := &granio.PointEvent{
 		Position:         objPos,
 		AbsolutePosition: pos,
 	}
 
 	if duration < tapSecondaryDelay {
-		_, doubleTap := co.(fyne.DoubleTappable)
+		_, doubleTap := co.(granio.DoubleTappable)
 		if doubleTap {
 			c.touchCancelLock.Lock()
 			c.touchTapCount++
@@ -416,24 +416,24 @@ func (c *canvas) tapUp(pos fyne.Position, tapID int,
 			}
 			go c.waitForDoubleTap(co, ev, tapCallback, doubleTapCallback)
 		} else {
-			if wid, ok := co.(fyne.Tappable); ok {
+			if wid, ok := co.(granio.Tappable); ok {
 				tapCallback(wid, ev)
 			}
 		}
 	} else {
-		if wid, ok := co.(fyne.SecondaryTappable); ok {
+		if wid, ok := co.(granio.SecondaryTappable); ok {
 			prevOverlay := c.Overlays().Top()
 			tapAltCallback(wid, ev)
 
 			// if the secondary tap dismissed an overlay (rather than opening a new
 			// one on top), forward the event to the widget underneath
 			if prevOverlay != nil && !slices.Contains(c.Overlays().List(), prevOverlay) {
-				co2, objPos2, _ := c.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
-					_, ok := object.(fyne.SecondaryTappable)
+				co2, objPos2, _ := c.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
+					_, ok := object.(granio.SecondaryTappable)
 					return ok
 				})
-				if sec2, ok := co2.(fyne.SecondaryTappable); ok {
-					ev2 := &fyne.PointEvent{Position: objPos2, AbsolutePosition: pos}
+				if sec2, ok := co2.(granio.SecondaryTappable); ok {
+					ev2 := &granio.PointEvent{Position: objPos2, AbsolutePosition: pos}
 					tapAltCallback(sec2, ev2)
 				}
 			}
@@ -441,7 +441,7 @@ func (c *canvas) tapUp(pos fyne.Position, tapID int,
 	}
 }
 
-func (c *canvas) waitForDoubleTap(co fyne.CanvasObject, ev *fyne.PointEvent, tapCallback func(fyne.Tappable, *fyne.PointEvent), doubleTapCallback func(fyne.DoubleTappable, *fyne.PointEvent)) {
+func (c *canvas) waitForDoubleTap(co granio.CanvasObject, ev *granio.PointEvent, tapCallback func(granio.Tappable, *granio.PointEvent), doubleTapCallback func(granio.DoubleTappable, *granio.PointEvent)) {
 	ctx, cancel := context.WithDeadline(context.TODO(), time.Now().Add(tapDoubleDelay))
 	c.touchCancelLock.Lock()
 	c.touchCancelFunc = cancel
@@ -449,18 +449,18 @@ func (c *canvas) waitForDoubleTap(co fyne.CanvasObject, ev *fyne.PointEvent, tap
 	defer cancel()
 
 	<-ctx.Done()
-	fyne.CurrentApp().Driver().DoFromGoroutine(func() {
+	granio.CurrentApp().Driver().DoFromGoroutine(func() {
 		c.touchCancelLock.Lock()
 		touchCount := c.touchTapCount
 		touchLast := c.touchLastTapped
 		c.touchCancelLock.Unlock()
 
 		if touchCount == 2 && touchLast == co {
-			if wid, ok := co.(fyne.DoubleTappable); ok {
+			if wid, ok := co.(granio.DoubleTappable); ok {
 				doubleTapCallback(wid, ev)
 			}
 		} else {
-			if wid, ok := co.(fyne.Tappable); ok {
+			if wid, ok := co.(granio.Tappable); ok {
 				tapCallback(wid, ev)
 			}
 		}
@@ -480,7 +480,7 @@ func (c *canvas) windowHeadIsDisplacing() bool {
 
 	chromeBox := c.windowHead
 	if c.padded {
-		chromeBox, _ = chromeBox.Objects[0].(*fyne.Container) // the padded container
+		chromeBox, _ = chromeBox.Objects[0].(*granio.Container) // the padded container
 	}
 	return len(chromeBox.Objects) > 1
 }

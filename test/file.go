@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 var errUnsupportedURLProtocol = errors.New("unsupported URL protocol")
@@ -19,11 +19,11 @@ type file struct {
 }
 
 type directory struct {
-	fyne.URI
+	granio.URI
 }
 
 // Declare conformity to the ListableURI interface
-var _ fyne.ListableURI = (*directory)(nil)
+var _ granio.ListableURI = (*directory)(nil)
 
 func (f *file) Open() (io.ReadCloser, error) {
 	return os.Open(f.path)
@@ -41,11 +41,11 @@ func (f *file) Name() string {
 	return filepath.Base(f.path)
 }
 
-func (f *file) URI() fyne.URI {
+func (f *file) URI() granio.URI {
 	return storage.NewFileURI(f.path)
 }
 
-func openFile(uri fyne.URI, create bool) (*file, error) {
+func openFile(uri granio.URI, create bool) (*file, error) {
 	if uri.Scheme() != "file" {
 		return nil, errUnsupportedURLProtocol
 	}
@@ -60,15 +60,15 @@ func openFile(uri fyne.URI, create bool) (*file, error) {
 	return &file{File: f, path: path}, err
 }
 
-func (*driver) FileReaderForURI(uri fyne.URI) (fyne.URIReadCloser, error) {
+func (*driver) FileReaderForURI(uri granio.URI) (granio.URIReadCloser, error) {
 	return openFile(uri, false)
 }
 
-func (*driver) FileWriterForURI(uri fyne.URI) (fyne.URIWriteCloser, error) {
+func (*driver) FileWriterForURI(uri granio.URI) (granio.URIWriteCloser, error) {
 	return openFile(uri, true)
 }
 
-func (*driver) ListerForURI(uri fyne.URI) (fyne.ListableURI, error) {
+func (*driver) ListerForURI(uri granio.URI) (granio.ListableURI, error) {
 	if uri.Scheme() != "file" {
 		return nil, errUnsupportedURLProtocol
 	}
@@ -86,7 +86,7 @@ func (*driver) ListerForURI(uri fyne.URI) (fyne.ListableURI, error) {
 	return &directory{URI: uri}, nil
 }
 
-func (d *directory) List() ([]fyne.URI, error) {
+func (d *directory) List() ([]granio.URI, error) {
 	if d.Scheme() != "file" {
 		return nil, errUnsupportedURLProtocol
 	}
@@ -97,7 +97,7 @@ func (d *directory) List() ([]fyne.URI, error) {
 		return nil, err
 	}
 
-	urilist := make([]fyne.URI, len(files))
+	urilist := make([]granio.URI, len(files))
 	for i, f := range files {
 		urilist[i] = storage.NewFileURI(filepath.Join(path, f.Name()))
 	}

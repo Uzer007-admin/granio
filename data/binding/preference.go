@@ -3,11 +3,11 @@ package binding
 import (
 	"sync/atomic"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Work around Go not supporting generic methods on non-generic types:
-type preferenceLookupSetter[T any] func(fyne.Preferences) (func(string) T, func(string, T))
+type preferenceLookupSetter[T any] func(granio.Preferences) (func(string) T, func(string, T))
 
 const keyTypeMismatchError = "A previous preference binding exists with different type for key: "
 
@@ -15,9 +15,9 @@ const keyTypeMismatchError = "A previous preference binding exists with differen
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.0
-func BindPreferenceBool(key string, p fyne.Preferences) Bool {
+func BindPreferenceBool(key string, p granio.Preferences) Bool {
 	return bindPreferenceItem(key, p,
-		func(p fyne.Preferences) (func(string) bool, func(string, bool)) {
+		func(p granio.Preferences) (func(string) bool, func(string, bool)) {
 			return p.Bool, p.SetBool
 		})
 }
@@ -26,10 +26,10 @@ func BindPreferenceBool(key string, p fyne.Preferences) Bool {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.6
-func BindPreferenceBoolList(key string, p fyne.Preferences) BoolList {
+func BindPreferenceBoolList(key string, p granio.Preferences) BoolList {
 	return bindPreferenceListComparable(
 		key, p,
-		func(p fyne.Preferences) (func(string) []bool, func(string, []bool)) {
+		func(p granio.Preferences) (func(string) []bool, func(string, []bool)) {
 			return p.BoolList, p.SetBoolList
 		},
 	)
@@ -39,9 +39,9 @@ func BindPreferenceBoolList(key string, p fyne.Preferences) BoolList {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.0
-func BindPreferenceFloat(key string, p fyne.Preferences) Float {
+func BindPreferenceFloat(key string, p granio.Preferences) Float {
 	return bindPreferenceItem(key, p,
-		func(p fyne.Preferences) (func(string) float64, func(string, float64)) {
+		func(p granio.Preferences) (func(string) float64, func(string, float64)) {
 			return p.Float, p.SetFloat
 		})
 }
@@ -50,10 +50,10 @@ func BindPreferenceFloat(key string, p fyne.Preferences) Float {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.6
-func BindPreferenceFloatList(key string, p fyne.Preferences) FloatList {
+func BindPreferenceFloatList(key string, p granio.Preferences) FloatList {
 	return bindPreferenceListComparable(
 		key, p,
-		func(p fyne.Preferences) (func(string) []float64, func(string, []float64)) {
+		func(p granio.Preferences) (func(string) []float64, func(string, []float64)) {
 			return p.FloatList, p.SetFloatList
 		},
 	)
@@ -63,9 +63,9 @@ func BindPreferenceFloatList(key string, p fyne.Preferences) FloatList {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.0
-func BindPreferenceInt(key string, p fyne.Preferences) Int {
+func BindPreferenceInt(key string, p granio.Preferences) Int {
 	return bindPreferenceItem(key, p,
-		func(p fyne.Preferences) (func(string) int, func(string, int)) {
+		func(p granio.Preferences) (func(string) int, func(string, int)) {
 			return p.Int, p.SetInt
 		})
 }
@@ -74,10 +74,10 @@ func BindPreferenceInt(key string, p fyne.Preferences) Int {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.6
-func BindPreferenceIntList(key string, p fyne.Preferences) IntList {
+func BindPreferenceIntList(key string, p granio.Preferences) IntList {
 	return bindPreferenceListComparable(
 		key, p,
-		func(p fyne.Preferences) (func(string) []int, func(string, []int)) {
+		func(p granio.Preferences) (func(string) []int, func(string, []int)) {
 			return p.IntList, p.SetIntList
 		},
 	)
@@ -87,9 +87,9 @@ func BindPreferenceIntList(key string, p fyne.Preferences) IntList {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.0
-func BindPreferenceString(key string, p fyne.Preferences) String {
+func BindPreferenceString(key string, p granio.Preferences) String {
 	return bindPreferenceItem(key, p,
-		func(p fyne.Preferences) (func(string) string, func(string, string)) {
+		func(p granio.Preferences) (func(string) string, func(string, string)) {
 			return p.String, p.SetString
 		})
 }
@@ -98,16 +98,16 @@ func BindPreferenceString(key string, p fyne.Preferences) String {
 // Changes to this value will be saved to application storage and when the app starts the previous values will be read.
 //
 // Since: 2.6
-func BindPreferenceStringList(key string, p fyne.Preferences) StringList {
+func BindPreferenceStringList(key string, p granio.Preferences) StringList {
 	return bindPreferenceListComparable(
 		key, p,
-		func(p fyne.Preferences) (func(string) []string, func(string, []string)) {
+		func(p granio.Preferences) (func(string) []string, func(string, []string)) {
 			return p.StringList, p.SetStringList
 		},
 	)
 }
 
-func bindPreferenceItem[T bool | float64 | int | string](key string, p fyne.Preferences, setLookup preferenceLookupSetter[T]) Item[T] {
+func bindPreferenceItem[T bool | float64 | int | string](key string, p granio.Preferences, setLookup preferenceLookupSetter[T]) Item[T] {
 	if found, ok := lookupExistingBinding[T](key, p); ok {
 		return found
 	}
@@ -119,7 +119,7 @@ func bindPreferenceItem[T bool | float64 | int | string](key string, p fyne.Pref
 	return listen
 }
 
-func lookupExistingBinding[T any](key string, p fyne.Preferences) (Item[T], bool) {
+func lookupExistingBinding[T any](key string, p granio.Preferences) (Item[T], bool) {
 	binds := prefBinds.getBindings(p)
 	if binds == nil {
 		return nil, false
@@ -129,13 +129,13 @@ func lookupExistingBinding[T any](key string, p fyne.Preferences) (Item[T], bool
 		if l, ok := listen.(Item[T]); ok {
 			return l, ok
 		}
-		fyne.LogError(keyTypeMismatchError+key, nil)
+		granio.LogError(keyTypeMismatchError+key, nil)
 	}
 
 	return nil, false
 }
 
-func lookupExistingListBinding[T bool | float64 | int | string](key string, p fyne.Preferences) (*prefBoundList[T], bool) {
+func lookupExistingListBinding[T bool | float64 | int | string](key string, p granio.Preferences) (*prefBoundList[T], bool) {
 	binds := prefBinds.getBindings(p)
 	if binds == nil {
 		return nil, false
@@ -145,7 +145,7 @@ func lookupExistingListBinding[T bool | float64 | int | string](key string, p fy
 		if l, ok := listen.(*prefBoundList[T]); ok {
 			return l, ok
 		}
-		fyne.LogError(keyTypeMismatchError+key, nil)
+		granio.LogError(keyTypeMismatchError+key, nil)
 	}
 
 	return nil, false
@@ -184,7 +184,7 @@ func (b *prefBoundBase[T]) checkForChange() {
 	b.trigger()
 }
 
-func (b *prefBoundBase[T]) replaceProvider(p fyne.Preferences) {
+func (b *prefBoundBase[T]) replaceProvider(p granio.Preferences) {
 	b.get, b.set = b.setLookup(p)
 }
 
@@ -219,13 +219,13 @@ func (b *prefBoundList[T]) checkForChange() {
 	}
 }
 
-func (b *prefBoundList[T]) replaceProvider(p fyne.Preferences) {
+func (b *prefBoundList[T]) replaceProvider(p granio.Preferences) {
 	b.get, b.set = b.setLookup(p)
 }
 
 type internalPrefs = interface{ WriteValues(func(map[string]any)) }
 
-func bindPreferenceListComparable[T bool | float64 | int | string](key string, p fyne.Preferences,
+func bindPreferenceListComparable[T bool | float64 | int | string](key string, p granio.Preferences,
 	setLookup preferenceLookupSetter[[]T],
 ) *prefBoundList[T] {
 	if found, ok := lookupExistingListBinding[T](key, p); ok {

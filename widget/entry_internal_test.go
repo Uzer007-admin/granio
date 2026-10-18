@@ -5,16 +5,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	intWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	intWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-func clickPrimary(e *Entry, ev *fyne.PointEvent) {
+func clickPrimary(e *Entry, ev *granio.PointEvent) {
 	mouseEvent := &desktop.MouseEvent{
 		PointEvent: *ev,
 		Button:     desktop.MouseButtonPrimary,
@@ -31,7 +31,7 @@ func TestEntry_Cursor(t *testing.T) {
 
 func TestEntry_DoubleTapped(t *testing.T) {
 	entry := NewEntry()
-	entry.Wrapping = fyne.TextWrapOff
+	entry.Wrapping = granio.TextWrapOff
 	entry.Scroll = intWidget.ScrollNone
 	entry.SetText("The quick brown fox\njumped    over the lazy dog\n")
 	entry.Resize(entry.MinSize())
@@ -75,8 +75,8 @@ func TestEntry_DoubleTapped_AfterCol(t *testing.T) {
 	assert.Equal(t, entry, c.Focused())
 
 	testCharSize := theme.TextSize()
-	pos := fyne.NewPos(testCharSize, testCharSize*4) // tap below rows
-	ev = &fyne.PointEvent{Position: pos}
+	pos := granio.NewPos(testCharSize, testCharSize*4) // tap below rows
+	ev = &granio.PointEvent{Position: pos}
 	clickPrimary(entry, ev)
 	entry.DoubleTapped(ev)
 
@@ -85,7 +85,7 @@ func TestEntry_DoubleTapped_AfterCol(t *testing.T) {
 
 func TestEntry_DragSelect(t *testing.T) {
 	entry := NewEntry()
-	entry.Wrapping = fyne.TextWrapOff
+	entry.Wrapping = granio.TextWrapOff
 	entry.Scroll = intWidget.ScrollNone
 	entry.SetText("The quick brown fox jumped\nover the lazy dog\nThe quick\nbrown fox\njumped over the lazy dog\n")
 	entry.Resize(entry.MinSize())
@@ -99,7 +99,7 @@ func TestEntry_DragSelect(t *testing.T) {
 	me := &desktop.MouseEvent{PointEvent: *ev1, Button: desktop.MouseButtonPrimary}
 	entry.MouseDown(me)
 	for ; ev1.Position.X < ev2.Position.X; ev1.Position.X++ {
-		de := &fyne.DragEvent{PointEvent: *ev1, Dragged: fyne.NewDelta(1, 0)}
+		de := &granio.DragEvent{PointEvent: *ev1, Dragged: granio.NewDelta(1, 0)}
 		entry.Dragged(de)
 	}
 	me = &desktop.MouseEvent{PointEvent: *ev1, Button: desktop.MouseButtonPrimary}
@@ -110,7 +110,7 @@ func TestEntry_DragSelect(t *testing.T) {
 
 func TestEntry_DragSelectLargeStep(t *testing.T) {
 	entry := NewEntry()
-	entry.Wrapping = fyne.TextWrapOff
+	entry.Wrapping = granio.TextWrapOff
 	entry.Scroll = intWidget.ScrollNone
 	entry.SetText("The quick brown fox jumped\nover the lazy dog\nThe quick\nbrown fox\njumped over the lazy dog\n")
 	entry.Resize(entry.MinSize())
@@ -125,7 +125,7 @@ func TestEntry_DragSelectLargeStep(t *testing.T) {
 	entry.MouseDown(me)
 
 	delta := ev2.Position.Subtract(ev1.Position)
-	de := &fyne.DragEvent{PointEvent: *ev2, Dragged: fyne.NewDelta(delta.X, delta.Y)}
+	de := &granio.DragEvent{PointEvent: *ev2, Dragged: granio.NewDelta(delta.X, delta.Y)}
 	entry.Dragged(de)
 
 	me = &desktop.MouseEvent{PointEvent: *ev2, Button: desktop.MouseButtonPrimary}
@@ -142,9 +142,9 @@ func TestEntry_DragSelectEmpty(t *testing.T) {
 	ev2 := getClickPosition("Testing", 0)
 
 	// Test empty selection - drag from 'e' to 'e' (empty)
-	de := &fyne.DragEvent{PointEvent: *ev1, Dragged: fyne.NewDelta(1, 0)}
+	de := &granio.DragEvent{PointEvent: *ev1, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
-	de = &fyne.DragEvent{PointEvent: *ev1, Dragged: fyne.NewDelta(1, 0)}
+	de = &granio.DragEvent{PointEvent: *ev1, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
 
 	assert.True(t, entry.sel.selecting)
@@ -155,9 +155,9 @@ func TestEntry_DragSelectEmpty(t *testing.T) {
 
 	// Test non-empty selection - drag from 'T' to 'g' (empty)
 	ev1 = getClickPosition("", 0)
-	de = &fyne.DragEvent{PointEvent: *ev1, Dragged: fyne.NewDelta(1, 0)}
+	de = &granio.DragEvent{PointEvent: *ev1, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
-	de = &fyne.DragEvent{PointEvent: *ev2, Dragged: fyne.NewDelta(1, 0)}
+	de = &granio.DragEvent{PointEvent: *ev2, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
 
 	assert.True(t, entry.sel.selecting)
@@ -179,9 +179,9 @@ func TestEntry_DragSelectWithScroll(t *testing.T) {
 	// mouse down and drag from 'a' to 'i'
 	me := &desktop.MouseEvent{PointEvent: *ev1, Button: desktop.MouseButtonPrimary}
 	entry.MouseDown(me)
-	de := &fyne.DragEvent{PointEvent: *ev1, Dragged: fyne.NewDelta(1, 0)}
+	de := &granio.DragEvent{PointEvent: *ev1, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
-	de = &fyne.DragEvent{PointEvent: *ev2, Dragged: fyne.NewDelta(1, 0)}
+	de = &granio.DragEvent{PointEvent: *ev2, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
 	me = &desktop.MouseEvent{PointEvent: *ev1, Button: desktop.MouseButtonPrimary}
 	entry.MouseUp(me)
@@ -259,18 +259,18 @@ func TestEntry_EraseSelection(t *testing.T) {
 	e.CursorRow = 1
 	e.CursorColumn = 2
 	e.sel.cursorRow, e.sel.cursorRow = e.CursorRow, e.CursorColumn
-	keyDown := func(key *fyne.KeyEvent) {
+	keyDown := func(key *granio.KeyEvent) {
 		e.KeyDown(key)
 		e.TypedKey(key)
 	}
-	keyPress := func(key *fyne.KeyEvent) {
+	keyPress := func(key *granio.KeyEvent) {
 		keyDown(key)
 		e.KeyUp(key)
 	}
-	keyDown(&fyne.KeyEvent{Name: desktop.KeyShiftLeft})
-	keyPress(&fyne.KeyEvent{Name: fyne.KeyRight})
-	keyPress(&fyne.KeyEvent{Name: fyne.KeyRight})
-	keyPress(&fyne.KeyEvent{Name: fyne.KeyRight})
+	keyDown(&granio.KeyEvent{Name: desktop.KeyShiftLeft})
+	keyPress(&granio.KeyEvent{Name: granio.KeyRight})
+	keyPress(&granio.KeyEvent{Name: granio.KeyRight})
+	keyPress(&granio.KeyEvent{Name: granio.KeyRight})
 
 	_ = e.Theme()
 	e.eraseSelectionAndUpdate()
@@ -291,7 +291,7 @@ func TestEntry_CallbackLocking(t *testing.T) {
 	_ = e.Theme()
 	test.Type(e, "abc123")
 	e.selectAll()
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyBackspace})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
 	assert.Equal(t, 7, called)
 }
 
@@ -300,14 +300,14 @@ func TestEntry_ContentSizeAndPlacementWithIcon(t *testing.T) {
 	entry.SetIcon(theme.MailComposeIcon())
 	entry.SetText("SomeText")
 	renderer := entry.CreateRenderer()
-	contentPos := fyne.NewPos(theme.LineSpacing()+theme.IconInlineSize(), theme.InputBorderSize())
+	contentPos := granio.NewPos(theme.LineSpacing()+theme.IconInlineSize(), theme.InputBorderSize())
 
 	renderer.Layout(entry.MinSize())
 	// Scrollable content should be positioned after the icon, with correct padding
 	assert.Equal(t, contentPos, entry.scroller.Position())
 
-	entry.Wrapping = fyne.TextWrapOff
-	entry.Scroll = fyne.ScrollNone
+	entry.Wrapping = granio.TextWrapOff
+	entry.Scroll = granio.ScrollNone
 	renderer.Layout(entry.MinSize())
 	// Content should be positioned after the icon, with correct padding
 	assert.Equal(t, contentPos, entry.content.Position())
@@ -318,12 +318,12 @@ func TestEntry_MouseClickAndDragOutsideText(t *testing.T) {
 	entry.SetText("A\nB\n")
 
 	testCharSize := theme.TextSize()
-	pos := fyne.NewPos(testCharSize, testCharSize*4) // tap below rows
-	ev := &fyne.PointEvent{Position: pos}
+	pos := granio.NewPos(testCharSize, testCharSize*4) // tap below rows
+	ev := &granio.PointEvent{Position: pos}
 
 	me := &desktop.MouseEvent{PointEvent: *ev, Button: desktop.MouseButtonPrimary}
 	entry.MouseDown(me)
-	de := &fyne.DragEvent{PointEvent: *ev, Dragged: fyne.NewDelta(1, 0)}
+	de := &granio.DragEvent{PointEvent: *ev, Dragged: granio.NewDelta(1, 0)}
 	entry.Dragged(de)
 	entry.MouseUp(me)
 	assert.False(t, entry.sel.selecting)
@@ -332,11 +332,11 @@ func TestEntry_MouseClickAndDragOutsideText(t *testing.T) {
 func TestEntry_MouseDownOnSelect(t *testing.T) {
 	entry := NewEntry()
 	entry.SetText("Ahnj\nBuki\n")
-	entry.TypedShortcut(&fyne.ShortcutSelectAll{})
+	entry.TypedShortcut(&granio.ShortcutSelectAll{})
 
 	testCharSize := theme.TextSize()
-	pos := fyne.NewPos(testCharSize, testCharSize*4) // tap below rows
-	ev := &fyne.PointEvent{Position: pos}
+	pos := granio.NewPos(testCharSize, testCharSize*4) // tap below rows
+	ev := &granio.PointEvent{Position: pos}
 
 	me := &desktop.MouseEvent{PointEvent: *ev, Button: desktop.MouseButtonSecondary}
 	entry.MouseDown(me)
@@ -360,7 +360,7 @@ func TestEntry_PasteFromClipboard(t *testing.T) {
 
 	testContent := "test"
 
-	clipboard := fyne.CurrentApp().Clipboard()
+	clipboard := granio.CurrentApp().Clipboard()
 	clipboard.SetContent(testContent)
 
 	entry.pasteFromClipboard(clipboard)
@@ -370,18 +370,18 @@ func TestEntry_PasteFromClipboard(t *testing.T) {
 
 func TestEntry_PasteFromClipboard_MultilineWrapping(t *testing.T) {
 	entry := NewMultiLineEntry()
-	entry.Wrapping = fyne.TextWrapWord
+	entry.Wrapping = granio.TextWrapWord
 
 	w := test.NewApp().NewWindow("")
 	defer w.Close()
 	w.SetContent(entry)
-	w.Resize(fyne.NewSize(108, 64))
+	w.Resize(granio.NewSize(108, 64))
 
 	test.Type(entry, "T")
 	assert.Equal(t, 0, entry.CursorRow)
 	assert.Equal(t, 1, entry.CursorColumn)
 
-	clipboard := fyne.CurrentApp().Clipboard()
+	clipboard := granio.CurrentApp().Clipboard()
 	clipboard.SetContent("esting entry")
 
 	entry.pasteFromClipboard(clipboard)
@@ -416,7 +416,7 @@ func TestEntry_PasteFromClipboardValidation(t *testing.T) {
 
 func TestEntry_PlaceholderTextStyle(t *testing.T) {
 	e := NewEntry()
-	e.TextStyle = fyne.TextStyle{Bold: true, Italic: true}
+	e.TextStyle = granio.TextStyle{Bold: true, Italic: true}
 
 	w := test.NewTempWindow(t, e)
 	assert.Equal(t, e.TextStyle, e.placeholderWidget.Segments[0].(*TextSegment).Style.TextStyle)
@@ -437,7 +437,7 @@ func TestEntry_Tab(t *testing.T) {
 	assert.Equal(t, "\tb", r.Objects()[1].(*canvas.Text).Text)
 
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(86, 86))
+	w.Resize(granio.NewSize(86, 86))
 	w.Canvas().Focus(e)
 	test.AssertImageMatches(t, "entry/tab-content.png", w.Canvas().Capture())
 }
@@ -449,15 +449,15 @@ func TestEntry_TabSelection(t *testing.T) {
 
 	e.CursorRow = 1
 	e.sel.cursorRow = 1
-	e.KeyDown(&fyne.KeyEvent{Name: desktop.KeyShiftLeft})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
-	e.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
-	e.KeyUp(&fyne.KeyEvent{Name: desktop.KeyShiftLeft})
+	e.KeyDown(&granio.KeyEvent{Name: desktop.KeyShiftLeft})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
+	e.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
+	e.KeyUp(&granio.KeyEvent{Name: desktop.KeyShiftLeft})
 
 	assert.Equal(t, "\tb", e.SelectedText())
 
 	w := test.NewTempWindow(t, e)
-	w.Resize(fyne.NewSize(86, 86))
+	w.Resize(granio.NewSize(86, 86))
 	w.Canvas().Focus(e)
 	test.AssertImageMatches(t, "entry/tab-select.png", w.Canvas().Capture())
 }
@@ -466,20 +466,20 @@ func TestEntry_ShiftSelection_ResetOnFocusLost(t *testing.T) {
 	e := NewEntry()
 	e.SetText("Hello")
 
-	e.KeyDown(&fyne.KeyEvent{Name: desktop.KeyShiftLeft})
+	e.KeyDown(&granio.KeyEvent{Name: desktop.KeyShiftLeft})
 	assert.True(t, e.selectKeyDown)
 
 	e.FocusLost()
 	assert.False(t, e.selectKeyDown)
 }
 
-func getClickPosition(str string, row int) *fyne.PointEvent {
-	x := fyne.MeasureText(str, theme.TextSize(), fyne.TextStyle{}).Width + theme.Padding()
+func getClickPosition(str string, row int) *granio.PointEvent {
+	x := granio.MeasureText(str, theme.TextSize(), granio.TextStyle{}).Width + theme.Padding()
 
-	rowHeight := fyne.MeasureText("M", theme.TextSize(), fyne.TextStyle{}).Height
+	rowHeight := granio.MeasureText("M", theme.TextSize(), granio.TextStyle{}).Height
 	y := float32(row)*rowHeight + rowHeight/2
 
 	// add a couple of pixels, this is currently a workaround for weird mouse to column logic on text with kerning
-	pos := fyne.NewPos(x+2, y)
-	return &fyne.PointEvent{Position: pos}
+	pos := granio.NewPos(x+2, y)
+	return &granio.PointEvent{Position: pos}
 }

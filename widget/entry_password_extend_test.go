@@ -3,9 +3,9 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +21,7 @@ func TestEntry_Password_Extended_CreateRenderer(t *testing.T) {
 	entry := &extendEntry{}
 	entry.ExtendBaseWidget(entry)
 	entry.Password = true
-	entry.Wrapping = fyne.TextWrap(fyne.TextTruncateClip)
+	entry.Wrapping = granio.TextWrap(granio.TextTruncateClip)
 	assert.NotNil(t, test.TempWidgetRenderer(t, entry))
 	r := test.TempWidgetRenderer(t, entry).(*entryRenderer).scroll.Content.(*entryContent)
 	p := test.TempWidgetRenderer(t, r).(*entryContentRenderer).provider

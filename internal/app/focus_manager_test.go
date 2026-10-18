@@ -3,11 +3,11 @@ package app_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/app"
-	internalWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -147,18 +147,18 @@ func TestFocusManager_FocusPrevious(t *testing.T) {
 }
 
 var (
-	_ fyne.Widget      = (*focusable)(nil)
-	_ fyne.Focusable   = (*focusable)(nil)
-	_ fyne.Disableable = (*focusable)(nil)
+	_ granio.Widget      = (*focusable)(nil)
+	_ granio.Focusable   = (*focusable)(nil)
+	_ granio.Disableable = (*focusable)(nil)
 )
 
 type focusable struct {
 	widget.DisableableWidget
-	child   fyne.CanvasObject
+	child   granio.CanvasObject
 	focused bool
 }
 
-func (f *focusable) CreateRenderer() fyne.WidgetRenderer {
+func (f *focusable) CreateRenderer() granio.WidgetRenderer {
 	return internalWidget.NewSimpleRenderer(f.child)
 }
 
@@ -176,7 +176,7 @@ func (f *focusable) FocusLost() {
 func (*focusable) TypedRune(_ rune) {
 }
 
-func (*focusable) TypedKey(_ *fyne.KeyEvent) {
+func (*focusable) TypedKey(_ *granio.KeyEvent) {
 }
 
 func setupFocusManager(t *testing.T) (m *app.FocusManager, entry1, hidden, visibleInsideHidden, entry2, disabled, entry3 *focusable) {

@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,34 +24,34 @@ func TestMenuBar(t *testing.T) {
 
 	var lastAction string
 
-	m1i3i3i1 := fyne.NewMenuItem("Old 1", func() { lastAction = "old 1" })
-	m1i3i3i2 := fyne.NewMenuItem("Old 2", func() { lastAction = "old 2" })
-	m1i3i1 := fyne.NewMenuItem("File 1", func() { lastAction = "file 1" })
-	m1i3i2 := fyne.NewMenuItem("File 2", func() { lastAction = "file 2" })
-	m1i3i3 := fyne.NewMenuItem("Older", nil)
-	m1i3i3.ChildMenu = fyne.NewMenu("", m1i3i3i1, m1i3i3i2)
-	m1i1 := fyne.NewMenuItem("New", func() { lastAction = "new" })
-	m1i2 := fyne.NewMenuItem("Open", func() { lastAction = "open" })
-	m1i3 := fyne.NewMenuItem("Recent", nil)
-	m1i3.ChildMenu = fyne.NewMenu("", m1i3i1, m1i3i2, m1i3i3)
+	m1i3i3i1 := granio.NewMenuItem("Old 1", func() { lastAction = "old 1" })
+	m1i3i3i2 := granio.NewMenuItem("Old 2", func() { lastAction = "old 2" })
+	m1i3i1 := granio.NewMenuItem("File 1", func() { lastAction = "file 1" })
+	m1i3i2 := granio.NewMenuItem("File 2", func() { lastAction = "file 2" })
+	m1i3i3 := granio.NewMenuItem("Older", nil)
+	m1i3i3.ChildMenu = granio.NewMenu("", m1i3i3i1, m1i3i3i2)
+	m1i1 := granio.NewMenuItem("New", func() { lastAction = "new" })
+	m1i2 := granio.NewMenuItem("Open", func() { lastAction = "open" })
+	m1i3 := granio.NewMenuItem("Recent", nil)
+	m1i3.ChildMenu = granio.NewMenu("", m1i3i1, m1i3i2, m1i3i3)
 	// TODO: remove useless separators: trailing, leading & double
-	// m1 := fyne.NewMenu("File", m1i1, m1i2, fyne.newMenuItemSeparator(), m1i3)
-	m1 := fyne.NewMenu("File", m1i1, m1i2, m1i3)
+	// m1 := granio.NewMenu("File", m1i1, m1i2, fyne.newMenuItemSeparator(), m1i3)
+	m1 := granio.NewMenu("File", m1i1, m1i2, m1i3)
 
-	m2i1 := fyne.NewMenuItem("Copy", func() { lastAction = "copy" })
-	m2i2 := fyne.NewMenuItem("Paste", func() { lastAction = "paste" })
-	m2 := fyne.NewMenu("Edit", m2i1, m2i2)
+	m2i1 := granio.NewMenuItem("Copy", func() { lastAction = "copy" })
+	m2i2 := granio.NewMenuItem("Paste", func() { lastAction = "paste" })
+	m2 := granio.NewMenu("Edit", m2i1, m2i2)
 
-	m3i1 := fyne.NewMenuItem("Help!", func() { lastAction = "help" })
-	m3 := fyne.NewMenu("Help", m3i1)
+	m3i1 := granio.NewMenuItem("Help!", func() { lastAction = "help" })
+	m3 := granio.NewMenu("Help", m3i1)
 
-	menu := fyne.NewMainMenu(m1, m2, m3)
+	menu := granio.NewMainMenu(m1, m2, m3)
 
 	t.Run("mouse control and basic behaviour", func(t *testing.T) {
 		w := test.NewWindow(nil)
 		defer w.Close()
 		w.SetPadded(false)
-		w.Resize(fyne.NewSize(300, 300))
+		w.Resize(granio.NewSize(300, 300))
 		c := w.Canvas()
 
 		menuBar := NewMenuBar(menu, c)
@@ -68,25 +68,25 @@ func TestMenuBar(t *testing.T) {
 		container := container.NewWithoutLayout(button, menuBar)
 		runOnMain(func() {
 			w.SetContent(container)
-			w.Resize(fyne.NewSize(300, 300))
+			w.Resize(granio.NewSize(300, 300))
 
 			button.Resize(button.MinSize())
-			button.Move(fyne.NewPos(100, 50))
-			menuBar.Resize(fyne.NewSize(300, 0).Max(menuBar.MinSize()))
+			button.Move(granio.NewPos(100, 50))
+			menuBar.Resize(granio.NewSize(300, 0).Max(menuBar.MinSize()))
 		})
 
-		buttonPos := fyne.NewPos(110, 60)
-		fileMenuPos := fyne.NewPos(20, 10)
-		fileNewPos := fyne.NewPos(20, 55)
-		fileOpenPos := fyne.NewPos(20, 75)
-		fileRecentPos := fyne.NewPos(20, 110)
-		fileRecentOlderPos := fyne.NewPos(120, 190)
-		fileRecentOlderOld1Pos := fyne.NewPos(200, 190)
-		editMenuPos := fyne.NewPos(70, 10)
-		helpMenuPos := fyne.NewPos(120, 10)
+		buttonPos := granio.NewPos(110, 60)
+		fileMenuPos := granio.NewPos(20, 10)
+		fileNewPos := granio.NewPos(20, 55)
+		fileOpenPos := granio.NewPos(20, 75)
+		fileRecentPos := granio.NewPos(20, 110)
+		fileRecentOlderPos := granio.NewPos(120, 190)
+		fileRecentOlderOld1Pos := granio.NewPos(200, 190)
+		editMenuPos := granio.NewPos(70, 10)
+		helpMenuPos := granio.NewPos(120, 10)
 		type action struct {
 			typ string
-			pos fyne.Position
+			pos granio.Position
 		}
 		type step struct {
 			actions    []action
@@ -301,8 +301,8 @@ func TestMenuBar(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				var capture image.Image
 				runOnMain(func() {
-					test.MoveMouse(c, fyne.NewPos(0, 0))
-					test.TapCanvas(c, fyne.NewPos(0, 0))
+					test.MoveMouse(c, granio.NewPos(0, 0))
+					test.TapCanvas(c, granio.NewPos(0, 0))
 
 					capture = c.Capture()
 				})
@@ -340,7 +340,7 @@ func TestMenuBar(t *testing.T) {
 		w := test.NewWindow(nil)
 		defer w.Close()
 		w.SetPadded(false)
-		w.Resize(fyne.NewSize(300, 300))
+		w.Resize(granio.NewSize(300, 300))
 		c := w.Canvas()
 
 		menuBar := NewMenuBar(menu, c)
@@ -356,85 +356,85 @@ func TestMenuBar(t *testing.T) {
 		})
 		container := container.NewWithoutLayout(button, menuBar)
 		w.SetContent(container)
-		w.Resize(fyne.NewSize(300, 300))
+		w.Resize(granio.NewSize(300, 300))
 		button.Resize(button.MinSize())
-		button.Move(fyne.NewPos(100, 50))
-		menuBar.Resize(fyne.NewSize(300, 0).Max(menuBar.MinSize()))
+		button.Move(granio.NewPos(100, 50))
+		menuBar.Resize(granio.NewSize(300, 0).Max(menuBar.MinSize()))
 
-		fileMenuPos := fyne.NewPos(20, 10)
+		fileMenuPos := granio.NewPos(20, 10)
 		for name, tt := range map[string]struct {
-			keys       []fyne.KeyName
+			keys       []granio.KeyName
 			wantAction string
 		}{
 			"traverse_menu_bar_items_right_1": {
-				keys: []fyne.KeyName{fyne.KeyRight},
+				keys: []granio.KeyName{granio.KeyRight},
 			},
 			"traverse_menu_bar_items_right_2": {
-				keys: []fyne.KeyName{fyne.KeyRight, fyne.KeyRight},
+				keys: []granio.KeyName{granio.KeyRight, granio.KeyRight},
 			},
 			"traverse_menu_bar_items_right_3": {
-				keys: []fyne.KeyName{fyne.KeyRight, fyne.KeyRight, fyne.KeyRight},
+				keys: []granio.KeyName{granio.KeyRight, granio.KeyRight, granio.KeyRight},
 			},
 			"traverse_menu_bar_items_left_1": {
-				keys: []fyne.KeyName{fyne.KeyLeft},
+				keys: []granio.KeyName{granio.KeyLeft},
 			},
 			"traverse_menu_bar_items_left_2": {
-				keys: []fyne.KeyName{fyne.KeyLeft, fyne.KeyLeft},
+				keys: []granio.KeyName{granio.KeyLeft, granio.KeyLeft},
 			},
 			"traverse_menu_bar_items_left_3": {
-				keys: []fyne.KeyName{fyne.KeyLeft, fyne.KeyLeft, fyne.KeyLeft},
+				keys: []granio.KeyName{granio.KeyLeft, granio.KeyLeft, granio.KeyLeft},
 			},
 			"traverse_menu_down_1": {
-				keys: []fyne.KeyName{fyne.KeyDown},
+				keys: []granio.KeyName{granio.KeyDown},
 			},
 			"traverse_menu_down_2": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown},
 			},
 			"traverse_menu_down_3": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown},
 			},
 			"traverse_menu_up_1": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyUp},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyUp},
 			},
 			"traverse_menu_up_2": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyUp, fyne.KeyUp},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyUp, granio.KeyUp},
 			},
 			"open_submenu_1": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyRight},
 			},
 			"open_submenu_2": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyDown, granio.KeyDown, granio.KeyRight},
 			},
 			"close_submenu_1": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyLeft},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyLeft},
 			},
 			"close_submenu_2": {
-				keys: []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyLeft, fyne.KeyLeft},
+				keys: []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyLeft, granio.KeyLeft},
 			},
 			"trigger_with_enter": {
-				keys:       []fyne.KeyName{fyne.KeyDown, fyne.KeyEnter},
+				keys:       []granio.KeyName{granio.KeyDown, granio.KeyEnter},
 				wantAction: "new",
 			},
 			"trigger_with_return": {
-				keys:       []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyReturn},
+				keys:       []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyReturn},
 				wantAction: "open",
 			},
 			"trigger_with_space": {
-				keys:       []fyne.KeyName{fyne.KeyRight, fyne.KeyDown, fyne.KeySpace},
+				keys:       []granio.KeyName{granio.KeyRight, granio.KeyDown, granio.KeySpace},
 				wantAction: "copy",
 			},
 			"trigger_submenu_item": {
-				keys:       []fyne.KeyName{fyne.KeyDown, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyDown, fyne.KeyDown, fyne.KeyRight, fyne.KeyReturn},
+				keys:       []granio.KeyName{granio.KeyDown, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyDown, granio.KeyDown, granio.KeyRight, granio.KeyReturn},
 				wantAction: "old 1",
 			},
 			"trigger_without_active_item": {
-				keys:       []fyne.KeyName{fyne.KeyEnter},
+				keys:       []granio.KeyName{granio.KeyEnter},
 				wantAction: "",
 			},
 		} {
 			t.Run(name, func(t *testing.T) {
-				test.MoveMouse(c, fyne.NewPos(0, 0))
-				test.TapCanvas(c, fyne.NewPos(0, 0))
+				test.MoveMouse(c, granio.NewPos(0, 0))
+				test.TapCanvas(c, granio.NewPos(0, 0))
 				test.TapCanvas(c, fileMenuPos) // activate menu
 				require.Equal(t, menuBar.Items[0], c.Focused())
 
@@ -446,7 +446,7 @@ func TestMenuBar(t *testing.T) {
 					lastAction = ""
 					runOnMain(func() {
 						for _, key := range tt.keys {
-							c.Focused().TypedKey(&fyne.KeyEvent{
+							c.Focused().TypedKey(&granio.KeyEvent{
 								Name: key,
 							})
 						}
@@ -458,16 +458,16 @@ func TestMenuBar(t *testing.T) {
 		}
 
 		t.Run("moving mouse over unfocused item moves focus", func(t *testing.T) {
-			test.MoveMouse(c, fyne.NewPos(0, 0))
-			test.TapCanvas(c, fyne.NewPos(0, 0))
+			test.MoveMouse(c, granio.NewPos(0, 0))
+			test.TapCanvas(c, granio.NewPos(0, 0))
 			test.MoveMouse(c, fileMenuPos)
 			test.TapCanvas(c, fileMenuPos) // activate menu
 			require.Equal(t, menuBar.Items[0], c.Focused())
-			c.Focused().TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
-			c.Focused().TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+			c.Focused().TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
+			c.Focused().TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 			require.Equal(t, menuBar.Items[2], c.Focused())
 
-			test.MoveMouse(c, fileMenuPos.Add(fyne.NewPos(1, 0)))
+			test.MoveMouse(c, fileMenuPos.Add(granio.NewPos(1, 0)))
 			assert.Equal(t, menuBar.Items[0], c.Focused())
 
 			runOnMain(func() {
@@ -482,26 +482,26 @@ func TestMenuBar_Toggle(t *testing.T) {
 		test.NewTempApp(t)
 	})
 
-	m1i1 := fyne.NewMenuItem("New", nil)
-	m1i2 := fyne.NewMenuItem("Open", nil)
-	m1 := fyne.NewMenu("File", m1i1, m1i2)
+	m1i1 := granio.NewMenuItem("New", nil)
+	m1i2 := granio.NewMenuItem("Open", nil)
+	m1 := granio.NewMenu("File", m1i1, m1i2)
 
-	m2i1 := fyne.NewMenuItem("Copy", nil)
-	m2i2 := fyne.NewMenuItem("Paste", nil)
-	m2 := fyne.NewMenu("Edit", m2i1, m2i2)
+	m2i1 := granio.NewMenuItem("Copy", nil)
+	m2i2 := granio.NewMenuItem("Paste", nil)
+	m2 := granio.NewMenu("Edit", m2i1, m2i2)
 
-	menu := fyne.NewMainMenu(m1, m2)
+	menu := granio.NewMainMenu(m1, m2)
 
 	t.Run("when menu bar is inactive", func(t *testing.T) {
 		w := test.NewWindow(nil)
 		defer w.Close()
 		w.SetPadded(false)
-		w.Resize(fyne.NewSize(300, 300))
+		w.Resize(granio.NewSize(300, 300))
 		c := w.Canvas()
 		menuBar := NewMenuBar(menu, c)
 		w.SetContent(container.NewWithoutLayout(menuBar))
-		w.Resize(fyne.NewSize(300, 300))
-		menuBar.Resize(fyne.NewSize(300, 0).Max(menuBar.MinSize()))
+		w.Resize(granio.NewSize(300, 300))
+		menuBar.Resize(granio.NewSize(300, 0).Max(menuBar.MinSize()))
 
 		require.False(t, menuBar.IsActive())
 		test.AssertRendersToMarkup(t, "menu_bar_toggle_deactivated.xml", c)
@@ -516,12 +516,12 @@ func TestMenuBar_Toggle(t *testing.T) {
 		w := test.NewWindow(nil)
 		defer w.Close()
 		w.SetPadded(false)
-		w.Resize(fyne.NewSize(300, 300))
+		w.Resize(granio.NewSize(300, 300))
 		c := w.Canvas()
 		menuBar := NewMenuBar(menu, c)
 		w.SetContent(container.NewWithoutLayout(menuBar))
-		w.Resize(fyne.NewSize(300, 300))
-		menuBar.Resize(fyne.NewSize(300, 0).Max(menuBar.MinSize()))
+		w.Resize(granio.NewSize(300, 300))
+		menuBar.Resize(granio.NewSize(300, 0).Max(menuBar.MinSize()))
 
 		menuBar.Toggle()
 		require.True(t, menuBar.IsActive())
@@ -537,12 +537,12 @@ func TestMenuBar_Toggle(t *testing.T) {
 		w := test.NewWindow(nil)
 		defer w.Close()
 		w.SetPadded(false)
-		w.Resize(fyne.NewSize(300, 300))
+		w.Resize(granio.NewSize(300, 300))
 		c := w.Canvas()
 		menuBar := NewMenuBar(menu, c)
 		w.SetContent(container.NewWithoutLayout(menuBar))
-		w.Resize(fyne.NewSize(300, 300))
-		menuBar.Resize(fyne.NewSize(300, 0).Max(menuBar.MinSize()))
+		w.Resize(granio.NewSize(300, 300))
+		menuBar.Resize(granio.NewSize(300, 0).Max(menuBar.MinSize()))
 
 		menuBar.Toggle()
 		c.(software.WindowlessCanvas).FocusNext()
@@ -568,6 +568,6 @@ func newNotFocusableButton(l string, f func()) *notFocusableButton {
 	return n
 }
 
-func (n *notFocusableButton) Tapped(*fyne.PointEvent) {
+func (n *notFocusableButton) Tapped(*granio.PointEvent) {
 	n.f()
 }

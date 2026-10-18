@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,11 +21,11 @@ func TestRenderingTheme(t *testing.T) {
 }
 
 type simpleTheme struct {
-	fyne.Theme
+	granio.Theme
 
 	onlyColor color.Color
 }
 
-func (s *simpleTheme) Color(fyne.ThemeColorName, fyne.ThemeVariant) color.Color {
+func (s *simpleTheme) Color(granio.ThemeColorName, granio.ThemeVariant) color.Color {
 	return s.onlyColor
 }

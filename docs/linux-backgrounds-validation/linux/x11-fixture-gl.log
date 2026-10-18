@@ -1,0 +1,8 @@
+owned X11 background fixture ready (xcompmgr alpha, KWin protocol fixture)
+fixture command blur off
+fixture command blur on
+fixture command remove
+fixture command add
+fixture command scale 150
+fixture command scale 240
+fixture command scale 120

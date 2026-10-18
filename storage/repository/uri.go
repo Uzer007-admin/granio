@@ -8,13 +8,13 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // EqualURI returns true if the two URIs are equal.
 //
 // Since: 2.6
-func EqualURI(t1, t2 fyne.URI) bool {
+func EqualURI(t1, t2 granio.URI) bool {
 	if t1 == nil || t2 == nil {
 		return t1 == t2
 	}
@@ -29,8 +29,8 @@ func EqualURI(t1, t2 fyne.URI) bool {
 	return t1 == t2 || t1.String() == t2.String()
 }
 
-// Declare conformance with fyne.URI interface.
-var _ fyne.URI = &uri{}
+// Declare conformance with granio.URI interface.
+var _ granio.URI = &uri{}
 
 type uri struct {
 	url.URL

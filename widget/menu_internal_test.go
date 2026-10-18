@@ -5,18 +5,18 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestMenu_ItemTapped(t *testing.T) {
 	tapped := false
-	item1 := fyne.NewMenuItem("Foo", nil)
-	item2 := fyne.NewMenuItem("Bar", func() { tapped = true })
-	item3 := fyne.NewMenuItem("Sub", nil)
-	subItem := fyne.NewMenuItem("Foo", func() {})
-	item3.ChildMenu = fyne.NewMenu("", subItem)
-	m := NewMenu(fyne.NewMenu("", item1, item2, item3))
+	item1 := granio.NewMenuItem("Foo", nil)
+	item2 := granio.NewMenuItem("Bar", func() { tapped = true })
+	item3 := granio.NewMenuItem("Sub", nil)
+	subItem := granio.NewMenuItem("Foo", func() {})
+	item3.ChildMenu = granio.NewMenu("", subItem)
+	m := NewMenu(granio.NewMenu("", item1, item2, item3))
 	size := m.MinSize()
 	m.Resize(size)
 	dismissed := false

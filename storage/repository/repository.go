@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // repositoryTable stores the mapping of schemes to Repository implementations.
@@ -51,19 +51,19 @@ type Repository interface {
 	// registered scheme of this repository.
 	//
 	// Since: 2.0
-	Exists(u fyne.URI) (bool, error)
+	Exists(u granio.URI) (bool, error)
 
 	// Reader will be used to implement calls to storage.Reader()
 	// for the registered scheme of this repository.
 	//
 	// Since: 2.0
-	Reader(u fyne.URI) (fyne.URIReadCloser, error)
+	Reader(u granio.URI) (granio.URIReadCloser, error)
 
 	// CanRead will be used to implement calls to storage.CanRead() for the
 	// registered scheme of this repository.
 	//
 	// Since: 2.0
-	CanRead(u fyne.URI) (bool, error)
+	CanRead(u granio.URI) (bool, error)
 
 	// Destroy is called when the repository is un-registered from a given
 	// URI scheme.
@@ -91,7 +91,7 @@ type CustomURIRepository interface {
 
 	// ParseURI will be used to implement calls to storage.ParseURI()
 	// for the registered scheme of this repository.
-	ParseURI(string) (fyne.URI, error)
+	ParseURI(string) (granio.URI, error)
 }
 
 // WritableRepository is an extension of the Repository interface which also
@@ -105,19 +105,19 @@ type WritableRepository interface {
 	// the registered scheme of this repository.
 	//
 	// Since: 2.0
-	Writer(u fyne.URI) (fyne.URIWriteCloser, error)
+	Writer(u granio.URI) (granio.URIWriteCloser, error)
 
 	// CanWrite will be used to implement calls to storage.CanWrite() for
 	// the registered scheme of this repository.
 	//
 	// Since: 2.0
-	CanWrite(u fyne.URI) (bool, error)
+	CanWrite(u granio.URI) (bool, error)
 
 	// Delete will be used to implement calls to storage.Delete() for the
 	// registered scheme of this repository.
 	//
 	// Since: 2.0
-	Delete(u fyne.URI) error
+	Delete(u granio.URI) error
 }
 
 // AppendableRepository is an extension of the WritableRepository interface which also
@@ -131,7 +131,7 @@ type AppendableRepository interface {
 	// file if it exists
 	//
 	// Since: 2.6
-	Appender(u fyne.URI) (fyne.URIWriteCloser, error)
+	Appender(u granio.URI) (granio.URIWriteCloser, error)
 }
 
 // ListableRepository is an extension of the Repository interface which also
@@ -146,20 +146,20 @@ type ListableRepository interface {
 	// the registered scheme of this repository.
 	//
 	// Since: 2.0
-	CanList(u fyne.URI) (bool, error)
+	CanList(u granio.URI) (bool, error)
 
 	// List will be used to implement calls to storage.List() for the
 	// registered scheme of this repository.
 	//
 	// Since: 2.0
-	List(u fyne.URI) ([]fyne.URI, error)
+	List(u granio.URI) ([]granio.URI, error)
 
 	// CreateListable will be used to implement calls to
 	// storage.CreateListable() for the registered scheme of this
 	// repository.
 	//
 	// Since: 2.0
-	CreateListable(u fyne.URI) error
+	CreateListable(u granio.URI) error
 }
 
 // HierarchicalRepository is an extension of the Repository interface which
@@ -176,7 +176,7 @@ type HierarchicalRepository interface {
 	// is based on the RFC3986 definition of a URI parent.
 	//
 	// Since: 2.0
-	Parent(fyne.URI) (fyne.URI, error)
+	Parent(granio.URI) (granio.URI, error)
 
 	// Child will be used to implement calls to storage.Child() for
 	// the registered scheme of this repository.
@@ -185,7 +185,7 @@ type HierarchicalRepository interface {
 	// is based on RFC3986.
 	//
 	// Since: 2.0
-	Child(fyne.URI, string) (fyne.URI, error)
+	Child(granio.URI, string) (granio.URI, error)
 }
 
 // DeleteAllRepository is an extension of the WritableRepository interface which
@@ -201,7 +201,7 @@ type DeleteAllRepository interface {
 	// A generic implementation is provided by GenericDeleteAll().
 	//
 	// Since: 2.7
-	DeleteAll(fyne.URI) error
+	DeleteAll(granio.URI) error
 }
 
 // CopyableRepository is an extension of the Repository interface which also
@@ -225,7 +225,7 @@ type CopyableRepository interface {
 	// are suggested to fail-over to GenericCopy().
 	//
 	// Since: 2.0
-	Copy(fyne.URI, fyne.URI) error
+	Copy(granio.URI, granio.URI) error
 }
 
 // MovableRepository is an extension of the Repository interface which also
@@ -252,7 +252,7 @@ type MovableRepository interface {
 	// are suggested to fail-over to GenericMove().
 	//
 	// Since: 2.0
-	Move(fyne.URI, fyne.URI) error
+	Move(granio.URI, granio.URI) error
 }
 
 // Register registers a storage repository so that operations on URIs of the
@@ -279,7 +279,7 @@ func Register(scheme string, repository Repository) {
 // instead you should use the methods in the storage package.
 //
 // Since: 2.0
-func ForURI(u fyne.URI) (Repository, error) {
+func ForURI(u granio.URI) (Repository, error) {
 	return ForScheme(u.Scheme())
 }
 

@@ -4,11 +4,11 @@ import (
 	"errors"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -41,11 +41,11 @@ func TestFyneApp_transitionCloud(t *testing.T) {
 	a := test.NewTempApp(t)
 	p := &mockCloud{}
 	preferenceChanged := false
-	settingsChan := make(chan fyne.Settings)
+	settingsChan := make(chan granio.Settings)
 	a.Preferences().AddChangeListener(func() {
 		preferenceChanged = true
 	})
-	a.Settings().AddListener(func(s fyne.Settings) {
+	a.Settings().AddListener(func(s granio.Settings) {
 		go func() { settingsChan <- s }()
 	})
 
@@ -90,15 +90,15 @@ type mockCloud struct {
 	configured, cleaned bool
 }
 
-func (c *mockCloud) Cleanup(_ fyne.App) {
+func (c *mockCloud) Cleanup(_ granio.App) {
 	c.cleaned = true
 }
 
-func (*mockCloud) CloudPreferences(fyne.App) fyne.Preferences {
+func (*mockCloud) CloudPreferences(granio.App) granio.Preferences {
 	return &internal.InMemoryPreferences{}
 }
 
-func (*mockCloud) CloudStorage(fyne.App) fyne.Storage {
+func (*mockCloud) CloudStorage(granio.App) granio.Storage {
 	return &mockCloudStorage{}
 }
 
@@ -106,7 +106,7 @@ func (*mockCloud) ProviderDescription() string {
 	return "Mock cloud implementation"
 }
 
-func (*mockCloud) ProviderIcon() fyne.Resource {
+func (*mockCloud) ProviderIcon() granio.Resource {
 	return theme.ComputerIcon()
 }
 
@@ -114,14 +114,14 @@ func (*mockCloud) ProviderName() string {
 	return "mock"
 }
 
-func (c *mockCloud) Setup(_ fyne.App) error {
+func (c *mockCloud) Setup(_ granio.App) error {
 	c.configured = true
 	return nil
 }
 
 type mockCloudStorage struct{}
 
-func (*mockCloudStorage) Create(string) (fyne.URIWriteCloser, error) {
+func (*mockCloudStorage) Create(string) (granio.URIWriteCloser, error) {
 	return nil, errors.New("not implemented")
 }
 
@@ -129,7 +129,7 @@ func (*mockCloudStorage) List() []string {
 	return []string{}
 }
 
-func (*mockCloudStorage) Open(string) (fyne.URIReadCloser, error) {
+func (*mockCloudStorage) Open(string) (granio.URIReadCloser, error) {
 	return nil, errors.New("not implemented")
 }
 
@@ -137,11 +137,11 @@ func (*mockCloudStorage) Remove(string) error {
 	return errors.New("not implemented")
 }
 
-func (*mockCloudStorage) RootURI() fyne.URI {
+func (*mockCloudStorage) RootURI() granio.URI {
 	u, _ := storage.ParseURI("mock://")
 	return u
 }
 
-func (*mockCloudStorage) Save(string) (fyne.URIWriteCloser, error) {
+func (*mockCloudStorage) Save(string) (granio.URIWriteCloser, error) {
 	return nil, errors.New("not implemented")
 }

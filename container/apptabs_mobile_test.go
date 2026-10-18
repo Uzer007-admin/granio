@@ -5,12 +5,12 @@ package container_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -25,7 +25,7 @@ func TestAppTabs_ChangeItemIcon(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "apptabs/mobile/change_icon_initial.xml", c)
@@ -48,7 +48,7 @@ func TestAppTabs_ChangeItemText(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "apptabs/mobile/change_label_initial.xml", c)
@@ -70,7 +70,7 @@ func TestAppTabs_DynamicTabs(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(300, 150))
+	w.Resize(granio.NewSize(300, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "apptabs/mobile/dynamic_initial.xml", c)
@@ -123,18 +123,18 @@ func TestAppTabs_HoverButtons(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "apptabs/mobile/hover_none.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(10, 10))
+	test.MoveMouse(c, granio.NewPos(10, 10))
 	test.AssertRendersToMarkup(t, "apptabs/mobile/hover_none.xml", c, "no hovering on mobile")
 
-	test.MoveMouse(c, fyne.NewPos(75, 10))
+	test.MoveMouse(c, granio.NewPos(75, 10))
 	test.AssertRendersToMarkup(t, "apptabs/mobile/hover_none.xml", c, "no hovering on mobile")
 
-	test.MoveMouse(c, fyne.NewPos(10, 10))
+	test.MoveMouse(c, granio.NewPos(10, 10))
 	test.AssertRendersToMarkup(t, "apptabs/mobile/hover_none.xml", c, "no hovering on mobile")
 }
 
@@ -230,7 +230,7 @@ func TestAppTabs_Layout(t *testing.T) {
 			tabs := container.NewAppTabs(tt.item)
 			tabs.SetTabLocation(tt.location)
 			w.SetContent(tabs)
-			w.Resize(fyne.NewSize(150, 150))
+			w.Resize(granio.NewSize(150, 150))
 
 			test.AssertRendersToMarkup(t, tt.want, c)
 		})
@@ -279,21 +279,21 @@ func TestAppTabs_Tapped(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(200, 100))
+	w.Resize(granio.NewSize(200, 100))
 	c := w.Canvas()
 
 	require.Equal(t, 0, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "apptabs/mobile/tapped_first_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(75, 10))
+	test.TapCanvas(c, granio.NewPos(75, 10))
 	assert.Equal(t, 1, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "apptabs/mobile/tapped_second_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(150, 10))
+	test.TapCanvas(c, granio.NewPos(150, 10))
 	assert.Equal(t, 2, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "apptabs/mobile/tapped_third_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(10, 10))
+	test.TapCanvas(c, granio.NewPos(10, 10))
 	require.Equal(t, 0, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "apptabs/mobile/tapped_first_selected.xml", c)
 }

@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 import "time"
 
@@ -42,6 +42,15 @@ type Animation struct {
 	Duration    time.Duration
 	RepeatCount int
 	Tick        func(float32)
+	// Object optionally scopes decorative motion to its visible canvas. Hidden
+	// scopes pause without ticking; an unscoped legacy animation keeps its scope.
+	Object CanvasObject
+	// OnFinished is invoked once for natural completion or a policy-forced final
+	// state. Stop cancels without invoking it. Repeat cycles do not invoke it.
+	OnFinished func()
+	// Disabled is an additional local restriction and never bypasses OS/build
+	// restrictions. A disabled animation is completed at its final value.
+	Disabled bool
 }
 
 // NewAnimation creates a very basic animation where the callback function will be called for every

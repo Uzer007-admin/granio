@@ -2,8 +2,8 @@
 
 package dialog
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func getFavoriteLocations() (map[string]fyne.ListableURI, error) {
-	return map[string]fyne.ListableURI{}, nil
+func getFavoriteLocations() (map[string]granio.ListableURI, error) {
+	return map[string]granio.ListableURI{}, nil
 }

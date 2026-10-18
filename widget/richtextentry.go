@@ -6,16 +6,16 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Declare conformity with interfaces
 var (
-	_ fyne.Widget      = (*RichTextEntry)(nil)
-	_ fyne.Focusable   = (*RichTextEntry)(nil)
-	_ fyne.Disableable = (*RichTextEntry)(nil)
+	_ granio.Widget      = (*RichTextEntry)(nil)
+	_ granio.Focusable   = (*RichTextEntry)(nil)
+	_ granio.Disableable = (*RichTextEntry)(nil)
 )
 
 const (
@@ -50,6 +50,23 @@ type RichTextEntry struct {
 	undoEdit richTextEdit
 }
 
+// ReplaceTextRange keeps styled native replacements in the rich-text undo log.
+func (e *RichTextEntry) ReplaceTextRange(text string, start, end int) bool {
+	if e.ReadOnly || e.Disabled() {
+		return false
+	}
+	e.CancelComposition()
+	if !e.AccessibilitySetSelection(start, end) {
+		return false
+	}
+	if text == "" {
+		e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
+	} else {
+		e.TypedText(text)
+	}
+	return true
+}
+
 // NewRichTextEntry creates a new rich text entry widget.
 // The returned entry accepts multiple lines and wraps on word boundaries.
 //
@@ -57,13 +74,13 @@ type RichTextEntry struct {
 func NewRichTextEntry() *RichTextEntry {
 	e := &RichTextEntry{}
 	e.MultiLine = true
-	e.Wrapping = fyne.TextWrapWord
+	e.Wrapping = granio.TextWrapWord
 	e.ExtendBaseWidget(e)
 	return e
 }
 
 // ExtendBaseWidget is used by an extending widget to make use of BaseWidget functionality.
-func (e *RichTextEntry) ExtendBaseWidget(wid fyne.Widget) {
+func (e *RichTextEntry) ExtendBaseWidget(wid granio.Widget) {
 	e.richProvider()
 	e.Entry.ExtendBaseWidget(wid)
 	e.registerStyleShortcuts()
@@ -204,6 +221,9 @@ func (e *RichTextEntry) StyleAtCursor() RichTextStyle {
 
 // TypedRune receives text input events when this widget is focused.
 func (e *RichTextEntry) TypedRune(r rune) {
+	if e.ReadOnly || e.Disabled() {
+		return
+	}
 	defer e.commitUndo(e.beginUndo())
 
 	e.Entry.TypedRune(r)
@@ -213,12 +233,56 @@ func (e *RichTextEntry) TypedRune(r rune) {
 	}
 }
 
+// TypedText records a committed IME batch with its rich-text style change.
+func (e *RichTextEntry) TypedText(text string) {
+	if e.Disabled() || e.ReadOnly || text == "" {
+		return
+	}
+	e.restoreComposition()
+	cursor := e.beginUndo()
+	e.Entry.TypedText(text)
+	// Replace the plain Entry action with RichTextEntry's segment delta.
+	stack := &e.undoStack
+	if stack.index > 0 {
+		if _, ok := stack.items[stack.index-1].(*entryReplaceAction); ok {
+			stack.index--
+			stack.items = stack.items[:stack.index]
+		}
+	}
+	e.undoEdit = richTextEditStyled
+	e.commitUndo(cursor)
+}
+
+func (e *RichTextEntry) CommitComposition(text string) { e.restoreComposition(); e.TypedText(text) }
+func (e *RichTextEntry) CommitTextEdit(text string, before, after int) {
+	if e.ReadOnly || e.Disabled() {
+		e.CancelComposition()
+		return
+	}
+	e.restoreComposition()
+	if before > 0 || after > 0 {
+		cursor := e.CursorTextOffset()
+		e.AccessibilitySetSelection(max(0, cursor-before), min(len([]rune(e.Text)), cursor+after))
+	}
+	if text == "" {
+		if e.sel.selecting {
+			e.TypedKey(&granio.KeyEvent{Name: granio.KeyBackspace})
+		}
+		return
+	}
+	e.TypedText(text)
+}
+
 // TypedKey receives key input events when this widget is focused.
-func (e *RichTextEntry) TypedKey(key *fyne.KeyEvent) {
+func (e *RichTextEntry) TypedKey(key *granio.KeyEvent) {
+	if e.ReadOnly {
+		e.Entry.TypedKey(key)
+		return
+	}
 	defer e.commitUndo(e.beginUndo())
 
 	switch key.Name {
-	case fyne.KeyBackspace:
+	case granio.KeyBackspace:
 		if e.hasSelection() {
 			break
 		}
@@ -229,7 +293,7 @@ func (e *RichTextEntry) TypedKey(key *fyne.KeyEvent) {
 			e.Refresh()
 			return
 		}
-	case fyne.KeyDelete:
+	case granio.KeyDelete:
 		if e.hasSelection() {
 			break
 		}
@@ -245,7 +309,7 @@ func (e *RichTextEntry) TypedKey(key *fyne.KeyEvent) {
 			e.Refresh()
 			return
 		}
-	case fyne.KeyReturn, fyne.KeyEnter:
+	case granio.KeyReturn, granio.KeyEnter:
 		if e.MultiLine && !e.hasSelection() && e.startsBlockLine() {
 			e.Refresh()
 			return
@@ -255,12 +319,12 @@ func (e *RichTextEntry) TypedKey(key *fyne.KeyEvent) {
 	e.Entry.TypedKey(key)
 
 	switch key.Name {
-	case fyne.KeyBackspace, fyne.KeyDelete:
+	case granio.KeyBackspace, granio.KeyDelete:
 		if e.pruneEmptySegments() {
 			e.noteEdit(richTextEditHidden)
 			e.Refresh()
 		}
-	case fyne.KeyReturn, fyne.KeyEnter:
+	case granio.KeyReturn, granio.KeyEnter:
 		if e.MultiLine && isBlockStyle(e.StyleAtCursor()) {
 			// headings and quotes cover a single line, so the next one starts
 			// again from the base style
@@ -272,7 +336,7 @@ func (e *RichTextEntry) TypedKey(key *fyne.KeyEvent) {
 }
 
 // TypedShortcut handles the shortcuts that this widget responds to.
-func (e *RichTextEntry) TypedShortcut(shortcut fyne.Shortcut) {
+func (e *RichTextEntry) TypedShortcut(shortcut granio.Shortcut) {
 	defer e.commitUndo(e.beginUndo())
 
 	e.Entry.TypedShortcut(shortcut)
@@ -314,24 +378,24 @@ var styleShortcuts = []struct {
 	set      func(*RichTextStyle, bool)
 }{
 	{
-		&desktop.CustomShortcut{KeyName: fyne.KeyB, Modifier: fyne.KeyModifierShortcutDefault},
+		&desktop.CustomShortcut{KeyName: granio.KeyB, Modifier: granio.KeyModifierShortcutDefault},
 		func(s RichTextStyle) bool { return s.TextStyle.Bold },
 		// headings are bold without any marks applied
 		func(s *RichTextStyle, on bool) { s.TextStyle.Bold = on || isHeadingStyle(*s) },
 	},
 	{
-		&desktop.CustomShortcut{KeyName: fyne.KeyI, Modifier: fyne.KeyModifierShortcutDefault},
+		&desktop.CustomShortcut{KeyName: granio.KeyI, Modifier: granio.KeyModifierShortcutDefault},
 		func(s RichTextStyle) bool { return s.TextStyle.Italic },
 		// quotes are italic without any marks applied
 		func(s *RichTextStyle, on bool) { s.TextStyle.Italic = on || s.QuotingDepth > 0 },
 	},
 	{
-		&desktop.CustomShortcut{KeyName: fyne.KeyU, Modifier: fyne.KeyModifierShortcutDefault},
+		&desktop.CustomShortcut{KeyName: granio.KeyU, Modifier: granio.KeyModifierShortcutDefault},
 		func(s RichTextStyle) bool { return s.TextStyle.Underline },
 		func(s *RichTextStyle, on bool) { s.TextStyle.Underline = on },
 	},
 	{
-		&desktop.CustomShortcut{KeyName: fyne.KeyX, Modifier: fyne.KeyModifierShortcutDefault | fyne.KeyModifierShift},
+		&desktop.CustomShortcut{KeyName: granio.KeyX, Modifier: granio.KeyModifierShortcutDefault | granio.KeyModifierShift},
 		func(s RichTextStyle) bool { return s.TextStyle.Strikethrough },
 		func(s *RichTextStyle, on bool) { s.TextStyle.Strikethrough = on },
 	},
@@ -339,7 +403,7 @@ var styleShortcuts = []struct {
 
 func (e *RichTextEntry) registerStyleShortcuts() {
 	for _, style := range styleShortcuts {
-		e.shortcut.AddShortcut(style.shortcut, func(fyne.Shortcut) {
+		e.shortcut.AddShortcut(style.shortcut, func(granio.Shortcut) {
 			e.toggleStyle(style.enabled, style.set)
 		})
 	}
@@ -349,7 +413,7 @@ func (e *RichTextEntry) registerStyleShortcuts() {
 // if all of the selection already has it, otherwise it is applied to all of it.
 // Without a selection it changes the style that will be used for text typed at the cursor.
 func (e *RichTextEntry) toggleStyle(enabled func(RichTextStyle) bool, set func(*RichTextStyle, bool)) {
-	if e.Disabled() {
+	if e.Disabled() || e.ReadOnly {
 		return
 	}
 
@@ -1638,7 +1702,7 @@ func (e *RichTextEntry) emptyStyleAt(pos int) (RichTextStyle, bool) {
 
 // isPlainStyle reports whether a style adds nothing to ordinary body text.
 func isPlainStyle(style RichTextStyle) bool {
-	return style.TextStyle == (fyne.TextStyle{}) && !isBlockStyle(style)
+	return style.TextStyle == (granio.TextStyle{}) && !isBlockStyle(style)
 }
 
 // ownerOf returns the segments that hold the given segment, its index in them and

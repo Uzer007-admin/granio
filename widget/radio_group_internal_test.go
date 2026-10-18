@@ -5,11 +5,11 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -251,8 +251,8 @@ func TestRadioGroup_Hovered(t *testing.T) {
 			assert.Equal(t, color.Transparent, render2.focusIndicator.FillColor)
 
 			item1.MouseIn(&desktop.MouseEvent{
-				PointEvent: fyne.PointEvent{
-					Position: fyne.NewPos(theme.Padding(), theme.Padding()),
+				PointEvent: granio.PointEvent{
+					Position: granio.NewPos(theme.Padding(), theme.Padding()),
 				},
 			})
 			assert.True(t, item1.hovered)
@@ -312,10 +312,10 @@ func radioGroupTestTapItem(t *testing.T, radio *RadioGroup, item int) {
 	t.Helper()
 	renderer := test.TempWidgetRenderer(t, radio)
 	radioItem := renderer.Objects()[item].(*radioItem)
-	radioItem.Tapped(&fyne.PointEvent{Position: fyne.NewPos(theme.Padding(), theme.Padding())})
+	radioItem.Tapped(&granio.PointEvent{Position: granio.NewPos(theme.Padding(), theme.Padding())})
 }
 
 func radioGroupTestItemRenderer(t *testing.T, radio *RadioGroup, item int) *radioItemRenderer {
 	t.Cleanup(func() { cache.DestroyRenderer(radio) })
-	return cache.Renderer(test.TempWidgetRenderer(t, radio).Objects()[item].(fyne.Widget)).(*radioItemRenderer)
+	return cache.Renderer(test.TempWidgetRenderer(t, radio).Objects()[item].(granio.Widget)).(*radioItemRenderer)
 }

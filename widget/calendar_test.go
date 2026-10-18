@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestNewCalendar(t *testing.T) {
@@ -83,7 +83,7 @@ func TestNewCalendar_Resize(t *testing.T) {
 	assert.Greater(t, layout.cellSize.Height, minSize.Height)
 }
 
-func firstDateButton(c *fyne.Container) *Button {
+func firstDateButton(c *granio.Container) *Button {
 	for _, b := range c.Objects {
 		if nonBlank, ok := b.(*Button); ok {
 			return nonBlank

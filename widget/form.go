@@ -4,17 +4,17 @@ import (
 	"errors"
 	"reflect"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // FormItem provides the details for a row in a form
 type FormItem struct {
 	Text   string
-	Widget fyne.CanvasObject
+	Widget granio.CanvasObject
 
 	// Since: 2.0
 	HintText string
@@ -25,15 +25,17 @@ type FormItem struct {
 	validationError        error
 	invalid, meetsRequired bool
 	helperOutput           *canvas.Text
+	helperWrapped          *RichText
+	helperContainer        *granio.Container
 	wasFocused             bool
 }
 
 // NewFormItem creates a new form item with the specified label text and input widget
-func NewFormItem(text string, widget fyne.CanvasObject) *FormItem {
+func NewFormItem(text string, widget granio.CanvasObject) *FormItem {
 	return &FormItem{Text: text, Widget: widget}
 }
 
-var _ fyne.Validatable = (*Form)(nil)
+var _ granio.Validatable = (*Form)(nil)
 
 // Form widget is two column grid where each row has a label and a widget (usually an input).
 // The last row of the grid will contain the appropriate form control buttons if any should be shown.
@@ -62,8 +64,8 @@ type Form struct {
 	// Since: 2.8
 	Validator func() error `json:"-"`
 
-	itemGrid     *fyne.Container
-	buttonBox    *fyne.Container
+	itemGrid     *granio.Container
+	buttonBox    *granio.Container
 	validateText *canvas.Text
 	cancelButton *Button
 	submitButton *Button
@@ -75,7 +77,7 @@ type Form struct {
 }
 
 // Append adds a new row to the form, using the text as a label next to the specified Widget
-func (f *Form) Append(text string, widget fyne.CanvasObject) {
+func (f *Form) Append(text string, widget granio.CanvasObject) {
 	item := &FormItem{Text: text, Widget: widget}
 	f.AppendItem(item)
 }
@@ -95,7 +97,7 @@ func (f *Form) AppendItem(item *FormItem) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (f *Form) MinSize() fyne.Size {
+func (f *Form) MinSize() granio.Size {
 	f.ExtendBaseWidget(f)
 	return f.BaseWidget.MinSize()
 }
@@ -113,6 +115,9 @@ func (f *Form) Refresh() {
 		f.itemGrid.Layout = layout.NewVBoxLayout()
 	} else {
 		f.itemGrid.Layout = layout.NewFormLayout()
+		if _, modern := f.Theme().(granio.ComponentTheme); modern {
+			f.itemGrid.Layout = modernFormLayout{form: f}
+		}
 	}
 
 	f.BaseWidget.Refresh()
@@ -189,7 +194,7 @@ func (f *Form) SetOnValidationChanged(callback func(error)) {
 // Validate validates the entire form and returns the first error that is encountered.
 func (f *Form) Validate() error {
 	for _, item := range f.Items {
-		if w, ok := item.Widget.(fyne.Validatable); ok {
+		if w, ok := item.Widget.(granio.Validatable); ok {
 			if err := w.Validate(); err != nil {
 				return err
 			}
@@ -198,8 +203,8 @@ func (f *Form) Validate() error {
 	return nil
 }
 
-func (f *Form) createInput(item *FormItem) fyne.CanvasObject {
-	_, ok := item.Widget.(fyne.Validatable)
+func (f *Form) createInput(item *FormItem) granio.CanvasObject {
+	_, ok := item.Widget.(granio.Validatable)
 	if item.HintText == "" {
 		if !ok {
 			return item.Widget
@@ -210,48 +215,49 @@ func (f *Form) createInput(item *FormItem) fyne.CanvasObject {
 	}
 
 	th := f.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	text := canvas.NewText(item.HintText, th.Color(theme.ColorNamePlaceHolder, v))
 	text.TextSize = th.Size(theme.SizeNameCaptionText)
 	item.helperOutput = text
+	textContainer := &granio.Container{Objects: []granio.CanvasObject{text}}
+	item.helperContainer = textContainer
 	f.updateHelperText(item)
-	textContainer := &fyne.Container{Objects: []fyne.CanvasObject{text}}
-	return &fyne.Container{Layout: formItemLayout{form: f}, Objects: []fyne.CanvasObject{item.Widget, textContainer}}
+	return &granio.Container{Layout: formItemLayout{form: f}, Objects: []granio.CanvasObject{item.Widget, textContainer}}
 }
 
 // unwrapItemWidget returns the widget actually shown by rendered, stripping the
 // hint/validation container createInput sometimes wraps it in.
-func (*Form) unwrapItemWidget(rendered fyne.CanvasObject) fyne.CanvasObject {
-	if c, ok := rendered.(*fyne.Container); ok && len(c.Objects) > 0 {
+func (*Form) unwrapItemWidget(rendered granio.CanvasObject) granio.CanvasObject {
+	if c, ok := rendered.(*granio.Container); ok && len(c.Objects) > 0 {
 		return c.Objects[0]
 	}
 	return rendered
 }
 
-func (f *Form) itemRendersWidget(rendered, widget fyne.CanvasObject) bool {
+func (f *Form) itemRendersWidget(rendered, widget granio.CanvasObject) bool {
 	return f.unwrapItemWidget(rendered) == widget
 }
 
 // detachValidation unhooks the callbacks setUpValidation registered on widget, so a
 // caller that keeps interacting with a widget no longer shown by the form can't have
 // it write stale state into the FormItem slot it used to occupy.
-func (*Form) detachValidation(widget fyne.CanvasObject) {
-	if v, ok := widget.(fyne.Validatable); ok {
+func (*Form) detachValidation(widget granio.CanvasObject) {
+	if v, ok := widget.(granio.Validatable); ok {
 		v.SetOnValidationChanged(nil)
 	}
-	if r, ok := widget.(fyne.Requireable); ok {
+	if r, ok := widget.(granio.Requireable); ok {
 		r.SetOnRequiredChanged(nil)
 	}
 }
 
-func (*Form) itemWidgetHasValidator(w fyne.CanvasObject) bool {
+func (*Form) itemWidgetHasValidator(w granio.CanvasObject) bool {
 	value := reflect.ValueOf(w).Elem()
 	validatorField := value.FieldByName("Validator")
 	if validatorField == (reflect.Value{}) {
 		return false
 	}
-	validator, ok := validatorField.Interface().(fyne.StringValidator)
+	validator, ok := validatorField.Interface().(granio.StringValidator)
 	if !ok {
 		return false
 	}
@@ -261,15 +267,15 @@ func (*Form) itemWidgetHasValidator(w fyne.CanvasObject) bool {
 func (f *Form) createLabel(item *FormItem) *RichText {
 	label := NewRichTextWithText(item.Text)
 	seg1, _ := label.Segments[0].(*TextSegment)
-	seg1.Style.Alignment = fyne.TextAlignTrailing
+	seg1.Style.Alignment = granio.TextAlignTrailing
 	seg1.Style.TextStyle.Bold = true
 	if f.isVertical() {
-		seg1.Style.Alignment = fyne.TextAlignLeading
+		seg1.Style.Alignment = granio.TextAlignLeading
 	}
 
 	if item.Required {
 		marker := &TextSegment{Text: "* "}
-		if dis, ok := item.Widget.(fyne.Disableable); ok && dis.Disabled() {
+		if dis, ok := item.Widget.(granio.Disableable); ok && dis.Disabled() {
 			marker.Style.ColorName = theme.ColorNameDisabled
 		} else {
 			marker.Style.ColorName = theme.ColorNameError
@@ -324,7 +330,7 @@ func (f *Form) checkValidation(err error) {
 		}
 
 		if item.Required {
-			if has, ok := item.Widget.(fyne.Requireable); ok && !has.HasValue() {
+			if has, ok := item.Widget.(granio.Requireable); ok && !has.HasValue() {
 				f.submitButton.Disable()
 				return
 			}
@@ -375,7 +381,7 @@ func (f *Form) ensureRenderItems() {
 	}
 
 	adding := len(f.Items) - done
-	objects := make([]fyne.CanvasObject, adding*2)
+	objects := make([]granio.CanvasObject, adding*2)
 	off := 0
 	for i, item := range f.Items {
 		if i < done {
@@ -399,16 +405,16 @@ func (f *Form) isVertical() bool {
 		return false
 	}
 
-	dev := fyne.CurrentDevice()
+	dev := granio.CurrentDevice()
 	if dev.IsMobile() {
 		orient := dev.Orientation()
-		return orient == fyne.OrientationVertical || orient == fyne.OrientationVerticalUpsideDown
+		return orient == granio.OrientationVertical || orient == granio.OrientationVerticalUpsideDown
 	}
 
 	return false
 }
 
-func (f *Form) setUpValidation(widget fyne.CanvasObject, i int) {
+func (f *Form) setUpValidation(widget granio.CanvasObject, i int) {
 	updateValidation := func(err error) {
 		if i >= len(f.Items) {
 			return // called after form has been truncated
@@ -439,12 +445,12 @@ func (f *Form) setUpValidation(widget fyne.CanvasObject, i int) {
 		f.checkValidation(f.Items[i].validationError)
 		f.updateHelperText(f.Items[i])
 	}
-	if w, ok := widget.(fyne.Validatable); ok {
+	if w, ok := widget.(granio.Validatable); ok {
 		f.Items[i].invalid = w.Validate() != nil
-		if r, ok := w.(fyne.Requireable); ok {
+		if r, ok := w.(granio.Requireable); ok {
 			r.SetOnRequiredChanged(updateRequired)
 		} else if f.Items[i].Required {
-			fyne.LogError("Cannot mark a widget that is not `Requirable` as required", nil)
+			granio.LogError("Cannot mark a widget that is not `Requirable` as required", nil)
 		}
 		w.SetOnValidationChanged(updateValidation)
 	}
@@ -468,7 +474,7 @@ func (f *Form) setValidationError(err error) {
 
 func (f *Form) updateHelperText(item *FormItem) {
 	th := f.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if item.helperOutput == nil {
 		return // testing probably, either way not rendered yet
@@ -497,6 +503,7 @@ func (f *Form) updateHelperText(item *FormItem) {
 		item.helperOutput.Show()
 	}
 	item.helperOutput.Refresh()
+	f.updateWrappedHelper(item)
 }
 
 func (f *Form) updateLabels() {
@@ -518,7 +525,7 @@ func (f *Form) updateLabels() {
 
 		if item.Required {
 			m, _ := r.Segments[0].(*TextSegment)
-			if dis, ok := item.Widget.(fyne.Disableable); ok && dis.Disabled() {
+			if dis, ok := item.Widget.(granio.Disableable); ok && dis.Disabled() {
 				m.Style.ColorName = theme.ColorNameDisabled
 			} else {
 				m.Style.ColorName = theme.ColorNameError
@@ -526,7 +533,7 @@ func (f *Form) updateLabels() {
 		}
 
 		l, _ := r.Segments[len(r.Segments)-1].(*TextSegment)
-		if dis, ok := item.Widget.(fyne.Disableable); ok {
+		if dis, ok := item.Widget.(granio.Disableable); ok {
 			if dis.Disabled() {
 				l.Style.ColorName = theme.ColorNameDisabled
 			} else {
@@ -537,10 +544,14 @@ func (f *Form) updateLabels() {
 		}
 
 		l.Text = item.Text
+		r.Wrapping = granio.TextWrapOff
+		if _, modern := thComponent(f.Theme()); modern {
+			r.Wrapping = granio.TextWrapWord
+		}
 		if f.isVertical() {
-			l.Style.Alignment = fyne.TextAlignLeading
+			l.Style.Alignment = granio.TextAlignLeading
 		} else {
-			l.Style.Alignment = fyne.TextAlignTrailing
+			l.Style.Alignment = granio.TextAlignTrailing
 		}
 		r.Refresh()
 		f.updateHelperText(item)
@@ -553,25 +564,28 @@ func (f *Form) updateLabels() {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (f *Form) CreateRenderer() fyne.WidgetRenderer {
+func (f *Form) CreateRenderer() granio.WidgetRenderer {
 	f.ExtendBaseWidget(f)
 	th := f.Theme()
 	f.cancelButton = &Button{Icon: th.Icon(theme.IconNameCancel), OnTapped: f.OnCancel}
 	f.submitButton = &Button{Icon: th.Icon(theme.IconNameConfirm), OnTapped: f.OnSubmit, Importance: HighImportance}
-	buttons := &fyne.Container{Layout: layout.NewGridLayoutWithRows(1), Objects: []fyne.CanvasObject{f.cancelButton, f.submitButton}}
-	f.buttonBox = &fyne.Container{Layout: layout.NewBorderLayout(nil, nil, nil, buttons), Objects: []fyne.CanvasObject{buttons}}
+	buttons := &granio.Container{Layout: layout.NewGridLayoutWithRows(1), Objects: []granio.CanvasObject{f.cancelButton, f.submitButton}}
+	f.buttonBox = &granio.Container{Layout: layout.NewBorderLayout(nil, nil, nil, buttons), Objects: []granio.CanvasObject{buttons}}
 
-	f.itemGrid = &fyne.Container{Layout: layout.NewFormLayout()}
+	f.itemGrid = &granio.Container{Layout: layout.NewFormLayout()}
 	if f.isVertical() {
 		f.itemGrid.Layout = layout.NewVBoxLayout()
 	} else {
 		f.itemGrid.Layout = layout.NewFormLayout()
+		if _, modern := f.Theme().(granio.ComponentTheme); modern {
+			f.itemGrid.Layout = modernFormLayout{form: f}
+		}
 	}
 	f.validateText = canvas.NewText("", theme.ColorForWidget(theme.ColorNameError, f))
 	f.validateText.TextSize = th.Size(theme.SizeNameCaptionText)
 	f.validateText.Hide()
 
-	content := &fyne.Container{Layout: layout.NewVBoxLayout(), Objects: []fyne.CanvasObject{f.itemGrid, f.validateText, f.buttonBox}}
+	content := &granio.Container{Layout: layout.NewVBoxLayout(), Objects: []granio.CanvasObject{f.itemGrid, f.validateText, f.buttonBox}}
 	renderer := NewSimpleRenderer(content)
 	f.ensureRenderItems()
 	f.updateButtons()
@@ -593,16 +607,25 @@ type formItemLayout struct {
 	form *Form
 }
 
-func (f formItemLayout) Layout(objs []fyne.CanvasObject, size fyne.Size) {
+func (f formItemLayout) Layout(objs []granio.CanvasObject, size granio.Size) {
 	innerPad := f.form.Theme().Size(theme.SizeNameInnerPadding)
 	itemHeight := objs[0].MinSize().Height
-	objs[0].Resize(fyne.NewSize(size.Width, itemHeight))
+	objs[0].Resize(granio.NewSize(size.Width, itemHeight))
 
-	objs[1].Move(fyne.NewPos(innerPad, itemHeight+innerPad/2))
-	objs[1].Resize(fyne.NewSize(size.Width, objs[1].MinSize().Width))
+	objs[1].Move(granio.NewPos(innerPad, itemHeight+innerPad/2))
+	if _, modern := f.form.Theme().(granio.ComponentTheme); modern {
+		width := max(0, size.Width-2*innerPad)
+		objs[1].Resize(granio.NewSize(width, objs[1].MinSize().Height))
+		if c, ok := objs[1].(*granio.Container); ok && len(c.Objects) > 0 {
+			c.Objects[0].Resize(granio.NewSize(width, c.Objects[0].MinSize().Height))
+			c.Resize(granio.NewSize(width, c.Objects[0].MinSize().Height))
+		}
+	} else {
+		objs[1].Resize(granio.NewSize(size.Width, objs[1].MinSize().Width))
+	}
 }
 
-func (f formItemLayout) MinSize(objs []fyne.CanvasObject) fyne.Size {
+func (f formItemLayout) MinSize(objs []granio.CanvasObject) granio.Size {
 	innerPad := f.form.Theme().Size(theme.SizeNameInnerPadding)
 	min0 := objs[0].MinSize()
 	min1 := objs[1].MinSize()
@@ -610,9 +633,9 @@ func (f formItemLayout) MinSize(objs []fyne.CanvasObject) fyne.Size {
 	minWidth := max(min0.Width, min1.Width)
 	height := min0.Height
 
-	items := objs[1].(*fyne.Container).Objects
-	if len(items) > 0 && items[0].(*canvas.Text).Text != "" {
+	items := objs[1].(*granio.Container).Objects
+	if len(items) > 0 && items[0].Visible() {
 		height += min1.Height + innerPad
 	}
-	return fyne.NewSize(minWidth, height)
+	return granio.NewSize(minWidth, height)
 }

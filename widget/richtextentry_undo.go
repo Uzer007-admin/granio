@@ -349,6 +349,9 @@ func (e *RichTextEntry) nextUndoAction() *richTextUndoAction {
 //
 // Since: 2.9
 func (e *RichTextEntry) Undo() {
+	if e.ReadOnly || e.Disabled() {
+		return
+	}
 	e.commitUndo(e.beginUndo())
 
 	var last *richTextUndoAction
@@ -372,6 +375,9 @@ func (e *RichTextEntry) Undo() {
 //
 // Since: 2.9
 func (e *RichTextEntry) Redo() {
+	if e.ReadOnly || e.Disabled() {
+		return
+	}
 	e.commitUndo(e.beginUndo())
 
 	var last *richTextUndoAction

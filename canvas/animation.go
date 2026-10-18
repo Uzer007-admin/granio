@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 const (
@@ -28,7 +28,7 @@ const shaderMaxFrameDelta = 100 * time.Millisecond
 // You should call Start() on the returned animation to start it.
 //
 // Since: 2.0
-func NewColorRGBAAnimation(start, stop color.Color, d time.Duration, fn func(color.Color)) *fyne.Animation {
+func NewColorRGBAAnimation(start, stop color.Color, d time.Duration, fn func(color.Color)) *granio.Animation {
 	c1, _ := color.RGBAModel.Convert(start).(color.RGBA)
 	c2, _ := color.RGBAModel.Convert(stop).(color.RGBA)
 	rDelta := int(c2.R) - int(c1.R)
@@ -36,7 +36,7 @@ func NewColorRGBAAnimation(start, stop color.Color, d time.Duration, fn func(col
 	bDelta := int(c2.B) - int(c1.B)
 	aDelta := int(c2.A) - int(c1.A)
 
-	return &fyne.Animation{
+	return &granio.Animation{
 		Duration: d,
 		Tick: func(done float32) {
 			fn(color.RGBA{
@@ -54,14 +54,14 @@ func NewColorRGBAAnimation(start, stop color.Color, d time.Duration, fn func(col
 // to be visible. You should call Start() on the returned animation to start it.
 //
 // Since: 2.0
-func NewPositionAnimation(start, stop fyne.Position, d time.Duration, fn func(fyne.Position)) *fyne.Animation {
+func NewPositionAnimation(start, stop granio.Position, d time.Duration, fn func(granio.Position)) *granio.Animation {
 	xDelta := stop.X - start.X
 	yDelta := stop.Y - start.Y
 
-	return &fyne.Animation{
+	return &granio.Animation{
 		Duration: d,
 		Tick: func(done float32) {
-			fn(fyne.NewPos(scaleVal(start.X, xDelta, done), scaleVal(start.Y, yDelta, done)))
+			fn(granio.NewPos(scaleVal(start.X, xDelta, done), scaleVal(start.Y, yDelta, done)))
 		},
 	}
 }
@@ -71,14 +71,14 @@ func NewPositionAnimation(start, stop fyne.Position, d time.Duration, fn func(fy
 // to be visible. You should call Start() on the returned animation to start it.
 //
 // Since: 2.0
-func NewSizeAnimation(start, stop fyne.Size, d time.Duration, fn func(fyne.Size)) *fyne.Animation {
+func NewSizeAnimation(start, stop granio.Size, d time.Duration, fn func(granio.Size)) *granio.Animation {
 	widthDelta := stop.Width - start.Width
 	heightDelta := stop.Height - start.Height
 
-	return &fyne.Animation{
+	return &granio.Animation{
 		Duration: d,
 		Tick: func(done float32) {
-			fn(fyne.NewSize(scaleVal(start.Width, widthDelta, done), scaleVal(start.Height, heightDelta, done)))
+			fn(granio.NewSize(scaleVal(start.Width, widthDelta, done), scaleVal(start.Height, heightDelta, done)))
 		},
 	}
 }
@@ -90,14 +90,14 @@ func NewSizeAnimation(start, stop fyne.Size, d time.Duration, fn func(fyne.Size)
 // animation again resumes from where it left off, without counting the paused time.
 //
 // Since: 2.8
-func NewShaderAnimation(s *Shader) *fyne.Animation {
+func NewShaderAnimation(s *Shader) *granio.Animation {
 	var elapsed time.Duration
 	var lastTick time.Time
 
-	return &fyne.Animation{
+	return &granio.Animation{
 		Duration:    time.Second,
-		Curve:       fyne.AnimationLinear,
-		RepeatCount: fyne.AnimationRepeatForever,
+		Curve:       granio.AnimationLinear,
+		RepeatCount: granio.AnimationRepeatForever,
 		Tick: func(float32) {
 			elapsed, lastTick = advanceShaderTime(elapsed, lastTick, time.Now())
 			if s.Uniforms == nil {

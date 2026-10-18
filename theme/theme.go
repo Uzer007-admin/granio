@@ -1,14 +1,14 @@
 // Package theme defines how a Fyne app should look when rendered.
-package theme // import "fyne.io/fyne/v2/theme"
+package theme // import "github.com/Uzer007-admin/granio/v2/theme"
 
 import (
 	"image/color"
 	"os"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	internaltheme "fyne.io/fyne/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	internaltheme "github.com/Uzer007-admin/granio/v2/internal/theme"
 )
 
 // Keep in mind to add new constants to the tests at test/theme.go.
@@ -28,13 +28,13 @@ const (
 	fontVariantRegular = "Regular"
 )
 
-var defaultTheme, systemTheme fyne.Theme
+var defaultTheme, systemTheme granio.Theme
 
 // DarkTheme defines the built-in dark theme colors and sizes.
 //
 // Deprecated: This method ignores user preference and should not be used, it will be removed in v3.0.
 // If developers want to ignore user preference for theme variant they can set a custom theme.
-func DarkTheme() fyne.Theme {
+func DarkTheme() granio.Theme {
 	theme := &builtinTheme{variant: VariantDark}
 
 	theme.initFonts()
@@ -44,7 +44,7 @@ func DarkTheme() fyne.Theme {
 // DefaultTheme returns a built-in theme that can adapt to the user preference of light or dark colors.
 //
 // Since: 2.0
-func DefaultTheme() fyne.Theme {
+func DefaultTheme() granio.Theme {
 	if defaultTheme == nil {
 		defaultTheme = setupDefaultTheme()
 	}
@@ -61,7 +61,7 @@ func DefaultTheme() fyne.Theme {
 //
 // Deprecated: This method ignores user preference and should not be used, it will be removed in v3.0.
 // If developers want to ignore user preference for theme variant they can set a custom theme.
-func LightTheme() fyne.Theme {
+func LightTheme() granio.Theme {
 	theme := &builtinTheme{variant: VariantLight}
 
 	theme.initFonts()
@@ -69,9 +69,9 @@ func LightTheme() fyne.Theme {
 }
 
 type builtinTheme struct {
-	variant fyne.ThemeVariant
+	variant granio.ThemeVariant
 
-	regular, bold, italic, boldItalic, monospace, symbol fyne.Resource
+	regular, bold, italic, boldItalic, monospace, symbol granio.Resource
 }
 
 func (t *builtinTheme) initFonts() {
@@ -105,12 +105,15 @@ func (t *builtinTheme) initFonts() {
 	}
 }
 
-func (t *builtinTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
+func (t *builtinTheme) Color(n granio.ThemeColorName, v granio.ThemeVariant) color.Color {
+	if n == ColorNameForegroundOnButton {
+		n = ColorNameForeground
+	}
 	if t.variant != internaltheme.VariantNameUserPreference {
 		v = t.variant
 	}
 
-	primary := fyne.CurrentApp().Settings().PrimaryColor()
+	primary := granio.CurrentApp().Settings().PrimaryColor()
 	switch n {
 	case ColorNamePrimary, ColorNameHyperlink:
 		return internaltheme.PrimaryColorNamed(primary)
@@ -129,7 +132,7 @@ func (t *builtinTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.C
 	return darkPaletteColorNamed(n)
 }
 
-func (t *builtinTheme) Font(style fyne.TextStyle) fyne.Resource {
+func (t *builtinTheme) Font(style granio.TextStyle) granio.Resource {
 	if style.Monospace {
 		return t.monospace
 	}
@@ -152,8 +155,8 @@ func (t *builtinTheme) Font(style fyne.TextStyle) fyne.Resource {
 // It looks up based on user preferences and application configuration.
 //
 // Since: 2.5
-func Current() fyne.Theme {
-	app := fyne.CurrentApp()
+func Current() granio.Theme {
+	app := granio.CurrentApp()
 	if app == nil {
 		return DarkTheme()
 	}
@@ -169,7 +172,7 @@ func Current() fyne.Theme {
 // It looks for widget overrides and falls back to the application's current theme.
 //
 // Since: 2.5
-func CurrentForWidget(w fyne.CanvasObject) fyne.Theme {
+func CurrentForWidget(w granio.CanvasObject) granio.Theme {
 	if custom := cache.WidgetTheme(w); custom != nil {
 		return custom
 	}
@@ -177,17 +180,17 @@ func CurrentForWidget(w fyne.CanvasObject) fyne.Theme {
 	return Current()
 }
 
-func currentVariant() fyne.ThemeVariant {
+func currentVariant() granio.ThemeVariant {
 	if std, ok := Current().(*builtinTheme); ok {
 		if std.variant != internaltheme.VariantNameUserPreference {
 			return std.variant // override if using the old LightTheme() or DarkTheme() constructor
 		}
 	}
 
-	return fyne.CurrentApp().Settings().ThemeVariant()
+	return granio.CurrentApp().Settings().ThemeVariant()
 }
 
-func darkPaletteColorNamed(name fyne.ThemeColorName) color.Color {
+func darkPaletteColorNamed(name granio.ThemeColorName) color.Color {
 	switch name {
 	case ColorNameBackground:
 		return colorDarkBackground
@@ -267,7 +270,7 @@ func focusColorNamed(name string) color.NRGBA {
 	return colorLightFocusBlue
 }
 
-func lightPaletteColorNamed(name fyne.ThemeColorName) color.Color {
+func lightPaletteColorNamed(name granio.ThemeColorName) color.Color {
 	switch name {
 	case ColorNameBackground:
 		return colorLightBackground
@@ -324,12 +327,12 @@ func lightPaletteColorNamed(name fyne.ThemeColorName) color.Color {
 	return color.Transparent
 }
 
-func loadCustomFont(env, variant string, fallback fyne.Resource) fyne.Resource {
+func loadCustomFont(env, variant string, fallback granio.Resource) granio.Resource {
 	variantPath := strings.ReplaceAll(env, "Regular", variant)
 
-	res, err := fyne.LoadResourceFromPath(variantPath)
+	res, err := granio.LoadResourceFromPath(variantPath)
 	if err != nil {
-		fyne.LogError("Error loading specified font", err)
+		granio.LogError("Error loading specified font", err)
 		return fallback
 	}
 
@@ -359,7 +362,7 @@ func selectionColorNamed(name string) color.NRGBA {
 	return colorLightSelectionBlue
 }
 
-func setupDefaultTheme() fyne.Theme {
+func setupDefaultTheme() granio.Theme {
 	theme := &builtinTheme{variant: internaltheme.VariantNameUserPreference}
 	theme.initFonts()
 

@@ -3,10 +3,10 @@ package container
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,29 +29,29 @@ func TestAppTabs_Extended_Tapped(t *testing.T) {
 		NewTabItem("Test1", widget.NewLabel("Test1")),
 		NewTabItem("Test2", widget.NewLabel("Test2")),
 	)
-	tabs.Resize(fyne.NewSize(150, 150)) // Ensure AppTabs is big enough to show both tab buttons
+	tabs.Resize(granio.NewSize(150, 150)) // Ensure AppTabs is big enough to show both tab buttons
 	r := test.TempWidgetRenderer(t, tabs).(*appTabsRenderer)
 
-	tab1 := r.bar.Objects[0].(*fyne.Container).Objects[0].(*tabButton)
-	tab2 := r.bar.Objects[0].(*fyne.Container).Objects[1].(*tabButton)
+	tab1 := r.bar.Objects[0].(*granio.Container).Objects[0].(*tabButton)
+	tab2 := r.bar.Objects[0].(*granio.Container).Objects[1].(*tabButton)
 	require.Equal(t, 0, tabs.SelectedIndex())
 	require.Equal(t, theme.Color(theme.ColorNamePrimary), test.TempWidgetRenderer(t, tab1).(*tabButtonRenderer).label.Color)
 
-	tab2.Tapped(&fyne.PointEvent{})
+	tab2.Tapped(&granio.PointEvent{})
 	assert.Equal(t, 1, tabs.SelectedIndex())
 	require.Equal(t, theme.Color(theme.ColorNameForeground), test.TempWidgetRenderer(t, tab1).(*tabButtonRenderer).label.Color)
 	require.Equal(t, theme.Color(theme.ColorNamePrimary), test.TempWidgetRenderer(t, tab2).(*tabButtonRenderer).label.Color)
 	assert.False(t, tabs.Items[0].Content.Visible())
 	assert.True(t, tabs.Items[1].Content.Visible())
 
-	tab2.Tapped(&fyne.PointEvent{})
+	tab2.Tapped(&granio.PointEvent{})
 	assert.Equal(t, 1, tabs.SelectedIndex())
 	require.Equal(t, theme.Color(theme.ColorNameForeground), test.TempWidgetRenderer(t, tab1).(*tabButtonRenderer).label.Color)
 	require.Equal(t, theme.Color(theme.ColorNamePrimary), test.TempWidgetRenderer(t, tab2).(*tabButtonRenderer).label.Color)
 	assert.False(t, tabs.Items[0].Content.Visible())
 	assert.True(t, tabs.Items[1].Content.Visible())
 
-	tab1.Tapped(&fyne.PointEvent{})
+	tab1.Tapped(&granio.PointEvent{})
 	assert.Equal(t, 0, tabs.SelectedIndex())
 	require.Equal(t, theme.Color(theme.ColorNamePrimary), test.TempWidgetRenderer(t, tab1).(*tabButtonRenderer).label.Color)
 	require.Equal(t, theme.Color(theme.ColorNameForeground), test.TempWidgetRenderer(t, tab2).(*tabButtonRenderer).label.Color)

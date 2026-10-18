@@ -5,9 +5,9 @@ package container_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestAppTabs_OverrideMobile(t *testing.T) {

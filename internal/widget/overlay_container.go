@@ -1,30 +1,30 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
 )
 
 var (
-	_ fyne.Widget            = (*OverlayContainer)(nil)
-	_ fyne.Tappable          = (*OverlayContainer)(nil)
-	_ fyne.SecondaryTappable = (*OverlayContainer)(nil)
-	_ desktop.Hoverable      = (*OverlayContainer)(nil)
+	_ granio.Widget            = (*OverlayContainer)(nil)
+	_ granio.Tappable          = (*OverlayContainer)(nil)
+	_ granio.SecondaryTappable = (*OverlayContainer)(nil)
+	_ desktop.Hoverable        = (*OverlayContainer)(nil)
 )
 
-// OverlayContainer is a transparent widget containing one fyne.CanvasObject and meant to be used as overlay.
+// OverlayContainer is a transparent widget containing one granio.CanvasObject and meant to be used as overlay.
 type OverlayContainer struct {
 	Base
-	Content, Background fyne.CanvasObject
+	Content, Background granio.CanvasObject
 
-	canvas        fyne.Canvas
+	canvas        granio.Canvas
 	onDismiss     func()
 	shown, manual bool
 }
 
 // NewOverlayContainer creates an OverlayContainer.
-func NewOverlayContainer(c fyne.CanvasObject, canvas fyne.Canvas, onDismiss func()) *OverlayContainer {
+func NewOverlayContainer(c granio.CanvasObject, canvas granio.Canvas, onDismiss func()) *OverlayContainer {
 	o := &OverlayContainer{canvas: canvas, Content: c, onDismiss: onDismiss}
 	o.manual = c != nil && !c.Position().IsZero()
 	o.ExtendBaseWidget(o)
@@ -32,10 +32,10 @@ func NewOverlayContainer(c fyne.CanvasObject, canvas fyne.Canvas, onDismiss func
 }
 
 // CreateRenderer returns a new renderer for the overlay container.
-func (o *OverlayContainer) CreateRenderer() fyne.WidgetRenderer {
-	objs := []fyne.CanvasObject{o.Content}
+func (o *OverlayContainer) CreateRenderer() granio.WidgetRenderer {
+	objs := []granio.CanvasObject{o.Content}
 	if o.Background != nil {
-		objs = []fyne.CanvasObject{o.Background, o.Content}
+		objs = []granio.CanvasObject{o.Background, o.Content}
 	}
 
 	o.manual = !o.Content.Position().IsZero()
@@ -71,7 +71,7 @@ func (*OverlayContainer) MouseOut() {
 // SetCanvas allows an overlay container to be re-used on a different canvas.
 //
 // Since: 2.8
-func (o *OverlayContainer) SetCanvas(c fyne.Canvas) {
+func (o *OverlayContainer) SetCanvas(c granio.Canvas) {
 	o.canvas.Overlays().Remove(o)
 	o.canvas = c
 	o.canvas.Overlays().Add(o)
@@ -88,7 +88,7 @@ func (o *OverlayContainer) Show() {
 
 // Tapped catches tap events not handled by the container’s content.
 // It performs the overlay container’s dismiss action.
-func (o *OverlayContainer) Tapped(*fyne.PointEvent) {
+func (o *OverlayContainer) Tapped(*granio.PointEvent) {
 	if o.onDismiss != nil {
 		o.onDismiss()
 	}
@@ -96,10 +96,18 @@ func (o *OverlayContainer) Tapped(*fyne.PointEvent) {
 
 // TappedSecondary catches secondary tap events not handled by the container’s content.
 // It performs the overlay container’s dismiss action.
-func (o *OverlayContainer) TappedSecondary(*fyne.PointEvent) {
+func (o *OverlayContainer) TappedSecondary(*granio.PointEvent) {
 	if o.onDismiss != nil {
 		o.onDismiss()
 	}
+}
+
+// HandleEscape delegates only to the top surface, preserving dialog callbacks.
+func (o *OverlayContainer) HandleEscape() bool {
+	if surface, ok := o.Content.(interface{ HandleEscape() bool }); ok {
+		return surface.HandleEscape()
+	}
+	return false
 }
 
 type overlayRenderer struct {
@@ -107,9 +115,9 @@ type overlayRenderer struct {
 	o *OverlayContainer
 }
 
-var _ fyne.WidgetRenderer = (*overlayRenderer)(nil)
+var _ granio.WidgetRenderer = (*overlayRenderer)(nil)
 
-func (r *overlayRenderer) Layout(s fyne.Size) {
+func (r *overlayRenderer) Layout(s granio.Size) {
 	if s.IsZero() {
 		return
 	}
@@ -129,10 +137,10 @@ func (r *overlayRenderer) Layout(s fyne.Size) {
 	midX -= size.Width / 2
 	midY := s.Height / 2
 	midY -= size.Height / 2
-	r.o.Content.Move(fyne.NewPos(midX, midY))
+	r.o.Content.Move(granio.NewPos(midX, midY))
 }
 
-func (r *overlayRenderer) MinSize() fyne.Size {
+func (r *overlayRenderer) MinSize() granio.Size {
 	return r.o.Content.MinSize()
 }
 

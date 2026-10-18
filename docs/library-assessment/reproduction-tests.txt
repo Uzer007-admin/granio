@@ -1,0 +1,128 @@
+// Source file for reproduction: X:\fyne\internal\cache\assessment_6c36517f_test.go
+package cache
+
+import (
+	"testing"
+	"time"
+
+	"github.com/Uzer007-admin/granio/v2"
+)
+
+func TestAssessmentNewFontMetricAfterClockGap(t *testing.T) {
+	testClearAll()
+	previousClock := timeNow
+	previousLastClean := lastClean
+	previousSample := cachedNow.Load()
+	defer func() {
+		testClearAll()
+		timeNow = previousClock
+		lastClean = previousLastClean
+		cachedNow.Store(previousSample)
+	}()
+	current := time.Date(2026, 10, 12, 12, 0, 0, 0, time.UTC)
+	timeNow = func() time.Time { return current }
+	refreshNow()
+	lastClean = current
+	current = current.Add(3 * ValidDuration)
+	want := granio.NewSize(25, 11)
+	SetFontMetrics("assessment-new-entry", 11, granio.TextStyle{}, nil, want, 9)
+	Clean(false)
+	got, _ := GetFontMetrics("assessment-new-entry", 11, granio.TextStyle{}, nil)
+	if got != want {
+		t.Fatalf("new metric was removed by the first Clean after a clock gap: got %v, want %v", got, want)
+	}
+}
+
+// Source file for reproduction: X:\fyne\internal\driver\glfw\assessment_6c36517f_test.go
+//go:build !no_glfw && !mobile
+
+package glfw
+
+import (
+	"testing"
+
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/glfw/v3.4/glfw"
+)
+
+func TestAssessmentModifierRepeat(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		key  glfw.Key
+		mod  glfw.ModifierKey
+		want granio.KeyModifier
+	}{
+		{"Ctrl", glfw.KeyLeftControl, glfw.ModControl, granio.KeyModifierControl},
+		{"Shift", glfw.KeyLeftShift, glfw.ModShift, granio.KeyModifierShift},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := desktopModifierCorrected(tc.mod, tc.key, glfw.Repeat); got != tc.want {
+				t.Errorf("Repeat cleared a held modifier: got %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
+// Source file for reproduction: X:\fyne\internal\painter\gl\assessment_6c36517f_test.go
+//go:build windows && !gles && !ci && !test_web_driver && !wasm
+
+package gl
+
+import (
+	"bytes"
+	"image"
+	"image/color"
+	"runtime"
+	"testing"
+	"unsafe"
+
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	nativegl "github.com/Uzer007-admin/gl/v2.1/gl"
+	"github.com/Uzer007-admin/glfw/v3.4/glfw"
+)
+
+func TestAssessmentRGBASubImageStride(t *testing.T) {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+	if err := glfw.Init(); err != nil {
+		t.Fatal(err)
+	}
+	defer glfw.Terminate()
+	glfw.WindowHint(glfw.Visible, glfw.False)
+	glfw.WindowHint(glfw.ContextVersionMajor, 2)
+	glfw.WindowHint(glfw.ContextVersionMinor, 1)
+	window, err := glfw.CreateWindow(16, 16, "Fyne RGBA stride assessment", nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer window.Destroy()
+	window.MakeContextCurrent()
+	if err := nativegl.Init(); err != nil {
+		t.Fatal(err)
+	}
+	parent := image.NewRGBA(image.Rect(0, 0, 4, 2))
+	for y := 0; y < 2; y++ {
+		for x := 0; x < 4; x++ {
+			parent.SetRGBA(x, y, color.RGBA{R: uint8(32 + x*40), G: uint8(20 + y*80), B: 5, A: 255})
+		}
+	}
+	sub := parent.SubImage(image.Rect(1, 0, 3, 2)).(*image.RGBA)
+	p := &painter{ctx: &coreContext{}}
+	texture := p.imgToTexture(sub, canvas.ImageScalePixels)
+	defer p.ctx.DeleteTexture(texture)
+	var got [16]byte
+	nativegl.GetTexImage(nativegl.TEXTURE_2D, 0, nativegl.RGBA, nativegl.UNSIGNED_BYTE, unsafe.Pointer(&got[0]))
+	if code := nativegl.GetError(); code != nativegl.NO_ERROR {
+		t.Fatalf("OpenGL error: %#x", code)
+	}
+	want := make([]byte, 0, len(got))
+	for y := sub.Rect.Min.Y; y < sub.Rect.Max.Y; y++ {
+		for x := sub.Rect.Min.X; x < sub.Rect.Max.X; x++ {
+			pixel := sub.RGBAAt(x, y)
+			want = append(want, pixel.R, pixel.G, pixel.B, pixel.A)
+		}
+	}
+	if !bytes.Equal(got[:], want) {
+		t.Fatalf("RGBA SubImage upload ignored Stride=%d, packed row=%d: got %v, want %v", sub.Stride, 4*sub.Rect.Dx(), got, want)
+	}
+}

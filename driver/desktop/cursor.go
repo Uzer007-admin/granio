@@ -12,7 +12,7 @@ type Cursor interface {
 }
 
 // StandardCursor represents a standard Fyne cursor.
-// These values were previously of type `fyne.Cursor`.
+// These values were previously of type `granio.Cursor`.
 //
 // Since: 2.0
 type StandardCursor int

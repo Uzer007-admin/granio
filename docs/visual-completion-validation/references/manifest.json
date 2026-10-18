@@ -1,0 +1,357 @@
+{
+  "backend": "software opaque; bundled fonts; fixed strings; no DWM",
+  "references": [
+    {
+      "File": "v1-light-dpi1-text1.png",
+      "SHA256": "e1083059d419dd5306209643085d00d0b31a2e2f63d6f1ecf1ecf4c11c309d26",
+      "Profile": "light",
+      "DPI": 1,
+      "TextScale": 1,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-light-dpi1-text1_5.png",
+      "SHA256": "e14f890383395c65df3ca065029355e43fe45cbcf6dc6ca065f179f8287b5135",
+      "Profile": "light",
+      "DPI": 1,
+      "TextScale": 1.5,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-light-dpi1-text2.png",
+      "SHA256": "33a0efeb64f09eab8f62b709a0eabab096ade08ca1a167709db79aa4a59bb586",
+      "Profile": "light",
+      "DPI": 1,
+      "TextScale": 2,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-light-dpi1-text2.25.png",
+      "SHA256": "1c0f3634e78f38d97452af17c1bed592c39131866719e29e9359d92ebf6d6573",
+      "Profile": "light",
+      "DPI": 1,
+      "TextScale": 2.25,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-light-dpi1_5-text1.png",
+      "SHA256": "370d4286b48324fdaae9c37d8e8c918bac3657aaeb9d924c87a4e9eb93297d40",
+      "Profile": "light",
+      "DPI": 1.5,
+      "TextScale": 1,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-light-dpi1_5-text1_5.png",
+      "SHA256": "1f58d4850cdd873e52c3dbae67db8d2c91e9c0b7f90d0d76f336b8ff506674a8",
+      "Profile": "light",
+      "DPI": 1.5,
+      "TextScale": 1.5,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-light-dpi1_5-text2.png",
+      "SHA256": "64bcda4a4352d30d9b1d28d815d64893fa58b0087e8765aee1c5a9aed9afae7f",
+      "Profile": "light",
+      "DPI": 1.5,
+      "TextScale": 2,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-light-dpi1_5-text2.25.png",
+      "SHA256": "1099763e7ad68f7b9de6432d0f1b0c794f1e4c7b0715dd7c023d626ef68252aa",
+      "Profile": "light",
+      "DPI": 1.5,
+      "TextScale": 2.25,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-light-dpi2-text1.png",
+      "SHA256": "7ff95db1d76c1d33d4fdaf46cbb4b97518fbaeca5f156c3411abc51917e8ed21",
+      "Profile": "light",
+      "DPI": 2,
+      "TextScale": 1,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-light-dpi2-text1_5.png",
+      "SHA256": "c07a67746311c4c868c7e4942e1ca1596394f071c6fc36beb2175c11d5ced300",
+      "Profile": "light",
+      "DPI": 2,
+      "TextScale": 1.5,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-light-dpi2-text2.png",
+      "SHA256": "d3fa2b4d80d1705cad9352d6d3c41b2f0f38b7a3cb152eac9d919e496a2abf6c",
+      "Profile": "light",
+      "DPI": 2,
+      "TextScale": 2,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-light-dpi2-text2.25.png",
+      "SHA256": "473c811a8f48052879049f69ab5c60e4ea0c2187826d5cbaceb69b9078b3e571",
+      "Profile": "light",
+      "DPI": 2,
+      "TextScale": 2.25,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-dark-dpi1-text1.png",
+      "SHA256": "06829e0e4594913b71a08e81852194ebf97e673811e5cbb2b5b63c9d8558d495",
+      "Profile": "dark",
+      "DPI": 1,
+      "TextScale": 1,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-dark-dpi1-text1_5.png",
+      "SHA256": "f4b1a32a42bf5b57b49a47522e651e7e85cd6d5c5f02bdb21a0221d8a04ee160",
+      "Profile": "dark",
+      "DPI": 1,
+      "TextScale": 1.5,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-dark-dpi1-text2.png",
+      "SHA256": "7e5cb96b3937ccf675a12f93de3d1aa65f4759f52fe7cd284c7c0c344a94890d",
+      "Profile": "dark",
+      "DPI": 1,
+      "TextScale": 2,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-dark-dpi1-text2.25.png",
+      "SHA256": "0f6581cd78cb47c1bcafaaf9d4cb7d15a1ea404ff24a6975e9174e87f14c56a7",
+      "Profile": "dark",
+      "DPI": 1,
+      "TextScale": 2.25,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-dark-dpi1_5-text1.png",
+      "SHA256": "2108f79342ee1dd28c6678fb54ae4f17086018cd653c517a6c05f4f802689333",
+      "Profile": "dark",
+      "DPI": 1.5,
+      "TextScale": 1,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-dark-dpi1_5-text1_5.png",
+      "SHA256": "70123dcbfb46fa78c07d8234b941f3f055cd3cec0656fa853ee8fe3437e5a6bb",
+      "Profile": "dark",
+      "DPI": 1.5,
+      "TextScale": 1.5,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-dark-dpi1_5-text2.png",
+      "SHA256": "7ffd83da91398fec335120e0705008c9b9dba086d756c6dfe54f748b6aff5e7a",
+      "Profile": "dark",
+      "DPI": 1.5,
+      "TextScale": 2,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-dark-dpi1_5-text2.25.png",
+      "SHA256": "58ffe6e58da0bbbac6071d6314ef11ee68c2191233bf76b2adb43e7c192d2e82",
+      "Profile": "dark",
+      "DPI": 1.5,
+      "TextScale": 2.25,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-dark-dpi2-text1.png",
+      "SHA256": "4db6564a926ad43aff2e26d569e1d28b7196604aac58554db94c07d57fd640b8",
+      "Profile": "dark",
+      "DPI": 2,
+      "TextScale": 1,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-dark-dpi2-text1_5.png",
+      "SHA256": "b98ed951ecacd3deef397c69669c74f91097422b50c9d107a6c434002aa33465",
+      "Profile": "dark",
+      "DPI": 2,
+      "TextScale": 1.5,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-dark-dpi2-text2.png",
+      "SHA256": "4b694c20120f7e5cad4819c44c76a8c0f1e367db9a0ffe51c2858feebba79cf1",
+      "Profile": "dark",
+      "DPI": 2,
+      "TextScale": 2,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-dark-dpi2-text2.25.png",
+      "SHA256": "7cc8f351277b25d3135957f1203ba98f8207319fc47f25852432623bc0e79892",
+      "Profile": "dark",
+      "DPI": 2,
+      "TextScale": 2.25,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-high-contrast-dpi1-text1.png",
+      "SHA256": "3a45a286fcb617fecf34e7dab92eca8323a1fff2be4d66b60460e39b5de064af",
+      "Profile": "high-contrast",
+      "DPI": 1,
+      "TextScale": 1,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-high-contrast-dpi1-text1_5.png",
+      "SHA256": "f7f69db6cd644350653673d8c32ac8dac3847d297b4b3774e14eb0783712399d",
+      "Profile": "high-contrast",
+      "DPI": 1,
+      "TextScale": 1.5,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-high-contrast-dpi1-text2.png",
+      "SHA256": "cfc759c8d91c233d924a5d2e4e0f9a89cf90a695399a2b15f5c215f2f8ca256e",
+      "Profile": "high-contrast",
+      "DPI": 1,
+      "TextScale": 2,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-high-contrast-dpi1-text2.25.png",
+      "SHA256": "ade10a802e0f42dd22b53c3b7161fa89a0941a1a7a33ec818a82a75427e8ecdf",
+      "Profile": "high-contrast",
+      "DPI": 1,
+      "TextScale": 2.25,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-high-contrast-dpi1_5-text1.png",
+      "SHA256": "a50595638b64cb101294a30026059baea53265ff11b3e6865c532073f7d92a98",
+      "Profile": "high-contrast",
+      "DPI": 1.5,
+      "TextScale": 1,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-high-contrast-dpi1_5-text1_5.png",
+      "SHA256": "b8d24baf43d842eef99fad538dfcb564c1912e7d15cf152121bd315be1c01898",
+      "Profile": "high-contrast",
+      "DPI": 1.5,
+      "TextScale": 1.5,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-high-contrast-dpi1_5-text2.png",
+      "SHA256": "9da9904d0afa18ecb3e020c5fb87e41694b1252950460a636b647d3a030e5ff5",
+      "Profile": "high-contrast",
+      "DPI": 1.5,
+      "TextScale": 2,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-high-contrast-dpi1_5-text2.25.png",
+      "SHA256": "3403bcd85c0abefb1672f3350c6671d2f30de6fde3b801e4f4afe15c40de1a2d",
+      "Profile": "high-contrast",
+      "DPI": 1.5,
+      "TextScale": 2.25,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-high-contrast-dpi2-text1.png",
+      "SHA256": "a51d18a8d9f7b4726c7308e845794645e4ba66ba1c4719bc7a6f204e681069d2",
+      "Profile": "high-contrast",
+      "DPI": 2,
+      "TextScale": 1,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-high-contrast-dpi2-text1_5.png",
+      "SHA256": "17f7f0918deb69866ce574f387dd70003424637fd75aa81075972ef4e003137c",
+      "Profile": "high-contrast",
+      "DPI": 2,
+      "TextScale": 1.5,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-high-contrast-dpi2-text2.png",
+      "SHA256": "a501e81a778bce1b788f72bb65568cb43d878f86738047e33fe8070d55756194",
+      "Profile": "high-contrast",
+      "DPI": 2,
+      "TextScale": 2,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-high-contrast-dpi2-text2.25.png",
+      "SHA256": "2a32e36c0d50775b6e0ab578fe6f13b26b73bba2e7889e8cae9072fca76369d1",
+      "Profile": "high-contrast",
+      "DPI": 2,
+      "TextScale": 2.25,
+      "Width": 1560,
+      "Height": 3600
+    },
+    {
+      "File": "v1-legacy-dpi1-text1.png",
+      "SHA256": "d686c80759305fea5c3f42a08abe7e858b7fdc07eca715ebe1f2fccdd9b8403a",
+      "Profile": "legacy",
+      "DPI": 1,
+      "TextScale": 1,
+      "Width": 780,
+      "Height": 1800
+    },
+    {
+      "File": "v1-legacy-dpi1_5-text1.png",
+      "SHA256": "855c56a3a800c3aa87a4538f5c5080e45d041b5eae19690b0e22f57be94db7bd",
+      "Profile": "legacy",
+      "DPI": 1.5,
+      "TextScale": 1,
+      "Width": 1170,
+      "Height": 2700
+    },
+    {
+      "File": "v1-legacy-dpi2-text1.png",
+      "SHA256": "8cc53ac0c73d2f5dbbb2997194fd720e4455d782e9121ee41344aa73bf7d0d7f",
+      "Profile": "legacy",
+      "DPI": 2,
+      "TextScale": 1,
+      "Width": 1560,
+      "Height": 3600
+    }
+  ],
+  "token_version": 1
+}

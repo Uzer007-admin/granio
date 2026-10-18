@@ -4,15 +4,15 @@ import (
 	"github.com/jeandeaual/go-locale"
 	"golang.org/x/text/language"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // SystemLocale returns the primary locale on the current system.
 // This may refer to a language that Fyne does not have translations for.
-func SystemLocale() fyne.Locale {
+func SystemLocale() granio.Locale {
 	loc, err := locale.GetLocale()
 	if err != nil {
-		fyne.LogError("Failed to look up user locale", err)
+		granio.LogError("Failed to look up user locale", err)
 	}
 	if len(loc) < 2 {
 		loc = "en"
@@ -20,19 +20,19 @@ func SystemLocale() fyne.Locale {
 
 	tag, err := language.Parse(loc)
 	if err != nil {
-		fyne.LogError("Error parsing user locale "+loc, err)
+		granio.LogError("Error parsing user locale "+loc, err)
 	}
 	return localeFromTag(tag)
 }
 
-func closestSupportedLocale(locs []string) fyne.Locale {
+func closestSupportedLocale(locs []string) granio.Locale {
 	matcher := language.NewMatcher(translated)
 
 	tags := make([]language.Tag, len(locs))
 	for i, loc := range locs {
 		tag, err := language.Parse(loc)
 		if err != nil && loc != "C" {
-			fyne.LogError("Error parsing user locale "+loc, err)
+			granio.LogError("Error parsing user locale "+loc, err)
 		}
 		tags[i] = tag
 	}
@@ -46,7 +46,7 @@ func closestSupportedLocale(locs []string) fyne.Locale {
 	return localeFromTag(best)
 }
 
-func localeFromTag(in language.Tag) fyne.Locale {
+func localeFromTag(in language.Tag) granio.Locale {
 	b, s, r := in.Raw()
 	ret := b.String()
 
@@ -58,5 +58,5 @@ func localeFromTag(in language.Tag) fyne.Locale {
 		}
 	}
 
-	return fyne.Locale(ret)
+	return granio.Locale(ret)
 }

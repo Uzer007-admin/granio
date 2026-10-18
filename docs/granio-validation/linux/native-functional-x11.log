@@ -1,0 +1,11 @@
+=== RUN   TestNativeModernScopeVisibilityAndEscape
+    visual_completion_native_test.go:95: hidden ancestor/window paused; native minimized flag observed=false; restored selection=7,0,7
+--- PASS: TestNativeModernScopeVisibilityAndEscape (0.27s)
+=== RUN   TestNativeVisualHundredLifecycleAndResizeCycles
+    visual_completion_native_test.go:150: 100 show/hide/resize/backdrop/maximize/minimize cycles; surface generation=1; native maximize observed=0; native minimize observed=0; final={RequestID:101 Phase:Fallback Requested:Mica Selected:Opaque Backend:3 SurfaceReady:true NativeAccepted:false Reason:UnsupportedOS NativeCode:0 PreparedFrames:4 FirstFrameBeforeShow:true}
+--- PASS: TestNativeVisualHundredLifecycleAndResizeCycles (0.59s)
+=== RUN   TestNativeModernLiveTextScalePreservesState
+    visual_completion_native_test.go:197: native live TextScale 100/150/200/225/100: text, focus, selection and binding retained
+--- PASS: TestNativeModernLiveTextScalePreservesState (0.21s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	2.314s

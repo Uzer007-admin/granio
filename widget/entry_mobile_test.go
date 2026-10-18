@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -22,9 +22,9 @@ func TestEntry_Select_TripleTap_Mobile(t *testing.T) {
 	time.Sleep(20 * time.Millisecond)
 
 	// the third touch triggers the triple-tap select of the whole row
-	pos := fyne.NewPos(1, 1)
-	e.TouchDown(&mobile.TouchEvent{PointEvent: fyne.PointEvent{Position: pos}})
-	e.TouchUp(&mobile.TouchEvent{PointEvent: fyne.PointEvent{Position: pos}})
+	pos := granio.NewPos(1, 1)
+	e.TouchDown(&mobile.TouchEvent{PointEvent: granio.PointEvent{Position: pos}})
+	e.TouchUp(&mobile.TouchEvent{PointEvent: granio.PointEvent{Position: pos}})
 	assert.Equal(t, "Testing", e.SelectedText())
 }
 
@@ -37,10 +37,10 @@ func TestEntry_Select_TapAfterDoubleTap_Mobile(t *testing.T) {
 	assert.NotEmpty(t, e.SelectedText())
 
 	// a later single tap should just move the cursor, not keep the selection alive
-	time.Sleep(fyne.CurrentApp().Driver().DoubleTapDelay() + 50*time.Millisecond)
-	pos := fyne.NewPos(1, 1)
-	e.TouchDown(&mobile.TouchEvent{PointEvent: fyne.PointEvent{Position: pos}})
-	e.TouchUp(&mobile.TouchEvent{PointEvent: fyne.PointEvent{Position: pos}})
+	time.Sleep(granio.CurrentApp().Driver().DoubleTapDelay() + 50*time.Millisecond)
+	pos := granio.NewPos(1, 1)
+	e.TouchDown(&mobile.TouchEvent{PointEvent: granio.PointEvent{Position: pos}})
+	e.TouchUp(&mobile.TouchEvent{PointEvent: granio.PointEvent{Position: pos}})
 	test.Tap(e)
 	assert.Equal(t, "", e.SelectedText())
 }

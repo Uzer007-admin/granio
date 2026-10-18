@@ -4,14 +4,14 @@ import (
 	"math"
 	"strconv"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const (
@@ -30,11 +30,11 @@ var (
 // Declare conformity with interfaces
 var (
 	_ desktop.Cursorable = (*Table)(nil)
-	_ fyne.Draggable     = (*Table)(nil)
-	_ fyne.Focusable     = (*Table)(nil)
+	_ granio.Draggable   = (*Table)(nil)
+	_ granio.Focusable   = (*Table)(nil)
 	_ desktop.Hoverable  = (*Table)(nil)
-	_ fyne.Tappable      = (*Table)(nil)
-	_ fyne.Widget        = (*Table)(nil)
+	_ granio.Tappable    = (*Table)(nil)
+	_ granio.Widget      = (*Table)(nil)
 )
 
 // TableCellID is a type that represents a cell's position in a table based on its row and column location.
@@ -50,12 +50,15 @@ type TableCellID struct {
 // Since: 1.4
 type Table struct {
 	BaseWidget
+	SelectionMode SelectionMode
 
-	Length       func() (rows int, cols int)                      `json:"-"`
-	CreateCell   func() fyne.CanvasObject                         `json:"-"`
-	UpdateCell   func(id TableCellID, template fyne.CanvasObject) `json:"-"`
-	OnSelected   func(id TableCellID)                             `json:"-"`
-	OnUnselected func(id TableCellID)                             `json:"-"`
+	Length     func() (rows int, cols int)                        `json:"-"`
+	CreateCell func() granio.CanvasObject                         `json:"-"`
+	UpdateCell func(id TableCellID, template granio.CanvasObject) `json:"-"`
+	// OnEdit вызывается при F2 для текущей ячейки, если редактор подключён.
+	OnEdit       func(id TableCellID) `json:"-"`
+	OnSelected   func(id TableCellID) `json:"-"`
+	OnUnselected func(id TableCellID) `json:"-"`
 
 	// ShowHeaderRow specifies that a row should be added to the table with header content.
 	// This will default to an A-Z style content, unless overridden with `CreateHeader` and `UpdateHeader` calls.
@@ -73,13 +76,13 @@ type Table struct {
 	// Developers must also override `UpdateHeader`.
 	//
 	// Since: 2.4
-	CreateHeader func() fyne.CanvasObject `json:"-"`
+	CreateHeader func() granio.CanvasObject `json:"-"`
 
 	// UpdateHeader is used with `CreateHeader` to support custom header content.
 	// The `id` parameter will have `-1` value to indicate a header, and `> 0` where the column or row refer to data.
 	//
 	// Since: 2.4
-	UpdateHeader func(id TableCellID, template fyne.CanvasObject) `json:"-"`
+	UpdateHeader func(id TableCellID, template granio.CanvasObject) `json:"-"`
 
 	// StickyRowCount specifies how many data rows should not scroll when the content moves.
 	// If `ShowHeaderRow` us `true` then the stuck row will appear immediately underneath.
@@ -104,20 +107,25 @@ type Table struct {
 	// Since: 2.8
 	OnHighlighted func(id TableCellID) `json:"-"`
 
-	currentHighlight          TableCellID
-	focused                   bool
-	selectedCell, hoveredCell *TableCellID
-	cells                     *tableCells
-	columnWidths, rowHeights  map[int]float32
-	moveCallback              func()
-	offset                    fyne.Position
-	content                   *widget.Scroll
+	currentHighlight            TableCellID
+	focused                     bool
+	selectedCell, hoveredCell   *TableCellID
+	selectedCells               map[TableCellID]struct{}
+	selectionAnchor             TableCellID
+	selectionAnchored           bool
+	clickModifiers              granio.KeyModifier
+	cells                       *tableCells
+	columnWidths, rowHeights    map[int]float32
+	columnGeometry, rowGeometry collectionGeometry
+	moveCallback                func()
+	offset                      granio.Position
+	content                     *widget.Scroll
 
-	cellSize, headerSize                                         fyne.Size
+	cellSize, headerSize                                         granio.Size
 	stuckXOff, stuckYOff, stuckWidth, stuckHeight, dragStartSize float32
 	top, left, corner, dividerLayer                              *clip
 	hoverHeaderRow, hoverHeaderCol, dragCol, dragRow             int
-	dragStartPos                                                 fyne.Position
+	dragStartPos                                                 granio.Position
 }
 
 // NewTable returns a new performant table widget defined by the passed functions.
@@ -126,7 +134,7 @@ type Table struct {
 // passed template CanvasObject.
 //
 // Since: 1.4
-func NewTable(length func() (rows int, cols int), create func() fyne.CanvasObject, update func(TableCellID, fyne.CanvasObject)) *Table {
+func NewTable(length func() (rows int, cols int), create func() granio.CanvasObject, update func(TableCellID, granio.CanvasObject)) *Table {
 	t := &Table{Length: length, CreateCell: create, UpdateCell: update}
 	t.ExtendBaseWidget(t)
 	return t
@@ -139,7 +147,7 @@ func NewTable(length func() (rows int, cols int), create func() fyne.CanvasObjec
 // The row and column headers will stick to the leading and top edges of the table and contain "1-10" and "A-Z" formatted labels.
 //
 // Since: 2.4
-func NewTableWithHeaders(length func() (rows int, cols int), create func() fyne.CanvasObject, update func(TableCellID, fyne.CanvasObject)) *Table {
+func NewTableWithHeaders(length func() (rows int, cols int), create func() granio.CanvasObject, update func(TableCellID, granio.CanvasObject)) *Table {
 	t := NewTable(length, create, update)
 	t.ShowHeaderRow = true
 	t.ShowHeaderColumn = true
@@ -148,7 +156,7 @@ func NewTableWithHeaders(length func() (rows int, cols int), create func() fyne.
 }
 
 // CreateRenderer returns a new renderer for the table.
-func (t *Table) CreateRenderer() fyne.WidgetRenderer {
+func (t *Table) CreateRenderer() granio.WidgetRenderer {
 	t.ExtendBaseWidget(t)
 
 	t.headerSize = t.createHeader().MinSize()
@@ -165,16 +173,16 @@ func (t *Table) CreateRenderer() fyne.WidgetRenderer {
 	t.cellSize = t.templateSize()
 	t.cells = newTableCells(t)
 	t.content = widget.NewScroll(t.cells)
-	t.top = newClip(t, &fyne.Container{})
-	t.left = newClip(t, &fyne.Container{})
-	t.corner = newClip(t, &fyne.Container{})
-	t.dividerLayer = newClip(t, &fyne.Container{})
+	t.top = newClip(t, &granio.Container{})
+	t.left = newClip(t, &granio.Container{})
+	t.corner = newClip(t, &granio.Container{})
+	t.dividerLayer = newClip(t, &granio.Container{})
 	t.dragCol = noCellMatch
 	t.dragRow = noCellMatch
 
 	r := &tableRenderer{t: t}
-	r.SetObjects([]fyne.CanvasObject{t.top, t.left, t.corner, t.dividerLayer, t.content})
-	t.content.OnScrolled = func(pos fyne.Position) {
+	r.SetObjects([]granio.CanvasObject{t.top, t.left, t.corner, t.dividerLayer, t.content})
+	t.content.OnScrolled = func(pos granio.Position) {
 		t.offset = pos
 		t.cells.refreshForID(onlyNewTableCellsID)
 	}
@@ -194,8 +202,8 @@ func (t *Table) Cursor() desktop.Cursor {
 	return desktop.DefaultCursor
 }
 
-// Dragged implements the [fyne.Draggable] interface.
-func (t *Table) Dragged(e *fyne.DragEvent) {
+// Dragged implements the [granio.Draggable] interface.
+func (t *Table) Dragged(e *granio.DragEvent) {
 	minSize := t.cellSize
 	col := t.dragCol
 	row := t.dragRow
@@ -218,7 +226,7 @@ func (t *Table) Dragged(e *fyne.DragEvent) {
 	}
 }
 
-// DragEnd implements the [fyne.Draggable] interface.
+// DragEnd implements the [granio.Draggable] interface.
 func (t *Table) DragEnd() {
 	t.dragCol = noCellMatch
 	t.dragRow = noCellMatch
@@ -246,6 +254,7 @@ func (t *Table) MouseIn(ev *desktop.MouseEvent) {
 
 // MouseDown response to desktop mouse event
 func (t *Table) MouseDown(e *desktop.MouseEvent) {
+	t.clickModifiers = e.Modifier
 	t.startDrag(e.Position)
 }
 
@@ -275,6 +284,14 @@ func (t *Table) RefreshItem(id TableCellID) {
 
 // Select will mark the specified cell as selected.
 func (t *Table) Select(id TableCellID) {
+	if t.SelectionMode == SelectionMultiple {
+		if t.isSelected(id) {
+			return
+		}
+		t.SetSelection(append(t.Selected(), id))
+		t.ScrollTo(id)
+		return
+	}
 	if t.Length == nil {
 		return
 	}
@@ -301,7 +318,7 @@ func (t *Table) Select(id TableCellID) {
 }
 
 // SetColumnWidth supports changing the width of the specified column. Columns normally take the width of the template
-// cell returned from the CreateCell callback. The width parameter uses the same units as a fyne.Size type and refers
+// cell returned from the CreateCell callback. The width parameter uses the same units as a granio.Size type and refers
 // to the internal content width not including the divider size.
 //
 // Since: 1.4.1
@@ -321,11 +338,12 @@ func (t *Table) SetColumnWidth(id int, width float32) {
 		return
 	}
 	t.columnWidths[id] = width
+	t.columnGeometry.dirty = true
 	t.Refresh()
 }
 
 // SetRowHeight supports changing the height of the specified row. Rows normally take the height of the template
-// cell returned from the CreateCell callback. The height parameter uses the same units as a fyne.Size type and refers
+// cell returned from the CreateCell callback. The height parameter uses the same units as a granio.Size type and refers
 // to the internal content height not including the divider size.
 //
 // Since: 2.3
@@ -345,6 +363,7 @@ func (t *Table) SetRowHeight(id int, height float32) {
 		return
 	}
 	t.rowHeights[id] = height
+	t.rowGeometry.dirty = true
 	t.Refresh()
 }
 
@@ -362,13 +381,21 @@ func (*Table) TouchCancel(*mobile.TouchEvent) {
 }
 
 // TypedKey is called if a key event happens while this Table is focused.
-func (t *Table) TypedKey(event *fyne.KeyEvent) {
+func (t *Table) TypedKey(event *granio.KeyEvent) {
 	oldHighlight := t.currentHighlight
 
 	switch event.Name {
-	case fyne.KeySpace:
-		t.Select(t.currentHighlight)
-	case fyne.KeyDown:
+	case granio.KeyF2:
+		if t.OnEdit != nil {
+			t.OnEdit(t.currentHighlight)
+		}
+	case granio.KeySpace:
+		if t.SelectionMode == SelectionMultiple {
+			t.pointerSelect(t.currentHighlight, selectionModifiers()|granio.KeyModifierControl)
+		} else {
+			t.Select(t.currentHighlight)
+		}
+	case granio.KeyDown:
 		if f := t.Length; f != nil {
 			rows, _ := f()
 			if t.currentHighlight.Row >= rows-1 {
@@ -379,7 +406,7 @@ func (t *Table) TypedKey(event *fyne.KeyEvent) {
 		t.currentHighlight.Row++
 		t.ScrollTo(t.currentHighlight)
 		t.RefreshItem(t.currentHighlight)
-	case fyne.KeyLeft:
+	case granio.KeyLeft:
 		if t.currentHighlight.Col <= 0 {
 			return
 		}
@@ -387,7 +414,7 @@ func (t *Table) TypedKey(event *fyne.KeyEvent) {
 		t.currentHighlight.Col--
 		t.ScrollTo(t.currentHighlight)
 		t.RefreshItem(t.currentHighlight)
-	case fyne.KeyRight:
+	case granio.KeyRight:
 		if f := t.Length; f != nil {
 			_, cols := f()
 			if t.currentHighlight.Col >= cols-1 {
@@ -398,7 +425,7 @@ func (t *Table) TypedKey(event *fyne.KeyEvent) {
 		t.currentHighlight.Col++
 		t.ScrollTo(t.currentHighlight)
 		t.RefreshItem(t.currentHighlight)
-	case fyne.KeyUp:
+	case granio.KeyUp:
 		if t.currentHighlight.Row <= 0 {
 			return
 		}
@@ -408,6 +435,9 @@ func (t *Table) TypedKey(event *fyne.KeyEvent) {
 		t.RefreshItem(t.currentHighlight)
 	}
 	if oldHighlight != t.currentHighlight {
+		if t.SelectionMode == SelectionMultiple && selectionModifiers()&granio.KeyModifierShift != 0 {
+			t.pointerSelect(t.currentHighlight, selectionModifiers())
+		}
 		if f := t.OnHighlighted; f != nil {
 			f(t.currentHighlight)
 		}
@@ -421,6 +451,16 @@ func (*Table) TypedRune(_ rune) {
 
 // Unselect will mark the cell provided by id as unselected.
 func (t *Table) Unselect(id TableCellID) {
+	if t.SelectionMode == SelectionMultiple {
+		ids := t.Selected()
+		for i, selected := range ids {
+			if selected == id {
+				t.SetSelection(append(ids[:i], ids[i+1:]...))
+				return
+			}
+		}
+		return
+	}
 	if t.selectedCell == nil || id != *t.selectedCell {
 		return
 	}
@@ -439,6 +479,10 @@ func (t *Table) Unselect(id TableCellID) {
 //
 // Since: 2.1
 func (t *Table) UnselectAll() {
+	if t.SelectionMode == SelectionMultiple {
+		t.SetSelection(nil)
+		return
+	}
 	if t.selectedCell == nil {
 		return
 	}
@@ -585,7 +629,7 @@ func (t *Table) ScrollToLeading() {
 // ScrollToOffset scrolls the table to a specific position
 //
 // Since: 2.6
-func (t *Table) ScrollToOffset(off fyne.Position) {
+func (t *Table) ScrollToOffset(off granio.Position) {
 	if t.content == nil {
 		return
 	}
@@ -628,9 +672,13 @@ func (t *Table) ScrollToTrailing() {
 	t.finishScroll()
 }
 
-// Tapped implements the [fyne.Tappable] interface.
-func (t *Table) Tapped(e *fyne.PointEvent) {
+// Tapped implements the [granio.Tappable] interface.
+func (t *Table) Tapped(e *granio.PointEvent) {
 	if e.Position.X < 0 || e.Position.X >= t.Size().Width || e.Position.Y < 0 || e.Position.Y >= t.Size().Height {
+		if t.SelectionMode == SelectionMultiple {
+			t.UnselectAll()
+			return
+		}
 		t.selectedCell = nil
 		t.Refresh()
 		return
@@ -645,21 +693,25 @@ func (t *Table) Tapped(e *fyne.PointEvent) {
 		return // out of row range
 	}
 
-	if !fyne.CurrentDevice().IsMobile() {
+	if !granio.CurrentDevice().IsMobile() {
 		t.RefreshItem(t.currentHighlight)
-		c := fyne.CurrentApp().Driver().CanvasForObject(t.super())
+		c := granio.CurrentApp().Driver().CanvasForObject(t.super())
 		if c != nil {
-			c.Focus(t.super().(fyne.Focusable))
+			c.Focus(t.super().(granio.Focusable))
 		}
 		t.RefreshItem(t.currentHighlight)
 	}
-	t.Select(TableCellID{row, col})
+	if t.SelectionMode == SelectionMultiple {
+		t.pointerSelect(TableCellID{row, col}, t.clickModifiers)
+	} else {
+		t.Select(TableCellID{row, col})
+	}
 }
 
 // columnAt returns a positive integer (or 0) for the column that is found at the `pos` X position.
 // If the position is between cells the method will return a negative integer representing the next column,
 // i.e. -1 means the gap between 0 and 1.
-func (t *Table) columnAt(pos fyne.Position) int {
+func (t *Table) columnAt(pos granio.Position) int {
 	dataCols := 0
 	if f := t.Length; f != nil {
 		_, dataCols = t.Length()
@@ -688,49 +740,57 @@ func (t *Table) columnAt(pos fyne.Position) int {
 	return noCellMatch
 }
 
-func (t *Table) createHeader() fyne.CanvasObject {
+func (t *Table) createHeader() granio.CanvasObject {
 	if f := t.CreateHeader; f != nil {
 		return f()
 	}
 
 	l := NewLabel("00")
 	l.TextStyle.Bold = true
-	l.Alignment = fyne.TextAlignCenter
+	l.Alignment = granio.TextAlignCenter
 	return l
 }
 
 func (t *Table) findX(col int) (cellX float32, cellWidth float32) {
-	cellSize := t.templateSize()
-	padding := t.Theme().Size(theme.SizeNamePadding)
-	for i := 0; i <= col; i++ {
-		if cellWidth > 0 {
-			cellX += cellWidth + padding
-		}
-
-		width := cellSize.Width
-		if w, ok := t.columnWidths[i]; ok {
-			width = w
-		}
-		cellWidth = width
+	if col < 0 {
+		return 0, 0
 	}
-	return cellX, cellWidth
+	cellSize := t.cellSize
+	if cellSize.IsZero() {
+		cellSize = t.templateSize()
+	}
+	padding := t.Theme().Size(theme.SizeNamePadding)
+	cols := col + 1
+	if t.Length != nil {
+		_, cols = t.Length()
+	}
+	t.columnGeometry.prepare(t.columnWidths, cols, cellSize.Width, padding)
+	cellWidth = cellSize.Width
+	if custom, ok := t.columnWidths[col]; ok {
+		cellWidth = custom
+	}
+	return t.columnGeometry.position(col), cellWidth
 }
 
 func (t *Table) findY(row int) (cellY float32, cellHeight float32) {
-	cellSize := t.templateSize()
-	padding := t.Theme().Size(theme.SizeNamePadding)
-	for i := 0; i <= row; i++ {
-		if cellHeight > 0 {
-			cellY += cellHeight + padding
-		}
-
-		height := cellSize.Height
-		if h, ok := t.rowHeights[i]; ok {
-			height = h
-		}
-		cellHeight = height
+	if row < 0 {
+		return 0, 0
 	}
-	return cellY, cellHeight
+	cellSize := t.cellSize
+	if cellSize.IsZero() {
+		cellSize = t.templateSize()
+	}
+	padding := t.Theme().Size(theme.SizeNamePadding)
+	rows := row + 1
+	if t.Length != nil {
+		rows, _ = t.Length()
+	}
+	t.rowGeometry.prepare(t.rowHeights, rows, cellSize.Height, padding)
+	cellHeight = cellSize.Height
+	if custom, ok := t.rowHeights[row]; ok {
+		cellHeight = custom
+	}
+	return t.rowGeometry.position(row), cellHeight
 }
 
 func (t *Table) finishScroll() {
@@ -740,7 +800,7 @@ func (t *Table) finishScroll() {
 	t.cells.Refresh()
 }
 
-func (t *Table) hoverAt(pos fyne.Position) {
+func (t *Table) hoverAt(pos granio.Position) {
 	col := t.columnAt(pos)
 	row := t.rowAt(pos)
 	oldHover := t.hoveredCell
@@ -803,7 +863,7 @@ func (t *Table) hoverOut() {
 // rowAt returns a positive integer (or 0) for the row that is found at the `pos` Y position.
 // If the position is between cells the method will return a negative integer representing the next row,
 // i.e. -1 means the gap between rows 0 and 1.
-func (t *Table) rowAt(pos fyne.Position) int {
+func (t *Table) rowAt(pos granio.Position) int {
 	dataRows := 0
 	if f := t.Length; f != nil {
 		dataRows, _ = t.Length()
@@ -832,7 +892,7 @@ func (t *Table) rowAt(pos fyne.Position) int {
 	return noCellMatch
 }
 
-func (t *Table) startDrag(pos fyne.Position) {
+func (t *Table) startDrag(pos granio.Position) {
 	if t.dragCol == noCellMatch && t.dragRow == noCellMatch {
 		t.dragStartPos = pos
 		if t.hoverHeaderRow != noCellMatch {
@@ -853,7 +913,7 @@ func (t *Table) startDrag(pos fyne.Position) {
 	}
 }
 
-func (t *Table) templateSize() fyne.Size {
+func (t *Table) templateSize() granio.Size {
 	if f := t.CreateCell; f != nil {
 		template := createItemAndApplyThemeScope(f, t) // don't use cache, we need new template
 		if !t.ShowHeaderRow && !t.ShowHeaderColumn {
@@ -862,11 +922,11 @@ func (t *Table) templateSize() fyne.Size {
 		return internal.MaxSizes(template.MinSize(), t.createHeader().MinSize())
 	}
 
-	fyne.LogError("Missing CreateCell callback required for Table", nil)
-	return fyne.Size{}
+	granio.LogError("Missing CreateCell callback required for Table", nil)
+	return granio.Size{}
 }
 
-func (t *Table) updateHeader(id TableCellID, o fyne.CanvasObject) {
+func (t *Table) updateHeader(id TableCellID, o granio.CanvasObject) {
 	if f := t.UpdateHeader; f != nil {
 		f(id, o)
 		return
@@ -921,8 +981,6 @@ func (t *Table) stickyColumnWidths(colWidth float32, cols int) (visible []float3
 
 func (t *Table) visibleColumnWidths(colWidth float32, cols int) (visible map[int]float32, offX float32, minCol, maxCol int) {
 	maxCol = cols
-	colOffset, headWidth := float32(0), float32(0)
-	isVisible := false
 	visible = make(map[int]float32)
 
 	if t.content.Size().Width <= 0 {
@@ -961,26 +1019,23 @@ func (t *Table) visibleColumnWidths(colWidth float32, cols int) (visible map[int
 		return visible, offX, minCol, maxCol
 	}
 
-	for i := 0; i < cols; i++ {
+	t.columnGeometry.prepare(t.columnWidths, cols, colWidth, padding)
+	minCol = t.columnGeometry.itemAt(t.offset.X)
+	offX = t.columnGeometry.position(minCol)
+	maxCol = t.columnGeometry.endAt(t.offset.X + size.Width)
+	for id := minCol; id < maxCol; id++ {
 		width := colWidth
-		if w, ok := t.columnWidths[i]; ok {
-			width = w
+		if custom, ok := t.columnWidths[id]; ok {
+			width = custom
 		}
-
-		if colOffset > t.offset.X-width-padding && (colOffset <= headWidth || colOffset <= t.offset.X) {
-			minCol = i
-			offX = colOffset
-			isVisible = true
+		visible[id] = width
+	}
+	for id := 0; id < min(stick, cols); id++ {
+		width := colWidth
+		if custom, ok := t.columnWidths[id]; ok {
+			width = custom
 		}
-		if colOffset >= t.offset.X+size.Width {
-			break
-		}
-
-		maxCol = i + 1
-		colOffset += width + padding
-		if isVisible || i < stick {
-			visible[i] = width
-		}
+		visible[id] = width
 	}
 	return visible, offX, minCol, maxCol
 }
@@ -1018,8 +1073,6 @@ func (t *Table) stickyRowHeights(rowHeight float32, rows int) (visible []float32
 
 func (t *Table) visibleRowHeights(rowHeight float32, rows int) (visible map[int]float32, offY float32, minRow, maxRow int) {
 	maxRow = rows
-	rowOffset, headHeight := float32(0), float32(0)
-	isVisible := false
 	visible = make(map[int]float32)
 
 	if t.content.Size().Height <= 0 {
@@ -1058,43 +1111,40 @@ func (t *Table) visibleRowHeights(rowHeight float32, rows int) (visible map[int]
 		return visible, offY, minRow, maxRow
 	}
 
-	for i := 0; i < rows; i++ {
+	t.rowGeometry.prepare(t.rowHeights, rows, rowHeight, padding)
+	minRow = t.rowGeometry.itemAt(t.offset.Y)
+	offY = t.rowGeometry.position(minRow)
+	maxRow = t.rowGeometry.endAt(t.offset.Y + size.Height)
+	for id := minRow; id < maxRow; id++ {
 		height := rowHeight
-		if h, ok := t.rowHeights[i]; ok {
-			height = h
+		if custom, ok := t.rowHeights[id]; ok {
+			height = custom
 		}
-
-		if rowOffset > t.offset.Y-height-padding && (rowOffset <= headHeight || rowOffset <= t.offset.Y) {
-			minRow = i
-			offY = rowOffset
-			isVisible = true
+		visible[id] = height
+	}
+	for id := 0; id < min(stick, rows); id++ {
+		height := rowHeight
+		if custom, ok := t.rowHeights[id]; ok {
+			height = custom
 		}
-		if rowOffset >= t.offset.Y+size.Height {
-			break
-		}
-
-		maxRow = i + 1
-		rowOffset += height + padding
-		if isVisible || i < stick {
-			visible[i] = height
-		}
+		visible[id] = height
 	}
 	return visible, offY, minRow, maxRow
 }
 
 // Declare conformity with WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*tableRenderer)(nil)
+var _ granio.WidgetRenderer = (*tableRenderer)(nil)
 
 type tableRenderer struct {
 	widget.BaseRenderer
 	t *Table
 }
 
-func (t *tableRenderer) Layout(s fyne.Size) {
+func (t *tableRenderer) Layout(s granio.Size) {
 	th := t.t.Theme()
 
 	t.calculateHeaderSizes(th)
-	off := fyne.NewPos(t.t.stuckWidth, t.t.stuckHeight)
+	off := granio.NewPos(t.t.stuckWidth, t.t.stuckHeight)
 	if t.t.ShowHeaderRow {
 		off.Y += t.t.headerSize.Height
 	}
@@ -1105,11 +1155,11 @@ func (t *tableRenderer) Layout(s fyne.Size) {
 	t.t.content.Move(off)
 	t.t.content.Resize(s.SubtractWidthHeight(off.X, off.Y))
 
-	t.t.top.Move(fyne.NewPos(off.X, 0))
-	t.t.top.Resize(fyne.NewSize(s.Width-off.X, off.Y))
-	t.t.left.Move(fyne.NewPos(0, off.Y))
-	t.t.left.Resize(fyne.NewSize(off.X, s.Height-off.Y))
-	t.t.corner.Resize(fyne.NewSize(off.X, off.Y))
+	t.t.top.Move(granio.NewPos(off.X, 0))
+	t.t.top.Resize(granio.NewSize(s.Width-off.X, off.Y))
+	t.t.left.Move(granio.NewPos(0, off.Y))
+	t.t.left.Resize(granio.NewSize(off.X, s.Height-off.Y))
+	t.t.corner.Resize(granio.NewSize(off.X, off.Y))
 
 	t.t.dividerLayer.Resize(s)
 	if t.t.HideSeparators {
@@ -1119,7 +1169,7 @@ func (t *tableRenderer) Layout(s fyne.Size) {
 	}
 }
 
-func (t *tableRenderer) MinSize() fyne.Size {
+func (t *tableRenderer) MinSize() granio.Size {
 	sep := t.t.Theme().Size(theme.SizeNamePadding)
 	minSize := internal.MaxSizes(t.t.content.MinSize(), t.t.cellSize)
 	if t.t.ShowHeaderRow {
@@ -1152,6 +1202,7 @@ func (t *tableRenderer) MinSize() fyne.Size {
 }
 
 func (t *tableRenderer) Refresh() {
+	t.t.rowGeometry.dirty, t.t.columnGeometry.dirty = true, true
 	th := t.t.Theme()
 	t.t.headerSize = t.t.createHeader().MinSize()
 	if t.t.columnWidths != nil {
@@ -1171,7 +1222,7 @@ func (t *tableRenderer) Refresh() {
 	t.t.cells.Refresh()
 }
 
-func (t *tableRenderer) calculateHeaderSizes(th fyne.Theme) {
+func (t *tableRenderer) calculateHeaderSizes(th granio.Theme) {
 	t.t.stuckXOff = 0
 	t.t.stuckYOff = 0
 
@@ -1199,7 +1250,7 @@ func (t *tableRenderer) calculateHeaderSizes(th fyne.Theme) {
 }
 
 // Declare conformity with Widget interface.
-var _ fyne.Widget = (*tableCells)(nil)
+var _ granio.Widget = (*tableCells)(nil)
 
 type tableCells struct {
 	BaseWidget
@@ -1214,17 +1265,18 @@ func newTableCells(t *Table) *tableCells {
 	return c
 }
 
-func (c *tableCells) CreateRenderer() fyne.WidgetRenderer {
+func (c *tableCells) CreateRenderer() granio.WidgetRenderer {
 	th := c.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	marker := canvas.NewRectangle(th.Color(theme.ColorNameSelection, v))
+	applySelectionStyle(marker, th, v)
 	marker.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
 	hover := canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	hover.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
 
 	r := &tableCellsRenderer{
 		cells:   c,
-		visible: make(map[TableCellID]fyne.CanvasObject), headers: make(map[TableCellID]fyne.CanvasObject),
+		visible: make(map[TableCellID]granio.CanvasObject), headers: make(map[TableCellID]granio.CanvasObject),
 		headRowBG: canvas.NewRectangle(th.Color(theme.ColorNameHeaderBackground, v)), headColBG: canvas.NewRectangle(theme.Color(theme.ColorNameHeaderBackground)),
 		headRowStickyBG: canvas.NewRectangle(th.Color(theme.ColorNameHeaderBackground, v)), headColStickyBG: canvas.NewRectangle(theme.Color(theme.ColorNameHeaderBackground)),
 		marker: marker, hover: hover,
@@ -1234,7 +1286,7 @@ func (c *tableCells) CreateRenderer() fyne.WidgetRenderer {
 	return r
 }
 
-func (c *tableCells) Resize(s fyne.Size) {
+func (c *tableCells) Resize(s granio.Size) {
 	c.BaseWidget.Resize(s)
 	c.refreshForID(onlyNewTableCellsID) // trigger a redraw
 }
@@ -1250,67 +1302,42 @@ func (c *tableCells) Refresh() {
 }
 
 // Declare conformity with WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*tableCellsRenderer)(nil)
+var _ granio.WidgetRenderer = (*tableCellsRenderer)(nil)
 
 type tableCellsRenderer struct {
 	widget.BaseRenderer
 
 	cells            *tableCells
-	pool, headerPool async.Pool[fyne.CanvasObject]
-	visible, headers map[TableCellID]fyne.CanvasObject
+	pool, headerPool async.Pool[granio.CanvasObject]
+	visible, headers map[TableCellID]granio.CanvasObject
 	hover, marker    *canvas.Rectangle
-	dividers         []fyne.CanvasObject
+	dividers         []granio.CanvasObject
+	selectionMarkers []*canvas.Rectangle
 
 	headColBG, headRowBG, headRowStickyBG, headColStickyBG *canvas.Rectangle
 }
 
-func (r *tableCellsRenderer) Layout(fyne.Size) {
+func (r *tableCellsRenderer) Layout(granio.Size) {
 	r.moveIndicators()
 }
 
-func (r *tableCellsRenderer) MinSize() fyne.Size {
+func (r *tableCellsRenderer) MinSize() granio.Size {
 	rows, cols := 0, 0
 	if f := r.cells.t.Length; f != nil {
 		rows, cols = r.cells.t.Length()
 	} else {
-		fyne.LogError("Missing Length callback required for Table", nil)
+		granio.LogError("Missing Length callback required for Table", nil)
 	}
 
 	stickRows := r.cells.t.StickyRowCount
 	stickCols := r.cells.t.StickyColumnCount
 
-	width := float32(0)
-	if len(r.cells.t.columnWidths) == 0 {
-		width = r.cells.t.cellSize.Width * float32(cols-stickCols)
-	} else {
-		cellWidth := r.cells.t.cellSize.Width
-		for col := stickCols; col < cols; col++ {
-			colWidth, ok := r.cells.t.columnWidths[col]
-			if ok {
-				width += colWidth
-			} else {
-				width += cellWidth
-			}
-		}
-	}
-
-	height := float32(0)
-	if len(r.cells.t.rowHeights) == 0 {
-		height = r.cells.t.cellSize.Height * float32(rows-stickRows)
-	} else {
-		cellHeight := r.cells.t.cellSize.Height
-		for row := stickRows; row < rows; row++ {
-			rowHeight, ok := r.cells.t.rowHeights[row]
-			if ok {
-				height += rowHeight
-			} else {
-				height += cellHeight
-			}
-		}
-	}
-
 	separatorSize := r.cells.t.Theme().Size(theme.SizeNamePadding)
-	return fyne.NewSize(width+float32(cols-stickCols-1)*separatorSize, height+float32(rows-stickRows-1)*separatorSize)
+	t := r.cells.t
+	t.columnGeometry.prepare(t.columnWidths, cols, t.cellSize.Width, separatorSize)
+	t.rowGeometry.prepare(t.rowHeights, rows, t.cellSize.Height, separatorSize)
+	return granio.NewSize(t.columnGeometry.position(cols)-t.columnGeometry.position(stickCols)-separatorSize,
+		t.rowGeometry.position(rows)-t.rowGeometry.position(stickRows)-separatorSize)
 }
 
 func (r *tableCellsRenderer) Refresh() {
@@ -1319,7 +1346,7 @@ func (r *tableCellsRenderer) Refresh() {
 
 func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 	th := r.cells.t.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	separatorThickness := th.Size(theme.SizeNamePadding)
 	dataRows, dataCols := 0, 0
@@ -1354,9 +1381,9 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 	}
 
 	wasVisible := r.visible
-	r.visible = make(map[TableCellID]fyne.CanvasObject)
-	var cells []fyne.CanvasObject
-	displayCol := func(row, col int, rowHeight float32, cells *[]fyne.CanvasObject) {
+	r.visible = make(map[TableCellID]granio.CanvasObject)
+	var cells []granio.CanvasObject
+	displayCol := func(row, col int, rowHeight float32, cells *[]granio.CanvasObject) {
 		id := TableCellID{row, col}
 		colWidth := visibleColWidths[col]
 		c, ok := wasVisible[id]
@@ -1370,15 +1397,15 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 			}
 		}
 
-		c.Move(fyne.NewPos(cellXOffset, cellYOffset))
-		c.Resize(fyne.NewSize(colWidth, rowHeight))
+		c.Move(granio.NewPos(cellXOffset, cellYOffset))
+		c.Resize(granio.NewSize(colWidth, rowHeight))
 
 		r.visible[id] = c
 		*cells = append(*cells, c)
 		cellXOffset += colWidth + separatorThickness
 	}
 
-	displayRow := func(row int, cells *[]fyne.CanvasObject) {
+	displayRow := func(row int, cells *[]granio.CanvasObject) {
 		rowHeight := visibleRowHeights[row]
 		cellXOffset = offX
 
@@ -1404,7 +1431,7 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 	offX -= r.cells.t.content.Offset.X
 	cellYOffset = r.cells.t.stuckYOff
 	for row := 0; row < stickRows; row++ {
-		displayRow(row, &r.cells.t.top.Content.(*fyne.Container).Objects)
+		displayRow(row, &r.cells.t.top.Content.(*granio.Container).Objects)
 	}
 
 	cellYOffset = offY - r.cells.t.content.Offset.Y
@@ -1412,7 +1439,7 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 		cellXOffset = r.cells.t.stuckXOff
 		rowHeight := visibleRowHeights[row]
 		for col := 0; col < stickCols; col++ {
-			displayCol(row, col, rowHeight, &r.cells.t.left.Content.(*fyne.Container).Objects)
+			displayCol(row, col, rowHeight, &r.cells.t.left.Content.(*granio.Container).Objects)
 		}
 		cellYOffset += rowHeight + separatorThickness
 	}
@@ -1422,13 +1449,16 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 		cellXOffset = r.cells.t.stuckXOff
 		rowHeight := visibleRowHeights[row]
 		for col := 0; col < stickCols; col++ {
-			displayCol(row, col, rowHeight, &r.cells.t.corner.Content.(*fyne.Container).Objects)
+			displayCol(row, col, rowHeight, &r.cells.t.corner.Content.(*granio.Container).Objects)
 		}
 		cellYOffset += rowHeight + separatorThickness
 	}
 
 	for id, old := range wasVisible {
 		if _, ok := r.visible[id]; !ok {
+			if cell, ok := old.(interface{ releaseTableCell() }); ok {
+				cell.releaseTableCell()
+			}
 			r.pool.Put(old)
 		}
 	}
@@ -1441,7 +1471,7 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 	}
 
 	r.moveIndicators()
-	r.marker.FillColor = th.Color(theme.ColorNameSelection, v)
+	applySelectionStyle(r.marker, th, v)
 	r.marker.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
 	r.marker.Refresh()
 	r.hover.FillColor = th.Color(theme.ColorNameHover, v)
@@ -1449,10 +1479,10 @@ func (r *tableCellsRenderer) refreshForID(toDraw TableCellID) {
 	r.hover.Refresh()
 }
 
-func (r *tableCellsRenderer) updateCells(toDraw TableCellID, visible, wasVisible map[TableCellID]fyne.CanvasObject) {
+func (r *tableCellsRenderer) updateCells(toDraw TableCellID, visible, wasVisible map[TableCellID]granio.CanvasObject) {
 	updateCell := r.cells.t.UpdateCell
 	if updateCell == nil {
-		fyne.LogError("Missing UpdateCell callback required for Table", nil)
+		granio.LogError("Missing UpdateCell callback required for Table", nil)
 		return
 	}
 
@@ -1502,6 +1532,7 @@ func (r *tableCellsRenderer) moveIndicators() {
 	} else {
 		r.moveMarker(r.marker, r.cells.t.selectedCell.Row, r.cells.t.selectedCell.Col, offX, offY, minCol, minRow, visibleColWidths, visibleRowHeights)
 	}
+	r.moveSelectionMarkers(offX, offY, minCol, minRow, visibleColWidths, visibleRowHeights)
 	if r.cells.t.hoveredCell == nil && !r.cells.t.focused {
 		r.moveMarker(r.hover, -1, -1, offX, offY, minCol, minRow, visibleColWidths, visibleRowHeights)
 	} else if r.cells.t.focused {
@@ -1531,8 +1562,11 @@ func (r *tableCellsRenderer) moveIndicators() {
 			r.dividers = append(r.dividers, NewSeparator())
 		}
 
-		objs := []fyne.CanvasObject{r.marker, r.hover}
-		r.cells.t.dividerLayer.Content.(*fyne.Container).Objects = append(objs, r.dividers...)
+		objs := []granio.CanvasObject{r.marker, r.hover}
+		for _, marker := range r.selectionMarkers {
+			objs = append(objs, marker)
+		}
+		r.cells.t.dividerLayer.Content.(*granio.Container).Objects = append(objs, r.dividers...)
 		r.cells.t.dividerLayer.Content.Refresh()
 	}
 
@@ -1545,8 +1579,8 @@ func (r *tableCellsRenderer) moveIndicators() {
 			i++
 
 			xPos := x + dividerOff
-			r.dividers[divs].Resize(fyne.NewSize(separatorThickness, size.Height))
-			r.dividers[divs].Move(fyne.NewPos(xPos, 0))
+			r.dividers[divs].Resize(granio.NewSize(separatorThickness, size.Height))
+			r.dividers[divs].Move(granio.NewPos(xPos, 0))
 			r.dividers[divs].Show()
 			divs++
 		}
@@ -1556,8 +1590,8 @@ func (r *tableCellsRenderer) moveIndicators() {
 		i++
 
 		xPos := x - r.cells.t.content.Offset.X + dividerOff
-		r.dividers[divs].Resize(fyne.NewSize(separatorThickness, size.Height))
-		r.dividers[divs].Move(fyne.NewPos(xPos, 0))
+		r.dividers[divs].Resize(granio.NewSize(separatorThickness, size.Height))
+		r.dividers[divs].Move(granio.NewPos(xPos, 0))
 		r.dividers[divs].Show()
 		divs++
 	}
@@ -1568,8 +1602,8 @@ func (r *tableCellsRenderer) moveIndicators() {
 			i++
 
 			yPos := y + dividerOff
-			r.dividers[divs].Resize(fyne.NewSize(size.Width, separatorThickness))
-			r.dividers[divs].Move(fyne.NewPos(0, yPos))
+			r.dividers[divs].Resize(granio.NewSize(size.Width, separatorThickness))
+			r.dividers[divs].Move(granio.NewPos(0, yPos))
 			r.dividers[divs].Show()
 			divs++
 		}
@@ -1579,8 +1613,8 @@ func (r *tableCellsRenderer) moveIndicators() {
 		i++
 
 		yPos := y - r.cells.t.content.Offset.Y + dividerOff
-		r.dividers[divs].Resize(fyne.NewSize(size.Width, separatorThickness))
-		r.dividers[divs].Move(fyne.NewPos(0, yPos))
+		r.dividers[divs].Resize(granio.NewSize(size.Width, separatorThickness))
+		r.dividers[divs].Move(granio.NewPos(0, yPos))
 		r.dividers[divs].Show()
 		divs++
 	}
@@ -1590,7 +1624,7 @@ func (r *tableCellsRenderer) moveIndicators() {
 	}
 }
 
-func (r *tableCellsRenderer) moveMarker(marker fyne.CanvasObject, row, col int, offX, offY float32, minCol, minRow int, widths, heights map[int]float32) {
+func (r *tableCellsRenderer) moveMarker(marker granio.CanvasObject, row, col int, offX, offY float32, minCol, minRow int, widths, heights map[int]float32) {
 	if col == -1 || row == -1 {
 		marker.Hide()
 		marker.Refresh()
@@ -1652,8 +1686,8 @@ func (r *tableCellsRenderer) moveMarker(marker fyne.CanvasObject, row, col int, 
 		if row >= stickRows { // clip Y
 			top = max(r.cells.t.stuckYOff+r.cells.t.stuckHeight, y1)
 		}
-		marker.Move(fyne.NewPos(left, top))
-		marker.Resize(fyne.NewSize(x2-left, y2-top))
+		marker.Move(granio.NewPos(left, top))
+		marker.Resize(granio.NewSize(x2-left, y2-top))
 
 		marker.Show()
 	}
@@ -1661,20 +1695,20 @@ func (r *tableCellsRenderer) moveMarker(marker fyne.CanvasObject, row, col int, 
 }
 
 func (r *tableCellsRenderer) refreshHeaders(visibleRowHeights, visibleColWidths map[int]float32, offX, offY float32,
-	startRow, maxRow, startCol, maxCol int, separatorThickness float32, th fyne.Theme, v fyne.ThemeVariant,
-) []fyne.CanvasObject {
+	startRow, maxRow, startCol, maxCol int, separatorThickness float32, th granio.Theme, v granio.ThemeVariant,
+) []granio.CanvasObject {
 	wasVisible := r.headers
-	r.headers = make(map[TableCellID]fyne.CanvasObject)
+	r.headers = make(map[TableCellID]granio.CanvasObject)
 	headerMin := r.cells.t.headerSize
 	rowHeight := headerMin.Height
 	colWidth := headerMin.Width
 
-	var cells, over []fyne.CanvasObject
-	corner := []fyne.CanvasObject{r.headColStickyBG, r.headRowStickyBG}
-	over = []fyne.CanvasObject{r.headRowBG}
+	var cells, over []granio.CanvasObject
+	corner := []granio.CanvasObject{r.headColStickyBG, r.headRowStickyBG}
+	over = []granio.CanvasObject{r.headRowBG}
 	if r.cells.t.ShowHeaderRow {
 		cellXOffset := offX - r.cells.t.content.Offset.X
-		displayColHeader := func(col int, list *[]fyne.CanvasObject) {
+		displayColHeader := func(col int, list *[]granio.CanvasObject) {
 			id := TableCellID{-1, col}
 			colWidth := visibleColWidths[col]
 			c, ok := wasVisible[id]
@@ -1688,8 +1722,8 @@ func (r *tableCellsRenderer) refreshHeaders(visibleRowHeights, visibleColWidths 
 				}
 			}
 
-			c.Move(fyne.NewPos(cellXOffset, 0))
-			c.Resize(fyne.NewSize(colWidth, rowHeight))
+			c.Move(granio.NewPos(cellXOffset, 0))
+			c.Resize(granio.NewSize(colWidth, rowHeight))
 
 			r.headers[id] = c
 			*list = append(*list, c)
@@ -1710,13 +1744,13 @@ func (r *tableCellsRenderer) refreshHeaders(visibleRowHeights, visibleColWidths 
 			}
 		}
 	}
-	r.cells.t.top.Content.(*fyne.Container).Objects = over
+	r.cells.t.top.Content.(*granio.Container).Objects = over
 	r.cells.t.top.Content.Refresh()
 
-	over = []fyne.CanvasObject{r.headColBG}
+	over = []granio.CanvasObject{r.headColBG}
 	if r.cells.t.ShowHeaderColumn {
 		cellYOffset := offY - r.cells.t.content.Offset.Y
-		displayRowHeader := func(row int, list *[]fyne.CanvasObject) {
+		displayRowHeader := func(row int, list *[]granio.CanvasObject) {
 			id := TableCellID{row, -1}
 			rowHeight := visibleRowHeights[row]
 			c, ok := wasVisible[id]
@@ -1730,8 +1764,8 @@ func (r *tableCellsRenderer) refreshHeaders(visibleRowHeights, visibleColWidths 
 				}
 			}
 
-			c.Move(fyne.NewPos(0, cellYOffset))
-			c.Resize(fyne.NewSize(colWidth, rowHeight))
+			c.Move(granio.NewPos(0, cellYOffset))
+			c.Resize(granio.NewSize(colWidth, rowHeight))
 
 			r.headers[id] = c
 			*list = append(*list, c)
@@ -1752,23 +1786,23 @@ func (r *tableCellsRenderer) refreshHeaders(visibleRowHeights, visibleColWidths 
 			}
 		}
 	}
-	r.cells.t.left.Content.(*fyne.Container).Objects = over
+	r.cells.t.left.Content.(*granio.Container).Objects = over
 	r.cells.t.left.Content.Refresh()
 
 	r.headColBG.Hidden = !r.cells.t.ShowHeaderColumn
 	r.headColBG.FillColor = th.Color(theme.ColorNameHeaderBackground, v)
-	r.headColBG.Resize(fyne.NewSize(colWidth, r.cells.t.Size().Height))
+	r.headColBG.Resize(granio.NewSize(colWidth, r.cells.t.Size().Height))
 
 	r.headColStickyBG.Hidden = !r.cells.t.ShowHeaderColumn
 	r.headColStickyBG.FillColor = th.Color(theme.ColorNameHeaderBackground, v)
-	r.headColStickyBG.Resize(fyne.NewSize(colWidth, r.cells.t.stuckHeight+rowHeight))
+	r.headColStickyBG.Resize(granio.NewSize(colWidth, r.cells.t.stuckHeight+rowHeight))
 	r.headRowBG.Hidden = !r.cells.t.ShowHeaderRow
 	r.headRowBG.FillColor = th.Color(theme.ColorNameHeaderBackground, v)
-	r.headRowBG.Resize(fyne.NewSize(r.cells.t.Size().Width, rowHeight))
+	r.headRowBG.Resize(granio.NewSize(r.cells.t.Size().Width, rowHeight))
 	r.headRowStickyBG.Hidden = !r.cells.t.ShowHeaderRow
 	r.headRowStickyBG.FillColor = th.Color(theme.ColorNameHeaderBackground, v)
-	r.headRowStickyBG.Resize(fyne.NewSize(r.cells.t.stuckWidth+colWidth, rowHeight))
-	r.cells.t.corner.Content.(*fyne.Container).Objects = corner
+	r.headRowStickyBG.Resize(granio.NewSize(r.cells.t.stuckWidth+colWidth, rowHeight))
+	r.cells.t.corner.Content.(*granio.Container).Objects = corner
 	r.cells.t.corner.Content.Refresh()
 
 	for id, old := range wasVisible {
@@ -1785,7 +1819,7 @@ type clip struct {
 	t *Table
 }
 
-func newClip(t *Table, o fyne.CanvasObject) *clip {
+func newClip(t *Table, o granio.CanvasObject) *clip {
 	c := &clip{t: t}
 	c.Content = o
 	c.Direction = widget.ScrollNone
@@ -1799,6 +1833,6 @@ func (c *clip) DragEnd() {
 	c.t.dragRow = noCellMatch
 }
 
-func (c *clip) Dragged(e *fyne.DragEvent) {
+func (c *clip) Dragged(e *granio.DragEvent) {
 	c.t.Dragged(e)
 }

@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Storage is used to manage file storage inside an application sandbox.
 // The files managed by this interface are unique to the current application.

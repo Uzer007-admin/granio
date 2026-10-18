@@ -26,10 +26,10 @@ import (
 	"time"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func (*fyneApp) SendNotification(n *fyne.Notification) {
+func (*fyneApp) SendNotification(n *granio.Notification) {
 	if C.isBundled() {
 		titleStr := C.CString(n.Title)
 		defer C.free(unsafe.Pointer(titleStr))
@@ -43,7 +43,7 @@ func (*fyneApp) SendNotification(n *fyne.Notification) {
 	fallbackNotification(n.Title, n.Content)
 }
 
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	if !C.isBundled() {
 		// osascript path has no native scheduler - use the in-process fallback.
 		return a.scheduleViaScheduler(n, when)
@@ -69,7 +69,7 @@ func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*f
 		// older SDK or runtime refusal - use the in-process scheduler instead
 		return a.scheduleViaScheduler(n, when)
 	}
-	return fyne.NewScheduledNotification(id, n, when), nil
+	return granio.NewScheduledNotification(id, n, when), nil
 }
 
 func (a *fyneApp) CancelScheduledNotification(id string) error {
@@ -109,6 +109,6 @@ func fallbackNotification(title, content string) {
 
 	err := exec.Command("osascript", "-e", script).Start()
 	if err != nil {
-		fyne.LogError("Failed to launch darwin notify script", err)
+		granio.LogError("Failed to launch darwin notify script", err)
 	}
 }

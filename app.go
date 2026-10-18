@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 import (
 	"errors"
@@ -24,7 +24,7 @@ var ErrPasswordIncorrect = errors.New("the password is incorrect")
 // Apps can have multiple windows, by default they will exit when all windows
 // have been closed. This can be modified using SetMaster or SetCloseIntercept.
 // To start an application you need to call Run somewhere in your main function.
-// Alternatively use the [fyne.io/fyne/v2.Window.ShowAndRun] function for your main window.
+// Alternatively use the [github.com/Uzer007-admin/granio/v2.Window.ShowAndRun] function for your main window.
 type App interface {
 	// Create a new window for the application.
 	// The first window to open is considered the "master" and when closed
@@ -133,7 +133,7 @@ type App interface {
 	CloudProvider() CloudProvider // get the (if any) configured provider
 
 	// SetCloudProvider allows developers to specify how this application should integrate with cloud services.
-	// See [fyne.io/cloud] package for implementation details.
+	// See [github.com/Uzer007-admin/granio-cloud] package for implementation details.
 	//
 	// Since: 2.3
 	SetCloudProvider(CloudProvider) // configure cloud for this app

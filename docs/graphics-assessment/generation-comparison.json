@@ -1,0 +1,118 @@
+{
+  "deps/gl/v2.1/gl": [
+    {
+      "file": "conversions.go",
+      "equal": false,
+      "equal_after_LF_and_gofmt": true
+    },
+    {
+      "file": "debug.go",
+      "equal": true,
+      "equal_after_LF_and_gofmt": true
+    },
+    {
+      "file": "package.go",
+      "equal": false,
+      "equal_after_LF_and_gofmt": true
+    },
+    {
+      "file": "procaddr.go",
+      "equal": true,
+      "equal_after_LF_and_gofmt": true
+    }
+  ],
+  "deps/gl/v3.1/gles2": [
+    {
+      "file": "conversions.go",
+      "equal": false,
+      "equal_after_LF_and_gofmt": true
+    },
+    {
+      "file": "debug.go",
+      "equal": true,
+      "equal_after_LF_and_gofmt": true
+    },
+    {
+      "file": "package.go",
+      "equal": false,
+      "equal_after_LF_and_gofmt": true
+    },
+    {
+      "file": "procaddr.go",
+      "equal": true,
+      "equal_after_LF_and_gofmt": true
+    }
+  ],
+  "deps/gl/v2.1/gl/size": {
+    "bytes": 2342812,
+    "Go_functions": 2856,
+    "lookups": 2848
+  },
+  "deps/gl/v3.1/gles2/size": {
+    "bytes": 846138,
+    "Go_functions": 887,
+    "lookups": 880
+  },
+  "Fyne_gl_entrypoints": [
+    "ActiveTexture",
+    "AttachShader",
+    "BindBuffer",
+    "BindTexture",
+    "BlendColor",
+    "BlendFunc",
+    "BufferData",
+    "BufferSubData",
+    "Clear",
+    "ClearColor",
+    "CompileShader",
+    "CopyTexSubImage2D",
+    "CreateProgram",
+    "CreateShader",
+    "DeleteBuffers",
+    "DeleteProgram",
+    "DeleteTextures",
+    "Disable",
+    "DrawArrays",
+    "Enable",
+    "EnableVertexAttribArray",
+    "GenBuffers",
+    "GenTextures",
+    "GetAttribLocation",
+    "GetError",
+    "GetIntegerv",
+    "GetProgramInfoLog",
+    "GetProgramiv",
+    "GetShaderInfoLog",
+    "GetShaderiv",
+    "GetUniformLocation",
+    "Init",
+    "LinkProgram",
+    "Ptr",
+    "ReadBuffer",
+    "ReadPixels",
+    "Scissor",
+    "ShaderSource",
+    "Str",
+    "Strs",
+    "TexImage2D",
+    "TexParameteri",
+    "TexSubImage2D",
+    "Uniform1f",
+    "Uniform1fv",
+    "Uniform1i",
+    "Uniform2f",
+    "Uniform2fv",
+    "Uniform4f",
+    "UseProgram",
+    "VertexAttribPointerWithOffset",
+    "Viewport"
+  ],
+  "generated-gles20": {
+    "bytes": 663360,
+    "generated": true
+  },
+  "generated-egl": {
+    "bytes": 184238,
+    "generated": true
+  }
+}

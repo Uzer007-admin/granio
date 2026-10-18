@@ -3,9 +3,9 @@ package container
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -187,8 +187,8 @@ func TestNavigation_ForwardRefresh(t *testing.T) {
 	tr := test.TempWidgetRenderer(t, nav)
 	r := tr.(*navigatorRenderer)
 
-	secBtn.Tapped(&fyne.PointEvent{})
-	thrBtn.Tapped(&fyne.PointEvent{})
+	secBtn.Tapped(&granio.PointEvent{})
+	thrBtn.Tapped(&granio.PointEvent{})
 
 	nav.Back()
 	nav.Back()

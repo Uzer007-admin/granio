@@ -5,10 +5,10 @@ package glfw
 import (
 	"testing"
 
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
-	"github.com/go-gl/glfw/v3.4/glfw"
+	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 	"github.com/stretchr/testify/assert"
 )
 

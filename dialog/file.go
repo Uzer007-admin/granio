@@ -9,15 +9,15 @@ import (
 	"sort"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // ViewLayout can be passed to SetView() to set the view of
@@ -46,18 +46,18 @@ const (
 )
 
 type textWidget interface {
-	fyne.Widget
+	granio.Widget
 	SetText(string)
 }
 
 type favoriteItem struct {
 	locName string
-	locIcon fyne.Resource
-	loc     fyne.URI
+	locIcon granio.Resource
+	loc     granio.URI
 }
 
 type fileDialogPanel interface {
-	fyne.Widget
+	granio.Widget
 
 	Unselect(int)
 }
@@ -68,7 +68,7 @@ type fileDialog struct {
 	title            *widget.Label
 	dismiss          *widget.Button
 	open             *widget.Button
-	breadcrumb       *fyne.Container
+	breadcrumb       *granio.Container
 	breadcrumbScroll *container.Scroll
 	files            fileDialogPanel
 	filesScroll      *container.Scroll
@@ -78,12 +78,12 @@ type fileDialog struct {
 
 	view ViewLayout
 
-	data []fyne.URI
+	data []granio.URI
 
 	win        *widget.PopUp
-	selected   fyne.URI
+	selected   granio.URI
 	selectedID int
-	dir        fyne.ListableURI
+	dir        granio.ListableURI
 	// this will be the initial filename in a FileDialog in save mode
 	initialFileName string
 
@@ -94,16 +94,16 @@ type fileDialog struct {
 type FileDialog struct {
 	callback         any
 	onClosedCallback func(bool)
-	parent           fyne.Window
+	parent           granio.Window
 	dialog           *fileDialog
 
 	titleText                string
 	confirmText, dismissText string
-	desiredSize              fyne.Size
+	desiredSize              granio.Size
 	filter                   storage.FileFilter
 	save                     bool
 	// this will be applied to dialog.dir when it's loaded
-	startingLocation fyne.ListableURI
+	startingLocation granio.ListableURI
 	// this will be the initial filename in a FileDialog in save mode
 	initialFileName string
 	// this will be the initial view in a FileDialog
@@ -113,7 +113,7 @@ type FileDialog struct {
 // Declare conformity to Dialog interface
 var _ Dialog = (*FileDialog)(nil)
 
-func (f *fileDialog) makeUI() fyne.CanvasObject {
+func (f *fileDialog) makeUI() granio.CanvasObject {
 	if f.file.save {
 		saveName := widget.NewEntry()
 		saveName.OnChanged = func(s string) {
@@ -167,9 +167,9 @@ func (f *fileDialog) makeUI() fyne.CanvasObject {
 	if f.file.titleText != "" {
 		title = f.file.titleText
 	}
-	f.title = widget.NewLabelWithStyle(title, fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
+	f.title = widget.NewLabelWithStyle(title, granio.TextAlignLeading, granio.TextStyle{Bold: true})
 
-	view := ViewLayout(fyne.CurrentApp().Preferences().Int(viewLayoutKey))
+	view := ViewLayout(granio.CurrentApp().Preferences().Int(viewLayoutKey))
 
 	// handle invalid values
 	if view != GridView && view != ListView {
@@ -201,12 +201,12 @@ func (f *fileDialog) makeUI() fyne.CanvasObject {
 		func() int {
 			return len(f.favorites)
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return container.NewHBox(container.New(&iconPaddingLayout{}, widget.NewIcon(theme.DocumentIcon())), widget.NewLabel("Template Object"))
 		},
-		func(id widget.ListItemID, item fyne.CanvasObject) {
-			item.(*fyne.Container).Objects[0].(*fyne.Container).Objects[0].(*widget.Icon).SetResource(f.favorites[id].locIcon)
-			item.(*fyne.Container).Objects[1].(*widget.Label).SetText(f.favorites[id].locName)
+		func(id widget.ListItemID, item granio.CanvasObject) {
+			item.(*granio.Container).Objects[0].(*granio.Container).Objects[0].(*widget.Icon).SetResource(f.favorites[id].locIcon)
+			item.(*granio.Container).Objects[1].(*widget.Label).SetText(f.favorites[id].locName)
 		},
 	)
 	f.favoritesList.OnSelected = func(id widget.ListItemID) {
@@ -215,7 +215,7 @@ func (f *fileDialog) makeUI() fyne.CanvasObject {
 
 	var optionsButton *widget.Button
 	optionsButton = widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
-		f.optionsMenu(fyne.CurrentApp().Driver().AbsolutePositionForObject(optionsButton), optionsButton.Size())
+		f.optionsMenu(granio.CurrentApp().Driver().AbsolutePositionForObject(optionsButton), optionsButton.Size())
 	})
 
 	newFolderButton := widget.NewButtonWithIcon("", theme.FolderNewIcon(), func() {
@@ -233,7 +233,7 @@ func (f *fileDialog) makeUI() fyne.CanvasObject {
 			newFolderPath := filepath.Join(f.dir.Path(), newFolderEntry.Text)
 			createFolderErr := os.MkdirAll(newFolderPath, 0o750)
 			if createFolderErr != nil {
-				fyne.LogError(
+				granio.LogError(
 					fmt.Sprintf("Failed to create folder with path %s", newFolderPath),
 					createFolderErr,
 				)
@@ -282,7 +282,7 @@ func (f *fileDialog) makeOpenButton(label string) *widget.Button {
 		}
 
 		if f.file.save {
-			callback, _ := f.file.callback.(func(fyne.URIWriteCloser, error))
+			callback, _ := f.file.callback.(func(granio.URIWriteCloser, error))
 			name := f.fileName.(*widget.Entry).Text
 			location, _ := storage.Child(f.dir, name)
 
@@ -316,14 +316,14 @@ func (f *fileDialog) makeOpenButton(label string) *widget.Button {
 					}
 				}, f.file.parent)
 		} else if f.selected != nil {
-			callback, _ := f.file.callback.(func(fyne.URIReadCloser, error))
+			callback, _ := f.file.callback.(func(granio.URIReadCloser, error))
 			f.win.Hide()
 			if f.file.onClosedCallback != nil {
 				f.file.onClosedCallback(true)
 			}
 			callback(storage.Reader(f.selected))
 		} else if f.file.isDirectory() {
-			callback, _ := f.file.callback.(func(fyne.ListableURI, error))
+			callback, _ := f.file.callback.(func(granio.ListableURI, error))
 			f.win.Hide()
 			if f.file.onClosedCallback != nil {
 				f.file.onClosedCallback(true)
@@ -346,11 +346,11 @@ func (f *fileDialog) makeDismissButton(label string) *widget.Button {
 		}
 		if f.file.callback != nil {
 			if f.file.save {
-				f.file.callback.(func(fyne.URIWriteCloser, error))(nil, nil)
+				f.file.callback.(func(granio.URIWriteCloser, error))(nil, nil)
 			} else if f.file.isDirectory() {
-				f.file.callback.(func(fyne.ListableURI, error))(nil, nil)
+				f.file.callback.(func(granio.ListableURI, error))(nil, nil)
 			} else {
-				f.file.callback.(func(fyne.URIReadCloser, error))(nil, nil)
+				f.file.callback.(func(granio.URIReadCloser, error))(nil, nil)
 			}
 		}
 	})
@@ -358,7 +358,7 @@ func (f *fileDialog) makeDismissButton(label string) *widget.Button {
 	return btn
 }
 
-func (f *fileDialog) optionsMenu(position fyne.Position, buttonSize fyne.Size) {
+func (f *fileDialog) optionsMenu(position granio.Position, buttonSize granio.Size) {
 	hiddenFiles := widget.NewCheck(lang.L("Show Hidden Files"), func(changed bool) {
 		f.showHidden = changed
 		f.refreshDir(f.dir)
@@ -368,13 +368,13 @@ func (f *fileDialog) optionsMenu(position fyne.Position, buttonSize fyne.Size) {
 	content := container.NewVBox(hiddenFiles)
 
 	p := position.Add(buttonSize)
-	pos := fyne.NewPos(p.X-content.MinSize().Width-theme.Padding()*2, p.Y+theme.Padding()*2)
+	pos := granio.NewPos(p.X-content.MinSize().Width-theme.Padding()*2, p.Y+theme.Padding()*2)
 	widget.ShowPopUpAtPosition(content, f.win.Canvas, pos)
 }
 
-func getFavoriteLocations() (map[string]fyne.ListableURI, error) {
+func getFavoriteLocations() (map[string]granio.ListableURI, error) {
 	if runtime.GOOS == goos.JavaScript {
-		return make(map[string]fyne.ListableURI), nil
+		return make(map[string]granio.ListableURI), nil
 	}
 
 	homeDir, err := os.UserHomeDir()
@@ -384,7 +384,7 @@ func getFavoriteLocations() (map[string]fyne.ListableURI, error) {
 	homeURI := storage.NewFileURI(homeDir)
 	home, _ := storage.ListerForURI(homeURI)
 
-	favoriteLocations := map[string]fyne.ListableURI{"Home": home}
+	favoriteLocations := map[string]granio.ListableURI{"Home": home}
 	for _, favName := range getFavoritesOrder() {
 		uri, err1 := getFavoriteLocation(homeURI, favName)
 		if err != nil {
@@ -406,13 +406,13 @@ func getFavoriteLocations() (map[string]fyne.ListableURI, error) {
 func (f *fileDialog) loadFavorites() {
 	favoriteLocations, err := getFavoriteLocations()
 	if err != nil {
-		fyne.LogError("Getting favorite locations", err)
+		granio.LogError("Getting favorite locations", err)
 	}
 
 	f.favorites = []favoriteItem{
 		{locName: folderHome, locIcon: theme.HomeIcon(), loc: favoriteLocations[folderHome]},
 	}
-	app := fyne.CurrentApp()
+	app := granio.CurrentApp()
 	if hasAppFiles(app) {
 		f.favorites = append(f.favorites,
 			favoriteItem{locName: "App Files", locIcon: theme.FileIcon(), loc: storageURI(app)})
@@ -430,19 +430,19 @@ func (f *fileDialog) loadFavorites() {
 	}
 }
 
-func (f *fileDialog) refreshDir(dir fyne.ListableURI) {
+func (f *fileDialog) refreshDir(dir granio.ListableURI) {
 	f.data = nil
 
 	files, err := dir.List()
 	if err != nil {
-		fyne.LogError("Unable to read ListableURI "+dir.String(), err)
+		granio.LogError("Unable to read ListableURI "+dir.String(), err)
 		return
 	}
 
-	var icons []fyne.URI
+	var icons []granio.URI
 	parent, err := storage.Parent(dir)
 	if err != nil && err != repository.ErrURIRoot {
-		fyne.LogError("Unable to get parent of "+dir.String(), err)
+		granio.LogError("Unable to get parent of "+dir.String(), err)
 		return
 	}
 	if parent != nil && parent.String() != dir.String() {
@@ -479,13 +479,13 @@ func (f *fileDialog) refreshDir(dir fyne.ListableURI) {
 	f.data = icons
 
 	f.files.Refresh()
-	f.filesScroll.Offset = fyne.NewPos(0, 0)
+	f.filesScroll.Offset = granio.NewPos(0, 0)
 	f.filesScroll.Refresh()
 }
 
-func (f *fileDialog) setLocation(dir fyne.URI) {
+func (f *fileDialog) setLocation(dir granio.URI) {
 	if dir == nil {
-		fyne.LogError("failed to open nil directory", nil)
+		granio.LogError("failed to open nil directory", nil)
 		return
 	}
 
@@ -495,11 +495,11 @@ func (f *fileDialog) setLocation(dir fyne.URI) {
 
 	list, err := storage.ListerForURI(dir)
 	if err != nil {
-		fyne.LogError("unable to get ListableURI for "+dir.String(), err)
+		granio.LogError("unable to get ListableURI for "+dir.String(), err)
 		return
 	}
 
-	fyne.CurrentApp().Preferences().SetString(lastFolderKey, dir.String())
+	granio.CurrentApp().Preferences().SetString(lastFolderKey, dir.String())
 	isFav := false
 	for i, fav := range f.favorites {
 		if storage.EqualURI(fav.loc, dir) {
@@ -542,7 +542,7 @@ func (f *fileDialog) setLocation(dir fyne.URI) {
 	f.refreshDir(list)
 }
 
-func (f *fileDialog) setSelected(file fyne.URI, id int) {
+func (f *fileDialog) setSelected(file granio.URI, id int) {
 	if file != nil {
 		if listable, err := storage.CanList(file); err == nil && listable {
 			f.setLocation(file)
@@ -567,7 +567,7 @@ func (f *fileDialog) setSelected(file fyne.URI, id int) {
 
 func (f *fileDialog) setView(view ViewLayout) {
 	f.view = view
-	fyne.CurrentApp().Preferences().SetInt(viewLayoutKey, int(view))
+	granio.CurrentApp().Preferences().SetInt(viewLayoutKey, int(view))
 	var selectF func(id int)
 	choose := func(id int) {
 		if file, ok := f.getDataItem(id); ok {
@@ -578,13 +578,13 @@ func (f *fileDialog) setView(view ViewLayout) {
 	count := func() int {
 		return len(f.data)
 	}
-	template := func() fyne.CanvasObject {
+	template := func() granio.CanvasObject {
 		return f.newFileItem(storage.NewFileURI("./tempfile"), true, false)
 	}
-	update := func(id widget.GridWrapItemID, o fyne.CanvasObject) {
+	update := func(id widget.GridWrapItemID, o granio.CanvasObject) {
 		if dir, ok := f.getDataItem(id); ok {
 			parent := id == 0 && len(dir.Path()) < len(f.dir.Path())
-			_, isDir := dir.(fyne.ListableURI)
+			_, isDir := dir.(granio.ListableURI)
 			o.(*fileDialogItem).setLocation(dir, isDir || parent, parent)
 			o.(*fileDialogItem).choose = selectF
 			o.(*fileDialogItem).id = id
@@ -614,7 +614,7 @@ func (f *fileDialog) setView(view ViewLayout) {
 	f.filesScroll.Refresh()
 }
 
-func (f *fileDialog) getDataItem(id int) (fyne.URI, bool) {
+func (f *fileDialog) getDataItem(id int) (granio.URI, bool) {
 	if id >= len(f.data) {
 		return nil, false
 	}
@@ -635,21 +635,21 @@ func (f *fileDialog) getDataItem(id int) (fyne.URI, bool) {
 //   - os.UserHomeDir()
 //   - os.Getwd()
 //   - "/" (should be filesystem root on all supported platforms)
-func (f *FileDialog) effectiveStartingDir() fyne.ListableURI {
+func (f *FileDialog) effectiveStartingDir() granio.ListableURI {
 	if f.startingLocation != nil {
-		if f.startingLocation.Scheme() == fyne.URISchemeFile {
+		if f.startingLocation.Scheme() == granio.URISchemeFile {
 			path := f.startingLocation.Path()
 
 			// the starting directory is set explicitly
 			if _, err := os.Stat(path); err != nil {
-				fyne.LogError("Error with StartingLocation", err)
+				granio.LogError("Error with StartingLocation", err)
 			}
 		}
 		return f.startingLocation
 	}
 
 	// last used
-	lastPath := fyne.CurrentApp().Preferences().String(lastFolderKey)
+	lastPath := granio.CurrentApp().Preferences().String(lastFolderKey)
 	if lastPath != "" {
 		parsed, err := storage.ParseURI(lastPath)
 		if err == nil {
@@ -661,7 +661,7 @@ func (f *FileDialog) effectiveStartingDir() fyne.ListableURI {
 	}
 
 	// Try app storage
-	app := fyne.CurrentApp()
+	app := granio.CurrentApp()
 	if hasAppFiles(app) {
 		list, _ := storage.ListerForURI(storageURI(app))
 		return list
@@ -674,9 +674,9 @@ func (f *FileDialog) effectiveStartingDir() fyne.ListableURI {
 		if err == nil {
 			return lister
 		}
-		fyne.LogError("Could not create lister for user home dir", err)
+		granio.LogError("Could not create lister for user home dir", err)
 	}
-	fyne.LogError("Could not load user home dir", err)
+	granio.LogError("Could not load user home dir", err)
 
 	// Try to get ./
 	wd, err := os.Getwd()
@@ -685,12 +685,12 @@ func (f *FileDialog) effectiveStartingDir() fyne.ListableURI {
 		if err == nil {
 			return lister
 		}
-		fyne.LogError("Could not create lister for working dir", err)
+		granio.LogError("Could not create lister for working dir", err)
 	}
 
 	lister, err := storage.ListerForURI(storage.NewFileURI("/"))
 	if err != nil {
-		fyne.LogError("could not create lister for /", err)
+		granio.LogError("could not create lister for /", err)
 		return nil
 	}
 	return lister
@@ -727,9 +727,9 @@ func (f *FileDialog) Dismiss() {
 // MinSize returns the size that this dialog should not shrink below
 //
 // Since: 2.1
-func (f *FileDialog) MinSize() fyne.Size {
+func (f *FileDialog) MinSize() granio.Size {
 	if f.dialog == nil { // the popup is only created on Show
-		return fyne.NewSquareSize(1)
+		return granio.NewSquareSize(1)
 	}
 	return f.dialog.win.MinSize()
 }
@@ -765,7 +765,7 @@ func (f *FileDialog) Refresh() {
 
 // Resize dialog to the requested size, if there is sufficient space.
 // If the parent window is not large enough then the size will be reduced to fit.
-func (f *FileDialog) Resize(size fyne.Size) {
+func (f *FileDialog) Resize(size granio.Size) {
 	f.desiredSize = internal.MaxSizes(size, f.MinSize())
 	if f.dialog == nil {
 		return
@@ -821,7 +821,7 @@ func (f *FileDialog) SetTitleText(label string) {
 // This is normally called before the dialog is shown.
 //
 // Since: 1.4
-func (f *FileDialog) SetLocation(u fyne.ListableURI) {
+func (f *FileDialog) SetLocation(u granio.ListableURI) {
 	f.startingLocation = u
 	if f.dialog != nil {
 		f.dialog.setLocation(u)
@@ -848,7 +848,7 @@ func (f *FileDialog) SetOnClosed(closed func()) {
 // SetFilter sets a filter for limiting files that can be chosen in the file dialog.
 func (f *FileDialog) SetFilter(filter storage.FileFilter) {
 	if f.isDirectory() {
-		fyne.LogError("Cannot set a filter for a folder dialog", nil)
+		granio.LogError("Cannot set a filter for a folder dialog", nil)
 		return
 	}
 	f.filter = filter
@@ -887,7 +887,7 @@ func (f *FileDialog) SetView(v ViewLayout) {
 // When the reader isn't nil it must be closed by the callback.
 //
 // The dialog will appear over the window specified when Show() is called.
-func NewFileOpen(callback func(reader fyne.URIReadCloser, err error), parent fyne.Window) *FileDialog {
+func NewFileOpen(callback func(reader granio.URIReadCloser, err error), parent granio.Window) *FileDialog {
 	dialog := &FileDialog{callback: callback, parent: parent}
 	return dialog
 }
@@ -901,7 +901,7 @@ func NewFileOpen(callback func(reader fyne.URIReadCloser, err error), parent fyn
 // When the writer isn't nil it must be closed by the callback.
 //
 // The dialog will appear over the window specified when Show() is called.
-func NewFileSave(callback func(writer fyne.URIWriteCloser, err error), parent fyne.Window) *FileDialog {
+func NewFileSave(callback func(writer granio.URIWriteCloser, err error), parent granio.Window) *FileDialog {
 	dialog := &FileDialog{callback: callback, parent: parent, save: true}
 	return dialog
 }
@@ -914,7 +914,7 @@ func NewFileSave(callback func(writer fyne.URIWriteCloser, err error), parent fy
 // When the reader isn't nil it must be closed by the callback.
 //
 // The dialog will appear over the window specified.
-func ShowFileOpen(callback func(reader fyne.URIReadCloser, err error), parent fyne.Window) {
+func ShowFileOpen(callback func(reader granio.URIReadCloser, err error), parent granio.Window) {
 	dialog := NewFileOpen(callback, parent)
 	if fileOpenOSOverride(dialog) {
 		return
@@ -931,7 +931,7 @@ func ShowFileOpen(callback func(reader fyne.URIReadCloser, err error), parent fy
 // When the writer isn't nil it must be closed by the callback.
 //
 // The dialog will appear over the window specified.
-func ShowFileSave(callback func(writer fyne.URIWriteCloser, err error), parent fyne.Window) {
+func ShowFileSave(callback func(writer granio.URIWriteCloser, err error), parent granio.Window) {
 	dialog := NewFileSave(callback, parent)
 	if fileSaveOSOverride(dialog) {
 		return
@@ -939,7 +939,7 @@ func ShowFileSave(callback func(writer fyne.URIWriteCloser, err error), parent f
 	dialog.Show()
 }
 
-func getFavoritesIcon(location string) fyne.Resource {
+func getFavoritesIcon(location string) granio.Resource {
 	switch location {
 	case folderDocuments:
 		return theme.DocumentIcon()
@@ -968,7 +968,7 @@ func getFavoritesOrder() []string {
 	}
 }
 
-func hasAppFiles(a fyne.App) bool {
+func hasAppFiles(a granio.App) bool {
 	if a.UniqueID() == "testApp" {
 		return false
 	}
@@ -976,7 +976,7 @@ func hasAppFiles(a fyne.App) bool {
 	return len(a.Storage().List()) > 0
 }
 
-func storageURI(a fyne.App) fyne.URI {
+func storageURI(a granio.App) granio.URI {
 	dir, _ := storage.Child(a.Storage().RootURI(), folderDocuments)
 	return dir
 }
@@ -985,12 +985,12 @@ func storageURI(a fyne.App) fyne.URI {
 // NOTE: It assumes that the slice only contains one item.
 type iconPaddingLayout struct{}
 
-func (*iconPaddingLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
+func (*iconPaddingLayout) Layout(objects []granio.CanvasObject, size granio.Size) {
 	padding := theme.Padding() * 2
-	objects[0].Move(fyne.NewPos(padding, 0))
+	objects[0].Move(granio.NewPos(padding, 0))
 	objects[0].Resize(size.SubtractWidthHeight(padding, 0))
 }
 
-func (*iconPaddingLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
+func (*iconPaddingLayout) MinSize(objects []granio.CanvasObject) granio.Size {
 	return objects[0].MinSize().AddWidthHeight(theme.Padding()*2, 0)
 }

@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestMain(m *testing.M) {
@@ -164,7 +164,7 @@ func TestCleanCanvas(t *testing.T) {
 	assert.Equal(t, 22, renderers.Len())
 	assert.Equal(t, 22, canvases.Len())
 	assert.Equal(t, 20, destroyedRenderersCnt)
-	canvases.Range(func(_ fyne.CanvasObject, cinfo *canvasInfo) bool {
+	canvases.Range(func(_ granio.CanvasObject, cinfo *canvasInfo) bool {
 		assert.Equal(t, dcanvas2, cinfo.canvas)
 		return true
 	})
@@ -193,21 +193,23 @@ func Test_expiringCache(t *testing.T) {
 }
 
 type dummyCanvas struct {
-	fyne.Canvas
+	granio.Canvas
 }
 
 type dummyWidget struct {
-	fyne.Widget
+	granio.Widget
 	onDestroy func()
 }
 
-func (w *dummyWidget) CreateRenderer() fyne.WidgetRenderer {
+func (w *dummyWidget) CreateRenderer() granio.WidgetRenderer {
 	return &dummyWidgetRenderer{widget: w}
 }
 
+func (*dummyWidget) Size() granio.Size { return granio.NewSize(1, 1) }
+
 type dummyWidgetRenderer struct {
 	widget  *dummyWidget
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 func (r *dummyWidgetRenderer) Destroy() {
@@ -216,14 +218,14 @@ func (r *dummyWidgetRenderer) Destroy() {
 	}
 }
 
-func (*dummyWidgetRenderer) Layout(fyne.Size) {
+func (*dummyWidgetRenderer) Layout(granio.Size) {
 }
 
-func (*dummyWidgetRenderer) MinSize() fyne.Size {
-	return fyne.NewSize(0, 0)
+func (*dummyWidgetRenderer) MinSize() granio.Size {
+	return granio.NewSize(0, 0)
 }
 
-func (r *dummyWidgetRenderer) Objects() []fyne.CanvasObject {
+func (r *dummyWidgetRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
@@ -254,6 +256,7 @@ func (t *timeMock) advance(d time.Duration) {
 }
 
 func testClearAll() {
+	touchEpoch.Store(1)
 	skippedCleanWithCanvasRefresh = false
 	canvases.Clear()
 	svgs.Clear()

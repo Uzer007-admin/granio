@@ -1,0 +1,1 @@
+PASS: three gamma bridges; 18 array/state and three surface bridges; WGL loader: NULL, 1, 2, 3, -1, valid pointer and DLL failure

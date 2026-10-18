@@ -1,0 +1,7 @@
+{
+  "CacheClockProbeExit": 1,
+  "ModifierRepeatProbeExit": 1,
+  "RunOnDrawProbeExit": 0,
+  "RGBAStrideProbeExit": 1,
+  "CalibratedRunOnDrawExit": 0
+}

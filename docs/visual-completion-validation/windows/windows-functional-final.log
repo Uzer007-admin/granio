@@ -1,0 +1,11 @@
+=== RUN   TestNativeModernScopeVisibilityAndEscape
+    visual_completion_native_test.go:95: hidden ancestor/window paused; native minimized flag observed=true; restored selection=7,0,7
+--- PASS: TestNativeModernScopeVisibilityAndEscape (0.82s)
+=== RUN   TestNativeVisualHundredLifecycleAndResizeCycles
+    visual_completion_native_test.go:150: 100 show/hide/resize/backdrop/maximize/minimize cycles; surface generation=1; native maximize observed=100; native minimize observed=100; final={RequestID:101 Phase:Ready Requested:Mica Selected:Mica Backend:2 SurfaceReady:true NativeAccepted:true Reason:None NativeCode:0 PreparedFrames:4 FirstFrameBeforeShow:true}
+--- PASS: TestNativeVisualHundredLifecycleAndResizeCycles (6.52s)
+=== RUN   TestNativeModernLiveTextScalePreservesState
+    visual_completion_native_test.go:197: native live TextScale 100/150/200/225/100: text, focus, selection and binding retained
+--- PASS: TestNativeModernLiveTextScalePreservesState (0.41s)
+PASS
+ok  	fyne.io/fyne/v2/internal/driver/glfw	10.509s

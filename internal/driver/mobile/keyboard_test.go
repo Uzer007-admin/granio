@@ -6,15 +6,15 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/key"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // defaultModifier returns the modifier the desktop driver detects the built-in
-// shortcuts with, i.e. fyne.KeyModifierShortcutDefault (Command on macOS,
+// shortcuts with, i.e. granio.KeyModifierShortcutDefault (Command on macOS,
 // Control everywhere else).
 func defaultModifier() key.Modifiers {
 	if runtime.GOOS == goos.Darwin {
@@ -33,30 +33,30 @@ func wordModifier() key.Modifiers {
 }
 
 func TestShortcutForKey(t *testing.T) {
-	assert.IsType(t, &fyne.ShortcutSelectAll{}, shortcutForKey(fyne.KeyA, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutUndo{}, shortcutForKey(fyne.KeyZ, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutRedo{}, shortcutForKey(fyne.KeyY, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutCopy{}, shortcutForKey(fyne.KeyC, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutCut{}, shortcutForKey(fyne.KeyX, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutPaste{}, shortcutForKey(fyne.KeyV, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutCopy{}, shortcutForKey(fyne.KeyInsert, fyne.KeyModifierShortcutDefault))
-	assert.IsType(t, &fyne.ShortcutPaste{}, shortcutForKey(fyne.KeyInsert, fyne.KeyModifierShift))
-	assert.IsType(t, &fyne.ShortcutCut{}, shortcutForKey(fyne.KeyDelete, fyne.KeyModifierShift))
+	assert.IsType(t, &granio.ShortcutSelectAll{}, shortcutForKey(granio.KeyA, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutUndo{}, shortcutForKey(granio.KeyZ, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutRedo{}, shortcutForKey(granio.KeyY, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutCopy{}, shortcutForKey(granio.KeyC, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutCut{}, shortcutForKey(granio.KeyX, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutPaste{}, shortcutForKey(granio.KeyV, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutCopy{}, shortcutForKey(granio.KeyInsert, granio.KeyModifierShortcutDefault))
+	assert.IsType(t, &granio.ShortcutPaste{}, shortcutForKey(granio.KeyInsert, granio.KeyModifierShift))
+	assert.IsType(t, &granio.ShortcutCut{}, shortcutForKey(granio.KeyDelete, granio.KeyModifierShift))
 
 	// no modifier or shift-only modifiers must not create a shortcut
-	assert.Nil(t, shortcutForKey(fyne.KeyA, 0))
-	assert.Nil(t, shortcutForKey(fyne.KeyLeft, fyne.KeyModifierShift))
-	assert.Nil(t, shortcutForKey(desktop.KeyShiftLeft, fyne.KeyModifierShift))
+	assert.Nil(t, shortcutForKey(granio.KeyA, 0))
+	assert.Nil(t, shortcutForKey(granio.KeyLeft, granio.KeyModifierShift))
+	assert.Nil(t, shortcutForKey(desktop.KeyShiftLeft, granio.KeyModifierShift))
 
 	// everything else becomes a custom shortcut, which widgets match by name
-	bs := shortcutForKey(fyne.KeyBackspace, fyne.KeyModifierShortcutDefault)
+	bs := shortcutForKey(granio.KeyBackspace, granio.KeyModifierShortcutDefault)
 	if assert.NotNil(t, bs) {
-		want := &desktop.CustomShortcut{KeyName: fyne.KeyBackspace, Modifier: fyne.KeyModifierShortcutDefault}
+		want := &desktop.CustomShortcut{KeyName: granio.KeyBackspace, Modifier: granio.KeyModifierShortcutDefault}
 		assert.Equal(t, want.ShortcutName(), bs.ShortcutName())
 	}
-	left := shortcutForKey(fyne.KeyLeft, fyne.KeyModifierShortcutDefault|fyne.KeyModifierShift)
+	left := shortcutForKey(granio.KeyLeft, granio.KeyModifierShortcutDefault|granio.KeyModifierShift)
 	if assert.NotNil(t, left) {
-		want := &desktop.CustomShortcut{KeyName: fyne.KeyLeft, Modifier: fyne.KeyModifierShortcutDefault | fyne.KeyModifierShift}
+		want := &desktop.CustomShortcut{KeyName: granio.KeyLeft, Modifier: granio.KeyModifierShortcutDefault | granio.KeyModifierShift}
 		assert.Equal(t, want.ShortcutName(), left.ShortcutName())
 	}
 }
@@ -68,7 +68,7 @@ func keyTestEntry(t *testing.T, text string) (*canvas, *widget.Entry) {
 	entry.SetText(text)
 	w.SetContent(entry)
 	w.Show()
-	w.Resize(fyne.NewSize(300, 100))
+	w.Resize(granio.NewSize(300, 100))
 	c := w.Canvas().(*canvas)
 
 	d.DoFromGoroutine(func() {
@@ -153,10 +153,10 @@ func TestMobileDriverKeyboardShortcuts(t *testing.T) {
 }
 
 func TestKeyModifiers(t *testing.T) {
-	assert.Equal(t, fyne.KeyModifierShift, keyModifiers(key.ModShift))
-	assert.Equal(t, fyne.KeyModifierControl, keyModifiers(key.ModControl))
-	assert.Equal(t, fyne.KeyModifierAlt, keyModifiers(key.ModAlt))
-	assert.Equal(t, fyne.KeyModifierSuper, keyModifiers(key.ModMeta))
-	assert.Equal(t, fyne.KeyModifier(0), keyModifiers(0))
-	assert.Equal(t, fyne.KeyModifierControl|fyne.KeyModifierShift, keyModifiers(key.ModControl|key.ModShift))
+	assert.Equal(t, granio.KeyModifierShift, keyModifiers(key.ModShift))
+	assert.Equal(t, granio.KeyModifierControl, keyModifiers(key.ModControl))
+	assert.Equal(t, granio.KeyModifierAlt, keyModifiers(key.ModAlt))
+	assert.Equal(t, granio.KeyModifierSuper, keyModifiers(key.ModMeta))
+	assert.Equal(t, granio.KeyModifier(0), keyModifiers(0))
+	assert.Equal(t, granio.KeyModifierControl|granio.KeyModifierShift, keyModifiers(key.ModControl|key.ModShift))
 }

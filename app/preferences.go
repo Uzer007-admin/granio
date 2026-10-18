@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
 )
 
 type preferences struct {
@@ -23,7 +23,7 @@ type preferences struct {
 }
 
 // Declare conformity with Preferences interface
-var _ fyne.Preferences = (*preferences)(nil)
+var _ granio.Preferences = (*preferences)(nil)
 
 // sentinel error to signal an empty preferences storage backend was loaded
 var errEmptyPreferencesStore = errors.New("empty preferences store")
@@ -42,7 +42,7 @@ func (p *preferences) forceImmediateSave() {
 	}
 	err := p.save()
 	if err != nil {
-		fyne.LogError("Failed on force saving preferences", err)
+		granio.LogError("Failed on force saving preferences", err)
 	}
 }
 
@@ -51,7 +51,7 @@ func (p *preferences) resetSavedRecently() {
 		time.Sleep(time.Millisecond * 100) // writes are not always atomic. 10ms worked, 100 is safer.
 
 		// For test reasons we need to use current app not what we were initialised with as they can differ
-		fyne.DoAndWait(func() {
+		granio.DoAndWait(func() {
 			p.prefLock.Lock()
 			p.savedRecently = false
 			changedDuringSaving := p.changedDuringSaving
@@ -60,7 +60,7 @@ func (p *preferences) resetSavedRecently() {
 
 			if changedDuringSaving {
 				if err := p.save(); err != nil {
-					fyne.LogError("failed on saving preferences", err)
+					granio.LogError("failed on saving preferences", err)
 				}
 			}
 		})
@@ -102,7 +102,7 @@ func (p *preferences) load() {
 		err = p.loadFromStorage(storage)
 	}
 	if err != nil && err != errEmptyPreferencesStore {
-		fyne.LogError("Preferences load error:", err)
+		granio.LogError("Preferences load error:", err)
 	}
 }
 
@@ -153,7 +153,7 @@ func newPreferences(app *fyneApp) *preferences {
 
 		err := p.save()
 		if err != nil {
-			fyne.LogError("Failed on saving preferences", err)
+			granio.LogError("Failed on saving preferences", err)
 		}
 	})
 	p.watch()

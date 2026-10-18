@@ -1,7 +1,7 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 const (
@@ -12,24 +12,24 @@ const (
 )
 
 var (
-	styleModifiers   = fyne.TextStyle{Symbol: true}
-	defaultStyleKeys = fyne.TextStyle{Monospace: true}
+	styleModifiers   = granio.TextStyle{Symbol: true}
+	defaultStyleKeys = granio.TextStyle{Monospace: true}
 )
 
-var keyTexts = map[fyne.KeyName]string{
-	fyne.KeyBackspace: "⌫",
-	fyne.KeyDelete:    "⌦",
-	fyne.KeyDown:      "↓",
-	fyne.KeyEnd:       "↘",
-	fyne.KeyEnter:     "↩",
-	fyne.KeyEscape:    "⎋",
-	fyne.KeyHome:      "↖",
-	fyne.KeyLeft:      "←",
-	fyne.KeyPageDown:  "⇟",
-	fyne.KeyPageUp:    "⇞",
-	fyne.KeyReturn:    "↩",
-	fyne.KeyRight:     "→",
-	fyne.KeySpace:     "␣",
-	fyne.KeyTab:       "⇥",
-	fyne.KeyUp:        "↑",
+var keyTexts = map[granio.KeyName]string{
+	granio.KeyBackspace: "⌫",
+	granio.KeyDelete:    "⌦",
+	granio.KeyDown:      "↓",
+	granio.KeyEnd:       "↘",
+	granio.KeyEnter:     "↩",
+	granio.KeyEscape:    "⎋",
+	granio.KeyHome:      "↖",
+	granio.KeyLeft:      "←",
+	granio.KeyPageDown:  "⇟",
+	granio.KeyPageUp:    "⇞",
+	granio.KeyReturn:    "↩",
+	granio.KeyRight:     "→",
+	granio.KeySpace:     "␣",
+	granio.KeyTab:       "⇥",
+	granio.KeyUp:        "↑",
 }

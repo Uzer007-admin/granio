@@ -3,64 +3,64 @@ package theme
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // DefaultEmojiFont returns the font resource for the built-in emoji font.
 // This may return nil if the application was packaged without an emoji font.
 //
 // Since: 2.4
-func DefaultEmojiFont() fyne.Resource {
+func DefaultEmojiFont() granio.Resource {
 	return emoji
 }
 
 // DefaultTextBoldFont returns the font resource for the built-in bold font style.
-func DefaultTextBoldFont() fyne.Resource {
+func DefaultTextBoldFont() granio.Resource {
 	return bold
 }
 
 // DefaultTextBoldItalicFont returns the font resource for the built-in bold and italic font style.
-func DefaultTextBoldItalicFont() fyne.Resource {
+func DefaultTextBoldItalicFont() granio.Resource {
 	return bolditalic
 }
 
 // DefaultTextFont returns the font resource for the built-in regular font style.
-func DefaultTextFont() fyne.Resource {
+func DefaultTextFont() granio.Resource {
 	return regular
 }
 
 // DefaultTextItalicFont returns the font resource for the built-in italic font style.
-func DefaultTextItalicFont() fyne.Resource {
+func DefaultTextItalicFont() granio.Resource {
 	return italic
 }
 
 // DefaultTextMonospaceFont returns the font resource for the built-in monospace font face.
-func DefaultTextMonospaceFont() fyne.Resource {
+func DefaultTextMonospaceFont() granio.Resource {
 	return monospace
 }
 
 // DefaultSymbolFont returns the font resource for the built-in symbol font.
 //
 // Since: 2.2
-func DefaultSymbolFont() fyne.Resource {
+func DefaultSymbolFont() granio.Resource {
 	return symbol
 }
 
 // Font looks up the font for current theme and text style.
 //
 // Since: 2.5
-func Font(style fyne.TextStyle) fyne.Resource {
+func Font(style granio.TextStyle) granio.Resource {
 	return safeFontLookup(style)
 }
 
 // TextBoldFont returns the font resource for the bold font style.
-func TextBoldFont() fyne.Resource {
-	return safeFontLookup(fyne.TextStyle{Bold: true})
+func TextBoldFont() granio.Resource {
+	return safeFontLookup(granio.TextStyle{Bold: true})
 }
 
 // TextBoldItalicFont returns the font resource for the bold and italic font style.
-func TextBoldItalicFont() fyne.Resource {
-	return safeFontLookup(fyne.TextStyle{Bold: true, Italic: true})
+func TextBoldItalicFont() granio.Resource {
+	return safeFontLookup(granio.TextStyle{Bold: true, Italic: true})
 }
 
 // TextColor returns the theme's standard text color - this is actually the foreground color since 1.4.
@@ -71,33 +71,33 @@ func TextColor() color.Color {
 }
 
 // TextFont returns the font resource for the regular font style.
-func TextFont() fyne.Resource {
-	return safeFontLookup(fyne.TextStyle{})
+func TextFont() granio.Resource {
+	return safeFontLookup(granio.TextStyle{})
 }
 
 // TextItalicFont returns the font resource for the italic font style.
-func TextItalicFont() fyne.Resource {
-	return safeFontLookup(fyne.TextStyle{Italic: true})
+func TextItalicFont() granio.Resource {
+	return safeFontLookup(granio.TextStyle{Italic: true})
 }
 
 // TextMonospaceFont returns the font resource for the monospace font face.
-func TextMonospaceFont() fyne.Resource {
-	return safeFontLookup(fyne.TextStyle{Monospace: true})
+func TextMonospaceFont() granio.Resource {
+	return safeFontLookup(granio.TextStyle{Monospace: true})
 }
 
 // SymbolFont returns the font resource for the symbol font style.
 //
 // Since: 2.4
-func SymbolFont() fyne.Resource {
-	return safeFontLookup(fyne.TextStyle{Symbol: true})
+func SymbolFont() granio.Resource {
+	return safeFontLookup(granio.TextStyle{Symbol: true})
 }
 
-func safeFontLookup(s fyne.TextStyle) fyne.Resource {
+func safeFontLookup(s granio.TextStyle) granio.Resource {
 	font := Current().Font(s)
 	if font != nil {
 		return font
 	}
-	fyne.LogError("Loaded theme returned nil font", nil)
+	granio.LogError("Loaded theme returned nil font", nil)
 
 	if s.Monospace {
 		return DefaultTextMonospaceFont()

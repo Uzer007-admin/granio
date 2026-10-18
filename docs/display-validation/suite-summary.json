@@ -1,0 +1,54 @@
+{
+  "windows-native-final.json": {
+    "packages_pass": 47,
+    "tests_pass": 4937,
+    "failures": 0,
+    "skips": [
+      "TestOpenTable",
+      "TestTableRefByName",
+      "TestTableMarshal",
+      "TestClipboardExternalTransferChild",
+      "TestExternalWindowsDropSource"
+    ],
+    "external_stdout": [],
+    "unfinished_packages": []
+  },
+  "windows-headless-final.json": {
+    "packages_pass": 47,
+    "tests_pass": 4751,
+    "failures": 0,
+    "skips": [
+      "TestOpenTable",
+      "TestTableRefByName",
+      "TestTableMarshal"
+    ],
+    "external_stdout": [],
+    "unfinished_packages": []
+  },
+  "linux-native-final.json": {
+    "packages_pass": 49,
+    "tests_pass": 5032,
+    "failures": 0,
+    "skips": [
+      "TestOpenTable",
+      "TestTableRefByName",
+      "TestTableMarshal",
+      "TestClipboardExternalTransferChild"
+    ],
+    "external_stdout": [
+      "SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry"
+    ],
+    "unfinished_packages": []
+  },
+  "windows-native-driver-final.json": {
+    "packages_pass": 1,
+    "tests_pass": 211,
+    "failures": 0,
+    "skips": [
+      "TestClipboardExternalTransferChild",
+      "TestExternalWindowsDropSource"
+    ],
+    "external_stdout": [],
+    "unfinished_packages": []
+  }
+}

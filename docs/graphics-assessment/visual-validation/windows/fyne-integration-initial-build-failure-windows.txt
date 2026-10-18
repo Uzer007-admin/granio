@@ -1,0 +1,7 @@
+# github.com/Uzer007-admin/granio/v2/widget
+widget\accessibility_collections.go:52:65: t.selected undefined (type *Table has no field or method selected, but does have method Selected)
+widget\accessibility_collections.go:53:20: t.selected undefined (type *Table has no field or method selected, but does have method Selected)
+FAIL	github.com/Uzer007-admin/granio/v2/app [build failed]
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	1.620s
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw [build failed]
+FAIL

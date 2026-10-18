@@ -5,7 +5,7 @@ package glfw
 import (
 	"time"
 
-	"fyne.io/fyne/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal"
 )
 
 const desktopDefaultDoubleTapDelay = 300 * time.Millisecond

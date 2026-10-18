@@ -1,10 +1,10 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 var _ Dialog = (*CustomDialog)(nil)
@@ -19,7 +19,7 @@ type CustomDialog struct {
 // NewCustom creates and returns a dialog over the specified application using custom
 // content. The button will have the dismiss text set.
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
-func NewCustom(title, dismiss string, content fyne.CanvasObject, parent fyne.Window) *CustomDialog {
+func NewCustom(title, dismiss string, content granio.CanvasObject, parent granio.Window) *CustomDialog {
 	d := &dialog{content: content, title: title, parent: parent}
 
 	d.dismiss = &widget.Button{Text: dismiss, OnTapped: d.Hide}
@@ -31,7 +31,7 @@ func NewCustom(title, dismiss string, content fyne.CanvasObject, parent fyne.Win
 // ShowCustom shows a dialog over the specified application using custom
 // content. The button will have the dismiss text set.
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
-func ShowCustom(title, dismiss string, content fyne.CanvasObject, parent fyne.Window) {
+func ShowCustom(title, dismiss string, content granio.CanvasObject, parent granio.Window) {
 	NewCustom(title, dismiss, content, parent).Show()
 }
 
@@ -39,7 +39,7 @@ func ShowCustom(title, dismiss string, content fyne.CanvasObject, parent fyne.Wi
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
 //
 // Since: 2.4
-func NewCustomWithoutButtons(title string, content fyne.CanvasObject, parent fyne.Window) *CustomDialog {
+func NewCustomWithoutButtons(title string, content granio.CanvasObject, parent granio.Window) *CustomDialog {
 	d := &dialog{content: content, title: title, parent: parent}
 	d.create(container.NewGridWithColumns(1))
 
@@ -50,7 +50,7 @@ func NewCustomWithoutButtons(title string, content fyne.CanvasObject, parent fyn
 // Passing an empty slice will result in a dialog with no buttons.
 //
 // Since: 2.4
-func (d *CustomDialog) SetButtons(buttons []fyne.CanvasObject) {
+func (d *CustomDialog) SetButtons(buttons []granio.CanvasObject) {
 	d.dismiss = nil // New button row invalidates possible dismiss button.
 	d.setButtons(container.NewGridWithRows(1, buttons...))
 }
@@ -59,7 +59,7 @@ func (d *CustomDialog) SetButtons(buttons []fyne.CanvasObject) {
 // Passing a nil resource will remove the icon from the dialog.
 //
 // Since: 2.6
-func (d *CustomDialog) SetIcon(icon fyne.Resource) {
+func (d *CustomDialog) SetIcon(icon granio.Resource) {
 	d.setIcon(icon)
 }
 
@@ -68,7 +68,7 @@ func (d *CustomDialog) SetIcon(icon fyne.Resource) {
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
 //
 // Since: 2.4
-func ShowCustomWithoutButtons(title string, content fyne.CanvasObject, parent fyne.Window) {
+func ShowCustomWithoutButtons(title string, content granio.CanvasObject, parent granio.Window) {
 	NewCustomWithoutButtons(title, content, parent).Show()
 }
 
@@ -76,8 +76,8 @@ func ShowCustomWithoutButtons(title string, content fyne.CanvasObject, parent fy
 // custom content. The cancel button will have the dismiss text set and the "OK" will
 // use the confirm text. The response callback is called on user action.
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
-func NewCustomConfirm(title, confirm, dismiss string, content fyne.CanvasObject,
-	callback func(bool), parent fyne.Window,
+func NewCustomConfirm(title, confirm, dismiss string, content granio.CanvasObject,
+	callback func(bool), parent granio.Window,
 ) *ConfirmDialog {
 	d := &dialog{content: content, title: title, parent: parent, callback: callback}
 
@@ -100,8 +100,8 @@ func NewCustomConfirm(title, confirm, dismiss string, content fyne.CanvasObject,
 // content. The cancel button will have the dismiss text set and the "OK" will use
 // the confirm text. The response callback is called on user action.
 // The MinSize() of the CanvasObject passed will be used to set the size of the window.
-func ShowCustomConfirm(title, confirm, dismiss string, content fyne.CanvasObject,
-	callback func(bool), parent fyne.Window,
+func ShowCustomConfirm(title, confirm, dismiss string, content granio.CanvasObject,
+	callback func(bool), parent granio.Window,
 ) {
 	NewCustomConfirm(title, confirm, dismiss, content, callback, parent).Show()
 }

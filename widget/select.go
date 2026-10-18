@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Widget       = (*Select)(nil)
-	_ desktop.Hoverable = (*Select)(nil)
-	_ fyne.Tappable     = (*Select)(nil)
-	_ fyne.Focusable    = (*Select)(nil)
-	_ fyne.Disableable  = (*Select)(nil)
+	_ granio.Widget      = (*Select)(nil)
+	_ desktop.Hoverable  = (*Select)(nil)
+	_ granio.Tappable    = (*Select)(nil)
+	_ granio.Focusable   = (*Select)(nil)
+	_ granio.Disableable = (*Select)(nil)
 )
 
 func defaultPlaceHolder() string {
@@ -31,7 +31,7 @@ type Select struct {
 	// Alignment sets the text alignment of the select and its list of options.
 	//
 	// Since: 2.1
-	Alignment   fyne.TextAlign
+	Alignment   granio.TextAlign
 	Selected    string
 	Options     []string
 	PlaceHolder string
@@ -42,7 +42,7 @@ type Select struct {
 	focused bool
 	hovered bool
 	popUp   *PopUpMenu
-	tapAnim *fyne.Animation
+	tapAnim *granio.Animation
 }
 
 // NewSelect creates a new select widget with the set list of options and changes handler
@@ -88,19 +88,19 @@ func (s *Select) ClearSelected() {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (s *Select) CreateRenderer() fyne.WidgetRenderer {
+func (s *Select) CreateRenderer() granio.WidgetRenderer {
 	s.ExtendBaseWidget(s)
 	th := s.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	icon := NewIcon(th.Icon(theme.IconNameArrowDropDown))
 	if s.PlaceHolder == "" {
 		s.PlaceHolder = defaultPlaceHolder()
 	}
 	txtProv := NewRichTextWithText(s.Selected)
-	txtProv.inset = fyne.NewSquareSize(th.Size(theme.SizeNamePadding))
+	txtProv.inset = granio.NewSquareSize(th.Size(theme.SizeNamePadding))
 	txtProv.ExtendBaseWidget(txtProv)
-	txtProv.Truncation = fyne.TextTruncateEllipsis
+	txtProv.Truncation = granio.TextTruncateEllipsis
 	if s.Disabled() {
 		txtProv.Segments[0].(*TextSegment).Style.ColorName = theme.ColorNameDisabled
 	}
@@ -108,8 +108,8 @@ func (s *Select) CreateRenderer() fyne.WidgetRenderer {
 	background := &canvas.Rectangle{}
 	tapBG := canvas.NewRectangle(color.Transparent)
 	s.tapAnim = newButtonTapAnimation(tapBG, s, th)
-	s.tapAnim.Curve = fyne.AnimationEaseOut
-	objects := []fyne.CanvasObject{background, tapBG, txtProv, icon}
+	s.tapAnim.Curve = granio.AnimationEaseOut
+	objects := []granio.CanvasObject{background, tapBG, txtProv, icon}
 	r := &selectRenderer{icon, txtProv, background, objects, s}
 	background.FillColor = r.bgColor(th, v)
 	background.CornerRadius = th.Size(theme.SizeNameInputRadius)
@@ -140,7 +140,7 @@ func (s *Select) Hide() {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (s *Select) MinSize() fyne.Size {
+func (s *Select) MinSize() granio.Size {
 	s.ExtendBaseWidget(s)
 	return s.BaseWidget.MinSize()
 }
@@ -162,7 +162,7 @@ func (s *Select) MouseOut() {
 }
 
 // Move changes the relative position of the select.
-func (s *Select) Move(pos fyne.Position) {
+func (s *Select) Move(pos granio.Position) {
 	s.BaseWidget.Move(pos)
 
 	if s.popUp != nil {
@@ -172,11 +172,11 @@ func (s *Select) Move(pos fyne.Position) {
 
 // Resize sets a new size for a widget.
 // Note this should not be used if the widget is being managed by a Layout within a Container.
-func (s *Select) Resize(size fyne.Size) {
+func (s *Select) Resize(size granio.Size) {
 	s.BaseWidget.Resize(size)
 
 	if s.popUp != nil {
-		s.popUp.Resize(fyne.NewSize(size.Width, s.popUp.MinSize().Height))
+		s.popUp.Resize(granio.NewSize(size.Width, s.popUp.MinSize().Height))
 	}
 }
 
@@ -218,7 +218,7 @@ func (s *Select) SetSelectedIndex(index int) {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any tap handler
-func (s *Select) Tapped(*fyne.PointEvent) {
+func (s *Select) Tapped(*granio.PointEvent) {
 	if s.Disabled() {
 		return
 	}
@@ -234,17 +234,17 @@ func (s *Select) Tapped(*fyne.PointEvent) {
 }
 
 // TypedKey is called if a key event happens while this Select is focused.
-func (s *Select) TypedKey(event *fyne.KeyEvent) {
+func (s *Select) TypedKey(event *granio.KeyEvent) {
 	switch event.Name {
-	case fyne.KeySpace, fyne.KeyUp, fyne.KeyDown:
+	case granio.KeySpace, granio.KeyUp, granio.KeyDown:
 		s.showPopUp()
-	case fyne.KeyRight:
+	case granio.KeyRight:
 		i := s.SelectedIndex() + 1
 		if i >= len(s.Options) {
 			i = 0
 		}
 		s.SetSelectedIndex(i)
-	case fyne.KeyLeft:
+	case granio.KeyLeft:
 		i := s.SelectedIndex() - 1
 		if i < 0 {
 			i = len(s.Options) - 1
@@ -267,22 +267,22 @@ func (s *Select) Unbind() {
 	s.binder.Unbind()
 }
 
-func (s *Select) popUpPos() fyne.Position {
-	buttonPos := fyne.CurrentApp().Driver().AbsolutePositionForObject(s.super())
-	return buttonPos.Add(fyne.NewPos(0, s.Size().Height-s.Theme().Size(theme.SizeNameInputBorder)))
+func (s *Select) popUpPos() granio.Position {
+	buttonPos := granio.CurrentApp().Driver().AbsolutePositionForObject(s.super())
+	return buttonPos.Add(granio.NewPos(0, s.Size().Height-s.Theme().Size(theme.SizeNameInputBorder)))
 }
 
 func (s *Select) showPopUp() {
-	items := make([]*fyne.MenuItem, len(s.Options))
+	items := make([]*granio.MenuItem, len(s.Options))
 	for i := range s.Options {
 		text := s.Options[i] // capture
-		items[i] = fyne.NewMenuItem(text, func() {
+		items[i] = granio.NewMenuItem(text, func() {
 			s.updateSelected(text)
 			s.popUp = nil
 		})
 	}
 
-	c := fyne.CurrentApp().Driver().CanvasForObject(s.super())
+	c := granio.CurrentApp().Driver().CanvasForObject(s.super())
 	if c == nil {
 		// The Select was detached from its canvas (e.g. its parent
 		// container was rebuilt) between the tap event being delivered
@@ -290,10 +290,10 @@ func (s *Select) showPopUp() {
 		// nothing rather than crash inside the overlay machinery.
 		return
 	}
-	pop := NewPopUpMenu(fyne.NewMenu("", items...), c)
+	pop := NewPopUpMenu(granio.NewMenu("", items...), c)
 	pop.alignment = s.Alignment
 	pop.ShowAtPosition(s.popUpPos())
-	pop.Resize(fyne.NewSize(s.Size().Width, pop.MinSize().Height))
+	pop.Resize(granio.NewSize(s.Size().Width, pop.MinSize().Height))
 	pop.OnDismiss = func() {
 		pop.Hide()
 		if s.popUp == pop {
@@ -309,7 +309,7 @@ func (s *Select) tapAnimation() {
 	}
 	s.tapAnim.Stop()
 
-	if fyne.CurrentApp().Settings().ShowAnimations() {
+	if granio.CurrentApp().Settings().ShowAnimations() {
 		s.tapAnim.Start()
 	}
 }
@@ -355,7 +355,7 @@ func (s *Select) writeData(data binding.DataItem) {
 	if currentValue != s.Selected {
 		err := stringTarget.Set(s.Selected)
 		if err != nil {
-			fyne.LogError(fmt.Sprintf("Failed to set binding value to %s", s.Selected), err)
+			granio.LogError(fmt.Sprintf("Failed to set binding value to %s", s.Selected), err)
 		}
 	}
 }
@@ -365,69 +365,77 @@ type selectRenderer struct {
 	label      *RichText
 	background *canvas.Rectangle
 
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 	combo   *Select
 }
 
-func (s *selectRenderer) Objects() []fyne.CanvasObject {
+func (s *selectRenderer) Objects() []granio.CanvasObject {
 	return s.objects
 }
 
 func (*selectRenderer) Destroy() {}
 
 // Layout the components of the button widget
-func (s *selectRenderer) Layout(size fyne.Size) {
+func (s *selectRenderer) Layout(size granio.Size) {
 	th := s.combo.Theme()
 	pad := th.Size(theme.SizeNamePadding)
 	iconSize := th.Size(theme.SizeNameInlineIcon)
 	innerPad := th.Size(theme.SizeNameInnerPadding)
-	s.background.Resize(fyne.NewSize(size.Width, size.Height))
-	s.label.inset = fyne.NewSquareSize(pad)
+	s.background.Resize(granio.NewSize(size.Width, size.Height))
+	s.label.inset = granio.NewSquareSize(pad)
 
-	iconPos := fyne.NewPos(size.Width-iconSize-innerPad, (size.Height-iconSize)/2)
-	labelSize := fyne.NewSize(iconPos.X-pad, s.label.MinSize().Height)
+	iconPos := granio.NewPos(size.Width-iconSize-innerPad, (size.Height-iconSize)/2)
+	labelSize := granio.NewSize(iconPos.X-pad, s.label.MinSize().Height)
 
 	s.label.Resize(labelSize)
-	s.label.Move(fyne.NewPos(pad, (size.Height-labelSize.Height)/2))
+	s.label.Move(granio.NewPos(pad, (size.Height-labelSize.Height)/2))
 
-	s.icon.Resize(fyne.NewSquareSize(iconSize))
+	s.icon.Resize(granio.NewSquareSize(iconSize))
 	s.icon.Move(iconPos)
 }
 
 // MinSize calculates the minimum size of a select button.
 // This is based on the selected text, the drop icon and a standard amount of padding added.
-func (s *selectRenderer) MinSize() fyne.Size {
+func (s *selectRenderer) MinSize() granio.Size {
 	th := s.combo.Theme()
 	innerPad := th.Size(theme.SizeNameInnerPadding)
 
-	minPlaceholderWidth := fyne.MeasureText(s.combo.PlaceHolder, th.Size(theme.SizeNameText), fyne.TextStyle{}).Width
+	minPlaceholderWidth := granio.MeasureText(s.combo.PlaceHolder, th.Size(theme.SizeNameText), granio.TextStyle{}).Width
 	minSize := s.label.MinSize()
 	minSize.Width = minPlaceholderWidth
-	minSize = minSize.Add(fyne.NewSize(innerPad*3, innerPad))
-	return minSize.Add(fyne.NewSize(th.Size(theme.SizeNameInlineIcon)+innerPad, 0))
+	minSize = minSize.Add(granio.NewSize(innerPad*3, innerPad))
+	return minimumComponentHeight(minSize.Add(granio.NewSize(th.Size(theme.SizeNameInlineIcon)+innerPad, 0)), th, granio.ComponentInput)
 }
 
 func (s *selectRenderer) Refresh() {
 	th := s.combo.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	s.updateLabel()
 	s.updateIcon(th)
 	s.background.FillColor = s.bgColor(th, v)
+	s.background.StrokeWidth = 0
+	if colors, ok := activeSystemColors(th); ok && !s.combo.Disabled() {
+		s.background.FillColor = colors.Window
+		s.background.StrokeColor, s.background.StrokeWidth = colors.WindowText, 1
+		if s.combo.focused {
+			s.background.StrokeColor, s.background.StrokeWidth = colors.Highlight, 2
+		}
+	}
 	s.background.CornerRadius = s.combo.Theme().Size(theme.SizeNameInputRadius)
 
 	s.Layout(s.combo.Size())
 	if s.combo.popUp != nil {
 		s.combo.popUp.alignment = s.combo.Alignment
 		s.combo.popUp.Move(s.combo.popUpPos())
-		s.combo.popUp.Resize(fyne.NewSize(s.combo.Size().Width, s.combo.popUp.MinSize().Height))
+		s.combo.popUp.Resize(granio.NewSize(s.combo.Size().Width, s.combo.popUp.MinSize().Height))
 		s.combo.popUp.Refresh()
 	}
 	s.background.Refresh()
 	canvas.Refresh(s.combo.super())
 }
 
-func (s *selectRenderer) bgColor(th fyne.Theme, v fyne.ThemeVariant) color.Color {
+func (s *selectRenderer) bgColor(th granio.Theme, v granio.ThemeVariant) color.Color {
 	if s.combo.Disabled() {
 		return th.Color(theme.ColorNameDisabledButton, v)
 	}
@@ -440,7 +448,7 @@ func (s *selectRenderer) bgColor(th fyne.Theme, v fyne.ThemeVariant) color.Color
 	return th.Color(theme.ColorNameInputBackground, v)
 }
 
-func (s *selectRenderer) updateIcon(th fyne.Theme) {
+func (s *selectRenderer) updateIcon(th granio.Theme) {
 	icon := th.Icon(theme.IconNameArrowDropDown)
 	if s.combo.Disabled() {
 		s.icon.Resource = theme.NewDisabledResource(icon)

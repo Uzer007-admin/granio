@@ -16,8 +16,8 @@ import "C"
 import (
 	"runtime"
 
-	"fyne.io/fyne/v2/driver"
-	"fyne.io/fyne/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
 )
 
 // assert we are implementing driver.NativeWindow

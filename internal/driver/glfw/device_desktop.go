@@ -5,15 +5,15 @@ package glfw
 import (
 	"runtime"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
 )
 
 func (*glDevice) IsMobile() bool {
 	return false
 }
 
-func (*glDevice) SystemScaleForWindow(w fyne.Window) float32 {
+func (*glDevice) SystemScaleForWindow(w granio.Window) float32 {
 	if runtime.GOOS == goos.Darwin {
 		return 1.0 // macOS scaling is done at the texture level
 	}

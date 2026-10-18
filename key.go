@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // KeyName represents the name of a key that has been pressed.
 type KeyName string

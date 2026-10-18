@@ -1,0 +1,57 @@
+{
+  "github.com/Uzer007-admin/gl": {
+    "version": "v0.0.0-20261017234122-3756695c6558",
+    "commit": "3756695c655823cb1c7ceb3bc8c7ff068838f855",
+    "directory": "deps\\gl"
+  },
+  "github.com/Uzer007-admin/dbus/v5": {
+    "version": "v5.3.0",
+    "commit": "2eb3d0dba943ea7c2df845285aea69db9fb4712a",
+    "directory": "deps\\dbus"
+  },
+  "github.com/Uzer007-admin/glow": {
+    "version": "v0.0.0-20261017234250-3169226de4e2",
+    "commit": "3169226de4e23d221876255a099c0603000dfc39",
+    "directory": "deps\\glow"
+  },
+  "github.com/Uzer007-admin/glfw/v3.3/glfw": {
+    "version": "v0.0.0-20261017234256-57a5925f8166",
+    "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+    "directory": "deps\\glfw"
+  },
+  "github.com/Uzer007-admin/glfw/v3.4/glfw": {
+    "version": "v0.1.0-pre.2.0.20261017234256-57a5925f8166",
+    "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+    "directory": "deps\\glfw"
+  },
+  "github.com/Uzer007-admin/glfw/v3.5/glfw": {
+    "version": "v0.0.0-20261017234256-57a5925f8166",
+    "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+    "directory": "deps\\glfw"
+  },
+  "github.com/Uzer007-admin/granio-image": {
+    "version": "v0.1.2-0.20261017234830-b1607a79c1eb",
+    "commit": "b1607a79c1ebffe894310f02c81bf19357e3c80d",
+    "directory": "deps\\image"
+  },
+  "github.com/Uzer007-admin/granio-oksvg": {
+    "version": "v0.2.1-0.20261017234852-ddb3049db67c",
+    "commit": "ddb3049db67ca590393977442a37227d944cd61a",
+    "directory": "deps\\oksvg"
+  },
+  "github.com/Uzer007-admin/granio-gl-js": {
+    "version": "v0.2.1-0.20261017234923-9e3b07127717",
+    "commit": "9e3b07127717faca7c69b5d215a7184317a41b41",
+    "directory": "deps\\gl-js"
+  },
+  "github.com/Uzer007-admin/granio-glfw-js": {
+    "version": "v0.4.1-0.20261017234950-9e15a5515cc9",
+    "commit": "9e15a5515cc9406ee996e3086a0a9b979df6b017",
+    "directory": "deps\\glfw-js"
+  },
+  "github.com/Uzer007-admin/granio-systray": {
+    "version": "v1.12.3-0.20261017235015-fd45fbf4dbbd",
+    "commit": "fd45fbf4dbbd8124eec16765ed71bb2c72ca7817",
+    "directory": "deps\\systray"
+  }
+}

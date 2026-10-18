@@ -1,0 +1,71 @@
+ok  	fyne.io/fyne/v2	(cached)
+ok  	fyne.io/fyne/v2/app	19.343s
+?   	fyne.io/fyne/v2/cache	[no test files]
+ok  	fyne.io/fyne/v2/canvas	3.556s
+?   	fyne.io/fyne/v2/cmd/fyne	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/commands	(cached)
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/commands	(cached)
+?   	fyne.io/fyne/v2/cmd/fyne/internal/mobile	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres	(cached)
+?   	fyne.io/fyne/v2/cmd/fyne/internal/templates	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/util	(cached)
+ok  	fyne.io/fyne/v2/cmd/fyne_demo	1.029s
+?   	fyne.io/fyne/v2/cmd/fyne_demo/data	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_demo/tutorials	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_gallery	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings/data	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne_settings/settings	1.315s
+?   	fyne.io/fyne/v2/cmd/hello	[no test files]
+ok  	fyne.io/fyne/v2/container	4.201s
+ok  	fyne.io/fyne/v2/data/binding	1.038s
+ok  	fyne.io/fyne/v2/data/validation	(cached)
+ok  	fyne.io/fyne/v2/dialog	44.023s
+ok  	fyne.io/fyne/v2/driver	(cached)
+ok  	fyne.io/fyne/v2/driver/desktop	1.027s
+?   	fyne.io/fyne/v2/driver/embedded	[no test files]
+?   	fyne.io/fyne/v2/driver/mobile	[no test files]
+ok  	fyne.io/fyne/v2/driver/software	2.037s
+ok  	fyne.io/fyne/v2/internal	2.087s
+ok  	fyne.io/fyne/v2/internal/animation	(cached)
+ok  	fyne.io/fyne/v2/internal/app	1.052s
+ok  	fyne.io/fyne/v2/internal/async	(cached)
+?   	fyne.io/fyne/v2/internal/build	[no test files]
+ok  	fyne.io/fyne/v2/internal/cache	(cached)
+ok  	fyne.io/fyne/v2/internal/color	(cached)
+ok  	fyne.io/fyne/v2/internal/driver	1.270s
+ok  	fyne.io/fyne/v2/internal/driver/common	1.361s
+ok  	fyne.io/fyne/v2/internal/driver/embedded	1.238s
+ok  	fyne.io/fyne/v2/internal/driver/glfw	26.564s
+ok  	fyne.io/fyne/v2/internal/driver/mobile	4.603s
+ok  	fyne.io/fyne/v2/internal/driver/mobile/app	(cached)
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/key	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/paint	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/size	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/touch	[no test files]
+ok  	fyne.io/fyne/v2/internal/driver/mobile/gl	(cached)
+?   	fyne.io/fyne/v2/internal/driver/mobile/mobileinit	[no test files]
+?   	fyne.io/fyne/v2/internal/goos	[no test files]
+ok  	fyne.io/fyne/v2/internal/metadata	(cached)
+ok  	fyne.io/fyne/v2/internal/painter	5.537s
+?   	fyne.io/fyne/v2/internal/painter/geom	[no test files]
+ok  	fyne.io/fyne/v2/internal/painter/gl	1.123s
+ok  	fyne.io/fyne/v2/internal/painter/software	11.267s
+ok  	fyne.io/fyne/v2/internal/repository	(cached)
+ok  	fyne.io/fyne/v2/internal/repository/mime	(cached)
+?   	fyne.io/fyne/v2/internal/scale	[no test files]
+ok  	fyne.io/fyne/v2/internal/scheduler	(cached)
+ok  	fyne.io/fyne/v2/internal/svg	(cached)
+ok  	fyne.io/fyne/v2/internal/test	(cached)
+ok  	fyne.io/fyne/v2/internal/theme	(cached)
+ok  	fyne.io/fyne/v2/internal/widget	1.274s
+ok  	fyne.io/fyne/v2/lang	(cached)
+ok  	fyne.io/fyne/v2/layout	1.565s
+ok  	fyne.io/fyne/v2/storage	1.039s
+ok  	fyne.io/fyne/v2/storage/repository	(cached)
+ok  	fyne.io/fyne/v2/test	1.462s
+ok  	fyne.io/fyne/v2/theme	1.048s
+ok  	fyne.io/fyne/v2/tools/playground	1.028s
+ok  	fyne.io/fyne/v2/widget	36.108s

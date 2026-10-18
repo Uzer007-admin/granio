@@ -10,26 +10,27 @@ import (
 	"image/png"
 	"os"
 	"runtime"
+	"sync/atomic"
 
-	"github.com/fyne-io/image/ico"
+	"github.com/Uzer007-admin/granio-image/ico"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/animation"
-	intapp "fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/internal/painter"
-	intRepo "fyne.io/fyne/v2/internal/repository"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/animation"
+	intapp "github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 var curWindow *window
 
 // NewGLDriver sets up a new Driver instance implemented using the GLFW Go library and OpenGL bindings.
-func NewGLDriver() fyne.Driver {
-	repository.Register(fyne.URISchemeFile, intRepo.NewFileRepository())
+func NewGLDriver() granio.Driver {
+	repository.Register(granio.URISchemeFile, intRepo.NewFileRepository())
 
 	return &gLDriver{
 		done: make(chan struct{}),
@@ -37,47 +38,51 @@ func NewGLDriver() fyne.Driver {
 }
 
 type gLDriver struct {
-	windows     []fyne.Window
-	initialized bool
-	done        chan struct{}
+	displayPlatform    atomic.Int32
+	windows            []granio.Window
+	initialized        bool
+	done               chan struct{}
+	requestedFrameRate atomic.Int32
+	detectedFrameRate  atomic.Int32
 
-	animation animation.Runner
+	animation       animation.Runner
+	animationOwners map[granio.CanvasObject]bool
 
-	currentKeyModifiers fyne.KeyModifier // desktop driver only
+	currentKeyModifiers granio.KeyModifier // desktop driver only
 
-	trayStart, trayStop func()     // shut down the system tray, if used
-	systrayMenu         *fyne.Menu // cache the menu set so we know when to refresh
+	trayStart, trayStop func()       // shut down the system tray, if used
+	systrayMenu         *granio.Menu // cache the menu set so we know when to refresh
 }
 
 // Declare conformity with Driver
-var _ fyne.Driver = (*gLDriver)(nil)
+var _ granio.Driver = (*gLDriver)(nil)
 
-func (d *gLDriver) AbsolutePositionForObject(co fyne.CanvasObject) fyne.Position {
+func (d *gLDriver) AbsolutePositionForObject(co granio.CanvasObject) granio.Position {
 	c := d.CanvasForObject(co)
 	if c == nil {
-		return fyne.NewPos(0, 0)
+		return granio.NewPos(0, 0)
 	}
 
 	glc, _ := c.(*glCanvas)
 	return driver.AbsolutePositionForObject(co, glc.ObjectTrees())
 }
 
-func (d *gLDriver) AllWindows() []fyne.Window {
+func (d *gLDriver) AllWindows() []granio.Window {
 	return d.windows
 }
 
-func (*gLDriver) CanvasForObject(obj fyne.CanvasObject) fyne.Canvas {
+func (*gLDriver) CanvasForObject(obj granio.CanvasObject) granio.Canvas {
 	return common.CanvasForObject(obj)
 }
 
-func (d *gLDriver) CreateSplashWindow() fyne.Window {
+func (d *gLDriver) CreateSplashWindow() granio.Window {
 	win := d.newWindow("", false)
 	win.SetPadded(false)
 	win.CenterOnScreen()
 	return win
 }
 
-func (*gLDriver) Device() fyne.Device {
+func (*gLDriver) Device() granio.Device {
 	return &glDevice{}
 }
 
@@ -93,7 +98,7 @@ func (*gLDriver) DoFromGoroutine(f func(), wait bool) {
 
 func (d *gLDriver) Quit() {
 	if curWindow != nil {
-		if f := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnExitedForeground(); f != nil {
+		if f := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnExitedForeground(); f != nil {
 			f()
 		}
 		curWindow = nil
@@ -105,10 +110,11 @@ func (d *gLDriver) Quit() {
 	// Only call close once to avoid panic.
 	if running.CompareAndSwap(true, false) {
 		close(d.done)
+		wakeMainLoop()
 	}
 }
 
-func (*gLDriver) RenderedTextSize(text string, textSize float32, style fyne.TextStyle, source fyne.Resource) (size fyne.Size, baseline float32) {
+func (*gLDriver) RenderedTextSize(text string, textSize float32, style granio.TextStyle, source granio.Resource) (size granio.Size, baseline float32) {
 	return painter.RenderedTextSize(text, textSize, style, source)
 }
 
@@ -121,7 +127,7 @@ func (d *gLDriver) Run() {
 	d.runGL()
 
 	// Ensure lifecycle events run to completion before the app exits
-	l, _ := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle)
+	l, _ := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle)
 	l.WaitForEvents()
 	l.DestroyEventQueue()
 }
@@ -130,7 +136,7 @@ func (*gLDriver) SetDisableScreenBlanking(disable bool) {
 	setDisableScreenBlank(disable)
 }
 
-func (d *gLDriver) newWindow(title string, decorate bool) fyne.Window {
+func (d *gLDriver) newWindow(title string, decorate bool) granio.Window {
 	var ret *window
 	if title == "" {
 		title = defaultTitle
@@ -179,7 +185,7 @@ func (d *gLDriver) init() {
 }
 
 func (d *gLDriver) initFailed(msg string, err error) {
-	fyne.LogError(msg, err)
+	granio.LogError(msg, err)
 
 	if running.Load() {
 		os.Exit(1) //revive:disable-line:deep-exit

@@ -6,19 +6,19 @@ import (
 	"io"
 	"os"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 type memCache struct {
 	memStore map[string][]byte
 }
 
-func makeCache() fyne.Cache {
+func makeCache() granio.Cache {
 	return &memCache{memStore: make(map[string][]byte)}
 }
 
-func (*memCache) RootURI() fyne.URI {
+func (*memCache) RootURI() granio.URI {
 	return storage.NewFileURI(os.TempDir()) // in case anyone wants to manually handle storage
 }
 

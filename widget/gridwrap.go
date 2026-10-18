@@ -5,20 +5,20 @@ import (
 	"math"
 	"sort"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Declare conformity with interfaces.
 var (
-	_ fyne.Widget    = (*GridWrap)(nil)
-	_ fyne.Focusable = (*GridWrap)(nil)
+	_ granio.Widget    = (*GridWrap)(nil)
+	_ granio.Focusable = (*GridWrap)(nil)
 )
 
 // GridWrapItemID is the ID of an individual item in the GridWrap widget.
@@ -39,13 +39,13 @@ type GridWrap struct {
 
 	// CreateItem is a callback invoked to create a new widget to render
 	// an item in the GridWrap.
-	CreateItem func() fyne.CanvasObject `json:"-"`
+	CreateItem func() granio.CanvasObject `json:"-"`
 
 	// UpdateItem is a callback invoked to update a GridWrap item widget
 	// to display a new item in the list. The UpdateItem callback should
 	// only update the given item, it should not invoke APIs that would
 	// change other properties of the GridWrap itself.
-	UpdateItem func(id GridWrapItemID, item fyne.CanvasObject) `json:"-"`
+	UpdateItem func(id GridWrapItemID, item granio.CanvasObject) `json:"-"`
 
 	// OnSelected is a callback to be notified when a given item
 	// in the GridWrap has been selected.
@@ -65,18 +65,18 @@ type GridWrap struct {
 	focused          bool
 	scroller         *widget.Scroll
 	selected         []GridWrapItemID
-	itemMin          fyne.Size
+	itemMin          granio.Size
 	offsetY          float32
-	offsetUpdated    func(fyne.Position)
+	offsetUpdated    func(granio.Position)
 	colCountCache    int
-	minSizeCache     fyne.Size
+	minSizeCache     granio.Size
 }
 
 // NewGridWrap creates and returns a GridWrap widget for displaying items in
 // a wrapping grid layout with scrolling and caching for performance.
 //
 // Since: 2.4
-func NewGridWrap(length func() int, createItem func() fyne.CanvasObject, updateItem func(GridWrapItemID, fyne.CanvasObject)) *GridWrap {
+func NewGridWrap(length func() int, createItem func() granio.CanvasObject, updateItem func(GridWrapItemID, granio.CanvasObject)) *GridWrap {
 	gwList := &GridWrap{Length: length, CreateItem: createItem, UpdateItem: updateItem}
 	gwList.ExtendBaseWidget(gwList)
 	return gwList
@@ -85,14 +85,14 @@ func NewGridWrap(length func() int, createItem func() fyne.CanvasObject, updateI
 // NewGridWrapWithData creates a new GridWrap widget that will display the contents of the provided data.
 //
 // Since: 2.4
-func NewGridWrapWithData(data binding.DataList, createItem func() fyne.CanvasObject, updateItem func(binding.DataItem, fyne.CanvasObject)) *GridWrap {
+func NewGridWrapWithData(data binding.DataList, createItem func() granio.CanvasObject, updateItem func(binding.DataItem, granio.CanvasObject)) *GridWrap {
 	gwList := NewGridWrap(
 		data.Length,
 		createItem,
-		func(i GridWrapItemID, o fyne.CanvasObject) {
+		func(i GridWrapItemID, o granio.CanvasObject) {
 			item, err := data.GetItem(i)
 			if err != nil {
-				fyne.LogError(fmt.Sprintf("Error getting data item %d", i), err)
+				granio.LogError(fmt.Sprintf("Error getting data item %d", i), err)
 				return
 			}
 			updateItem(item, o)
@@ -104,7 +104,7 @@ func NewGridWrapWithData(data binding.DataList, createItem func() fyne.CanvasObj
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (l *GridWrap) CreateRenderer() fyne.WidgetRenderer {
+func (l *GridWrap) CreateRenderer() granio.WidgetRenderer {
 	l.ExtendBaseWidget(l)
 
 	if f := l.CreateItem; f != nil && l.itemMin.IsZero() {
@@ -113,11 +113,11 @@ func (l *GridWrap) CreateRenderer() fyne.WidgetRenderer {
 		l.itemMin = item.MinSize()
 	}
 
-	layout := &fyne.Container{Layout: newGridWrapLayout(l)}
+	layout := &granio.Container{Layout: newGridWrapLayout(l)}
 	l.scroller = widget.NewVScroll(layout)
 	layout.Resize(layout.MinSize())
 
-	return newGridWrapRenderer([]fyne.CanvasObject{l.scroller}, l, l.scroller, layout)
+	return newGridWrapRenderer([]granio.CanvasObject{l.scroller}, l, l.scroller, layout)
 }
 
 // FocusGained is called after this GridWrap has gained focus.
@@ -136,7 +136,7 @@ func (l *GridWrap) FocusLost() {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (l *GridWrap) MinSize() fyne.Size {
+func (l *GridWrap) MinSize() granio.Size {
 	l.ExtendBaseWidget(l)
 	return l.BaseWidget.MinSize()
 }
@@ -161,12 +161,12 @@ func (l *GridWrap) scrollWithoutItemCheckTo(id GridWrapItemID) {
 //
 // Since: 2.4
 func (l *GridWrap) RefreshItem(id GridWrapItemID) {
-	l.minSizeCache = fyne.Size{}
+	l.minSizeCache = granio.Size{}
 	if l.scroller == nil {
 		return
 	}
 	l.BaseWidget.Refresh()
-	lo, _ := l.scroller.Content.(*fyne.Container).Layout.(*gridWrapLayout)
+	lo, _ := l.scroller.Content.(*granio.Container).Layout.(*gridWrapLayout)
 	item, ok := lo.searchVisible(lo.visible, id)
 	if ok {
 		lo.setupGridItem(item, id, l.focused && l.currentHighlight == id)
@@ -174,7 +174,7 @@ func (l *GridWrap) RefreshItem(id GridWrapItemID) {
 }
 
 // Resize is called when this GridWrap should change size. We refresh to ensure invisible items are drawn.
-func (l *GridWrap) Resize(s fyne.Size) {
+func (l *GridWrap) Resize(s granio.Size) {
 	oldColCount := l.ColumnCount()
 	oldHeight := l.size.Height
 	l.colCountCache = 0
@@ -188,7 +188,7 @@ func (l *GridWrap) Resize(s fyne.Size) {
 
 	if l.scroller != nil {
 		l.offsetUpdated(l.scroller.Offset)
-		l.scroller.Content.(*fyne.Container).Layout.(*gridWrapLayout).updateGrid(true)
+		l.scroller.Content.(*granio.Container).Layout.(*gridWrapLayout).updateGrid(true)
 	}
 }
 
@@ -283,18 +283,18 @@ func (l *GridWrap) ScrollToOffset(offset float32) {
 	if offset > contentHeight {
 		offset = contentHeight
 	}
-	l.scroller.ScrollToOffset(fyne.NewPos(0, offset))
+	l.scroller.ScrollToOffset(granio.NewPos(0, offset))
 	l.offsetUpdated(l.scroller.Offset)
 }
 
 // TypedKey is called if a key event happens while this GridWrap is focused.
-func (l *GridWrap) TypedKey(event *fyne.KeyEvent) {
+func (l *GridWrap) TypedKey(event *granio.KeyEvent) {
 	oldHighlight := l.currentHighlight
 
 	switch event.Name {
-	case fyne.KeySpace:
+	case granio.KeySpace:
 		l.Select(l.currentHighlight)
-	case fyne.KeyDown:
+	case granio.KeyDown:
 		count := 0
 		if f := l.Length; f != nil {
 			count = f()
@@ -306,7 +306,7 @@ func (l *GridWrap) TypedKey(event *fyne.KeyEvent) {
 		}
 		l.scrollWithoutItemCheckTo(l.currentHighlight)
 		l.RefreshItem(l.currentHighlight)
-	case fyne.KeyLeft:
+	case granio.KeyLeft:
 		if l.currentHighlight <= 0 {
 			return
 		}
@@ -315,7 +315,7 @@ func (l *GridWrap) TypedKey(event *fyne.KeyEvent) {
 		l.currentHighlight--
 		l.scrollWithoutItemCheckTo(l.currentHighlight)
 		l.RefreshItem(l.currentHighlight)
-	case fyne.KeyRight:
+	case granio.KeyRight:
 		if f := l.Length; f != nil && l.currentHighlight >= f()-1 {
 			return
 		}
@@ -324,7 +324,7 @@ func (l *GridWrap) TypedKey(event *fyne.KeyEvent) {
 		l.currentHighlight++
 		l.scrollWithoutItemCheckTo(l.currentHighlight)
 		l.RefreshItem(l.currentHighlight)
-	case fyne.KeyUp:
+	case granio.KeyUp:
 		if l.currentHighlight <= 0 {
 			return
 		}
@@ -385,49 +385,49 @@ func (l *GridWrap) UnselectAll() {
 
 // Refresh causes this GridWrap to be redrawn in its current state.
 func (l *GridWrap) Refresh() {
-	l.minSizeCache = fyne.Size{}
+	l.minSizeCache = granio.Size{}
 	l.BaseWidget.Refresh()
 }
 
-func (l *GridWrap) contentMinSize() fyne.Size {
+func (l *GridWrap) contentMinSize() granio.Size {
 	if !l.minSizeCache.IsZero() {
 		return l.minSizeCache
 	}
 
 	padding := l.Theme().Size(theme.SizeNamePadding)
 	if l.Length == nil {
-		return fyne.NewSize(0, 0)
+		return granio.NewSize(0, 0)
 	}
 
 	cols := l.ColumnCount()
 	rows := float32(math.Ceil(float64(l.Length()) / float64(cols)))
-	size := fyne.NewSize(l.itemMin.Width, (l.itemMin.Height+padding)*rows-padding)
+	size := granio.NewSize(l.itemMin.Width, (l.itemMin.Height+padding)*rows-padding)
 	l.minSizeCache = size
 	return size
 }
 
 // Declare conformity with WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*gridWrapRenderer)(nil)
+var _ granio.WidgetRenderer = (*gridWrapRenderer)(nil)
 
 type gridWrapRenderer struct {
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 
 	list     *GridWrap
 	scroller *widget.Scroll
-	layout   *fyne.Container
+	layout   *granio.Container
 }
 
-func newGridWrapRenderer(objects []fyne.CanvasObject, l *GridWrap, scroller *widget.Scroll, layout *fyne.Container) *gridWrapRenderer {
+func newGridWrapRenderer(objects []granio.CanvasObject, l *GridWrap, scroller *widget.Scroll, layout *granio.Container) *gridWrapRenderer {
 	lr := &gridWrapRenderer{objects: objects, list: l, scroller: scroller, layout: layout}
 	lr.scroller.OnScrolled = l.offsetUpdated
 	return lr
 }
 
-func (l *gridWrapRenderer) Layout(size fyne.Size) {
+func (l *gridWrapRenderer) Layout(size granio.Size) {
 	l.scroller.Resize(size)
 }
 
-func (l *gridWrapRenderer) MinSize() fyne.Size {
+func (l *gridWrapRenderer) MinSize() granio.Size {
 	return internal.MaxSizes(l.scroller.MinSize(), l.list.itemMin)
 }
 
@@ -446,14 +446,14 @@ func (l *gridWrapRenderer) Refresh() {
 func (*gridWrapRenderer) Destroy() {
 }
 
-func (l *gridWrapRenderer) Objects() []fyne.CanvasObject {
+func (l *gridWrapRenderer) Objects() []granio.CanvasObject {
 	return l.objects
 }
 
 // Declare conformity with interfaces.
 var (
-	_ fyne.Widget       = (*gridWrapItem)(nil)
-	_ fyne.Tappable     = (*gridWrapItem)(nil)
+	_ granio.Widget     = (*gridWrapItem)(nil)
+	_ granio.Tappable   = (*gridWrapItem)(nil)
 	_ desktop.Hoverable = (*gridWrapItem)(nil)
 )
 
@@ -463,11 +463,11 @@ type gridWrapItem struct {
 	onTapped          func()
 	onHovered         func()
 	background        *canvas.Rectangle
-	child             fyne.CanvasObject
+	child             granio.CanvasObject
 	hovered, selected bool
 }
 
-func newGridWrapItem(child fyne.CanvasObject, tapped func()) *gridWrapItem {
+func newGridWrapItem(child granio.CanvasObject, tapped func()) *gridWrapItem {
 	gw := &gridWrapItem{
 		child:    child,
 		onTapped: tapped,
@@ -478,22 +478,22 @@ func newGridWrapItem(child fyne.CanvasObject, tapped func()) *gridWrapItem {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (gw *gridWrapItem) CreateRenderer() fyne.WidgetRenderer {
+func (gw *gridWrapItem) CreateRenderer() granio.WidgetRenderer {
 	gw.ExtendBaseWidget(gw)
 	th := gw.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	gw.background = canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	gw.background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
 	gw.background.Hide()
 
-	objects := []fyne.CanvasObject{gw.background, gw.child}
+	objects := []granio.CanvasObject{gw.background, gw.child}
 
 	return &gridWrapItemRenderer{widget.NewBaseRenderer(objects), gw}
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (gw *gridWrapItem) MinSize() fyne.Size {
+func (gw *gridWrapItem) MinSize() granio.Size {
 	gw.ExtendBaseWidget(gw)
 	return gw.BaseWidget.MinSize()
 }
@@ -518,7 +518,7 @@ func (gw *gridWrapItem) MouseOut() {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any tap handler.
-func (gw *gridWrapItem) Tapped(*fyne.PointEvent) {
+func (gw *gridWrapItem) Tapped(*granio.PointEvent) {
 	if gw.onTapped != nil {
 		gw.selected = true
 		gw.Refresh()
@@ -527,7 +527,7 @@ func (gw *gridWrapItem) Tapped(*fyne.PointEvent) {
 }
 
 // Declare conformity with the WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*gridWrapItemRenderer)(nil)
+var _ granio.WidgetRenderer = (*gridWrapItemRenderer)(nil)
 
 type gridWrapItemRenderer struct {
 	widget.BaseRenderer
@@ -537,23 +537,24 @@ type gridWrapItemRenderer struct {
 
 // MinSize calculates the minimum size of a listItem.
 // This is based on the size of the status indicator and the size of the child object.
-func (gw *gridWrapItemRenderer) MinSize() fyne.Size {
+func (gw *gridWrapItemRenderer) MinSize() granio.Size {
 	return gw.item.child.MinSize()
 }
 
 // Layout the components of the listItem widget.
-func (gw *gridWrapItemRenderer) Layout(size fyne.Size) {
+func (gw *gridWrapItemRenderer) Layout(size granio.Size) {
 	gw.item.background.Resize(size)
 	gw.item.child.Resize(size)
 }
 
 func (gw *gridWrapItemRenderer) Refresh() {
 	th := gw.item.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	gw.item.background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
+	gw.item.background.StrokeWidth = 0
 	if gw.item.selected {
-		gw.item.background.FillColor = th.Color(theme.ColorNameSelection, v)
+		applySelectionStyle(gw.item.background, th, v)
 		gw.item.background.Show()
 	} else if gw.item.hovered {
 		gw.item.background.FillColor = th.Color(theme.ColorNameHover, v)
@@ -566,7 +567,7 @@ func (gw *gridWrapItemRenderer) Refresh() {
 }
 
 // Declare conformity with Layout interface.
-var _ fyne.Layout = (*gridWrapLayout)(nil)
+var _ granio.Layout = (*gridWrapLayout)(nil)
 
 type gridItemAndID struct {
 	item *gridWrapItem
@@ -581,17 +582,17 @@ type gridWrapLayout struct {
 	wasVisible []gridItemAndID
 }
 
-func newGridWrapLayout(gw *GridWrap) fyne.Layout {
+func newGridWrapLayout(gw *GridWrap) granio.Layout {
 	gwl := &gridWrapLayout{gw: gw}
 	gw.offsetUpdated = gwl.offsetUpdated
 	return gwl
 }
 
-func (l *gridWrapLayout) Layout(_ []fyne.CanvasObject, _ fyne.Size) {
+func (l *gridWrapLayout) Layout(_ []granio.CanvasObject, _ granio.Size) {
 	l.updateGrid(true)
 }
 
-func (l *gridWrapLayout) MinSize(_ []fyne.CanvasObject) fyne.Size {
+func (l *gridWrapLayout) MinSize(_ []granio.CanvasObject) granio.Size {
 	return l.gw.contentMinSize()
 }
 
@@ -607,7 +608,7 @@ func (l *gridWrapLayout) getItem() *gridWrapItem {
 	return nil
 }
 
-func (l *gridWrapLayout) offsetUpdated(pos fyne.Position) {
+func (l *gridWrapLayout) offsetUpdated(pos granio.Position) {
 	if l.gw.offsetY == pos.Y {
 		return
 	}
@@ -640,11 +641,11 @@ func (l *gridWrapLayout) setupGridItem(li *gridWrapItem, id GridWrapItemID, focu
 		}
 	}
 	li.onTapped = func() {
-		if !fyne.CurrentDevice().IsMobile() {
+		if !granio.CurrentDevice().IsMobile() {
 			l.gw.RefreshItem(l.gw.currentHighlight)
-			canvas := fyne.CurrentApp().Driver().CanvasForObject(l.gw.super())
+			canvas := granio.CurrentApp().Driver().CanvasForObject(l.gw.super())
 			if canvas != nil {
-				canvas.Focus(l.gw.super().(fyne.Focusable))
+				canvas.Focus(l.gw.super().(granio.Focusable))
 			}
 
 			l.gw.currentHighlight = id
@@ -689,7 +690,7 @@ func (l *gridWrapLayout) updateGrid(newOnly bool) {
 	maxItem := GridWrapItemID(math.Min(float64(maxRow*colCount), float64(length-1)))
 
 	if l.gw.UpdateItem == nil {
-		fyne.LogError("Missing UpdateItem callback required for GridWrap", nil)
+		granio.LogError("Missing UpdateItem callback required for GridWrap", nil)
 	}
 
 	// l.wasVisible now represents the currently visible items, while
@@ -697,7 +698,7 @@ func (l *gridWrapLayout) updateGrid(newOnly bool) {
 	l.wasVisible = append(l.wasVisible, l.visible...)
 	l.visible = l.visible[:0]
 
-	c, _ := l.gw.scroller.Content.(*fyne.Container)
+	c, _ := l.gw.scroller.Content.(*granio.Container)
 	oldObjLen := len(c.Objects)
 	c.Objects = c.Objects[:0]
 	y := offY
@@ -714,7 +715,7 @@ func (l *gridWrapLayout) updateGrid(newOnly bool) {
 				item.Resize(l.gw.itemMin)
 			}
 
-			item.Move(fyne.NewPos(x, y))
+			item.Move(granio.NewPos(x, y))
 			item.Resize(l.gw.itemMin)
 
 			x += l.gw.itemMin.Width + padding
@@ -760,7 +761,7 @@ func (*gridWrapLayout) searchVisible(visible []gridItemAndID, id GridWrapItemID)
 	return nil, false
 }
 
-func (*gridWrapLayout) nilOldSliceData(objs []fyne.CanvasObject, length, oldLength int) {
+func (*gridWrapLayout) nilOldSliceData(objs []granio.CanvasObject, length, oldLength int) {
 	if oldLength > length {
 		objs = objs[:oldLength] // gain view into old data
 		clear(objs[length:])

@@ -1,0 +1,21 @@
+=== RUN   TestTerminateWindowRegistry
+--- PASS: TestTerminateWindowRegistry (0.92s)
+=== RUN   TestUnknownScancodeName
+--- PASS: TestUnknownScancodeName (0.05s)
+=== RUN   TestNativeArrayCopiesOwnDataAndReuseCapacity
+--- PASS: TestNativeArrayCopiesOwnDataAndReuseCapacity (0.00s)
+=== RUN   TestInvalidGammaRampPanicsBeforeNativeCall
+--- PASS: TestInvalidGammaRampPanicsBeforeNativeCall (0.00s)
+=== RUN   TestSurfaceMetricsMatchesNativeQueries
+--- PASS: TestSurfaceMetricsMatchesNativeQueries (0.07s)
+=== RUN   TestSurfacePixelScaleIsIndependentOfContentScale
+--- PASS: TestSurfacePixelScaleIsIndependentOfContentScale (0.00s)
+=== RUN   TestWindowVisualNativeLifecycle
+    visuals_integration_test.go:39: created surface: {OSBuild:26300 OSAttributes:15 Composition:true RemoteSession:false HighContrast:false HighContrastKnown:true TransparentFramebuffer:true PixelFormat:12 AlphaBits:8 Backdrop:0 BackdropKnown:true}
+--- PASS: TestWindowVisualNativeLifecycle (0.08s)
+=== RUN   TestDestroyedWindowVisuals
+--- PASS: TestDestroyedWindowVisuals (0.00s)
+=== RUN   TestCreatedSurfaceAlpha
+--- PASS: TestCreatedSurfaceAlpha (0.00s)
+PASS
+ok  	github.com/Uzer007-admin/glfw/v3.3/glfw	2.365s

@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -40,12 +40,12 @@ func TestAccordion_ChangeTheme(t *testing.T) {
 
 	w := test.NewWindow(ac)
 	defer w.Close()
-	w.Resize(ac.MinSize().Add(fyne.NewSize(theme.InnerPadding(), theme.InnerPadding())))
+	w.Resize(ac.MinSize().Add(granio.NewSize(theme.InnerPadding(), theme.InnerPadding())))
 
 	test.AssertImageMatches(t, "accordion/theme_initial.png", w.Canvas().Capture())
 
 	test.WithTestTheme(t, func() {
-		w.Resize(ac.MinSize().Add(fyne.NewSize(theme.InnerPadding(), theme.InnerPadding())))
+		w.Resize(ac.MinSize().Add(granio.NewSize(theme.InnerPadding(), theme.InnerPadding())))
 		ac.Refresh()
 		time.Sleep(100 * time.Millisecond)
 		test.AssertImageMatches(t, "accordion/theme_changed.png", w.Canvas().Capture())
@@ -206,8 +206,8 @@ func TestAccordion_Layout(t *testing.T) {
 				accordion.Open(o)
 			}
 
-			window := test.NewTempWindow(t, &fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{accordion}})
-			window.Resize(accordion.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+			window := test.NewTempWindow(t, &granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{accordion}})
+			window.Resize(accordion.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 
 			test.AssertRendersToMarkup(t, "accordion/layout_"+name+".xml", window.Canvas())
 		})
@@ -322,8 +322,8 @@ func TestAccordion_Layout_Expanded(t *testing.T) {
 				accordion.Open(o)
 			}
 
-			window := test.NewTempWindow(t, &fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{accordion}})
-			window.Resize(accordion.MinSize().Max(fyne.NewSize(150, 280)))
+			window := test.NewTempWindow(t, &granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{accordion}})
+			window.Resize(accordion.MinSize().Max(granio.NewSize(150, 280)))
 
 			test.AssertRendersToMarkup(t, "accordion/layout_"+name+".xml", window.Canvas())
 		})
@@ -331,16 +331,16 @@ func TestAccordion_Layout_Expanded(t *testing.T) {
 }
 
 func TestAccordion_MinSize(t *testing.T) {
-	minSizeA := fyne.MeasureText("A", theme.TextSize(), fyne.TextStyle{})
+	minSizeA := granio.MeasureText("A", theme.TextSize(), granio.TextStyle{})
 	minSizeA.Width += theme.IconInlineSize() + theme.InnerPadding()*3 + theme.Padding()
 	minSizeA.Height = max(minSizeA.Height, theme.IconInlineSize()) + theme.InnerPadding()
-	minSizeB := fyne.MeasureText("B", theme.TextSize(), fyne.TextStyle{})
+	minSizeB := granio.MeasureText("B", theme.TextSize(), granio.TextStyle{})
 	minSizeB.Width += theme.IconInlineSize() + theme.InnerPadding()*3 + theme.Padding()
 	minSizeB.Height = max(minSizeB.Height, theme.IconInlineSize()) + theme.InnerPadding()
-	minSize1 := fyne.MeasureText("111111", theme.TextSize(), fyne.TextStyle{})
+	minSize1 := granio.MeasureText("111111", theme.TextSize(), granio.TextStyle{})
 	minSize1.Width += theme.Padding() * 4
 	minSize1.Height += theme.Padding() * 4
-	minSize2 := fyne.MeasureText("2222222222", theme.TextSize(), fyne.TextStyle{})
+	minSize2 := granio.MeasureText("2222222222", theme.TextSize(), granio.TextStyle{})
 	minSize2.Width += theme.Padding() * 4
 	minSize2.Height += theme.Padding() * 4
 
@@ -354,7 +354,7 @@ func TestAccordion_MinSize(t *testing.T) {
 		multiOpen bool
 		items     []*widget.AccordionItem
 		opened    []int
-		want      fyne.Size
+		want      granio.Size
 	}{
 		"single_open_one_item": {
 			items: []*widget.AccordionItem{
@@ -363,7 +363,7 @@ func TestAccordion_MinSize(t *testing.T) {
 					Detail: widget.NewLabel("111111"),
 				},
 			},
-			want: fyne.NewSize(minWidthA1, minSizeA.Height+theme.InnerPadding()),
+			want: granio.NewSize(minWidthA1, minSizeA.Height+theme.InnerPadding()),
 		},
 		"single_open_one_item_opened": {
 			items: []*widget.AccordionItem{
@@ -373,7 +373,7 @@ func TestAccordion_MinSize(t *testing.T) {
 				},
 			},
 			opened: []int{0},
-			want:   fyne.NewSize(minWidthA1, minHeightA1+theme.InnerPadding()),
+			want:   granio.NewSize(minWidthA1, minHeightA1+theme.InnerPadding()),
 		},
 		"single_open_multiple_items": {
 			items: []*widget.AccordionItem{
@@ -386,7 +386,7 @@ func TestAccordion_MinSize(t *testing.T) {
 					Detail: widget.NewLabel("2222222222"),
 				},
 			},
-			want: fyne.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+theme.InnerPadding()*2+theme.Padding()),
+			want: granio.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+theme.InnerPadding()*2+theme.Padding()),
 		},
 		"single_open_multiple_items_opened": {
 			items: []*widget.AccordionItem{
@@ -400,7 +400,7 @@ func TestAccordion_MinSize(t *testing.T) {
 				},
 			},
 			opened: []int{0, 1},
-			want:   fyne.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+minSize2.Height+theme.InnerPadding()*2+theme.Padding()*2),
+			want:   granio.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+minSize2.Height+theme.InnerPadding()*2+theme.Padding()*2),
 		},
 		"multiple_open_one_item": {
 			multiOpen: true,
@@ -410,7 +410,7 @@ func TestAccordion_MinSize(t *testing.T) {
 					Detail: widget.NewLabel("111111"),
 				},
 			},
-			want: fyne.NewSize(minWidthA1, minSizeA.Height+theme.InnerPadding()),
+			want: granio.NewSize(minWidthA1, minSizeA.Height+theme.InnerPadding()),
 		},
 		"multiple_open_one_item_opened": {
 			multiOpen: true,
@@ -421,7 +421,7 @@ func TestAccordion_MinSize(t *testing.T) {
 				},
 			},
 			opened: []int{0},
-			want:   fyne.NewSize(minWidthA1, minHeightA1+theme.InnerPadding()),
+			want:   granio.NewSize(minWidthA1, minHeightA1+theme.InnerPadding()),
 		},
 		"multiple_open_multiple_items": {
 			multiOpen: true,
@@ -435,7 +435,7 @@ func TestAccordion_MinSize(t *testing.T) {
 					Detail: widget.NewLabel("2222222222"),
 				},
 			},
-			want: fyne.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+theme.InnerPadding()*2+theme.Padding()),
+			want: granio.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+theme.InnerPadding()*2+theme.Padding()),
 		},
 		"multiple_open_multiple_items_opened": {
 			multiOpen: true,
@@ -450,7 +450,7 @@ func TestAccordion_MinSize(t *testing.T) {
 				},
 			},
 			opened: []int{0, 1},
-			want:   fyne.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+minSize1.Height+minSize2.Height+theme.InnerPadding()*3+theme.Padding()),
+			want:   granio.NewSize(minWidthA1B2, minSizeA.Height+minSizeB.Height+minSize1.Height+minSize2.Height+theme.InnerPadding()*3+theme.Padding()),
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

@@ -1,8 +1,8 @@
 package painter
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
 )
 
 // TextVectorPad is the number of points added to the bottom of a text texture so that
@@ -11,8 +11,8 @@ const TextVectorPad = 1
 
 // VectorPad returns the number of additional points that should be added around a texture.
 // This is to accommodate overflow caused by stroke and line endings etc.
-// THe result is in fyne.Size type coordinates and should be scaled for output.
-func VectorPad(obj fyne.CanvasObject) float32 {
+// THe result is in granio.Size type coordinates and should be scaled for output.
+func VectorPad(obj granio.CanvasObject) float32 {
 	//revive:disable:add-constant
 	switch co := obj.(type) {
 	case *canvas.Circle:

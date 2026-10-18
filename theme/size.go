@@ -3,155 +3,155 @@ package theme
 import (
 	"math"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 const (
 	// SizeNameCaptionText is the name of theme lookup for helper text size, normally smaller than regular text size.
 	//
 	// Since: 2.0
-	SizeNameCaptionText fyne.ThemeSizeName = "helperText"
+	SizeNameCaptionText granio.ThemeSizeName = "helperText"
 
 	// SizeNameInlineIcon is the name of theme lookup for inline icons size.
 	//
 	// Since: 2.0
-	SizeNameInlineIcon fyne.ThemeSizeName = "iconInline"
+	SizeNameInlineIcon granio.ThemeSizeName = "iconInline"
 
 	// SizeNameInnerPadding is the name of theme lookup for internal widget padding size.
 	//
 	// Since: 2.3
-	SizeNameInnerPadding fyne.ThemeSizeName = "innerPadding"
+	SizeNameInnerPadding granio.ThemeSizeName = "innerPadding"
 
 	// SizeNameInnerWindowRadius is the name of theme lookup for inner window corner radius.
 	//
 	// Since: 2.8
-	SizeNameInnerWindowRadius fyne.ThemeSizeName = "innerWindowRadius"
+	SizeNameInnerWindowRadius granio.ThemeSizeName = "innerWindowRadius"
 
 	// SizeNameLineSpacing is the name of theme lookup for between text line spacing.
 	//
 	// Since: 2.3
-	SizeNameLineSpacing fyne.ThemeSizeName = "lineSpacing"
+	SizeNameLineSpacing granio.ThemeSizeName = "lineSpacing"
 
 	// SizeNamePadding is the name of theme lookup for padding size.
 	//
 	// Since: 2.0
-	SizeNamePadding fyne.ThemeSizeName = "padding"
+	SizeNamePadding granio.ThemeSizeName = "padding"
 
 	// SizeNameScrollBar is the name of theme lookup for the scrollbar size.
 	//
 	// Since: 2.0
-	SizeNameScrollBar fyne.ThemeSizeName = "scrollBar"
+	SizeNameScrollBar granio.ThemeSizeName = "scrollBar"
 
 	// SizeNameScrollBarSmall is the name of theme lookup for the shrunk scrollbar size.
 	//
 	// Since: 2.0
-	SizeNameScrollBarSmall fyne.ThemeSizeName = "scrollBarSmall"
+	SizeNameScrollBarSmall granio.ThemeSizeName = "scrollBarSmall"
 
 	// SizeNameSeparatorThickness is the name of theme lookup for the thickness of a separator.
 	//
 	// Since: 2.0
-	SizeNameSeparatorThickness fyne.ThemeSizeName = "separator"
+	SizeNameSeparatorThickness granio.ThemeSizeName = "separator"
 
 	// SizeNameSplitThickness is the name of theme lookup for the thickness of a split divider.
 	//
 	// Since: 2.8
-	SizeNameSplitThickness fyne.ThemeSizeName = "split"
+	SizeNameSplitThickness granio.ThemeSizeName = "split"
 
 	// SizeNameText is the name of theme lookup for text size.
 	//
 	// Since: 2.0
-	SizeNameText fyne.ThemeSizeName = "text"
+	SizeNameText granio.ThemeSizeName = "text"
 
 	// SizeNameHeadingText is the name of theme lookup for text size of a heading.
 	//
 	// Since: 2.1
-	SizeNameHeadingText fyne.ThemeSizeName = "headingText"
+	SizeNameHeadingText granio.ThemeSizeName = "headingText"
 
 	// SizeNameSubHeadingText is the name of theme lookup for text size of a sub-heading.
 	//
 	// Since: 2.1
-	SizeNameSubHeadingText fyne.ThemeSizeName = "subHeadingText"
+	SizeNameSubHeadingText granio.ThemeSizeName = "subHeadingText"
 
 	// SizeNameInputBorder is the name of theme lookup for input border size.
 	//
 	// Since: 2.0
-	SizeNameInputBorder fyne.ThemeSizeName = "inputBorder"
+	SizeNameInputBorder granio.ThemeSizeName = "inputBorder"
 
 	// SizeNameInputRadius is the name of theme lookup for input corner radius.
 	//
 	// Since: 2.4
-	SizeNameInputRadius fyne.ThemeSizeName = "inputRadius"
+	SizeNameInputRadius granio.ThemeSizeName = "inputRadius"
 
 	// SizeNameModalBlurRadius is the name of theme lookup for blurring modal popup backgrounds.
 	//
 	// Since: 2.8
-	SizeNameModalBlurRadius fyne.ThemeSizeName = "modalBlurRadius"
+	SizeNameModalBlurRadius granio.ThemeSizeName = "modalBlurRadius"
 
 	// SizeNameSelectionRadius is the name of theme lookup for selection corner radius.
 	//
 	// Since: 2.4
-	SizeNameSelectionRadius fyne.ThemeSizeName = "selectionRadius"
+	SizeNameSelectionRadius granio.ThemeSizeName = "selectionRadius"
 
 	// SizeNameScrollBarRadius is the name of theme lookup for the scroll bar corner radius.
 	//
 	// Since: 2.5
-	SizeNameScrollBarRadius fyne.ThemeSizeName = "scrollBarRadius"
+	SizeNameScrollBarRadius granio.ThemeSizeName = "scrollBarRadius"
 
 	// SizeNameWindowButtonHeight is the name of the height for an inner window titleBar button.
 	//
 	// Since: 2.6
-	SizeNameWindowButtonHeight fyne.ThemeSizeName = "windowButtonHeight"
+	SizeNameWindowButtonHeight granio.ThemeSizeName = "windowButtonHeight"
 
 	// SizeNameWindowButtonRadius is the name of the radius for an inner window titleBar button.
 	//
 	// Since: 2.6
-	SizeNameWindowButtonRadius fyne.ThemeSizeName = "windowButtonRadius"
+	SizeNameWindowButtonRadius granio.ThemeSizeName = "windowButtonRadius"
 
 	// SizeNameWindowButtonIcon is the name of the width of an inner window titleBar button.
 	//
 	// Since: 2.6
-	SizeNameWindowButtonIcon fyne.ThemeSizeName = "windowButtonIcon"
+	SizeNameWindowButtonIcon granio.ThemeSizeName = "windowButtonIcon"
 
 	// SizeNameWindowShadowActiveRadius controls the overall size of inner window shadows when the
 	// window is active (has focus).
 	//
 	// Since: 2.9
-	SizeNameWindowShadowActiveRadius fyne.ThemeSizeName = "windowShadowActiveRadius"
+	SizeNameWindowShadowActiveRadius granio.ThemeSizeName = "windowShadowActiveRadius"
 
 	// SizeNameWindowShadowRadius controls the overall size of inner window shadows.
 	//
 	// Since: 2.9
-	SizeNameWindowShadowRadius fyne.ThemeSizeName = "windowShadowRadius"
+	SizeNameWindowShadowRadius granio.ThemeSizeName = "windowShadowRadius"
 
 	// SizeNameWindowTitleBarHeight is the height for inner window titleBars.
 	//
 	// Since: 2.6
-	SizeNameWindowTitleBarHeight fyne.ThemeSizeName = "windowTitleBarHeight"
+	SizeNameWindowTitleBarHeight granio.ThemeSizeName = "windowTitleBarHeight"
 
 	// SizeNameButtonRadius is the name of theme lookup for button corner radius.
 	//
 	// Since: 2.8
-	SizeNameButtonRadius fyne.ThemeSizeName = "buttonRadius"
+	SizeNameButtonRadius granio.ThemeSizeName = "buttonRadius"
 
 	// SizeNameCardRadius is the name of theme lookup for card widget corner radius.
 	//
 	// Since: 2.8
-	SizeNameCardRadius fyne.ThemeSizeName = "cardRadius"
+	SizeNameCardRadius granio.ThemeSizeName = "cardRadius"
 
 	// SizeNameDialogRadius is the name of theme lookup for dialog and modal popup corner radius.
 	//
 	// Since: 2.8
-	SizeNameDialogRadius fyne.ThemeSizeName = "dialogRadius"
+	SizeNameDialogRadius granio.ThemeSizeName = "dialogRadius"
 
 	// SizeNamePopupRadius is the name of theme lookup for popup corner radius.
 	//
 	// Since: 2.8
-	SizeNamePopupRadius fyne.ThemeSizeName = "popupRadius"
+	SizeNamePopupRadius granio.ThemeSizeName = "popupRadius"
 
 	// SizeNameMenuRadius is the name of theme lookup for menu corner radius.
 	//
 	// Since: 2.8
-	SizeNameMenuRadius fyne.ThemeSizeName = "menuRadius"
+	SizeNameMenuRadius granio.ThemeSizeName = "menuRadius"
 )
 
 // CaptionTextSize returns the size for caption text.
@@ -224,7 +224,7 @@ func SeparatorThicknessSize() float32 {
 // Size looks up the specified size for current theme.
 //
 // Since: 2.5
-func Size(name fyne.ThemeSizeName) float32 {
+func Size(name granio.ThemeSizeName) float32 {
 	return Current().Size(name)
 }
 
@@ -232,7 +232,7 @@ func Size(name fyne.ThemeSizeName) float32 {
 // If the widget theme has been overridden that theme will be used.
 //
 // Since: 2.5
-func SizeForWidget(name fyne.ThemeSizeName, w fyne.Widget) float32 {
+func SizeForWidget(name granio.ThemeSizeName, w granio.Widget) float32 {
 	return CurrentForWidget(w).Size(name)
 }
 
@@ -255,7 +255,7 @@ func TextSubHeadingSize() float32 {
 	return Current().Size(SizeNameSubHeadingText)
 }
 
-func (*builtinTheme) Size(s fyne.ThemeSizeName) float32 {
+func (*builtinTheme) Size(s granio.ThemeSizeName) float32 {
 	//revive:disable:add-constant
 	//revive:disable:identical-switch-branches
 	switch s {

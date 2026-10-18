@@ -3,8 +3,8 @@ package binding
 import (
 	"sync"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
 type preferenceItem interface {
@@ -25,9 +25,9 @@ func (b *preferenceBindings) list() []preferenceItem {
 }
 
 type preferencesMap struct {
-	prefs async.Map[fyne.Preferences, *preferenceBindings]
+	prefs async.Map[granio.Preferences, *preferenceBindings]
 
-	appPrefs fyne.Preferences // the main application prefs, to check if it changed...
+	appPrefs granio.Preferences // the main application prefs, to check if it changed...
 	appLock  sync.Mutex
 }
 
@@ -35,7 +35,7 @@ func newPreferencesMap() *preferencesMap {
 	return &preferencesMap{}
 }
 
-func (m *preferencesMap) ensurePreferencesAttached(p fyne.Preferences) *preferenceBindings {
+func (m *preferencesMap) ensurePreferencesAttached(p granio.Preferences) *preferenceBindings {
 	binds, loaded := m.prefs.LoadOrStore(p, &preferenceBindings{})
 	if loaded {
 		return binds
@@ -45,8 +45,8 @@ func (m *preferencesMap) ensurePreferencesAttached(p fyne.Preferences) *preferen
 	return binds
 }
 
-func (m *preferencesMap) getBindings(p fyne.Preferences) *preferenceBindings {
-	if p == fyne.CurrentApp().Preferences() {
+func (m *preferencesMap) getBindings(p granio.Preferences) *preferenceBindings {
+	if p == granio.CurrentApp().Preferences() {
 		m.appLock.Lock()
 		prefs := m.appPrefs
 		if m.appPrefs == nil {
@@ -61,7 +61,7 @@ func (m *preferencesMap) getBindings(p fyne.Preferences) *preferenceBindings {
 	return binds
 }
 
-func (m *preferencesMap) preferencesChanged(p fyne.Preferences) {
+func (m *preferencesMap) preferencesChanged(p granio.Preferences) {
 	binds := m.getBindings(p)
 	if binds == nil {
 		return
@@ -71,7 +71,7 @@ func (m *preferencesMap) preferencesChanged(p fyne.Preferences) {
 	}
 }
 
-func (m *preferencesMap) migratePreferences(src, dst fyne.Preferences) {
+func (m *preferencesMap) migratePreferences(src, dst granio.Preferences) {
 	old, loaded := m.prefs.Load(src)
 	if !loaded {
 		return
@@ -88,7 +88,7 @@ func (m *preferencesMap) migratePreferences(src, dst fyne.Preferences) {
 		return
 	}
 	for _, b := range binds.list() {
-		if backed, ok := b.(interface{ replaceProvider(fyne.Preferences) }); ok {
+		if backed, ok := b.(interface{ replaceProvider(granio.Preferences) }); ok {
 			backed.replaceProvider(dst)
 		}
 	}

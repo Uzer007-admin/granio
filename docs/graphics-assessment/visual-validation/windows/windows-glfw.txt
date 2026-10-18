@@ -1,0 +1,3 @@
+ok  	github.com/Uzer007-admin/glfw/v3.3/glfw	2.435s
+ok  	github.com/Uzer007-admin/glfw/v3.4/glfw	1.965s
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	1.974s

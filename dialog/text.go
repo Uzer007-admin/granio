@@ -1,9 +1,9 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 	maxTextDialogWinPcntWidth float32 = .9
 )
 
-func newTextDialog(title, message string, icon fyne.Resource, parent fyne.Window) *dialog {
+func newTextDialog(title, message string, icon granio.Resource, parent granio.Window) *dialog {
 	d := &dialog{
 		title:   title,
 		icon:    icon,
@@ -33,18 +33,18 @@ func newTextDialog(title, message string, icon fyne.Resource, parent fyne.Window
 // - current window width * maxTextDialogWinPcntWidth
 func createBeforeShowHook(d *dialog, message string) func() {
 	// Until issue #4648 is resolved, we need to create a label here
-	// rather than just using fyne.MeasureText, because the label's minsize
+	// rather than just using granio.MeasureText, because the label's minsize
 	// also depends on the internal padding that label adds, which is unknown here
 	noWrapWidth := widget.NewLabel(message).MinSize().Width + padWidth + theme.Padding()*2
 	return func() {
 		if d.desiredSize.IsZero() {
 			maxWinWitth := d.parent.Canvas().Size().Width * maxTextDialogWinPcntWidth
 			w := min(min(noWrapWidth, maxTextDialogAbsoluteWidth), maxWinWitth)
-			d.desiredSize = fyne.NewSize(w, d.MinSize().Height)
+			d.desiredSize = granio.NewSize(w, d.MinSize().Height)
 		}
 	}
 }
 
-func newCenterWrappedLabel(message string) fyne.CanvasObject {
-	return &widget.Label{Text: message, Alignment: fyne.TextAlignCenter, Wrapping: fyne.TextWrapWord}
+func newCenterWrappedLabel(message string) granio.CanvasObject {
+	return &widget.Label{Text: message, Alignment: granio.TextAlignCenter, Wrapping: granio.TextWrapWord}
 }

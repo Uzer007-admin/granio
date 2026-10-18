@@ -7,12 +7,12 @@ import (
 	"image/draw"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	paint "fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/painter/geom"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const floatEqualityThreshold = 1e-9
@@ -52,7 +52,7 @@ func textTextureWindow(visibleOffset, visibleWidth, fullWidth, maxWidth int) (of
 // Texture represents an uploaded GL texture
 type Texture cache.TextureType
 
-func (p *painter) freeTexture(obj fyne.CanvasObject) {
+func (p *painter) freeTexture(obj granio.CanvasObject) {
 	texture, ok := cache.GetTexture(obj)
 	if !ok {
 		return
@@ -65,7 +65,7 @@ func (p *painter) freeTexture(obj fyne.CanvasObject) {
 	cache.DeleteTexture(obj)
 }
 
-func (p *painter) getTexture(object fyne.CanvasObject, creator func(canvasObject fyne.CanvasObject) Texture) (Texture, error) {
+func (p *painter) getTexture(object granio.CanvasObject, creator func(canvasObject granio.CanvasObject) Texture) (Texture, error) {
 	if t, ok := object.(*canvas.Text); ok {
 		custom := ""
 		if t.FontSource != nil {
@@ -131,6 +131,10 @@ func (p *painter) imgToTexture(img image.Image, textureFilter canvas.ImageScale)
 		if len(i.Pix) == 0 { // image is empty
 			return noTexture
 		}
+		pixels := packedRGBAPixels(i)
+		if len(pixels) == 0 {
+			return noTexture
+		}
 
 		texture := p.newTexture(textureFilter)
 		p.ctx.TexImage2D(
@@ -140,7 +144,7 @@ func (p *painter) imgToTexture(img image.Image, textureFilter canvas.ImageScale)
 			i.Rect.Size().Y,
 			colorFormatRGBA,
 			unsignedByte,
-			i.Pix,
+			pixels,
 		)
 		p.logError()
 		return texture
@@ -151,7 +155,25 @@ func (p *painter) imgToTexture(img image.Image, textureFilter canvas.ImageScale)
 	}
 }
 
-func (p *painter) newGlImageTexture(obj fyne.CanvasObject) Texture {
+// packedRGBAPixels avoids copying ordinary images and single-row subimages.
+// OpenGL's packed upload cannot consume the parent stride of a multi-row SubImage.
+func packedRGBAPixels(img *image.RGBA) []byte {
+	width, height := img.Rect.Dx(), img.Rect.Dy()
+	if width <= 0 || height <= 0 {
+		return nil
+	}
+	rowBytes := width * 4
+	if img.Stride == rowBytes || height == 1 {
+		return img.Pix[:rowBytes*height]
+	}
+	pixels := make([]byte, rowBytes*height)
+	for row := 0; row < height; row++ {
+		copy(pixels[row*rowBytes:(row+1)*rowBytes], img.Pix[row*img.Stride:row*img.Stride+rowBytes])
+	}
+	return pixels
+}
+
+func (p *painter) newGlImageTexture(obj granio.CanvasObject) Texture {
 	img, _ := obj.(*canvas.Image)
 
 	width := p.textureScale(img.Size().Width)
@@ -165,7 +187,7 @@ func (p *painter) newGlImageTexture(obj fyne.CanvasObject) Texture {
 	return p.imgToTexture(tex, img.ScaleMode)
 }
 
-func (p *painter) newGlLinearGradientTexture(obj fyne.CanvasObject) Texture {
+func (p *painter) newGlLinearGradientTexture(obj granio.CanvasObject) Texture {
 	gradient, _ := obj.(*canvas.LinearGradient)
 
 	w := gradient.Size().Width
@@ -182,7 +204,7 @@ func (p *painter) newGlLinearGradientTexture(obj fyne.CanvasObject) Texture {
 	return p.imgToTexture(gradient.Generate(int(width), int(height)), canvas.ImageScaleSmooth)
 }
 
-func (p *painter) newGlRadialGradientTexture(obj fyne.CanvasObject) Texture {
+func (p *painter) newGlRadialGradientTexture(obj granio.CanvasObject) Texture {
 	gradient, _ := obj.(*canvas.RadialGradient)
 
 	width := p.textureScale(gradient.Size().Width)
@@ -191,7 +213,7 @@ func (p *painter) newGlRadialGradientTexture(obj fyne.CanvasObject) Texture {
 	return p.imgToTexture(gradient.Generate(int(width), int(height)), canvas.ImageScaleSmooth)
 }
 
-func (p *painter) newGlRasterTexture(obj fyne.CanvasObject) Texture {
+func (p *painter) newGlRasterTexture(obj granio.CanvasObject) Texture {
 	rast, _ := obj.(*canvas.Raster)
 
 	width := p.textureScale(rast.Size().Width)
@@ -200,7 +222,7 @@ func (p *painter) newGlRasterTexture(obj fyne.CanvasObject) Texture {
 	return p.imgToTexture(rast.Generator(int(width), int(height)), rast.ScaleMode)
 }
 
-func (p *painter) newGlTextTexture(obj fyne.CanvasObject) Texture {
+func (p *painter) newGlTextTexture(obj granio.CanvasObject) Texture {
 	text, _ := obj.(*canvas.Text)
 	color := text.Color
 	if color == nil {
@@ -259,7 +281,7 @@ func (p *painter) freeClippedTextTexture(text *canvas.Text) {
 
 func (p *painter) newTexture(textureFilter canvas.ImageScale) Texture {
 	if int(textureFilter) >= len(textureFilterToGL) {
-		fyne.LogError(fmt.Sprintf("Invalid canvas.ImageScale value (%d), using canvas.ImageScaleSmooth as default value", textureFilter), nil)
+		granio.LogError(fmt.Sprintf("Invalid canvas.ImageScale value (%d), using canvas.ImageScaleSmooth as default value", textureFilter), nil)
 		textureFilter = canvas.ImageScaleSmooth
 	}
 

@@ -1,0 +1,2 @@
+deps\gl\v2.1\material\conversions.go:45:10: possible misuse of unsafe.Pointer
+deps\gl\v2.1\material\conversions.go:69:9: possible misuse of unsafe.Pointer

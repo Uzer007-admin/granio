@@ -5,14 +5,14 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -34,10 +34,10 @@ func TestNewTreeWithData(t *testing.T) {
 
 	tree := widget.NewTreeWithData(
 		data,
-		func(bool) fyne.CanvasObject {
+		func(bool) granio.CanvasObject {
 			return widget.NewLabel("Template Object")
 		},
-		func(data binding.DataItem, _ bool, item fyne.CanvasObject) {
+		func(data binding.DataItem, _ bool, item granio.CanvasObject) {
 			item.(*widget.Label).Bind(data.(binding.String))
 		},
 	)
@@ -280,7 +280,7 @@ func TestTree_Layout(t *testing.T) {
 
 			window := test.NewWindow(tree)
 			defer window.Close()
-			window.Resize(fyne.NewSize(200, 300))
+			window.Resize(granio.NewSize(200, 300))
 
 			tree.Refresh() // Force layout
 
@@ -298,7 +298,7 @@ func TestTree_ChangeTheme(t *testing.T) {
 	window := test.NewWindow(tree)
 	defer window.Close()
 	window.SetPadded(false)
-	window.Resize(fyne.NewSize(220, 220))
+	window.Resize(granio.NewSize(220, 220))
 
 	tree.Refresh() // Force layout
 
@@ -320,14 +320,14 @@ func TestTree_OverrideTheme(t *testing.T) {
 	window := test.NewWindow(tree)
 	defer window.Close()
 	window.SetPadded(false)
-	window.Resize(fyne.NewSize(220, 220))
+	window.Resize(granio.NewSize(220, 220))
 	test.ApplyTheme(t, test.NewTheme())
 
 	normal := test.Theme()
 	bg := canvas.NewRectangle(normal.Color(theme.ColorNameBackground, theme.VariantDark))
-	window.SetContent(&fyne.Container{
+	window.SetContent(&granio.Container{
 		Layout:  layout.NewStackLayout(),
-		Objects: []fyne.CanvasObject{bg, container.NewThemeOverride(tree, normal)},
+		Objects: []granio.CanvasObject{bg, container.NewThemeOverride(tree, normal)},
 	})
 	test.AssertImageMatches(t, "tree/theme_initial.png", window.Canvas().Capture())
 }
@@ -340,13 +340,13 @@ func TestTree_Move(t *testing.T) {
 
 	window := test.NewWindow(tree)
 	defer window.Close()
-	window.Resize(fyne.NewSize(220, 220))
+	window.Resize(granio.NewSize(220, 220))
 
 	tree.Refresh() // Force layout
 
 	test.AssertRendersToMarkup(t, "tree/move_initial.xml", window.Canvas())
 
-	tree.Move(fyne.NewPos(20, 20))
+	tree.Move(granio.NewPos(20, 20))
 	test.AssertRendersToMarkup(t, "tree/move_moved.xml", window.Canvas())
 }
 
@@ -356,7 +356,7 @@ func TestTree_Refresh(t *testing.T) {
 
 	value := "Foo Leaf"
 	tree := widget.NewTreeWithStrings(treeData)
-	tree.UpdateNode = func(uid widget.TreeNodeID, branch bool, node fyne.CanvasObject) {
+	tree.UpdateNode = func(uid widget.TreeNodeID, branch bool, node granio.CanvasObject) {
 		if uid == "foobar" {
 			node.(*widget.Label).SetText(value)
 			assert.False(t, branch)
@@ -369,7 +369,7 @@ func TestTree_Refresh(t *testing.T) {
 
 	window := test.NewWindow(tree)
 	defer window.Close()
-	window.Resize(fyne.NewSize(220, 220))
+	window.Resize(granio.NewSize(220, 220))
 
 	test.AssertImageMatches(t, "tree/refresh_initial.png", window.Canvas().Capture())
 
@@ -391,11 +391,11 @@ func TestTree_FocusItem(t *testing.T) {
 
 	window := test.NewWindow(tree)
 	defer window.Close()
-	window.Resize(fyne.NewSize(220, 220))
+	window.Resize(granio.NewSize(220, 220))
 	window.Canvas().Focus(tree)
 
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 
 	test.AssertImageMatches(t, "tree/tree_focus_item.png", window.Canvas().Capture())
 }

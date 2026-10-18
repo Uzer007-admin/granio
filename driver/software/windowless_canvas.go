@@ -5,14 +5,14 @@ import (
 	"image/draw"
 	"sync"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/painter/software"
-	"fyne.io/fyne/v2/internal/scale"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const canvasDefaultSize = 100
@@ -21,10 +21,10 @@ const canvasDefaultSize = 100
 //
 // Since: 2.9
 type WindowlessCanvas interface {
-	fyne.Canvas
+	granio.Canvas
 
 	Padded() bool
-	Resize(fyne.Size)
+	Resize(granio.Size)
 	SetPadded(bool)
 	SetScale(float32)
 }
@@ -63,7 +63,7 @@ func createCanvas(painter driver.Painter, transparent bool) WindowlessCanvas {
 		padded:      true,
 		painter:     painter,
 		scale:       1.0,
-		size:        fyne.NewSize(canvasDefaultSize, canvasDefaultSize),
+		size:        granio.NewSize(canvasDefaultSize, canvasDefaultSize),
 		transparent: transparent,
 	}
 	c.overlays.Canvas = c
@@ -71,20 +71,20 @@ func createCanvas(painter driver.Painter, transparent bool) WindowlessCanvas {
 }
 
 type canvas struct {
-	size    fyne.Size
+	size    granio.Size
 	resized bool
 	scale   float32
 
-	content     fyne.CanvasObject
+	content     granio.CanvasObject
 	overlays    internal.OverlayStack
 	focusMgr    *app.FocusManager
 	padded      bool
 	transparent bool
 
 	onTypedRune func(rune)
-	onTypedKey  func(*fyne.KeyEvent)
+	onTypedKey  func(*granio.KeyEvent)
 
-	fyne.ShortcutHandler
+	granio.ShortcutHandler
 	painter      driver.Painter
 	propertyLock sync.RWMutex
 }
@@ -105,14 +105,14 @@ func (c *canvas) Capture() image.Image {
 	return img
 }
 
-func (c *canvas) Content() fyne.CanvasObject {
+func (c *canvas) Content() granio.CanvasObject {
 	c.propertyLock.RLock()
 	defer c.propertyLock.RUnlock()
 
 	return c.content
 }
 
-func (c *canvas) Focus(obj fyne.Focusable) {
+func (c *canvas) Focus(obj granio.Focusable) {
 	c.focusManager().Focus(obj)
 }
 
@@ -124,15 +124,15 @@ func (c *canvas) FocusPrevious() {
 	c.focusManager().FocusPrevious()
 }
 
-func (c *canvas) Focused() fyne.Focusable {
+func (c *canvas) Focused() granio.Focusable {
 	return c.focusManager().Focused()
 }
 
-func (c *canvas) InteractiveArea() (fyne.Position, fyne.Size) {
-	return fyne.NewPos(0, 0), c.Size()
+func (c *canvas) InteractiveArea() (granio.Position, granio.Size) {
+	return granio.NewPos(0, 0), c.Size()
 }
 
-func (c *canvas) OnTypedKey() func(*fyne.KeyEvent) {
+func (c *canvas) OnTypedKey() func(*granio.KeyEvent) {
 	c.propertyLock.RLock()
 	defer c.propertyLock.RUnlock()
 
@@ -146,7 +146,7 @@ func (c *canvas) OnTypedRune() func(rune) {
 	return c.onTypedRune
 }
 
-func (c *canvas) Overlays() fyne.OverlayStack {
+func (c *canvas) Overlays() granio.OverlayStack {
 	c.propertyLock.Lock()
 	defer c.propertyLock.Unlock()
 
@@ -160,14 +160,14 @@ func (c *canvas) Padded() bool {
 	return c.padded
 }
 
-func (c *canvas) PixelCoordinateForPosition(pos fyne.Position) (x, y int) {
+func (c *canvas) PixelCoordinateForPosition(pos granio.Position) (x, y int) {
 	return int(pos.X * c.scale), int(pos.Y * c.scale)
 }
 
-func (*canvas) Refresh(fyne.CanvasObject) {
+func (*canvas) Refresh(granio.CanvasObject) {
 }
 
-func (c *canvas) Resize(size fyne.Size) {
+func (c *canvas) Resize(size granio.Size) {
 	c.propertyLock.Lock()
 	c.resized = true
 	c.propertyLock.Unlock()
@@ -182,7 +182,7 @@ func (c *canvas) Scale() float32 {
 	return c.scale
 }
 
-func (c *canvas) SetContent(content fyne.CanvasObject) {
+func (c *canvas) SetContent(content granio.CanvasObject) {
 	c.propertyLock.Lock()
 	c.content = content
 	c.focusMgr = app.NewFocusManager(c.content)
@@ -195,7 +195,7 @@ func (c *canvas) SetContent(content fyne.CanvasObject) {
 
 	minSize := content.MinSize()
 	if c.padded {
-		minSize = minSize.Add(fyne.NewSquareSize(theme.Padding() * 2))
+		minSize = minSize.Add(granio.NewSquareSize(theme.Padding() * 2))
 	}
 
 	if resized {
@@ -205,7 +205,7 @@ func (c *canvas) SetContent(content fyne.CanvasObject) {
 	}
 }
 
-func (c *canvas) SetOnTypedKey(handler func(*fyne.KeyEvent)) {
+func (c *canvas) SetOnTypedKey(handler func(*granio.KeyEvent)) {
 	c.propertyLock.Lock()
 	defer c.propertyLock.Unlock()
 
@@ -234,7 +234,7 @@ func (c *canvas) SetScale(s float32) {
 	c.scale = s
 }
 
-func (c *canvas) Size() fyne.Size {
+func (c *canvas) Size() granio.Size {
 	c.propertyLock.RLock()
 	defer c.propertyLock.RUnlock()
 
@@ -245,7 +245,7 @@ func (c *canvas) Unfocus() {
 	c.focusManager().Focus(nil)
 }
 
-func (c *canvas) doResize(size fyne.Size) {
+func (c *canvas) doResize(size granio.Size) {
 	c.propertyLock.Lock()
 	content := c.content
 	overlays := c.overlays
@@ -266,11 +266,11 @@ func (c *canvas) doResize(size fyne.Size) {
 
 	if padded {
 		padding := theme.Padding()
-		content.Resize(size.Subtract(fyne.NewSquareSize(padding * 2)))
-		content.Move(fyne.NewSquareOffsetPos(padding))
+		content.Resize(size.Subtract(granio.NewSquareSize(padding * 2)))
+		content.Move(granio.NewSquareOffsetPos(padding))
 	} else {
 		content.Resize(size)
-		content.Move(fyne.NewPos(0, 0))
+		content.Move(granio.NewPos(0, 0))
 	}
 }
 

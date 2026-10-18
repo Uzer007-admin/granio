@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/internal/metadata"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/metadata"
 )
 
 func checkLocalMetadata() {
-	if build.NoMetadata || build.Mode == fyne.BuildRelease {
+	if build.NoMetadata || build.Mode == granio.BuildRelease {
 		return
 	}
 
@@ -25,7 +25,7 @@ func checkLocalMetadata() {
 
 	data, err := metadata.Load(ref)
 	if err != nil || data == nil {
-		fyne.LogError("failed to parse FyneApp.toml", err)
+		granio.LogError("failed to parse FyneApp.toml", err)
 		return
 	}
 
@@ -36,12 +36,12 @@ func checkLocalMetadata() {
 
 	const iconBaseSize = 512
 	if data.Details.Icon != "" {
-		res, err := fyne.LoadResourceFromPath(data.Details.Icon)
+		res, err := granio.LoadResourceFromPath(data.Details.Icon)
 		if err == nil {
 			meta.Icon = metadata.ScaleIcon(res, iconBaseSize)
 		}
 	} else { // Icon.png fallback
-		res, err := fyne.LoadResourceFromPath("Icon.png")
+		res, err := granio.LoadResourceFromPath("Icon.png")
 		if err == nil {
 			meta.Icon = metadata.ScaleIcon(res, iconBaseSize)
 		}
@@ -57,7 +57,7 @@ func getProjectPath() string {
 	work, _ := os.Getwd()
 
 	if err != nil {
-		fyne.LogError("failed to lookup build executable", err)
+		granio.LogError("failed to lookup build executable", err)
 		return work
 	}
 

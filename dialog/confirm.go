@@ -1,11 +1,11 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // ConfirmDialog is like the standard Dialog but with an additional confirmation button
@@ -38,7 +38,7 @@ func (d *ConfirmDialog) SetConfirmImportance(importance widget.Importance) {
 // NewConfirm creates a dialog over the specified window for user confirmation.
 // The title is used for the dialog window and message is the content.
 // The callback is executed when the user decides. After creation you should call Show().
-func NewConfirm(title, message string, callback func(bool), parent fyne.Window) *ConfirmDialog {
+func NewConfirm(title, message string, callback func(bool), parent granio.Window) *ConfirmDialog {
 	d := newTextDialog(title, message, theme.QuestionIcon(), parent)
 	d.callback = callback
 
@@ -60,6 +60,6 @@ func NewConfirm(title, message string, callback func(bool), parent fyne.Window) 
 // ShowConfirm shows a dialog over the specified window for a user
 // confirmation. The title is used for the dialog window and message is the content.
 // The callback is executed when the user decides.
-func ShowConfirm(title, message string, callback func(bool), parent fyne.Window) {
+func ShowConfirm(title, message string, callback func(bool), parent granio.Window) {
 	NewConfirm(title, message, callback, parent).Show()
 }

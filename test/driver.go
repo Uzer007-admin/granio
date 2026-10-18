@@ -4,13 +4,13 @@ import (
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	fynedriver "fyne.io/fyne/v2/driver"
-	intdriver "fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/painter/software"
-	intRepo "fyne.io/fyne/v2/internal/repository"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	fynedriver "github.com/Uzer007-admin/granio/v2/driver"
+	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 // SoftwarePainter describes a simple type that can render canvases
@@ -21,15 +21,15 @@ type SoftwarePainter = fynedriver.Painter
 type driver struct {
 	device       device
 	painter      fynedriver.Painter
-	windows      []fyne.Window
+	windows      []granio.Window
 	windowsMutex sync.RWMutex
 }
 
 // Declare conformity with Driver
-var _ fyne.Driver = (*driver)(nil)
+var _ granio.Driver = (*driver)(nil)
 
 // NewDriver sets up and registers a new dummy driver for test purpose
-func NewDriver() fyne.Driver {
+func NewDriver() granio.Driver {
 	drv := &driver{windowsMutex: sync.RWMutex{}}
 	repository.Register("file", intRepo.NewFileRepository())
 
@@ -45,7 +45,7 @@ func NewDriver() fyne.Driver {
 
 // NewDriverWithPainter creates a new dummy driver that will pass the given
 // painter to all canvases created
-func NewDriverWithPainter(p fynedriver.Painter) fyne.Driver {
+func NewDriverWithPainter(p fynedriver.Painter) granio.Driver {
 	return &driver{painter: p}
 }
 
@@ -55,14 +55,14 @@ func (*driver) DoFromGoroutine(f func(), _ bool) {
 	f()
 }
 
-func (d *driver) AbsolutePositionForObject(co fyne.CanvasObject) fyne.Position {
+func (d *driver) AbsolutePositionForObject(co granio.CanvasObject) granio.Position {
 	c := d.CanvasForObject(co)
 	if c == nil {
-		return fyne.NewPos(0, 0)
+		return granio.NewPos(0, 0)
 	}
 
 	overlays := c.Overlays().List()
-	trees := make([]fyne.CanvasObject, 0, len(overlays)+1)
+	trees := make([]granio.CanvasObject, 0, len(overlays)+1)
 	if content := c.Content(); content != nil {
 		trees = append(trees, content)
 	}
@@ -72,20 +72,20 @@ func (d *driver) AbsolutePositionForObject(co fyne.CanvasObject) fyne.Position {
 	return pos.Subtract(inset)
 }
 
-func (d *driver) AllWindows() []fyne.Window {
+func (d *driver) AllWindows() []granio.Window {
 	d.windowsMutex.RLock()
 	defer d.windowsMutex.RUnlock()
 	return d.windows
 }
 
-func (d *driver) CanvasForObject(fyne.CanvasObject) fyne.Canvas {
+func (d *driver) CanvasForObject(granio.CanvasObject) granio.Canvas {
 	d.windowsMutex.RLock()
 	defer d.windowsMutex.RUnlock()
 	// cheating: probably the last created window is meant
 	return d.windows[len(d.windows)-1].Canvas()
 }
 
-func (d *driver) CreateWindow(title string) fyne.Window {
+func (d *driver) CreateWindow(title string) granio.Window {
 	p := d.painter
 	if p == nil {
 		p = software.NewPainter()
@@ -99,12 +99,12 @@ func (d *driver) CreateWindow(title string) fyne.Window {
 	return w
 }
 
-func (d *driver) Device() fyne.Device {
+func (d *driver) Device() granio.Device {
 	return &d.device
 }
 
 // RenderedTextSize looks up how bit a string would be if drawn on screen
-func (*driver) RenderedTextSize(text string, size float32, style fyne.TextStyle, source fyne.Resource) (fyne.Size, float32) {
+func (*driver) RenderedTextSize(text string, size float32, style granio.TextStyle, source granio.Resource) (granio.Size, float32) {
 	return painter.RenderedTextSize(text, size, style, source)
 }
 
@@ -112,16 +112,19 @@ func (*driver) Run() {
 	// no-op
 }
 
-func (*driver) StartAnimation(a *fyne.Animation) {
+func (*driver) StartAnimation(a *granio.Animation) {
 	// currently no animations in test app, we just initialize it and leave
 	if a.AutoReverse {
 		a.Tick(0.0)
 	} else {
 		a.Tick(1.0)
 	}
+	if a.RepeatCount != granio.AnimationRepeatForever && a.OnFinished != nil {
+		a.OnFinished()
+	}
 }
 
-func (*driver) StopAnimation(*fyne.Animation) {
+func (*driver) StopAnimation(*granio.Animation) {
 	// currently no animations in test app, do nothing
 }
 
@@ -129,7 +132,7 @@ func (*driver) Quit() {
 	// no-op
 }
 
-func (*driver) Clipboard() fyne.Clipboard {
+func (*driver) Clipboard() granio.Clipboard {
 	return nil
 }
 

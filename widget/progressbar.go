@@ -4,12 +4,12 @@ import (
 	"image/color"
 	"strconv"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 type progressRenderer struct {
@@ -22,7 +22,7 @@ type progressRenderer struct {
 
 // MinSize calculates the minimum size of a progress bar.
 // This is simply the "100%" label size plus padding.
-func (p *progressRenderer) MinSize() fyne.Size {
+func (p *progressRenderer) MinSize() granio.Size {
 	text := "100%"
 	if format := p.progress.TextFormatter; format != nil {
 		text = format()
@@ -30,7 +30,7 @@ func (p *progressRenderer) MinSize() fyne.Size {
 
 	th := p.progress.Theme()
 	padding := th.Size(theme.SizeNameInnerPadding) * 2
-	size := fyne.MeasureText(text, p.label.TextSize, p.label.TextStyle)
+	size := granio.MeasureText(text, p.label.TextSize, p.label.TextStyle)
 	return size.AddWidthHeight(padding, padding)
 }
 
@@ -62,10 +62,10 @@ func (p *progressRenderer) updateBar() {
 }
 
 // Layout the components of the progress bar widget
-func (p *progressRenderer) Layout(size fyne.Size) {
+func (p *progressRenderer) Layout(size granio.Size) {
 	p.calculateRatio()
 
-	p.bar.Resize(fyne.NewSize(size.Width*p.ratio, size.Height))
+	p.bar.Resize(granio.NewSize(size.Width*p.ratio, size.Height))
 	p.background.Resize(size)
 	p.label.Resize(size)
 }
@@ -73,7 +73,7 @@ func (p *progressRenderer) Layout(size fyne.Size) {
 // applyTheme updates the progress bar to match the current theme
 func (p *progressRenderer) applyTheme() {
 	th := p.progress.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	primaryColor := th.Color(theme.ColorNamePrimary, v)
 	inputRadius := th.Size(theme.SizeNameInputRadius)
@@ -127,24 +127,24 @@ func (p *ProgressBar) SetValue(v float64) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (p *ProgressBar) MinSize() fyne.Size {
+func (p *ProgressBar) MinSize() granio.Size {
 	p.ExtendBaseWidget(p)
 	return p.BaseWidget.MinSize()
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (p *ProgressBar) CreateRenderer() fyne.WidgetRenderer {
+func (p *ProgressBar) CreateRenderer() granio.WidgetRenderer {
 	p.ExtendBaseWidget(p)
 	if p.Min == 0 && p.Max == 0 {
 		p.Max = 1.0
 	}
 
 	renderer := &progressRenderer{progress: p}
-	renderer.label.Alignment = fyne.TextAlignCenter
+	renderer.label.Alignment = granio.TextAlignCenter
 	renderer.applyTheme()
 	renderer.updateBar()
 
-	renderer.SetObjects([]fyne.CanvasObject{&renderer.background, &renderer.bar, &renderer.label})
+	renderer.SetObjects([]granio.CanvasObject{&renderer.background, &renderer.bar, &renderer.label})
 	return renderer
 }
 
@@ -191,7 +191,7 @@ func (p *ProgressBar) updateFromData(data binding.DataItem) {
 
 	val, err := floatSource.Get()
 	if err != nil {
-		fyne.LogError("Error getting current data value", err)
+		granio.LogError("Error getting current data value", err)
 		return
 	}
 	p.SetValue(val)

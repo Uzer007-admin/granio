@@ -1,0 +1,37 @@
+# github.com/Uzer007-admin/dbus/v5
+C:\Users\night\go\pkg\mod\github.com\godbus\dbus\v5@v5.2.3\conn_windows.go:10:10: not enough return values
+	have (string)
+	want (string, error)
+FAIL	github.com/Uzer007-admin/granio/v2/internal/cache [build failed]
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw [build failed]
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/widget
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkText_splitLines-16                 	   13352	     12087 ns/op	   30224 B/op	      28 allocs/op
+BenchmarkText_splitLines-16                 	   13921	     11187 ns/op	   30224 B/op	      28 allocs/op
+BenchmarkText_splitLines-16                 	   12075	     13433 ns/op	   30224 B/op	      28 allocs/op
+BenchmarkText_lineBounds_WrapOff-16         	   13448	     12125 ns/op	   30144 B/op	      28 allocs/op
+BenchmarkText_lineBounds_WrapOff-16         	   13994	     11280 ns/op	   30144 B/op	      28 allocs/op
+BenchmarkText_lineBounds_WrapOff-16         	   14808	     10652 ns/op	   30144 B/op	      28 allocs/op
+BenchmarkText_lineBounds_Truncate-16        	    9007	     27199 ns/op	   65280 B/op	      88 allocs/op
+BenchmarkText_lineBounds_Truncate-16        	    9064	     26196 ns/op	   65280 B/op	      88 allocs/op
+BenchmarkText_lineBounds_Truncate-16        	    8412	     28230 ns/op	   65280 B/op	      88 allocs/op
+BenchmarkText_lineBounds_WrapBreak-16       	     121	   1559205 ns/op	 1704123 B/op	   14617 allocs/op
+BenchmarkText_lineBounds_WrapBreak-16       	     100	   1612400 ns/op	 1704126 B/op	   14617 allocs/op
+BenchmarkText_lineBounds_WrapBreak-16       	     126	   1477779 ns/op	 1704125 B/op	   14617 allocs/op
+BenchmarkText_lineBounds_WrapWord-16        	     134	   1329917 ns/op	 1696387 B/op	   13948 allocs/op
+BenchmarkText_lineBounds_WrapWord-16        	     128	   1481654 ns/op	 1696388 B/op	   13948 allocs/op
+BenchmarkText_lineBounds_WrapWord-16        	     127	   1437180 ns/op	 1696388 B/op	   13948 allocs/op
+BenchmarkText_howManyRunesFit_latin-16      	  160666	      1181 ns/op	    2400 B/op	       3 allocs/op
+BenchmarkText_howManyRunesFit_latin-16      	  122086	      1263 ns/op	    2400 B/op	       3 allocs/op
+BenchmarkText_howManyRunesFit_latin-16      	  151282	      1206 ns/op	    2400 B/op	       3 allocs/op
+BenchmarkText_howManyRunesFit_chinese-16    	   98143	      1731 ns/op	     928 B/op	       4 allocs/op
+BenchmarkText_howManyRunesFit_chinese-16    	  115556	      1651 ns/op	     928 B/op	       4 allocs/op
+BenchmarkText_howManyRunesFit_chinese-16    	  115254	      1630 ns/op	     928 B/op	       4 allocs/op
+BenchmarkTextGrid_Refresh-16                	    7504	     24094 ns/op	    4066 B/op	    1001 allocs/op
+BenchmarkTextGrid_Refresh-16                	    7718	     23346 ns/op	    4066 B/op	    1001 allocs/op
+BenchmarkTextGrid_Refresh-16                	    7248	     22931 ns/op	    4066 B/op	    1001 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/widget	11.950s
+FAIL

@@ -3,15 +3,15 @@ package container
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // Declare conformity with Widget interface.
-var _ fyne.Widget = (*DocTabs)(nil)
+var _ granio.Widget = (*DocTabs)(nil)
 
 // DocTabs container is used to display various pieces of content identified by tabs.
 // The tabs contain text and/or an icon and allow the user to switch between the content specified in each TabItem.
@@ -52,26 +52,26 @@ func (t *DocTabs) Append(item *TabItem) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *DocTabs) CreateRenderer() fyne.WidgetRenderer {
+func (t *DocTabs) CreateRenderer() granio.WidgetRenderer {
 	t.ExtendBaseWidget(t)
 	th := t.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	r := &docTabsRenderer{
 		baseTabsRenderer: baseTabsRenderer{
-			bar:       &fyne.Container{},
+			bar:       &granio.Container{},
 			divider:   canvas.NewRectangle(th.Color(theme.ColorNameShadow, v)),
 			indicator: canvas.NewRectangle(th.Color(theme.ColorNamePrimary, v)),
 		},
 		docTabs:  t,
-		scroller: NewScroll(&fyne.Container{}),
+		scroller: NewScroll(&granio.Container{}),
 	}
 	r.action = r.buildAllTabsButton()
 	r.create = r.buildCreateTabsButton()
 	r.tabs = t
 
 	r.box = NewHBox(r.create, r.action)
-	r.scroller.OnScrolled = func(fyne.Position) {
+	r.scroller.OnScrolled = func(granio.Position) {
 		r.updateIndicator(false)
 	}
 	r.updateAllTabs()
@@ -120,7 +120,7 @@ func (t *DocTabs) Hide() {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (t *DocTabs) MinSize() fyne.Size {
+func (t *DocTabs) MinSize() granio.Size {
 	t.ExtendBaseWidget(t)
 	return t.BaseWidget.MinSize()
 }
@@ -227,25 +227,25 @@ func (t *DocTabs) transitioning() bool {
 }
 
 // Declare conformity with WidgetRenderer interface.
-var _ fyne.WidgetRenderer = (*docTabsRenderer)(nil)
+var _ granio.WidgetRenderer = (*docTabsRenderer)(nil)
 
 type docTabsRenderer struct {
 	baseTabsRenderer
 	docTabs      *DocTabs
 	scroller     *Scroll
-	box          *fyne.Container
+	box          *granio.Container
 	create       *widget.Button
 	lastSelected int
 }
 
-func (r *docTabsRenderer) Layout(size fyne.Size) {
+func (r *docTabsRenderer) Layout(size granio.Size) {
 	r.updateAllTabs()
 	r.updateCreateTab()
 	r.updateTabs()
 	r.layout(r.docTabs, size)
 
 	// lay out buttons before updating indicator, which is relative to their position
-	buttons, _ := r.scroller.Content.(*fyne.Container)
+	buttons, _ := r.scroller.Content.(*granio.Container)
 	buttons.Layout.Layout(buttons.Objects, buttons.Size())
 	r.updateIndicator(r.docTabs.transitioning())
 
@@ -254,11 +254,11 @@ func (r *docTabsRenderer) Layout(size fyne.Size) {
 	}
 }
 
-func (r *docTabsRenderer) MinSize() fyne.Size {
+func (r *docTabsRenderer) MinSize() granio.Size {
 	return r.minSize(r.docTabs)
 }
 
-func (r *docTabsRenderer) Objects() []fyne.CanvasObject {
+func (r *docTabsRenderer) Objects() []granio.CanvasObject {
 	return r.objects(r.docTabs)
 }
 
@@ -281,11 +281,11 @@ func (r *docTabsRenderer) buildAllTabsButton() (all *widget.Button) {
 	all = &widget.Button{Importance: widget.LowImportance, OnTapped: func() {
 		// Show pop up containing all tabs
 
-		items := make([]*fyne.MenuItem, len(r.docTabs.Items))
+		items := make([]*granio.MenuItem, len(r.docTabs.Items))
 		for i := 0; i < len(r.docTabs.Items); i++ {
 			index := i // capture
 			// FIXME MenuItem doesn't support icons (#1752)
-			items[i] = fyne.NewMenuItem(r.docTabs.Items[i].Text, func() {
+			items[i] = granio.NewMenuItem(r.docTabs.Items[i].Text, func() {
 				r.docTabs.SelectIndex(index)
 				if r.docTabs.popUpMenu != nil {
 					r.docTabs.popUpMenu.Hide()
@@ -314,7 +314,7 @@ func (r *docTabsRenderer) buildCreateTabsButton() *widget.Button {
 	return create
 }
 
-func (r *docTabsRenderer) buildTabButtons(count int, buttons *fyne.Container) {
+func (r *docTabsRenderer) buildTabButtons(count int, buttons *granio.Container) {
 	buttons.Objects = nil
 
 	var iconPos buttonIconPosition
@@ -347,14 +347,14 @@ func (r *docTabsRenderer) buildTabButtons(count int, buttons *fyne.Container) {
 			button.importance = widget.MediumImportance
 		}
 		button.text = item.Text
-		button.textAlignment = fyne.TextAlignLeading
+		button.textAlignment = granio.TextAlignLeading
 		button.Refresh()
 		buttons.Objects = append(buttons.Objects, button)
 	}
 }
 
 func (r *docTabsRenderer) scrollToSelected() {
-	buttons, _ := r.scroller.Content.(*fyne.Container)
+	buttons, _ := r.scroller.Content.(*granio.Container)
 
 	// https://github.com/fyne-io/fyne/issues/3909
 	// very dirty temporary fix to this crash!
@@ -388,14 +388,14 @@ func (r *docTabsRenderer) updateIndicator(animate bool) {
 	th := r.docTabs.Theme()
 	if r.docTabs.current < 0 {
 		r.indicator.FillColor = color.Transparent
-		r.moveIndicator(fyne.NewPos(0, 0), fyne.NewSize(0, 0), th, animate)
+		r.moveIndicator(granio.NewPos(0, 0), granio.NewSize(0, 0), th, animate)
 		return
 	}
 
-	var selectedPos fyne.Position
-	var selectedSize fyne.Size
+	var selectedPos granio.Position
+	var selectedSize granio.Size
 
-	buttons := r.scroller.Content.(*fyne.Container).Objects
+	buttons := r.scroller.Content.(*granio.Container).Objects
 
 	if r.docTabs.current >= len(buttons) {
 		if a := r.action; a != nil {
@@ -419,24 +419,24 @@ func (r *docTabsRenderer) updateIndicator(animate bool) {
 	scrollOffset := r.scroller.Offset
 	scrollSize := r.scroller.Size()
 
-	var indicatorPos fyne.Position
-	var indicatorSize fyne.Size
+	var indicatorPos granio.Position
+	var indicatorSize granio.Size
 	pad := th.Size(theme.SizeNamePadding)
 	dividerWidth := th.Size(theme.SizeNameSeparatorThickness)
 
 	switch r.docTabs.location {
 	case TabLocationTop:
-		indicatorPos = fyne.NewPos(selectedPos.X-scrollOffset.X, r.bar.MinSize().Height)
-		indicatorSize = fyne.NewSize(min(selectedSize.Width, scrollSize.Width-indicatorPos.X), dividerWidth)
+		indicatorPos = granio.NewPos(selectedPos.X-scrollOffset.X, r.bar.MinSize().Height)
+		indicatorSize = granio.NewSize(min(selectedSize.Width, scrollSize.Width-indicatorPos.X), dividerWidth)
 	case TabLocationLeading:
-		indicatorPos = fyne.NewPos(r.bar.MinSize().Width, selectedPos.Y-scrollOffset.Y)
-		indicatorSize = fyne.NewSize(dividerWidth, min(selectedSize.Height, scrollSize.Height-indicatorPos.Y))
+		indicatorPos = granio.NewPos(r.bar.MinSize().Width, selectedPos.Y-scrollOffset.Y)
+		indicatorSize = granio.NewSize(dividerWidth, min(selectedSize.Height, scrollSize.Height-indicatorPos.Y))
 	case TabLocationBottom:
-		indicatorPos = fyne.NewPos(selectedPos.X-scrollOffset.X, r.bar.Position().Y-pad)
-		indicatorSize = fyne.NewSize(min(selectedSize.Width, scrollSize.Width-indicatorPos.X), dividerWidth)
+		indicatorPos = granio.NewPos(selectedPos.X-scrollOffset.X, r.bar.Position().Y-pad)
+		indicatorSize = granio.NewSize(min(selectedSize.Width, scrollSize.Width-indicatorPos.X), dividerWidth)
 	case TabLocationTrailing:
-		indicatorPos = fyne.NewPos(r.bar.Position().X-pad, selectedPos.Y-scrollOffset.Y)
-		indicatorSize = fyne.NewSize(dividerWidth, min(selectedSize.Height, scrollSize.Height-indicatorPos.Y))
+		indicatorPos = granio.NewPos(r.bar.Position().X-pad, selectedPos.Y-scrollOffset.Y)
+		indicatorSize = granio.NewSize(dividerWidth, min(selectedSize.Height, scrollSize.Height-indicatorPos.Y))
 	}
 
 	if indicatorPos.X < 0 {
@@ -475,7 +475,7 @@ func (r *docTabsRenderer) updateCreateTab() {
 
 func (r *docTabsRenderer) updateTabs() {
 	tabCount := len(r.docTabs.Items)
-	r.buildTabButtons(tabCount, r.scroller.Content.(*fyne.Container))
+	r.buildTabButtons(tabCount, r.scroller.Content.(*granio.Container))
 
 	// Set layout of tab bar containing tab buttons and overflow action
 	if r.docTabs.location == TabLocationLeading || r.docTabs.location == TabLocationTrailing {
@@ -486,6 +486,6 @@ func (r *docTabsRenderer) updateTabs() {
 		r.scroller.Direction = ScrollHorizontalOnly
 	}
 
-	r.bar.Objects = []fyne.CanvasObject{r.scroller, r.box}
+	r.bar.Objects = []granio.CanvasObject{r.scroller, r.box}
 	r.bar.Refresh()
 }

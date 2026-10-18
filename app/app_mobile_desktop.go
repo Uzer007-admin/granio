@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
 )
 
 func (a *fyneApp) OpenURL(url *url.URL) error {
@@ -25,11 +25,11 @@ func (a *fyneApp) OpenURL(url *url.URL) error {
 	}
 }
 
-func (a *fyneApp) SendNotification(_ *fyne.Notification) {
-	fyne.LogError("Notifications are not supported in the mobile simulator yet", nil)
+func (a *fyneApp) SendNotification(_ *granio.Notification) {
+	granio.LogError("Notifications are not supported in the mobile simulator yet", nil)
 }
 
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	return a.scheduleViaScheduler(n, when)
 }
 

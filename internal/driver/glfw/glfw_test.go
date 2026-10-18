@@ -10,20 +10,20 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func assertCanvasSize(t *testing.T, w *safeWindow, size fyne.Size) {
-	if runtime.GOOS == "linux" {
+func assertCanvasSize(t *testing.T, w *safeWindow, size granio.Size) {
+	if runtime.GOOS == "linux" || runtime.GOOS == "windows" {
 		// TODO: find the root cause for these problems and solve them without additional repaint
 		// fixes issues where the window does not have the correct size
-		waitForCanvasSize(t, w, size, false)
+		waitForCanvasSize(t, w, size, runtime.GOOS == "windows")
 	}
 	assert.Equal(t, size, w.Canvas().Size())
 }
 
-func ensureCanvasSize(t *testing.T, w *safeWindow, size fyne.Size) {
-	if runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
+func ensureCanvasSize(t *testing.T, w *safeWindow, size granio.Size) {
+	if runtime.GOOS == "linux" || runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
 		// TODO: find the root cause for these problems and solve them without additional repaint
 		// fixes issues where the window does not have the correct size
 		waitForCanvasSize(t, w, size, true)
@@ -41,7 +41,7 @@ func repaintWindow(w *safeWindow) {
 	time.Sleep(time.Millisecond * 150) // wait for the frames to be rendered... o
 }
 
-func waitForCanvasSize(t *testing.T, w *safeWindow, size fyne.Size, resizeIfNecessary bool) {
+func waitForCanvasSize(t *testing.T, w *safeWindow, size granio.Size, resizeIfNecessary bool) {
 	attempts := 0
 	for w.Canvas().Size() != size {
 		attempts++

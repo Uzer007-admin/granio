@@ -3,12 +3,14 @@ package app
 import (
 	"os"
 	"path/filepath"
+	"sync"
+	"sync/atomic"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // SettingsSchema is used for loading and storing global settings
@@ -28,7 +30,7 @@ func (*SettingsSchema) StoragePath() string {
 }
 
 // Declare conformity with Settings interface
-var _ fyne.Settings = (*settings)(nil)
+var _ granio.Settings = (*settings)(nil)
 
 const (
 	themeVariantNameDark  = "dark"
@@ -36,18 +38,24 @@ const (
 )
 
 type settings struct {
-	theme          fyne.Theme
+	theme          granio.Theme
 	themeSpecified bool
-	variant        fyne.ThemeVariant
+	variant        granio.ThemeVariant
 
-	listeners       []func(fyne.Settings)
-	changeListeners async.Map[chan fyne.Settings, bool]
-	watcher         any // normally *fsnotify.Watcher or nil - avoid import in this file
+	listeners         []func(granio.Settings)
+	changeListeners   async.Map[chan granio.Settings, bool]
+	watcher           any // normally *fsnotify.Watcher or nil - avoid import in this file
+	appearance        atomic.Pointer[granio.SystemAppearance]
+	appearanceQueued  atomic.Bool
+	appearanceMu      sync.Mutex
+	appearanceCancel  func()
+	appearanceDone    <-chan struct{}
+	appearanceStopped bool
 
 	schema SettingsSchema
 }
 
-func (*settings) BuildType() fyne.BuildType {
+func (*settings) BuildType() granio.BuildType {
 	return build.Mode
 }
 
@@ -59,34 +67,49 @@ func (s *settings) PrimaryColor() string {
 // Please make sure that you remember the original settings and call this again to revert the change.
 //
 // Deprecated: Use container.NewThemeOverride to change the appearance of part of your application.
-func (s *settings) OverrideTheme(t fyne.Theme, name string) {
+func (s *settings) OverrideTheme(t granio.Theme, name string) {
 	s.schema.PrimaryColor = name
 	s.theme = t
 }
 
-func (s *settings) Theme() fyne.Theme {
+func (s *settings) Theme() granio.Theme {
 	if s == nil {
-		fyne.LogError("Attempt to access current Fyne theme when no app is started", nil)
+		granio.LogError("Attempt to access current Fyne theme when no app is started", nil)
 		return nil
 	}
 	return s.theme
 }
 
-func (s *settings) SetTheme(t fyne.Theme) {
+func (s *settings) SetTheme(t granio.Theme) {
 	s.themeSpecified = true
 	s.applyTheme(t, s.variant)
 }
 
 func (s *settings) ShowAnimations() bool {
-	return !s.schema.DisableAnimations && !build.NoAnimations
+	appearance := s.SystemAppearance()
+	local := false
+	if policy, ok := s.theme.(granio.MotionTheme); ok {
+		local = policy.Motion(granio.MotionHover).Disabled
+	}
+	return !local && !s.schema.DisableAnimations && !build.NoAnimations && !(appearance.Available && appearance.ReducedMotion.Available && appearance.ReducedMotion.Value)
 }
 
-func (s *settings) ThemeVariant() fyne.ThemeVariant {
+func (s *settings) SystemAppearance() granio.SystemAppearance {
+	if snapshot := s.appearance.Load(); snapshot != nil {
+		return *snapshot
+	}
+	return granio.SystemAppearance{}
+}
+
+func (s *settings) ThemeVariant() granio.ThemeVariant {
 	return s.variant
 }
 
-func (s *settings) applyTheme(t fyne.Theme, variant fyne.ThemeVariant) {
+func (s *settings) applyTheme(t granio.Theme, variant granio.ThemeVariant) {
 	s.variant = variant
+	if themed, ok := t.(granio.SystemAppearanceTheme); ok {
+		t = themed.WithSystemAppearance(s.SystemAppearance())
+	}
 	s.theme = t
 	s.apply()
 }
@@ -98,16 +121,16 @@ func (s *settings) Scale() float32 {
 	return s.schema.Scale
 }
 
-func (s *settings) AddChangeListener(listener chan fyne.Settings) {
+func (s *settings) AddChangeListener(listener chan granio.Settings) {
 	s.changeListeners.Store(listener, true) // the boolean is just a dummy value here.
 }
 
-func (s *settings) AddListener(listener func(fyne.Settings)) {
+func (s *settings) AddListener(listener func(granio.Settings)) {
 	s.listeners = append(s.listeners, listener)
 }
 
 func (s *settings) apply() {
-	s.changeListeners.Range(func(listener chan fyne.Settings, _ bool) bool {
+	s.changeListeners.Range(func(listener chan granio.Settings, _ bool) bool {
 		select {
 		case listener <- s:
 		default:

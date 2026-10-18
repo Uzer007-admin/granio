@@ -12,13 +12,13 @@ import (
 	"github.com/go-text/typesetting/shaping"
 	"golang.org/x/image/math/fixed"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	paint "fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const (
@@ -27,7 +27,7 @@ const (
 	passwordChar = "•"
 )
 
-var _ fyne.Widget = (*RichText)(nil)
+var _ granio.Widget = (*RichText)(nil)
 
 // RichText represents the base element for a rich text-based widget.
 //
@@ -35,13 +35,13 @@ var _ fyne.Widget = (*RichText)(nil)
 type RichText struct {
 	BaseWidget
 	Segments []RichTextSegment
-	Wrapping fyne.TextWrap
-	Scroll   fyne.ScrollDirection
+	Wrapping granio.TextWrap
+	Scroll   granio.ScrollDirection
 
 	// The truncation mode of the text
 	//
 	// Since: 2.4
-	Truncation fyne.TextTruncation
+	Truncation granio.TextTruncation
 
 	// If set to true, Selectable indicates that this rich text should support select interaction
 	// to allow the text to be copied.
@@ -49,31 +49,31 @@ type RichText struct {
 	// Since: 2.9
 	Selectable bool
 
-	inset     fyne.Size     // this varies due to how the widget works (entry with scroller vs others with padding)
+	inset     granio.Size   // this varies due to how the widget works (entry with scroller vs others with padding)
 	rowBounds []rowBoundary // cache for boundaries
 	scr       *widget.Scroll
 	prop      *canvas.Rectangle // used to apply text minsize to the scroller `scr`, if present - TODO improve #2464
 
 	visualCache    map[RichTextSegment]visualCacheEntry
 	visualCacheGen int64
-	minCache       fyne.Size
+	minCache       granio.Size
 	geometryValid  bool // whether rowBounds carries up to date row positions
 	decor          []rowDecoration
 
 	// highlight is the selection whose rectangles are drawn over this content,
 	// above the panels that blocks sit on but below the text
 	highlight  *selectable
-	highlights []fyne.CanvasObject
+	highlights []granio.CanvasObject
 
-	selection *focusSelectable    // handles select interaction when Selectable is set
-	visuals   []fyne.CanvasObject // everything we draw, apart from selection highlights
-	lead      int                 // how many of the visuals come before those of the text
+	selection *focusSelectable      // handles select interaction when Selectable is set
+	visuals   []granio.CanvasObject // everything we draw, apart from selection highlights
+	lead      int                   // how many of the visuals come before those of the text
 }
 
 // rowDecoration is a graphical element drawn behind a run of rows, such as the
 // panel that sits under the lines of a code block.
 type rowDecoration struct {
-	obj      fyne.CanvasObject
+	obj      granio.CanvasObject
 	from, to int // the first and last row that this decoration covers
 }
 
@@ -83,12 +83,12 @@ type panelSegment interface {
 	RichTextSegment
 	RichTextBlock
 
-	panel() fyne.CanvasObject
+	panel() granio.CanvasObject
 }
 
 type visualCacheEntry struct {
 	gen int64
-	obj []fyne.CanvasObject
+	obj []granio.CanvasObject
 }
 
 // NewRichText returns a new RichText widget that renders the given text and segments.
@@ -113,11 +113,11 @@ func NewRichTextWithText(text string) *RichText {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *RichText) CreateRenderer() fyne.WidgetRenderer {
+func (t *RichText) CreateRenderer() granio.WidgetRenderer {
 	t.prop = canvas.NewRectangle(color.Transparent)
 	if t.scr == nil && t.Scroll != widget.ScrollNone {
-		t.scr = widget.NewScroll(&fyne.Container{Layout: layout.NewStackLayout(), Objects: []fyne.CanvasObject{
-			t.prop, &fyne.Container{},
+		t.scr = widget.NewScroll(&granio.Container{Layout: layout.NewStackLayout(), Objects: []granio.CanvasObject{
+			t.prop, &granio.Container{},
 		}})
 	}
 
@@ -131,7 +131,7 @@ func (t *RichText) CreateRenderer() fyne.WidgetRenderer {
 
 // MinSize calculates the minimum size of a rich text widget.
 // This is based on the contained text with a standard amount of padding added.
-func (t *RichText) MinSize() fyne.Size {
+func (t *RichText) MinSize() granio.Size {
 	// We return the minCache here which might be outdated if internal segments were changed.
 	// Users must call Refresh() to force an update after any changes to t.
 	t.ExtendBaseWidget(t)
@@ -145,7 +145,7 @@ func (t *RichText) MinSize() fyne.Size {
 
 // Refresh triggers a redraw of the rich text.
 func (t *RichText) Refresh() {
-	t.minCache = fyne.Size{}
+	t.minCache = granio.Size{}
 	t.updateRowBounds()
 	t.checkSelection()
 
@@ -163,14 +163,14 @@ func (t *RichText) Refresh() {
 
 // Resize sets a new size for the rich text.
 // This should only be called if it is not in a container with a layout manager.
-func (t *RichText) Resize(size fyne.Size) {
+func (t *RichText) Resize(size granio.Size) {
 	if size == t.Size() {
 		return
 	}
 
 	t.size = size
 
-	skipResize := !t.minCache.IsZero() && size.Width >= t.minCache.Width && size.Height >= t.minCache.Height && t.Wrapping == fyne.TextWrapOff && t.Truncation == fyne.TextTruncateOff
+	skipResize := !t.minCache.IsZero() && size.Width >= t.minCache.Width && size.Height >= t.minCache.Height && t.Wrapping == granio.TextWrapOff && t.Truncation == granio.TextTruncateOff
 
 	if skipResize {
 		if len(t.Segments) < 2 { // we can simplify :)
@@ -338,13 +338,13 @@ func (t *RichText) contentIs(text string) bool {
 }
 
 // charMinSize returns the average char size to use for internal computation
-func (*RichText) charMinSize(concealed bool, style fyne.TextStyle, textSize float32) fyne.Size {
+func (*RichText) charMinSize(concealed bool, style granio.TextStyle, textSize float32) granio.Size {
 	defaultChar := averageChar
 	if concealed {
 		defaultChar = passwordChar
 	}
 
-	return fyne.MeasureText(defaultChar, textSize, style)
+	return granio.MeasureText(defaultChar, textSize, style)
 }
 
 // textHolder is content that an editor can add text to and remove text from.
@@ -457,7 +457,7 @@ func segmentIn(seg RichTextSegment, list []RichTextSegment) bool {
 
 // cachedSegmentVisual returns a cached segment visual representation.
 // The offset value is > 0 if the segment had been split and so we need multiple objects.
-func (t *RichText) cachedSegmentVisual(seg RichTextSegment, offset int) fyne.CanvasObject {
+func (t *RichText) cachedSegmentVisual(seg RichTextSegment, offset int) granio.CanvasObject {
 	if t.visualCache == nil {
 		t.visualCache = make(map[RichTextSegment]visualCacheEntry)
 	}
@@ -592,7 +592,7 @@ func (t *RichText) len() int {
 }
 
 // lineSizeToColumn returns the rendered size for the line specified by row up to the col position
-func (t *RichText) lineSizeToColumn(col, row int, textSize, innerPad float32) fyne.Size {
+func (t *RichText) lineSizeToColumn(col, row int, textSize, innerPad float32) granio.Size {
 	if row < 0 {
 		row = 0
 	}
@@ -600,16 +600,16 @@ func (t *RichText) lineSizeToColumn(col, row int, textSize, innerPad float32) fy
 		col = 0
 	}
 	bound := t.rowBoundary(row)
-	total := fyne.NewSize(0, 0)
+	total := granio.NewSize(0, 0)
 	counted := 0
 	last := false
 	if bound == nil {
-		return t.charMinSize(false, fyne.TextStyle{}, textSize)
+		return t.charMinSize(false, granio.TextStyle{}, textSize)
 	}
 
-	leftPad, _ := t.rowPaddingAndAlign(*bound, t.Theme().Size(theme.SizeNameLineSpacing), fyne.TextAlignLeading)
+	leftPad, _ := t.rowPaddingAndAlign(*bound, t.Theme().Size(theme.SizeNameLineSpacing), granio.TextAlignLeading)
 	for i, seg := range bound.segments {
-		var size fyne.Size
+		var size granio.Size
 		measureText := rowSegmentRunes(bound, i)
 		partial := false
 		if col < counted+len(measureText) {
@@ -624,15 +624,15 @@ func (t *RichText) lineSizeToColumn(col, row int, textSize, innerPad float32) fy
 				measureText = []rune(strings.Repeat(passwordChar, len(measureText)))
 			}
 
-			size, _ = fyne.CurrentApp().Driver().RenderedTextSize(string(measureText), text.size(), text.Style.TextStyle, nil)
+			size = text.measure(string(measureText))
 		} else if link, ok := seg.(*HyperlinkSegment); ok {
 			sizeName := link.SizeName
 			if sizeName == "" {
 				sizeName = theme.SizeNameText
 			}
-			size, _ = fyne.CurrentApp().Driver().RenderedTextSize(string(measureText), t.Theme().Size(sizeName), link.TextStyle, nil)
+			size, _ = granio.CurrentApp().Driver().RenderedTextSize(string(measureText), t.Theme().Size(sizeName), link.TextStyle, nil)
 		} else if partial {
-			size = fyne.Size{} // the cursor is before this object, so it adds no width
+			size = granio.Size{} // the cursor is before this object, so it adds no width
 		} else {
 			size = t.cachedSegmentVisual(seg, 0).MinSize()
 		}
@@ -643,7 +643,7 @@ func (t *RichText) lineSizeToColumn(col, row int, textSize, innerPad float32) fy
 			break
 		}
 	}
-	return total.Add(fyne.NewSize(innerPad-t.inset.Width+leftPad, 0))
+	return total.Add(granio.NewSize(innerPad-t.inset.Width+leftPad, 0))
 }
 
 // rowAlignOffset returns the horizontal offset of the text in the specified row
@@ -653,8 +653,8 @@ func (t *RichText) rowAlignOffset(row int, textSize, innerPad float32) float32 {
 	if bound == nil {
 		return 0
 	}
-	_, align := t.rowPaddingAndAlign(*bound, 0, fyne.TextAlignLeading)
-	if align == fyne.TextAlignLeading {
+	_, align := t.rowPaddingAndAlign(*bound, 0, granio.TextAlignLeading)
+	if align == granio.TextAlignLeading {
 		return 0
 	}
 
@@ -662,9 +662,9 @@ func (t *RichText) rowAlignOffset(row int, textSize, innerPad float32) float32 {
 	lineWidth := t.Size().Width - xInset*2
 	textWidth := t.lineSizeToColumn(t.rowLength(row), row, textSize, innerPad).Width - xInset
 	if text, ok := bound.segments[len(bound.segments)-1].(*TextSegment); ok && bound.ellipsis {
-		textWidth += fyne.MeasureText(ellipsisChar, text.size(), text.Style.TextStyle).Width
+		textWidth += text.measure(ellipsisChar).Width
 	}
-	if align == fyne.TextAlignCenter {
+	if align == granio.TextAlignCenter {
 		return (lineWidth - textWidth) / 2
 	}
 	return lineWidth - textWidth
@@ -795,30 +795,27 @@ func (t *RichText) updateRowGeometry() {
 			var segHeight float32
 			switch s := seg.(type) {
 			case *TextSegment:
-				segHeight = fyne.MeasureText(string(rowSegmentRunes(bound, j)), s.size(), s.Style.TextStyle).Height
+				segHeight = s.measure(string(rowSegmentRunes(bound, j))).Height
 			case *HyperlinkSegment:
 				sizeName := s.SizeName
 				if sizeName == "" {
 					sizeName = theme.SizeNameText
 				}
-				segHeight = fyne.MeasureText(string(rowSegmentRunes(bound, j)), th.Size(sizeName), s.TextStyle).Height
+				segHeight = granio.MeasureText(string(rowSegmentRunes(bound, j)), th.Size(sizeName), s.TextStyle).Height
 			default:
 				segHeight = t.cachedSegmentVisual(seg, 0).MinSize().Height
 			}
 			height = max(height, segHeight)
 		}
 		if height == 0 {
-			height = fyne.MeasureText(averageChar, textSize, fyne.TextStyle{}).Height
+			height = granio.MeasureText(averageChar, textSize, granio.TextStyle{}).Height
 		}
 
 		bound.yPos = yPos
 		bound.height = height
 		yPos += height
 
-		lastSeg := rowEndSegment(bound)
-		if !lastSeg.Inline() && i < len(t.rowBounds)-1 && t.rowBounds[i+1].segments[0] != lastSeg {
-			yPos += lineSpacing
-		}
+		yPos += t.rowSpacing(i, lineSpacing)
 	}
 }
 
@@ -833,12 +830,19 @@ func (t *RichText) uniformRowGeometry() bool {
 		return false
 	}
 
-	height := fyne.MeasureText(averageChar, text.size(), text.Style.TextStyle).Height
+	height := text.measure(averageChar).Height
+	spacing := float32(0)
+	if text.Style.TextRole != granio.TextRoleDefault {
+		spacing = text.typography().LineSpacing
+	}
 	yPos := float32(0)
 	for i := range t.rowBounds {
 		t.rowBounds[i].yPos = yPos
 		t.rowBounds[i].height = height
 		yPos += height
+		if i+1 < len(t.rowBounds) {
+			yPos += spacing
+		}
 	}
 	return true
 }
@@ -890,14 +894,14 @@ func (t *RichText) rowAt(y float32) int {
 func (t *RichText) rowGeometry(row int) (y, height float32) {
 	if row < 0 || row >= t.rows() {
 		th := t.Theme()
-		return 0, fyne.MeasureText(averageChar, th.Size(theme.SizeNameText), fyne.TextStyle{}).Height
+		return 0, granio.MeasureText(averageChar, th.Size(theme.SizeNameText), granio.TextStyle{}).Height
 	}
 	t.ensureRowGeometry()
 
 	bound := &t.rowBounds[row]
 	if bound.height == 0 {
 		th := t.Theme()
-		return bound.yPos, fyne.MeasureText(averageChar, th.Size(theme.SizeNameText), fyne.TextStyle{}).Height
+		return bound.yPos, granio.MeasureText(averageChar, th.Size(theme.SizeNameText), granio.TextStyle{}).Height
 	}
 	return bound.yPos, bound.height
 }
@@ -930,7 +934,7 @@ type RichTextBlock interface {
 
 // setHighlights records the rectangles that a selection wants drawn over this
 // content.
-func (t *RichText) setHighlights(sel *selectable, objs []fyne.CanvasObject) {
+func (t *RichText) setHighlights(sel *selectable, objs []granio.CanvasObject) {
 	t.highlight, t.highlights = sel, objs
 
 	t.updateScrollContent() // scrolled content is not asked for its objects, so slot them in now
@@ -940,7 +944,7 @@ func (t *RichText) setHighlights(sel *selectable, objs []fyne.CanvasObject) {
 // layeredVisuals returns everything that this rich text draws, from the back to
 // the front. Any selection highlights are slotted in above the panels that blocks
 // sit on and below the text itself.
-func (t *RichText) layeredVisuals() []fyne.CanvasObject {
+func (t *RichText) layeredVisuals() []granio.CanvasObject {
 	objs := t.visuals
 	if len(t.decor) == 0 {
 		return objs
@@ -952,7 +956,7 @@ func (t *RichText) layeredVisuals() []fyne.CanvasObject {
 	}
 
 	at := min(t.lead, len(objs))
-	out := make([]fyne.CanvasObject, 0, len(objs)+len(highlights))
+	out := make([]granio.CanvasObject, 0, len(objs)+len(highlights))
 	out = append(out, objs[:at]...)
 	out = append(out, highlights...)
 	return append(out, objs[at:]...)
@@ -1005,7 +1009,7 @@ func (t *RichText) checkSelection() {
 }
 
 // highlightObjects returns the selection rectangles to draw over this content.
-func (t *RichText) highlightObjects() []fyne.CanvasObject {
+func (t *RichText) highlightObjects() []granio.CanvasObject {
 	if t.highlight == nil || !t.highlight.selecting {
 		return nil
 	}
@@ -1015,7 +1019,7 @@ func (t *RichText) highlightObjects() []fyne.CanvasObject {
 
 // updateDecorations prepares the graphical elements drawn behind rows. It returns the
 // objects to draw, which are added before the text so that they appear behind it.
-func (t *RichText) updateDecorations() []fyne.CanvasObject {
+func (t *RichText) updateDecorations() []granio.CanvasObject {
 	var decor []rowDecoration
 	var current panelSegment
 	for row := range t.rowBounds {
@@ -1034,7 +1038,7 @@ func (t *RichText) updateDecorations() []fyne.CanvasObject {
 		decor = append(decor, rowDecoration{obj: block.panel(), from: row, to: row})
 	}
 
-	objs := make([]fyne.CanvasObject, len(decor))
+	objs := make([]granio.CanvasObject, len(decor))
 	for i, d := range decor {
 		objs[i] = d.obj
 		d.obj.Refresh()
@@ -1052,11 +1056,11 @@ type textRenderer struct {
 // codeInlineText returns the text inside an inline-code container, identified by
 // its codeInlineLayout, or a bare *canvas.Text as-is. It returns false for any
 // other object.
-func codeInlineText(obj fyne.CanvasObject) (*canvas.Text, bool) {
+func codeInlineText(obj granio.CanvasObject) (*canvas.Text, bool) {
 	switch o := obj.(type) {
 	case *canvas.Text:
 		return o, true
-	case *fyne.Container:
+	case *granio.Container:
 		if _, ok := o.Layout.(*codeInlineLayout); ok {
 			t, _ := o.Objects[1].(*canvas.Text)
 			return t, true
@@ -1067,7 +1071,7 @@ func codeInlineText(obj fyne.CanvasObject) (*canvas.Text, bool) {
 
 // textObjects returns the visuals of the rendered segments, leaving out the
 // decorations that are drawn behind them.
-func (r *textRenderer) textObjects() []fyne.CanvasObject {
+func (r *textRenderer) textObjects() []granio.CanvasObject {
 	if r.obj.lead > len(r.obj.visuals) {
 		return nil
 	}
@@ -1075,7 +1079,7 @@ func (r *textRenderer) textObjects() []fyne.CanvasObject {
 }
 
 // Objects returns the visuals of this rich text, or the scroller that holds them.
-func (r *textRenderer) Objects() []fyne.CanvasObject {
+func (r *textRenderer) Objects() []granio.CanvasObject {
 	if r.obj.scr != nil {
 		return r.BaseRenderer.Objects()
 	}
@@ -1083,7 +1087,7 @@ func (r *textRenderer) Objects() []fyne.CanvasObject {
 	return r.obj.layeredVisuals()
 }
 
-func (r *textRenderer) Layout(size fyne.Size) {
+func (r *textRenderer) Layout(size granio.Size) {
 	th := r.obj.Theme()
 	bounds := r.obj.rowBounds
 	if r.obj.scr != nil {
@@ -1106,8 +1110,8 @@ func (r *textRenderer) Layout(size fyne.Size) {
 	left := xInset
 	yPos := innerPadding - r.obj.inset.Height
 	lineWidth := size.Width - left*2
-	var rowItems []fyne.CanvasObject
-	rowAlign := fyne.TextAlignLeading
+	var rowItems []granio.CanvasObject
+	rowAlign := granio.TextAlignLeading
 	i := 0
 	for row, bound := range bounds {
 		leftPad, align := r.obj.rowPaddingAndAlign(bound, lineSpacing, rowAlign)
@@ -1122,8 +1126,8 @@ func (r *textRenderer) Layout(size fyne.Size) {
 			obj := objs[i]
 			i++
 			if segI == 0 && rowStartsWithSpentText(&bound) {
-				obj.Move(fyne.NewPos(left+leftPad, yPos))
-				obj.Resize(fyne.Size{})
+				obj.Move(granio.NewPos(left+leftPad, yPos))
+				obj.Resize(granio.Size{})
 				continue
 			}
 			_, isText := codeInlineText(obj) // code-inline containers are text-like, not blocks
@@ -1135,8 +1139,8 @@ func (r *textRenderer) Layout(size fyne.Size) {
 				}
 				height := obj.MinSize().Height
 
-				obj.Move(fyne.NewPos(left+leftPad, yPos))
-				obj.Resize(fyne.NewSize(lineWidth-leftPad, height))
+				obj.Move(granio.NewPos(left+leftPad, yPos))
+				obj.Resize(granio.NewSize(lineWidth-leftPad, height))
 				yPos += height
 				left = xInset
 				continue
@@ -1155,10 +1159,7 @@ func (r *textRenderer) Layout(size fyne.Size) {
 		bounds[row].yPos = rowY - (innerPadding - r.obj.inset.Height)
 		bounds[row].height = yPos - rowY
 
-		lastSeg := rowEndSegment(&bound)
-		if !lastSeg.Inline() && row < len(bounds)-1 && bounds[row+1].segments[0] != lastSeg { // ignore wrapped lines etc
-			yPos += lineSpacing
-		}
+		yPos += r.obj.rowSpacing(row, lineSpacing)
 	}
 	r.obj.geometryValid = true
 
@@ -1179,17 +1180,17 @@ func (r *textRenderer) layoutDecorations(bounds []rowBoundary, xInset, lineWidth
 		}
 
 		top, bottom := bounds[d.from], bounds[d.to]
-		leftPad, _ := r.obj.rowPaddingAndAlign(top, lineSpacing, fyne.TextAlignLeading)
+		leftPad, _ := r.obj.rowPaddingAndAlign(top, lineSpacing, granio.TextAlignLeading)
 		leftPad -= inset // the panel surrounds the text rather than starting at it
 
-		d.obj.Move(fyne.NewPos(xInset+leftPad, top.yPos+yOffset-lineSpacing/2))
-		d.obj.Resize(fyne.NewSize(lineWidth-leftPad, bottom.yPos+bottom.height-top.yPos+lineSpacing))
+		d.obj.Move(granio.NewPos(xInset+leftPad, top.yPos+yOffset-lineSpacing/2))
+		d.obj.Resize(granio.NewSize(lineWidth-leftPad, bottom.yPos+bottom.height-top.yPos+lineSpacing))
 	}
 }
 
 // MinSize calculates the minimum size of a rich text widget.
 // This is based on the contained text with a standard amount of padding added.
-func (r *textRenderer) MinSize() fyne.Size {
+func (r *textRenderer) MinSize() granio.Size {
 	th := r.obj.Theme()
 	textSize := th.Size(theme.SizeNameText)
 	innerPad := th.Size(theme.SizeNameInnerPadding)
@@ -1200,24 +1201,24 @@ func (r *textRenderer) MinSize() fyne.Size {
 	scroll := r.obj.Scroll
 	objs := r.textObjects()
 
-	charMinSize := r.obj.charMinSize(false, fyne.TextStyle{}, textSize)
+	charMinSize := r.obj.charMinSize(false, granio.TextStyle{}, textSize)
 	minSize := r.calculateMin(bounds, wrap, objs, charMinSize, th)
 	if r.obj.scr != nil {
 		r.obj.prop.SetMinSize(minSize)
 	}
 
-	if trunc != fyne.TextTruncateOff && r.obj.Scroll == widget.ScrollNone {
+	if trunc != granio.TextTruncateOff && r.obj.Scroll == widget.ScrollNone {
 		minBounds := charMinSize
-		if wrap == fyne.TextWrapOff {
+		if wrap == granio.TextWrapOff {
 			minBounds.Height = minSize.Height
 		} else {
-			minBounds = minBounds.Add(fyne.NewSquareSize(innerPad * 2).Subtract(r.obj.inset).Subtract(r.obj.inset))
+			minBounds = minBounds.Add(granio.NewSquareSize(innerPad * 2).Subtract(r.obj.inset).Subtract(r.obj.inset))
 		}
-		if trunc == fyne.TextTruncateClip {
+		if trunc == granio.TextTruncateClip {
 			return minBounds
 		}
-		if trunc == fyne.TextTruncateEllipsis {
-			ellipsisSize := fyne.MeasureText(ellipsisChar, th.Size(theme.SizeNameText), fyne.TextStyle{})
+		if trunc == granio.TextTruncateEllipsis {
+			ellipsisSize := granio.MeasureText(ellipsisChar, th.Size(theme.SizeNameText), granio.TextStyle{})
 			return minBounds.AddWidthHeight(ellipsisSize.Width, 0)
 		}
 	}
@@ -1225,19 +1226,19 @@ func (r *textRenderer) MinSize() fyne.Size {
 	const minScrolledSize = 32
 	switch scroll {
 	case widget.ScrollBoth:
-		return fyne.NewSize(minScrolledSize, minScrolledSize)
+		return granio.NewSize(minScrolledSize, minScrolledSize)
 	case widget.ScrollHorizontalOnly:
-		return fyne.NewSize(minScrolledSize, minSize.Height)
+		return granio.NewSize(minScrolledSize, minSize.Height)
 	case widget.ScrollVerticalOnly:
-		return fyne.NewSize(minSize.Width, minScrolledSize)
+		return granio.NewSize(minSize.Width, minScrolledSize)
 	default:
 		return minSize
 	}
 }
 
-func (r *textRenderer) calculateMin(bounds []rowBoundary, wrap fyne.TextWrap, objs []fyne.CanvasObject,
-	charMinSize fyne.Size, th fyne.Theme,
-) fyne.Size {
+func (r *textRenderer) calculateMin(bounds []rowBoundary, wrap granio.TextWrap, objs []granio.CanvasObject,
+	charMinSize granio.Size, th granio.Theme,
+) granio.Size {
 	height := float32(0)
 	width := float32(0)
 	rowHeight := float32(0)
@@ -1276,31 +1277,28 @@ func (r *textRenderer) calculateMin(bounds []rowBoundary, wrap fyne.TextWrap, ob
 			rowWidth += minSize.Width
 		}
 
-		if wrap == fyne.TextWrapOff && trunc == fyne.TextTruncateOff {
+		if wrap == granio.TextWrapOff && trunc == granio.TextTruncateOff {
 			width = max(width, rowWidth)
 		}
 		height += rowHeight
 		rowHeight = 0
 		rowWidth = 0
 
-		lastSeg := rowEndSegment(&bound)
-		if !lastSeg.Inline() && row < len(bounds)-1 && bounds[row+1].segments[0] != lastSeg { // ignore wrapped lines etc
-			height += lineSpacing
-		}
+		height += r.obj.rowSpacing(row, lineSpacing)
 	}
 
 	if height == 0 {
 		height = charMinSize.Height
 	}
-	return fyne.NewSize(width, height).
-		Add(fyne.NewSquareSize(innerPad * 2).Subtract(r.obj.inset).Subtract(r.obj.inset))
+	return granio.NewSize(width, height).
+		Add(granio.NewSquareSize(innerPad * 2).Subtract(r.obj.inset).Subtract(r.obj.inset))
 }
 
 func (r *textRenderer) Refresh() {
 	bounds := r.obj.rowBounds
 	scroll := r.obj.Scroll
 
-	var objs []fyne.CanvasObject
+	var objs []granio.CanvasObject
 	sel := r.obj.selectionWidget()
 	if sel != nil {
 		objs = append(objs, sel) // behind the content, so that hyperlinks etc can still be tapped
@@ -1350,7 +1348,7 @@ func (r *textRenderer) Refresh() {
 				to, _ := codeInlineText(obj)
 				to.Text = txt
 			} else if isHyperlink {
-				hl, _ := obj.(*fyne.Container).Objects[0].(*Hyperlink)
+				hl, _ := obj.(*granio.Container).Objects[0].(*Hyperlink)
 				hl.Text = txt
 				r.associateSiblings(hl, hlSeg, reuse)
 				hl.Refresh()
@@ -1363,11 +1361,11 @@ func (r *textRenderer) Refresh() {
 	if r.obj.scr != nil {
 		if inner := scrollInnerContainer(r.obj.scr); inner != nil {
 			if inner.Objects == nil {
-				r.obj.scr.Content = &fyne.Container{Layout: layout.NewStackLayout(), Objects: []fyne.CanvasObject{
-					r.obj.prop, &fyne.Container{Objects: r.obj.layeredVisuals()},
+				r.obj.scr.Content = &granio.Container{Layout: layout.NewStackLayout(), Objects: []granio.CanvasObject{
+					r.obj.prop, &granio.Container{Objects: r.obj.layeredVisuals()},
 				}}
 				r.obj.scr.Direction = scroll
-				r.SetObjects([]fyne.CanvasObject{r.obj.scr})
+				r.SetObjects([]granio.CanvasObject{r.obj.scr})
 			} else {
 				inner.Objects = r.obj.layeredVisuals()
 			}
@@ -1389,13 +1387,13 @@ func (r *textRenderer) Refresh() {
 func (r *textRenderer) associateSiblings(hl *Hyperlink, hlSeg *HyperlinkSegment, reuse int) {
 	hl.siblings = hl.siblings[:0]
 	for prev := 0; prev < reuse; prev++ {
-		prevHL, _ := r.obj.cachedSegmentVisual(hlSeg, prev).(*fyne.Container).Objects[0].(*Hyperlink)
+		prevHL, _ := r.obj.cachedSegmentVisual(hlSeg, prev).(*granio.Container).Objects[0].(*Hyperlink)
 		prevHL.siblings = append(prevHL.siblings, hl)
 		hl.siblings = append(hl.siblings, prevHL)
 	}
 }
 
-func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign, xPos, yPos, lineWidth float32) (x, height float32) {
+func (r *textRenderer) layoutRow(texts []granio.CanvasObject, align granio.TextAlign, xPos, yPos, lineWidth float32) (x, height float32) {
 	initialX := xPos
 	if len(texts) == 1 {
 		minSize := texts[0].MinSize()
@@ -1403,16 +1401,16 @@ func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign
 			texts[0].Resize(minSize)
 			xPad := float32(0)
 			switch text.Alignment {
-			case fyne.TextAlignLeading:
-			case fyne.TextAlignTrailing:
+			case granio.TextAlignLeading:
+			case granio.TextAlignTrailing:
 				xPad = lineWidth - minSize.Width
-			case fyne.TextAlignCenter:
+			case granio.TextAlignCenter:
 				xPad = (lineWidth - minSize.Width) / 2
 			}
-			texts[0].Move(fyne.NewPos(xPos+xPad, yPos))
+			texts[0].Move(granio.NewPos(xPos+xPad, yPos))
 		} else {
-			texts[0].Resize(fyne.NewSize(lineWidth, minSize.Height))
-			texts[0].Move(fyne.NewPos(xPos, yPos))
+			texts[0].Resize(granio.NewSize(lineWidth, minSize.Height))
+			texts[0].Move(granio.NewPos(xPos, yPos))
 		}
 		return minSize.Width, minSize.Height
 	}
@@ -1421,9 +1419,9 @@ func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign
 	realign := false
 	baselines := make([]float32, len(texts))
 
-	driver := fyne.CurrentApp().Driver()
+	driver := granio.CurrentApp().Driver()
 	for i, text := range texts {
-		var size fyne.Size
+		var size granio.Size
 		if txt, ok := codeInlineText(text); ok { // bare text or an inline-code container
 			s, base := driver.RenderedTextSize(txt.Text, txt.TextSize, txt.TextStyle, txt.FontSource)
 			if base > tallestBaseline {
@@ -1434,7 +1432,7 @@ func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign
 			}
 			size = s
 			baselines[i] = base
-		} else if c, ok := text.(*fyne.Container); ok {
+		} else if c, ok := text.(*granio.Container); ok {
 			wid := c.Objects[0]
 			if link, ok := wid.(*Hyperlink); ok {
 				sizeName := link.SizeName
@@ -1457,7 +1455,7 @@ func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign
 			size = text.MinSize()
 		}
 		text.Resize(size)
-		text.Move(fyne.NewPos(xPos, yPos))
+		text.Move(granio.NewPos(xPos, yPos))
 
 		xPos += size.Width
 		if height == 0 {
@@ -1471,39 +1469,39 @@ func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign
 	if realign {
 		for i, text := range texts {
 			delta := tallestBaseline - baselines[i]
-			text.Move(fyne.NewPos(text.Position().X, yPos+delta))
+			text.Move(granio.NewPos(text.Position().X, yPos+delta))
 		}
 	}
 
 	innerPadding := r.obj.Theme().Size(theme.SizeNameInnerPadding)
 	spare := lineWidth - xPos
 	switch align {
-	case fyne.TextAlignTrailing:
+	case granio.TextAlignTrailing:
 		spare += innerPadding
 		first := texts[0]
-		first.Resize(fyne.NewSize(first.Size().Width+spare, height))
-		setAlign(first, fyne.TextAlignTrailing)
+		first.Resize(granio.NewSize(first.Size().Width+spare, height))
+		setAlign(first, granio.TextAlignTrailing)
 
 		for _, text := range texts[1:] {
-			text.Move(text.Position().Add(fyne.NewPos(spare, 0)))
+			text.Move(text.Position().Add(granio.NewPos(spare, 0)))
 		}
-	case fyne.TextAlignCenter:
+	case granio.TextAlignCenter:
 		spare += innerPadding
 		pad := spare / 2
 		first := texts[0]
-		first.Resize(fyne.NewSize(first.Size().Width+pad, height))
-		setAlign(first, fyne.TextAlignTrailing)
+		first.Resize(granio.NewSize(first.Size().Width+pad, height))
+		setAlign(first, granio.TextAlignTrailing)
 		last := texts[len(texts)-1]
-		last.Resize(fyne.NewSize(last.Size().Width+pad, height))
-		setAlign(last, fyne.TextAlignLeading)
+		last.Resize(granio.NewSize(last.Size().Width+pad, height))
+		setAlign(last, granio.TextAlignLeading)
 
 		for _, text := range texts[1:] {
-			text.Move(text.Position().Add(fyne.NewPos(pad, 0)))
+			text.Move(text.Position().Add(granio.NewPos(pad, 0)))
 		}
 	default:
 		last := texts[len(texts)-1]
-		last.Resize(fyne.NewSize(last.Size().Width+spare, height))
-		setAlign(last, fyne.TextAlignLeading)
+		last.Resize(granio.NewSize(last.Size().Width+spare, height))
+		setAlign(last, granio.TextAlignLeading)
 	}
 
 	return xPos - initialX, height
@@ -1511,10 +1509,10 @@ func (r *textRenderer) layoutRow(texts []fyne.CanvasObject, align fyne.TextAlign
 
 // scrollInnerContainer returns the container holding the visual objects of a RichText
 // scroll content, or nil if the scroll structure is not the expected one.
-func scrollInnerContainer(o *widget.Scroll) *fyne.Container {
-	if c, ok := o.Content.(*fyne.Container); ok {
+func scrollInnerContainer(o *widget.Scroll) *granio.Container {
+	if c, ok := o.Content.(*granio.Container); ok {
 		if len(c.Objects) == 2 {
-			if inner, ok := c.Objects[1].(*fyne.Container); ok {
+			if inner, ok := c.Objects[1].(*granio.Container); ok {
 				return inner
 			}
 		}
@@ -1526,14 +1524,20 @@ func scrollInnerContainer(o *widget.Scroll) *fyne.Container {
 // character width, and a function that calculates the (pixel) size of a given
 // rune slice.
 // howManyRunesFit returns how many runes fit into the available width.
-func howManyRunesFit(runes []rune, availableWidth float32, charWidth float32, measurer func([]rune) fyne.Size) int {
+func howManyRunesFit(runes []rune, availableWidth float32, charWidth float32, measurer func([]rune) granio.Size) int {
 	if availableWidth <= 0 {
 		return 0
 	}
 	length := len(runes)
+	if length == 0 {
+		return 0
+	}
 	fits := 0
 	tooLong := length + 1
 	estimation := int(availableWidth / charWidth)
+	if charWidth <= 0 {
+		estimation = length
+	}
 	if estimation > length {
 		estimation = length
 	}
@@ -1564,12 +1568,12 @@ func concealed(seg RichTextSegment) bool {
 	return false
 }
 
-func ellipsisPriorBound(bounds []rowBoundary, trunc fyne.TextTruncation, width float32, charWidth float32, measurer func([]rune) fyne.Size) []rowBoundary {
+func ellipsisPriorBound(bounds []rowBoundary, trunc granio.TextTruncation, width float32, charWidth float32, measurer func([]rune) granio.Size) []rowBoundary {
 	if len(bounds) == 0 {
 		return bounds
 	}
 	bounds[len(bounds)-1].truncated = true
-	if trunc != fyne.TextTruncateEllipsis {
+	if trunc != granio.TextTruncateEllipsis {
 		return bounds
 	}
 
@@ -1610,35 +1614,36 @@ func float32ToFixed266(f float32) fixed.Int26_6 {
 // measure text size.
 // It will return a slice containing the boundary metadata of each line with the given wrapping applied and the
 // total height required to render the boundaries at the given width/height constraints
-func lineBounds(t *RichText, seg RichTextSegment, firstWidth float32, maxSize fyne.Size, measurer func([]rune) fyne.Size) ([]rowBoundary, float32) {
+func lineBounds(t *RichText, seg RichTextSegment, firstWidth float32, maxSize granio.Size, measurer func([]rune) granio.Size) ([]rowBoundary, float32) {
 	wrap := t.Wrapping
 	trunc := t.Truncation
 	lines := splitLines(seg)
 
-	if wrap == fyne.TextWrap(fyne.TextTruncateClip) {
-		if trunc == fyne.TextTruncateOff {
-			trunc = fyne.TextTruncateClip
+	if wrap == granio.TextWrap(granio.TextTruncateClip) {
+		if trunc == granio.TextTruncateOff {
+			trunc = granio.TextTruncateClip
 		}
-		wrap = fyne.TextWrapOff
+		wrap = granio.TextWrapOff
 	}
 
-	if maxSize.Width <= 0 || wrap == fyne.TextWrapOff && trunc == fyne.TextTruncateOff {
+	if maxSize.Width <= 0 || wrap == granio.TextWrapOff && trunc == granio.TextTruncateOff {
 		return lines, 0 // don't bother returning a calculated height, our MinSize is going to cover it
 	}
 
 	measureWidth := float32(math.Min(float64(firstWidth), float64(maxSize.Width)))
 
 	switch wrap {
-	case fyne.TextWrapBreak:
+	case granio.TextWrapBreak:
 		return wrapBreakLines(seg, trunc, measureWidth, maxSize, measurer, lines)
-	case fyne.TextWrapWord:
+	case granio.TextWrapWord:
 		return wrapWordLines(seg, trunc, measureWidth, maxSize, measurer, lines)
 	default:
 		return truncateLines(t, seg, trunc, measureWidth, maxSize.Width, measurer, lines)
 	}
 }
 
-func wrapBreakLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth float32, maxSize fyne.Size, measurer func([]rune) fyne.Size, lines []rowBoundary) ([]rowBoundary, float32) {
+func wrapBreakLines(seg RichTextSegment, trunc granio.TextTruncation, measureWidth float32, maxSize granio.Size, measurer func([]rune) granio.Size, lines []rowBoundary) ([]rowBoundary, float32) {
+	segments := []RichTextSegment{seg}
 	text := []rune(seg.Textual())
 	firstWidth := measureWidth
 	charSize := measurer([]rune("z"))
@@ -1657,33 +1662,29 @@ func wrapBreakLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth
 			continue
 		}
 		for low < high {
-			if yPos+lineHeight > maxSize.Height && trunc != fyne.TextTruncateOff {
+			if yPos+lineHeight > maxSize.Height && trunc != granio.TextTruncateOff {
 				return ellipsisPriorBound(bounds, trunc, priorWidth(bounds, firstWidth, maxSize.Width), charWidth, measurer), yPos
 			}
 
 			fitCount := howManyRunesFit(text[low:high], measureWidth, charWidth, measurer)
-			switch fitCount {
-			case high - low: // all characters fit on this line
-				bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: high, ellipsis: false})
-				reuse++
-				low = high
-				high = l.segEnd
+			if fitCount == 0 {
+				fitCount = 1 // make progress even when one character exceeds the width
+			} else {
 				measureWidth = maxSize.Width
-				yPos += lineHeight
-			case 0: // even a character won't fit
-				bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: low + 1, ellipsis: false})
-				reuse++
-				low++
-				yPos += lineHeight
-			default:
-				high = low + fitCount
 			}
+			// The fit calculation already measured this boundary; measuring the
+			// same prefix again costs another string conversion and cache lookup.
+			bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: low + fitCount})
+			reuse++
+			low += fitCount
+			yPos += lineHeight
 		}
 	}
 	return bounds, yPos
 }
 
-func wrapWordLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth float32, maxSize fyne.Size, measurer func([]rune) fyne.Size, lines []rowBoundary) ([]rowBoundary, float32) {
+func wrapWordLines(seg RichTextSegment, trunc granio.TextTruncation, measureWidth float32, maxSize granio.Size, measurer func([]rune) granio.Size, lines []rowBoundary) ([]rowBoundary, float32) {
+	segments := []RichTextSegment{seg}
 	text := []rune(seg.Textual())
 	firstWidth := measureWidth
 	charSize := measurer([]rune("z"))
@@ -1702,14 +1703,14 @@ func wrapWordLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth 
 			continue
 		}
 		for low < high {
-			if yPos+lineHeight > maxSize.Height && trunc != fyne.TextTruncateOff {
+			if yPos+lineHeight > maxSize.Height && trunc != granio.TextTruncateOff {
 				return ellipsisPriorBound(bounds, trunc, priorWidth(bounds, firstWidth, maxSize.Width), charWidth, measurer), yPos
 			}
 
 			sub := text[low:high]
 			fitCount := howManyRunesFit(sub, measureWidth, charWidth, measurer)
 			if fitCount == high-low { // all characters fit on this line
-				bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: high, ellipsis: false})
+				bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: high, ellipsis: false})
 				reuse++
 				low = high
 				high = l.segEnd
@@ -1723,7 +1724,7 @@ func wrapWordLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth 
 			}
 			if fitCount == 0 { // even a character won't fit
 				if measureWidth < maxSize.Width {
-					bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: low, ellipsis: false})
+					bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: low, ellipsis: false})
 					reuse++
 					measureWidth = maxSize.Width
 					yPos += lineHeight
@@ -1731,11 +1732,11 @@ func wrapWordLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth 
 				}
 				include := 1
 				ellipsis := false
-				if trunc == fyne.TextTruncateEllipsis {
+				if trunc == granio.TextTruncateEllipsis {
 					include = 0
 					ellipsis = true
 				}
-				bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: low + include, ellipsis: ellipsis})
+				bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: low + include, ellipsis: ellipsis})
 				low++
 				high = low + 1
 				reuse++
@@ -1751,25 +1752,31 @@ func wrapWordLines(seg RichTextSegment, trunc fyne.TextTruncation, measureWidth 
 				if spaceIndex == 0 {
 					spaceIndex = 1
 				}
-				high = low + spaceIndex
+				fitCount = spaceIndex
+			}
+			if spaceIndex < 0 && low == 0 && measureWidth < maxSize.Width { // add a newline as there is more space on next
+				bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: low, ellipsis: false})
+				reuse++
+				measureWidth = maxSize.Width
+				yPos += lineHeight
 				continue
 			}
-			oldHigh := high
-			high = low + fitCount
-			if low == 0 && measureWidth < maxSize.Width { // add a newline as there is more space on next
-				bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: low, ellipsis: false})
-				reuse++
-				high = oldHigh
-				measureWidth = maxSize.Width
-
-				yPos += lineHeight
+			bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: low + fitCount})
+			reuse++
+			low += fitCount
+			high = l.segEnd
+			if low < high && unicode.IsSpace(text[low]) {
+				low++
 			}
+			measureWidth = maxSize.Width
+			yPos += lineHeight
 		}
 	}
 	return bounds, yPos
 }
 
-func truncateLines(t *RichText, seg RichTextSegment, trunc fyne.TextTruncation, measureWidth, maxWidth float32, measurer func([]rune) fyne.Size, lines []rowBoundary) ([]rowBoundary, float32) {
+func truncateLines(t *RichText, seg RichTextSegment, trunc granio.TextTruncation, measureWidth, maxWidth float32, measurer func([]rune) granio.Size, lines []rowBoundary) ([]rowBoundary, float32) {
+	segments := []RichTextSegment{seg}
 	text := []rune(seg.Textual())
 	yPos := float32(0)
 	var bounds []rowBoundary
@@ -1789,8 +1796,8 @@ func truncateLines(t *RichText, seg RichTextSegment, trunc fyne.TextTruncation, 
 			continue
 		}
 		switch trunc {
-		case fyne.TextTruncateEllipsis:
-			txt := []rune(seg.Textual())[low:high]
+		case granio.TextTruncateEllipsis:
+			txt := text[low:high]
 			var textObj *canvas.Text
 			switch s := seg.(type) {
 			case *TextSegment:
@@ -1809,25 +1816,25 @@ func truncateLines(t *RichText, seg RichTextSegment, trunc fyne.TextTruncation, 
 				end, full = truncateLimit(string(txt), textObj, int(measureWidth), []rune{'…'})
 			}
 			high = low + end
-			bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: high, ellipsis: !full, truncated: !full})
+			bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: high, ellipsis: !full, truncated: !full})
 			reuse++
-		case fyne.TextTruncateClip:
+		case granio.TextTruncateClip:
 			fitCount := howManyRunesFit(text[low:high], measureWidth, charWidth, measurer)
-			bounds = append(bounds, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: reuse, segBegin: low, segEnd: low + fitCount, ellipsis: false, truncated: low+fitCount < high})
+			bounds = append(bounds, rowBoundary{segments: segments, firstSegmentReuse: reuse, segBegin: low, segEnd: low + fitCount, ellipsis: false, truncated: low+fitCount < high})
 			reuse++
-		case fyne.TextTruncateOff:
+		case granio.TextTruncateOff:
 			// don’t do anything
 		}
 	}
 	return bounds, yPos
 }
 
-func setAlign(obj fyne.CanvasObject, align fyne.TextAlign) {
+func setAlign(obj granio.CanvasObject, align granio.TextAlign) {
 	if text, ok := obj.(*canvas.Text); ok {
 		text.Alignment = align
 		return
 	}
-	if c, ok := obj.(*fyne.Container); ok {
+	if c, ok := obj.(*granio.Container); ok {
 		wid := c.Objects[0]
 		if link, ok := wid.(*Hyperlink); ok {
 			link.Alignment = align
@@ -1837,7 +1844,7 @@ func setAlign(obj fyne.CanvasObject, align fyne.TextAlign) {
 }
 
 // rowPaddingAndAlign returns the left padding and text alignment for a row.
-func (t *RichText) rowPaddingAndAlign(bound rowBoundary, lineSpacing float32, currentAlign fyne.TextAlign) (float32, fyne.TextAlign) {
+func (t *RichText) rowPaddingAndAlign(bound rowBoundary, lineSpacing float32, currentAlign granio.TextAlign) (float32, granio.TextAlign) {
 	leftPad := bound.indent
 	align := currentAlign
 	quoting := 0
@@ -1850,10 +1857,10 @@ func (t *RichText) rowPaddingAndAlign(bound rowBoundary, lineSpacing float32, cu
 		align = first.Alignment
 		quoting = first.quotingLevel
 	case *CodeBlockSegment:
-		align = fyne.TextAlignLeading
+		align = granio.TextAlignLeading
 		quoting = first.quotingLevel
 	case *listMarkerSegment:
-		align = fyne.TextAlignLeading
+		align = granio.TextAlignLeading
 		quoting = first.quoting
 	}
 
@@ -1869,6 +1876,7 @@ func (t *RichText) rowPaddingAndAlign(bound rowBoundary, lineSpacing float32, cu
 // splitLines accepts a text segment and returns a slice of boundary metadata denoting the
 // start and end indices of each line delimited by the newline character.
 func splitLines(seg RichTextSegment) []rowBoundary {
+	segments := []RichTextSegment{seg}
 	var low, high int
 	var lines []rowBoundary
 	text := []rune(seg.Textual())
@@ -1876,11 +1884,11 @@ func splitLines(seg RichTextSegment) []rowBoundary {
 	for i := 0; i < length; i++ {
 		if text[i] == '\n' {
 			high = i
-			lines = append(lines, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: len(lines), segBegin: low, segEnd: high, ellipsis: false})
+			lines = append(lines, rowBoundary{segments: segments, firstSegmentReuse: len(lines), segBegin: low, segEnd: high, ellipsis: false})
 			low = i + 1
 		}
 	}
-	return append(lines, rowBoundary{segments: []RichTextSegment{seg}, firstSegmentReuse: len(lines), segBegin: low, segEnd: length, ellipsis: false})
+	return append(lines, rowBoundary{segments: segments, firstSegmentReuse: len(lines), segBegin: low, segEnd: length, ellipsis: false})
 }
 
 func truncateLimit(s string, text *canvas.Text, limit int, ellipsis []rune) (int, bool) {

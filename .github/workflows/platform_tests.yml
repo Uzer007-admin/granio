@@ -22,10 +22,13 @@ jobs:
             tags: no_glfw,migrated_fynedo
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-go@v6
+          submodules: recursive
+      - name: Apply local submodule patches
+        run: python scripts/apply-patches.py
+      - uses: actions/setup-go@v7.0.0
         with:
           go-version: ${{ matrix.go-version }}
           go-version-file: ${{ matrix.go-version == '' && 'go.mod' || '' }}
@@ -54,7 +57,7 @@ jobs:
         run: ${{ matrix.runner }} go test -race -tags "${{ matrix.tags }}" ${{ matrix.cover }} ${{ env.TESTLDFLAGS }} ./...
 
       - name: Upload failed testdata
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7.0.2
         if: failure()
         with:
           name: failed-testdata-${{ matrix.os }}-${{ matrix.go-version }}
@@ -77,7 +80,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.go-version == 'stable' }}
 
       - name: Update PR Coverage
-        uses: shogo82148/actions-goveralls@v1
+        uses: shogo82148/actions-goveralls@v1.11.2
         with:
           path-to-profile: coverage.out
         if: ${{ runner.os == 'Linux' && matrix.go-version == 'stable' }}

@@ -5,11 +5,11 @@ import (
 	"math"
 	"sort"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/cache"
-	paint "fyne.io/fyne/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
 )
 
 const (
@@ -81,7 +81,7 @@ func (p *painter) createBuffer(size int) Buffer {
 	return vbo
 }
 
-func (p *painter) drawBlur(b *canvas.Blur, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawBlur(b *canvas.Blur, pos granio.Position, frame granio.Size) {
 	if b.Radius == 0 {
 		return
 	}
@@ -206,7 +206,7 @@ func (p *painter) drawBlur(b *canvas.Blur, pos fyne.Position, frame fyne.Size) {
 	p.logError()
 }
 
-func (p *painter) drawCircle(circle *canvas.Circle, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawCircle(circle *canvas.Circle, pos granio.Position, frame granio.Size) {
 	radius := paint.GetMaximumRadius(circle.Size())
 	program := p.programs.roundRectangle
 
@@ -269,15 +269,15 @@ func (p *painter) drawCircle(circle *canvas.Circle, pos fyne.Position, frame fyn
 	p.logError()
 }
 
-func (p *painter) drawGradient(o fyne.CanvasObject, texCreator func(fyne.CanvasObject) Texture, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawGradient(o granio.CanvasObject, texCreator func(granio.CanvasObject) Texture, pos granio.Position, frame granio.Size) {
 	p.drawTextureWithDetails(o, texCreator, pos, o.Size(), frame, canvas.ImageFillStretch, 1.0, 0)
 }
 
-func (p *painter) drawImage(img *canvas.Image, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawImage(img *canvas.Image, pos granio.Position, frame granio.Size) {
 	p.drawTextureWithDetails(img, p.newGlImageTexture, pos, img.Size(), frame, img.FillMode, float32(img.Alpha()), 0)
 }
 
-func (p *painter) drawLine(line *canvas.Line, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawLine(line *canvas.Line, pos granio.Position, frame granio.Size) {
 	if line.StrokeColor == color.Transparent || line.StrokeColor == nil || line.StrokeWidth == 0 {
 		return
 	}
@@ -290,7 +290,7 @@ func (p *painter) drawLine(line *canvas.Line, pos fyne.Position, frame fyne.Size
 	}
 }
 
-func (p *painter) drawBezierCurve(bezierCurve *canvas.BezierCurve, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawBezierCurve(bezierCurve *canvas.BezierCurve, pos granio.Position, frame granio.Size) {
 	if bezierCurve.StrokeColor == color.Transparent || bezierCurve.StrokeColor == nil || bezierCurve.StrokeWidth == 0 {
 		return
 	}
@@ -354,7 +354,7 @@ func (p *painter) drawBezierCurve(bezierCurve *canvas.BezierCurve, pos fyne.Posi
 	p.logError()
 }
 
-func (p *painter) drawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, pos granio.Position, frame granio.Size) {
 	if len(polygon.Points) < 3 || ((polygon.FillColor == color.Transparent || polygon.FillColor == nil) && (polygon.StrokeColor == color.Transparent || polygon.StrokeColor == nil || polygon.StrokeWidth == 0)) {
 		return
 	}
@@ -384,11 +384,11 @@ func (p *painter) drawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, pos fyn
 	p.SetUniform1f(program, attrVertexCount, float32(numPoints))
 
 	size := polygon.Size()
-	clampPoint := func(p fyne.Position) (float32, float32) {
+	clampPoint := func(p granio.Position) (float32, float32) {
 		return min(max(p.X, 0), max(size.Width, 0)), min(max(p.Y, 0), max(size.Height, 0))
 	}
 
-	fixedPoints := make([]fyne.Position, numPoints)
+	fixedPoints := make([]granio.Position, numPoints)
 	cornerRadii := make([]float32, numPoints)
 
 	for i := 0; i < numPoints; i++ {
@@ -396,8 +396,8 @@ func (p *painter) drawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, pos fyn
 		if polygon.NormalizedPoints {
 			px, py = px*size.Width, py*size.Height
 		}
-		px, py = clampPoint(fyne.NewPos(px, py))
-		fixedPoints[i] = fyne.NewPos(px, py)
+		px, py = clampPoint(granio.NewPos(px, py))
+		fixedPoints[i] = granio.NewPos(px, py)
 
 		var radius float32
 		if i < len(polygon.CornerRadii) {
@@ -436,8 +436,10 @@ func (p *painter) drawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, pos fyn
 	p.logError()
 }
 
-func (p *painter) drawObject(o fyne.CanvasObject, pos fyne.Position, frame fyne.Size, clip *internal.ClipItem) {
+func (p *painter) drawObject(o granio.CanvasObject, pos granio.Position, frame granio.Size, clip *internal.ClipItem) {
 	switch obj := o.(type) {
+	case *canvas.Material:
+		p.drawMaterial(obj, pos, frame, clip)
 	case *canvas.Blur:
 		p.drawBlur(obj, pos, frame)
 	case *canvas.Circle:
@@ -487,7 +489,7 @@ func (p *painter) shaderProgram(shader *canvas.Shader) (*shaderState, bool) {
 
 	ref, err := p.createProgram(shaderVertPassthrough2D, userShaderFragment(shader))
 	if err != nil {
-		fyne.LogError("Failed to compile shader "+shader.Name, err)
+		granio.LogError("Failed to compile shader "+shader.Name, err)
 		p.shaderPrograms[shader.Name] = &shaderState{} // cache the failure so we do not retry
 		return p.shaderPrograms[shader.Name], false
 	}
@@ -505,7 +507,7 @@ func (p *painter) shaderProgram(shader *canvas.Shader) (*shaderState, bool) {
 	return state, true
 }
 
-func (p *painter) drawShader(shader *canvas.Shader, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawShader(shader *canvas.Shader, pos granio.Position, frame granio.Size) {
 	state, ok := p.shaderProgram(shader)
 	if !ok {
 		return
@@ -574,11 +576,11 @@ func (p *painter) bindShaderTextures(state *shaderState, shader *canvas.Shader) 
 	p.ctx.ActiveTexture(texture0) // restore the default unit for later draws
 }
 
-func (p *painter) drawRaster(img *canvas.Raster, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawRaster(img *canvas.Raster, pos granio.Position, frame granio.Size) {
 	p.drawTextureWithDetails(img, p.newGlRasterTexture, pos, img.Size(), frame, canvas.ImageFillStretch, float32(img.Alpha()), 0)
 }
 
-func (p *painter) drawRectangle(rect *canvas.Rectangle, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawRectangle(rect *canvas.Rectangle, pos granio.Position, frame granio.Size) {
 	topRightRadius := paint.GetCornerRadius(rect.TopRightCornerRadius, rect.CornerRadius)
 	topLeftRadius := paint.GetCornerRadius(rect.TopLeftCornerRadius, rect.CornerRadius)
 	bottomRightRadius := paint.GetCornerRadius(rect.BottomRightCornerRadius, rect.CornerRadius)
@@ -590,7 +592,7 @@ func (p *painter) drawRectangle(rect *canvas.Rectangle, pos fyne.Position, frame
 	p.drawOblong(rect, rect.FillColor, rect.StrokeColor, rect.StrokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, rect.Aspect, rect.Shadow, pos, frame)
 }
 
-func (p *painter) drawOblong(obj fyne.CanvasObject, fill, stroke color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, aspect float32, shadow canvas.Shadow, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawOblong(obj granio.CanvasObject, fill, stroke color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, aspect float32, shadow canvas.Shadow, pos granio.Position, frame granio.Size) {
 	if !paint.IsShadowVisible(shadow) && (fill == color.Transparent || fill == nil) && (stroke == color.Transparent || stroke == nil || strokeWidth == 0) {
 		return
 	}
@@ -629,7 +631,7 @@ func (p *painter) drawOblong(obj fyne.CanvasObject, fill, stroke color.Color, st
 		p.SetUniform2f(program, attrRectangleSizeHalf, rectSizeWidthScaled*0.5, rectSizeHeightScaled*0.5)
 
 		// the maximum possible corner radii for a circular shape, calculated taking into account the rect coords with aspect ratio
-		size := fyne.NewSize(bounds[2]-bounds[0], bounds[3]-bounds[1])
+		size := granio.NewSize(bounds[2]-bounds[0], bounds[3]-bounds[1])
 		topRightRadiusScaled := roundToPixel(
 			paint.GetMaximumCornerRadius(topRightRadius, topLeftRadius, bottomRightRadius, size)*p.pixScale,
 			1.0,
@@ -683,7 +685,7 @@ func (p *painter) drawOblong(obj fyne.CanvasObject, fill, stroke color.Color, st
 	p.logError()
 }
 
-func (p *painter) drawPolygon(polygon *canvas.RegularPolygon, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawPolygon(polygon *canvas.RegularPolygon, pos granio.Position, frame granio.Size) {
 	if ((polygon.FillColor == color.Transparent || polygon.FillColor == nil) && (polygon.StrokeColor == color.Transparent || polygon.StrokeColor == nil || polygon.StrokeWidth == 0)) || polygon.Sides < 3 {
 		return
 	}
@@ -741,7 +743,7 @@ func (p *painter) drawPolygon(polygon *canvas.RegularPolygon, pos fyne.Position,
 	p.logError()
 }
 
-func (p *painter) drawArc(arc *canvas.Arc, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawArc(arc *canvas.Arc, pos granio.Position, frame granio.Size) {
 	if ((arc.FillColor == color.Transparent || arc.FillColor == nil) && (arc.StrokeColor == color.Transparent || arc.StrokeColor == nil || arc.StrokeWidth == 0)) || arc.StartAngle == arc.EndAngle {
 		return
 	}
@@ -803,7 +805,7 @@ func (p *painter) drawArc(arc *canvas.Arc, pos fyne.Position, frame fyne.Size) {
 	p.logError()
 }
 
-func (p *painter) drawEllipse(ellipse *canvas.Ellipse, pos fyne.Position, frame fyne.Size) {
+func (p *painter) drawEllipse(ellipse *canvas.Ellipse, pos granio.Position, frame granio.Size) {
 	size := ellipse.Size()
 	radiusX := size.Width / 2
 	radiusY := size.Height / 2
@@ -879,7 +881,7 @@ func (p *painter) drawEllipse(ellipse *canvas.Ellipse, pos fyne.Position, frame 
 	p.logError()
 }
 
-func (p *painter) drawText(text *canvas.Text, pos fyne.Position, frame fyne.Size, clip *internal.ClipItem) {
+func (p *painter) drawText(text *canvas.Text, pos granio.Position, frame granio.Size, clip *internal.ClipItem) {
 	if text.Text == "" {
 		return
 	}
@@ -891,14 +893,14 @@ func (p *painter) drawText(text *canvas.Text, pos fyne.Position, frame fyne.Size
 	size := text.MinSize()
 	containerSize := text.Size()
 	switch text.Alignment {
-	case fyne.TextAlignTrailing:
-		pos = fyne.NewPos(pos.X+containerSize.Width-size.Width, pos.Y)
-	case fyne.TextAlignCenter:
-		pos = fyne.NewPos(pos.X+(containerSize.Width-size.Width)/2, pos.Y)
+	case granio.TextAlignTrailing:
+		pos = granio.NewPos(pos.X+containerSize.Width-size.Width, pos.Y)
+	case granio.TextAlignCenter:
+		pos = granio.NewPos(pos.X+(containerSize.Width-size.Width)/2, pos.Y)
 	}
 
 	if containerSize.Height > size.Height {
-		pos = fyne.NewPos(pos.X, pos.Y+(containerSize.Height-size.Height)/2)
+		pos = granio.NewPos(pos.X, pos.Y+(containerSize.Height-size.Height)/2)
 	}
 
 	// text size is sensitive to position on screen
@@ -921,8 +923,8 @@ func (p *painter) drawText(text *canvas.Text, pos fyne.Position, frame fyne.Size
 		height := int(math.Ceil(float64(size.Height * p.pixScale)))
 		cached := p.clippedTextTexture(text, visibleOffset, visibleWidth, fullWidth, height)
 		if cache.IsValid(cache.TextureType(cached.texture)) {
-			clipPos := fyne.NewPos(pos.X+float32(cached.offset)/p.pixScale, pos.Y)
-			clipSize := fyne.NewSize(float32(cached.width)/p.pixScale, size.Height)
+			clipPos := granio.NewPos(pos.X+float32(cached.offset)/p.pixScale, pos.Y)
+			clipSize := granio.NewSize(float32(cached.width)/p.pixScale, size.Height)
 			p.drawTextureRegion(cached.texture, clipPos, clipSize, frame, canvas.ImageFillStretch, 1, 1, 0, 0)
 		}
 	}
@@ -930,20 +932,20 @@ func (p *painter) drawText(text *canvas.Text, pos fyne.Position, frame fyne.Size
 	if decorated {
 		_, baseline := cache.GetFontMetrics(text.Text, text.TextSize, text.TextStyle, text.FontSource)
 		line := canvas.NewLine(text.Color)
-		line.Resize(fyne.NewSize(size.Width, 0))
+		line.Resize(granio.NewSize(size.Width, 0))
 		if text.TextStyle.Underline {
-			underlinePos := fyne.NewPos(pos.X, pos.Y+baseline+paint.UnderlineOffsetFromBaseline)
+			underlinePos := granio.NewPos(pos.X, pos.Y+baseline+paint.UnderlineOffsetFromBaseline)
 			p.drawLine(line, underlinePos, frame)
 		}
 		if text.TextStyle.Strikethrough {
-			strikePos := fyne.NewPos(pos.X, pos.Y+baseline*paint.StrikethroughToBaselineFactor)
+			strikePos := granio.NewPos(pos.X, pos.Y+baseline*paint.StrikethroughToBaselineFactor)
 			p.drawLine(line, strikePos, frame)
 		}
 	}
 }
 
-func visibleTextPixels(pos fyne.Position, size, frame fyne.Size, clip *internal.ClipItem, scale float32) (offset, width int) {
-	clipPos := fyne.Position{}
+func visibleTextPixels(pos granio.Position, size, frame granio.Size, clip *internal.ClipItem, scale float32) (offset, width int) {
+	clipPos := granio.Position{}
 	clipSize := frame
 	if clip != nil {
 		clipPos, clipSize = clip.Rect()
@@ -960,7 +962,7 @@ func visibleTextPixels(pos fyne.Position, size, frame fyne.Size, clip *internal.
 	return offset, width
 }
 
-func (p *painter) drawTextureRegion(texture Texture, pos fyne.Position, size, frame fyne.Size, fill canvas.ImageFill, alpha, aspect, cornerRadius, pad float32) {
+func (p *painter) drawTextureRegion(texture Texture, pos granio.Position, size, frame granio.Size, fill canvas.ImageFill, alpha, aspect, cornerRadius, pad float32) {
 	points, insets, inner := p.rectCoords(size, pos, frame, fill, aspect, pad)
 
 	p.useProgram(p.programs.simple.ref)
@@ -989,8 +991,8 @@ func (p *painter) drawTextureRegion(texture Texture, pos fyne.Position, size, fr
 	p.logError()
 }
 
-func (p *painter) drawTextureWithDetails(o fyne.CanvasObject, creator func(canvasObject fyne.CanvasObject) Texture,
-	pos fyne.Position, size, frame fyne.Size, fill canvas.ImageFill, alpha float32, pad float32,
+func (p *painter) drawTextureWithDetails(o granio.CanvasObject, creator func(canvasObject granio.CanvasObject) Texture,
+	pos granio.Position, size, frame granio.Size, fill canvas.ImageFill, alpha float32, pad float32,
 ) {
 	texture, err := p.getTexture(o, creator)
 	if err != nil {
@@ -1011,7 +1013,7 @@ func (p *painter) drawTextureWithDetails(o fyne.CanvasObject, creator func(canva
 	p.drawTextureRegion(texture, pos, size, frame, fill, alpha, aspect, cornerRadius, pad)
 }
 
-func (p *painter) lineCoords(pos, pos1, pos2 fyne.Position, lineWidth, feather float32, frame fyne.Size) (points [coordinatesSizeLine]float32, halfWidth, featherWidth float32) {
+func (p *painter) lineCoords(pos, pos1, pos2 granio.Position, lineWidth, feather float32, frame granio.Size) (points [coordinatesSizeLine]float32, halfWidth, featherWidth float32) {
 	// Shift line coordinates so that they match the target position.
 	xPosDiff := pos.X - min(pos1.X, pos2.X)
 	yPosDiff := pos.Y - min(pos1.Y, pos2.Y)
@@ -1068,7 +1070,7 @@ func (p *painter) lineCoords(pos, pos1, pos2 fyne.Position, lineWidth, feather f
 }
 
 // rectCoords calculates the openGL coordinate space of a rectangle
-func (p *painter) rectCoords(size fyne.Size, pos fyne.Position, frame fyne.Size, fill canvas.ImageFill, aspect, pad float32) ([coordinatesSizeRectangleWithTexture]float32, [4]float32, fyne.Size) {
+func (p *painter) rectCoords(size granio.Size, pos granio.Position, frame granio.Size, fill canvas.ImageFill, aspect, pad float32) ([coordinatesSizeRectangleWithTexture]float32, [4]float32, granio.Size) {
 	innerSize, innerPos := rectInnerCoords(size, pos, fill, aspect)
 	pixelSize, pixelPos := roundToPixelCoords(innerSize, innerPos, p.pixScale)
 
@@ -1110,7 +1112,7 @@ func (p *painter) rectCoords(size fyne.Size, pos fyne.Position, frame fyne.Size,
 	}, insets, innerSize
 }
 
-func rectInnerCoords(size fyne.Size, pos fyne.Position, fill canvas.ImageFill, aspect float32) (fyne.Size, fyne.Position) {
+func rectInnerCoords(size granio.Size, pos granio.Position, fill canvas.ImageFill, aspect float32) (granio.Size, granio.Position) {
 	if fill != canvas.ImageFillContain && fill != canvas.ImageFillOriginal {
 		return size, pos
 	}
@@ -1130,10 +1132,10 @@ func rectInnerCoords(size fyne.Size, pos fyne.Position, fill canvas.ImageFill, a
 		newHeight = size.Width / aspect
 		newY += (size.Height - newHeight) / 2
 	}
-	return fyne.NewSize(newWidth, newHeight), fyne.NewPos(newX, newY)
+	return granio.NewSize(newWidth, newHeight), granio.NewPos(newX, newY)
 }
 
-func (p *painter) vecRectCoords(pos fyne.Position, rect fyne.CanvasObject, frame fyne.Size, aspect float32, shadow canvas.Shadow) ([coordinatesSizeRectangle]float32, [4]float32) {
+func (p *painter) vecRectCoords(pos granio.Position, rect granio.CanvasObject, frame granio.Size, aspect float32, shadow canvas.Shadow) ([coordinatesSizeRectangle]float32, [4]float32) {
 	xPad, yPad := float32(0), float32(0)
 
 	if aspect != 0 {
@@ -1152,7 +1154,7 @@ func (p *painter) vecRectCoords(pos fyne.Position, rect fyne.CanvasObject, frame
 	return p.vecRectCoordsWithPad(pos, rect, frame, xPad, yPad, shadow)
 }
 
-func (p *painter) vecRectCoordsWithPad(pos fyne.Position, rect fyne.CanvasObject, frame fyne.Size, xPad, yPad float32, shadow canvas.Shadow) ([coordinatesSizeRectangle]float32, [4]float32) {
+func (p *painter) vecRectCoordsWithPad(pos granio.Position, rect granio.CanvasObject, frame granio.Size, xPad, yPad float32, shadow canvas.Shadow) ([coordinatesSizeRectangle]float32, [4]float32) {
 	// align each edge to a pixel so that objects sharing an edge do not overlap or leave a gap
 	size := rect.Size()
 	left, top := pos.X+xPad, pos.Y+yPad
@@ -1185,7 +1187,7 @@ func (p *painter) vecRectCoordsWithPad(pos fyne.Position, rect fyne.CanvasObject
 	return coords, [4]float32{x1Pos, y1Pos, x2Pos, y2Pos}
 }
 
-func (p *painter) vecSquareCoords(pos fyne.Position, rect fyne.CanvasObject, frame fyne.Size, shadow canvas.Shadow) ([coordinatesSizeRectangle]float32, [4]float32) {
+func (p *painter) vecSquareCoords(pos granio.Position, rect granio.CanvasObject, frame granio.Size, shadow canvas.Shadow) ([coordinatesSizeRectangle]float32, [4]float32) {
 	return p.vecRectCoords(pos, rect, frame, 1, shadow)
 }
 
@@ -1197,7 +1199,7 @@ func roundToPixel(v float32, pixScale float32) float32 {
 	return float32(math.Round(float64(v*pixScale))) / pixScale
 }
 
-func roundToPixelCoords(size fyne.Size, pos fyne.Position, pixScale float32) (fyne.Size, fyne.Position) {
+func roundToPixelCoords(size granio.Size, pos granio.Position, pixScale float32) (granio.Size, granio.Position) {
 	end := pos.Add(size)
 	end.X = roundToPixel(end.X, pixScale)
 	end.Y = roundToPixel(end.Y, pixScale)
@@ -1209,7 +1211,7 @@ func roundToPixelCoords(size fyne.Size, pos fyne.Position, pixScale float32) (fy
 	return size, pos
 }
 
-// Returns FragmentColor(red,green,blue,alpha) from fyne.Color
+// Returns FragmentColor(red,green,blue,alpha) from granio.Color
 func getFragmentColor(col color.Color) (fragmentR, fragmentG, fragmentB, fragmentA float32) {
 	if col == nil {
 		return 0, 0, 0, 0
@@ -1222,7 +1224,7 @@ func getFragmentColor(col color.Color) (fragmentR, fragmentG, fragmentB, fragmen
 	return float32(r) / alpha, float32(g) / alpha, float32(b) / alpha, alpha / 0xffff
 }
 
-func (p *painter) scaleFrameSize(frame fyne.Size) (width, height float32) {
+func (p *painter) scaleFrameSize(frame granio.Size) (width, height float32) {
 	frameWidthScaled := roundToPixel(frame.Width*p.pixScale, 1.0)
 	frameHeightScaled := roundToPixel(frame.Height*p.pixScale, 1.0)
 	return frameWidthScaled, frameHeightScaled

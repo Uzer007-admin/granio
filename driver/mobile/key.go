@@ -1,10 +1,10 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 const (
 	// KeyBack represents the back button which may be hardware or software
-	KeyBack fyne.KeyName = "Back"
+	KeyBack granio.KeyName = "Back"
 )

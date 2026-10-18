@@ -3,10 +3,10 @@ package software
 import (
 	"image"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 )
 
 // Painter is a simple software painter that can paint a canvas in memory.
@@ -20,11 +20,11 @@ func NewPainter() *Painter {
 // Paint is the main entry point for a simple software painter.
 // The canvas to be drawn is passed in as a parameter and the return is an
 // image containing the result of rendering.
-func (*Painter) Paint(c fyne.Canvas) image.Image {
+func (*Painter) Paint(c granio.Canvas) image.Image {
 	bounds := image.Rect(0, 0, scale.ToScreenCoordinate(c, c.Size().Width), scale.ToScreenCoordinate(c, c.Size().Height))
 	base := image.NewNRGBA(bounds)
 
-	paint := func(obj fyne.CanvasObject, pos, clipPos fyne.Position, clipSize fyne.Size) bool {
+	paint := func(obj granio.CanvasObject, pos, clipPos granio.Position, clipSize granio.Size) bool {
 		w := min(clipPos.X+clipSize.Width, c.Size().Width)
 		h := min(clipPos.Y+clipSize.Height, c.Size().Height)
 		clip := image.Rect(
@@ -34,6 +34,8 @@ func (*Painter) Paint(c fyne.Canvas) image.Image {
 			scale.ToScreenCoordinate(c, h),
 		)
 		switch o := obj.(type) {
+		case *canvas.Material:
+			drawRectangle(c, o.FallbackRectangle(), pos, base, clip)
 		case *canvas.Image:
 			drawImage(c, o, pos, base, clip)
 		case *canvas.Text:

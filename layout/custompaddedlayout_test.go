@@ -6,18 +6,18 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/layout"
 )
 
 func TestCustomPaddedLayout(t *testing.T) {
-	size := fyne.NewSize(100, 100)
+	size := granio.NewSize(100, 100)
 
 	obj := canvas.NewRectangle(color.Black)
-	c := &fyne.Container{
-		Objects: []fyne.CanvasObject{obj},
+	c := &granio.Container{
+		Objects: []granio.CanvasObject{obj},
 	}
 	c.Resize(size)
 

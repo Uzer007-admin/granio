@@ -1,13 +1,13 @@
 package layout
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 type rowWrapLayout struct {
 	horizontalPadding float32
-	minSize           fyne.Size
+	minSize           granio.Size
 	verticalPadding   float32
 }
 
@@ -16,7 +16,7 @@ type rowWrapLayout struct {
 // Objects are separated with horizontal and vertical padding.
 //
 // Since: 2.7
-func NewRowWrapLayout() fyne.Layout {
+func NewRowWrapLayout() granio.Layout {
 	p := theme.Padding()
 	return &rowWrapLayout{
 		horizontalPadding: p,
@@ -28,23 +28,23 @@ func NewRowWrapLayout() fyne.Layout {
 // with custom horizontal and inner padding.
 //
 // Since: 2.7
-func NewRowWrapLayoutWithCustomPadding(horizontal, vertical float32) fyne.Layout {
+func NewRowWrapLayoutWithCustomPadding(horizontal, vertical float32) granio.Layout {
 	return &rowWrapLayout{
 		horizontalPadding: horizontal,
 		verticalPadding:   vertical,
 	}
 }
 
-var _ fyne.Layout = (*rowWrapLayout)(nil)
+var _ granio.Layout = (*rowWrapLayout)(nil)
 
 // MinSize finds the smallest size that satisfies all the child objects.
 // For a RowWrapLayout this is initially the width of the widest child
 // and the height of the tallest child multiplied by the number of children,
 // with appropriate padding between them.
 // After Layout() has run it returns the actual min size.
-func (l *rowWrapLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
+func (l *rowWrapLayout) MinSize(objects []granio.CanvasObject) granio.Size {
 	if len(objects) == 0 {
-		return fyne.NewSize(0, 0)
+		return granio.NewSize(0, 0)
 	}
 	if !l.minSize.IsZero() {
 		return l.minSize
@@ -60,7 +60,7 @@ func (l *rowWrapLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
 		maxW = max(maxW, s.Width)
 		maxH = max(maxH, s.Height)
 	}
-	return fyne.NewSize(maxW, l.minHeight(maxH, objCount))
+	return granio.NewSize(maxW, l.minHeight(maxH, objCount))
 }
 
 func (l *rowWrapLayout) minHeight(rowHeight float32, rowCount int) float32 {
@@ -70,7 +70,7 @@ func (l *rowWrapLayout) minHeight(rowHeight float32, rowCount int) float32 {
 // Layout is called to pack all child objects into a specified size.
 // For RowWrapLayout this will arrange all objects into rows of equal size
 // and wrap objects into additional rows as needed.
-func (l *rowWrapLayout) Layout(objects []fyne.CanvasObject, containerSize fyne.Size) {
+func (l *rowWrapLayout) Layout(objects []granio.CanvasObject, containerSize granio.Size) {
 	if len(objects) == 0 {
 		return
 	}
@@ -81,8 +81,8 @@ func (l *rowWrapLayout) Layout(objects []fyne.CanvasObject, containerSize fyne.S
 		}
 		maxH = max(maxH, o.MinSize().Height)
 	}
-	var minSize fyne.Size
-	pos := fyne.NewPos(0, 0)
+	var minSize granio.Size
+	pos := granio.NewPos(0, 0)
 	rows := 1
 	isFirst := true
 	for _, o := range objects {
@@ -93,14 +93,14 @@ func (l *rowWrapLayout) Layout(objects []fyne.CanvasObject, containerSize fyne.S
 		o.Resize(size)
 		if !isFirst && pos.X+size.Width+l.horizontalPadding >= containerSize.Width {
 			y := float32(rows) * (maxH + l.verticalPadding)
-			pos = fyne.NewPos(0, y)
+			pos = granio.NewPos(0, y)
 			rows++
 		}
 		isFirst = false
 		minSize.Width = max(minSize.Width, pos.X+size.Width)
 		minSize.Height = l.minHeight(maxH, rows)
 		o.Move(pos)
-		pos = pos.Add(fyne.NewPos(size.Width+l.horizontalPadding, 0))
+		pos = pos.Add(granio.NewPos(size.Width+l.horizontalPadding, 0))
 	}
 	l.minSize = minSize
 }

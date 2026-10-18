@@ -1,0 +1,22 @@
+=== RUN   TestNativeWindowsAppearanceSnapshotAndLifetime
+    system_appearance_windows_native_test.go:57: actual OS snapshot: {DesktopTheme:{Value:{Name: WidgetStyle: Font: IconTheme:} Available:false} Generation:0 Available:true ColorScheme:{Value:1 Available:true} HighContrast:{Value:false Available:true} ReducedMotion:{Value:false Available:true} Accent:{Value:{R:0 G:99 B:177 A:255} Available:true} TextScale:{Value:1 Available:true} Transparency:{Value:true Available:true} Colors:{Value:{Window:{R:255 G:255 B:255 A:255} WindowText:{R:0 G:0 B:0 A:255} ButtonFace:{R:240 G:240 B:240 A:255} ButtonText:{R:0 G:0 B:0 A:255} Highlight:{R:0 G:120 B:215 A:255} HighlightText:{R:255 G:255 B:255 A:255} GrayText:{R:109 G:109 B:109 A:255} Hotlight:{R:0 G:102 B:204 A:255}} Available:true} UnavailableReason:}; subscriptions=0x1f
+--- PASS: TestNativeWindowsAppearanceSnapshotAndLifetime (0.55s)
+=== RUN   TestNativeWindowsAppearanceInitialAndCancel
+    system_appearance_windows_native_test.go:89: initial load and 1.1s idle/lifecycle: 1.1071687s
+--- PASS: TestNativeWindowsAppearanceInitialAndCancel (1.11s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/app	4.101s
+=== RUN   TestNativeModernScopeVisibilityAndEscape
+    visual_completion_native_test.go:95: hidden ancestor/window paused; native minimized flag observed=true; restored selection=7,0,7
+--- PASS: TestNativeModernScopeVisibilityAndEscape (1.20s)
+=== RUN   TestNativeVisualHundredLifecycleAndResizeCycles
+    visual_completion_native_test.go:150: 100 show/hide/resize/backdrop/maximize/minimize cycles; surface generation=1; native maximize observed=100; native minimize observed=100; final={RequestID:101 Phase:Ready Requested:Mica Selected:Mica Backend:2 SurfaceReady:true NativeAccepted:true Reason:None NativeCode:0 PreparedFrames:4 FirstFrameBeforeShow:true}
+--- PASS: TestNativeVisualHundredLifecycleAndResizeCycles (7.60s)
+=== RUN   TestNativeModernLiveTextScalePreservesState
+    visual_completion_native_test.go:197: native live TextScale 100/150/200/225/100: text, focus, selection and binding retained
+--- PASS: TestNativeModernLiveTextScalePreservesState (0.49s)
+=== RUN   TestNativeWindowVisualsDWMComposition
+    window_visuals_native_test.go:35: real native window visuals acceptance
+--- SKIP: TestNativeWindowVisualsDWMComposition (0.00s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	14.135s

@@ -1,0 +1,4 @@
+PASS: three gamma bridges; 18 array/state bridges; WGL loader: NULL, 1, 2, 3, -1, valid pointer and DLL failure
+ok  	github.com/Uzer007-admin/granio/v2/app	18.776s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	2.372s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	23.886s

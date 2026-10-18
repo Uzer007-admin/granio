@@ -1,14 +1,14 @@
 package theme
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-var themeStack []fyne.Theme
+var themeStack []granio.Theme
 
 // CurrentlyRenderingWithFallback returns the theme that is currently being used during rendering or layout
 // calculations. If there is no override in effect then the fallback is returned.
-func CurrentlyRenderingWithFallback(f fyne.Theme) fyne.Theme {
+func CurrentlyRenderingWithFallback(f granio.Theme) granio.Theme {
 	if len(themeStack) == 0 {
 		return f
 	}
@@ -18,7 +18,7 @@ func CurrentlyRenderingWithFallback(f fyne.Theme) fyne.Theme {
 
 // PushRenderingTheme is used by the ThemeOverride container to stack the current theme during rendering
 // and calculations.
-func PushRenderingTheme(th fyne.Theme) {
+func PushRenderingTheme(th granio.Theme) {
 	themeStack = append(themeStack, th)
 }
 

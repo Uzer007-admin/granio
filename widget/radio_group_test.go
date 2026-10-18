@@ -3,11 +3,11 @@ package widget_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -15,9 +15,9 @@ import (
 func TestRadioGroup_FocusRendering(t *testing.T) {
 	t.Run("gain/lose focus", func(t *testing.T) {
 		radio := widget.NewRadioGroup([]string{"Option A", "Option B", "Option C"}, nil)
-		window := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{radio}})
+		window := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{radio}})
 		defer window.Close()
-		window.Resize(radio.MinSize().Max(fyne.NewSize(150, 200)))
+		window.Resize(radio.MinSize().Max(granio.NewSize(150, 200)))
 
 		canvas := window.Canvas().(software.WindowlessCanvas)
 		test.AssertRendersToMarkup(t, "radio_group/focus_none_focused_none_selected.xml", canvas)
@@ -40,9 +40,9 @@ func TestRadioGroup_FocusRendering(t *testing.T) {
 
 	t.Run("disable/enable focused", func(t *testing.T) {
 		radio := &widget.RadioGroup{Options: []string{"Option A", "Option B", "Option C"}}
-		window := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{radio}})
+		window := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{radio}})
 		defer window.Close()
-		window.Resize(radio.MinSize().Max(fyne.NewSize(150, 200)))
+		window.Resize(radio.MinSize().Max(granio.NewSize(150, 200)))
 
 		canvas := window.Canvas().(software.WindowlessCanvas)
 		canvas.FocusNext()
@@ -54,9 +54,9 @@ func TestRadioGroup_FocusRendering(t *testing.T) {
 
 	t.Run("append disabled", func(t *testing.T) {
 		radio := &widget.RadioGroup{Options: []string{"Option A", "Option B"}}
-		window := test.NewWindow(&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{radio}})
+		window := test.NewWindow(&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{radio}})
 		defer window.Close()
-		window.Resize(radio.MinSize().Max(fyne.NewSize(150, 200)))
+		window.Resize(radio.MinSize().Max(granio.NewSize(150, 200)))
 
 		canvas := window.Canvas().(software.WindowlessCanvas)
 		radio.Disable()
@@ -156,8 +156,8 @@ func TestRadioGroup_Layout(t *testing.T) {
 				radio.Disable()
 			}
 
-			window := test.NewTempWindow(t, &fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{radio}})
-			window.Resize(radio.MinSize().Max(fyne.NewSize(150, 200)))
+			window := test.NewTempWindow(t, &granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{radio}})
+			window.Resize(radio.MinSize().Max(granio.NewSize(150, 200)))
 
 			test.AssertRendersToMarkup(t, "radio_group/layout_"+name+".xml", window.Canvas())
 		})

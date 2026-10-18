@@ -1,15 +1,15 @@
 package container
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Split)(nil)
+var _ granio.CanvasObject = (*Split)(nil)
 
 var splitDefaultThickness = float32(5) // a sane constant if the theme does not know the new value nor delegate
 
@@ -20,8 +20,8 @@ type Split struct {
 	widget.BaseWidget
 	Offset     float64
 	Horizontal bool
-	Leading    fyne.CanvasObject
-	Trailing   fyne.CanvasObject
+	Leading    granio.CanvasObject
+	Trailing   granio.CanvasObject
 
 	// to communicate to the renderer that the next refresh
 	// is just an offset update (ie a resize and move only)
@@ -33,7 +33,7 @@ type Split struct {
 // A vertical split bar that can be dragged will be added between the elements.
 //
 // Since: 1.4
-func NewHSplit(leading, trailing fyne.CanvasObject) *Split {
+func NewHSplit(leading, trailing granio.CanvasObject) *Split {
 	return newSplitContainer(true, leading, trailing)
 }
 
@@ -41,11 +41,11 @@ func NewHSplit(leading, trailing fyne.CanvasObject) *Split {
 // A horizontal split bar that can be dragged will be added between the elements.
 //
 // Since: 1.4
-func NewVSplit(top, bottom fyne.CanvasObject) *Split {
+func NewVSplit(top, bottom granio.CanvasObject) *Split {
 	return newSplitContainer(false, top, bottom)
 }
 
-func newSplitContainer(horizontal bool, leading, trailing fyne.CanvasObject) *Split {
+func newSplitContainer(horizontal bool, leading, trailing granio.CanvasObject) *Split {
 	s := &Split{
 		Offset:     0.5, // Sensible default, can be overridden with SetOffset
 		Horizontal: horizontal,
@@ -57,20 +57,20 @@ func newSplitContainer(horizontal bool, leading, trailing fyne.CanvasObject) *Sp
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (s *Split) CreateRenderer() fyne.WidgetRenderer {
+func (s *Split) CreateRenderer() granio.WidgetRenderer {
 	s.BaseWidget.ExtendBaseWidget(s)
 	d := newDivider(s)
 	return &splitContainerRenderer{
 		split:   s,
 		divider: d,
-		objects: []fyne.CanvasObject{s.Leading, d, s.Trailing},
+		objects: []granio.CanvasObject{s.Leading, d, s.Trailing},
 	}
 }
 
 // ExtendBaseWidget is used by an extending widget to make use of BaseWidget functionality.
 //
 // Deprecated: Support for extending containers is being removed
-func (s *Split) ExtendBaseWidget(wid fyne.Widget) {
+func (s *Split) ExtendBaseWidget(wid granio.Widget) {
 	s.BaseWidget.ExtendBaseWidget(wid)
 }
 
@@ -87,27 +87,27 @@ func (s *Split) SetOffset(offset float64) {
 	s.Refresh()
 }
 
-var _ fyne.WidgetRenderer = (*splitContainerRenderer)(nil)
+var _ granio.WidgetRenderer = (*splitContainerRenderer)(nil)
 
 type splitContainerRenderer struct {
 	split   *Split
 	divider *divider
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 func (*splitContainerRenderer) Destroy() {
 }
 
-func (r *splitContainerRenderer) Layout(size fyne.Size) {
-	var dividerPos, leadingPos, trailingPos fyne.Position
-	var dividerSize, leadingSize, trailingSize fyne.Size
+func (r *splitContainerRenderer) Layout(size granio.Size) {
+	var dividerPos, leadingPos, trailingPos granio.Position
+	var dividerSize, leadingSize, trailingSize granio.Size
 
 	dividerVisible := r.split.Leading.Visible() && r.split.Trailing.Visible()
 	if !r.split.Leading.Visible() {
-		trailingPos = fyne.NewPos(0, 0)
+		trailingPos = granio.NewPos(0, 0)
 		trailingSize = size
 	} else if !r.split.Trailing.Visible() {
-		leadingPos = fyne.NewPos(0, 0)
+		leadingPos = granio.NewPos(0, 0)
 		leadingSize = size
 	} else if dividerVisible {
 		if r.split.Horizontal {
@@ -146,8 +146,8 @@ func (r *splitContainerRenderer) Layout(size fyne.Size) {
 	canvas.Refresh(r.divider)
 }
 
-func (r *splitContainerRenderer) MinSize() fyne.Size {
-	s := fyne.NewSize(0, 0)
+func (r *splitContainerRenderer) MinSize() granio.Size {
+	s := granio.NewSize(0, 0)
 	dividerVisible := r.split.Leading.Visible() && r.split.Trailing.Visible()
 	for i, o := range r.objects {
 		if (i == 1 /* divider */ && !dividerVisible) || (i != 1 && !o.Visible()) {
@@ -165,7 +165,7 @@ func (r *splitContainerRenderer) MinSize() fyne.Size {
 	return s
 }
 
-func (r *splitContainerRenderer) Objects() []fyne.CanvasObject {
+func (r *splitContainerRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
@@ -244,18 +244,18 @@ func (r *splitContainerRenderer) minTrailingHeight() float32 {
 
 // Declare conformity with interfaces
 var (
-	_ fyne.CanvasObject  = (*divider)(nil)
-	_ fyne.Draggable     = (*divider)(nil)
-	_ desktop.Cursorable = (*divider)(nil)
-	_ desktop.Hoverable  = (*divider)(nil)
+	_ granio.CanvasObject = (*divider)(nil)
+	_ granio.Draggable    = (*divider)(nil)
+	_ desktop.Cursorable  = (*divider)(nil)
+	_ desktop.Hoverable   = (*divider)(nil)
 )
 
 type divider struct {
 	widget.BaseWidget
 	split          *Split
 	hovered        bool
-	startDragOff   *fyne.Position
-	currentDragPos fyne.Position
+	startDragOff   *granio.Position
+	currentDragPos granio.Position
 }
 
 func newDivider(split *Split) *divider {
@@ -267,10 +267,10 @@ func newDivider(split *Split) *divider {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (d *divider) CreateRenderer() fyne.WidgetRenderer {
+func (d *divider) CreateRenderer() granio.WidgetRenderer {
 	d.ExtendBaseWidget(d)
 	th := d.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameShadow, v))
 	foreground := canvas.NewRectangle(th.Color(theme.ColorNameForeground, v))
@@ -278,7 +278,7 @@ func (d *divider) CreateRenderer() fyne.WidgetRenderer {
 		divider:    d,
 		background: background,
 		foreground: foreground,
-		objects:    []fyne.CanvasObject{background, foreground},
+		objects:    []granio.CanvasObject{background, foreground},
 	}
 }
 
@@ -293,7 +293,7 @@ func (d *divider) DragEnd() {
 	d.startDragOff = nil
 }
 
-func (d *divider) Dragged(e *fyne.DragEvent) {
+func (d *divider) Dragged(e *granio.DragEvent) {
 	if d.startDragOff == nil {
 		d.currentDragPos = d.Position().Add(e.Position)
 		start := e.Position.Subtract(e.Dragged)
@@ -337,19 +337,19 @@ func (d *divider) MouseOut() {
 	d.Refresh()
 }
 
-var _ fyne.WidgetRenderer = (*dividerRenderer)(nil)
+var _ granio.WidgetRenderer = (*dividerRenderer)(nil)
 
 type dividerRenderer struct {
 	divider    *divider
 	background *canvas.Rectangle
 	foreground *canvas.Rectangle
-	objects    []fyne.CanvasObject
+	objects    []granio.CanvasObject
 }
 
 func (*dividerRenderer) Destroy() {
 }
 
-func (r *dividerRenderer) Layout(size fyne.Size) {
+func (r *dividerRenderer) Layout(size granio.Size) {
 	r.background.Resize(size)
 	var x, y, w, h float32
 	if r.divider.split.Horizontal {
@@ -363,24 +363,24 @@ func (r *dividerRenderer) Layout(size fyne.Size) {
 		w = handleLength(r.divider)
 		h = handleThickness(r.divider)
 	}
-	r.foreground.Move(fyne.NewPos(x, y))
-	r.foreground.Resize(fyne.NewSize(w, h))
+	r.foreground.Move(granio.NewPos(x, y))
+	r.foreground.Resize(granio.NewSize(w, h))
 }
 
-func (r *dividerRenderer) MinSize() fyne.Size {
+func (r *dividerRenderer) MinSize() granio.Size {
 	if r.divider.split.Horizontal {
-		return fyne.NewSize(dividerThickness(r.divider), dividerLength(r.divider))
+		return granio.NewSize(dividerThickness(r.divider), dividerLength(r.divider))
 	}
-	return fyne.NewSize(dividerLength(r.divider), dividerThickness(r.divider))
+	return granio.NewSize(dividerLength(r.divider), dividerThickness(r.divider))
 }
 
-func (r *dividerRenderer) Objects() []fyne.CanvasObject {
+func (r *dividerRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
 func (r *dividerRenderer) Refresh() {
 	th := r.divider.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if r.divider.hovered {
 		r.background.FillColor = th.Color(theme.ColorNameHover, v)
@@ -393,7 +393,7 @@ func (r *dividerRenderer) Refresh() {
 	r.Layout(r.divider.Size())
 }
 
-func dividerTheme(d *divider) fyne.Theme {
+func dividerTheme(d *divider) granio.Theme {
 	if d == nil {
 		return theme.Current()
 	}

@@ -1,0 +1,6 @@
+=== RUN   TestReferenceExporterIconsWithAppSettings
+--- PASS: TestReferenceExporterIconsWithAppSettings (3.96s)
+=== RUN   TestReferenceSceneIconsFollowVariant
+--- PASS: TestReferenceSceneIconsFollowVariant (3.95s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_gallery	8.960s

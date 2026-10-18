@@ -3,18 +3,18 @@ package widget
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Widget       = (*radioItem)(nil)
+	_ granio.Widget     = (*radioItem)(nil)
 	_ desktop.Hoverable = (*radioItem)(nil)
-	_ fyne.Tappable     = (*radioItem)(nil)
-	_ fyne.Focusable    = (*radioItem)(nil)
+	_ granio.Tappable   = (*radioItem)(nil)
+	_ granio.Focusable  = (*radioItem)(nil)
 )
 
 func newRadioItem(label string, onTap func(*radioItem)) *radioItem {
@@ -36,11 +36,11 @@ type radioItem struct {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (i *radioItem) CreateRenderer() fyne.WidgetRenderer {
-	txt := canvas.Text{Alignment: fyne.TextAlignLeading}
+func (i *radioItem) CreateRenderer() granio.WidgetRenderer {
+	txt := canvas.Text{Alignment: granio.TextAlignLeading}
 	txt.TextSize = i.Theme().Size(theme.SizeNameText)
 	r := &radioItemRenderer{item: i, label: &txt}
-	r.SetObjects([]fyne.CanvasObject{&r.focusIndicator, &r.icon, &r.over, &txt})
+	r.SetObjects([]granio.CanvasObject{&r.focusIndicator, &r.icon, &r.over, &txt})
 	r.update()
 	return r
 }
@@ -92,7 +92,7 @@ func (i *radioItem) SetSelected(selected bool) {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any change handler
-func (i *radioItem) Tapped(_ *fyne.PointEvent) {
+func (i *radioItem) Tapped(_ *granio.PointEvent) {
 	if !i.focused {
 		focusIfNotMobile(i.super())
 	}
@@ -100,7 +100,7 @@ func (i *radioItem) Tapped(_ *fyne.PointEvent) {
 }
 
 // TypedKey is called when this item receives a key event.
-func (*radioItem) TypedKey(_ *fyne.KeyEvent) {
+func (*radioItem) TypedKey(_ *granio.KeyEvent) {
 }
 
 // TypedRune is called when this item receives a char event.
@@ -127,34 +127,34 @@ type radioItemRenderer struct {
 	label          *canvas.Text
 }
 
-func (r *radioItemRenderer) Layout(size fyne.Size) {
+func (r *radioItemRenderer) Layout(size granio.Size) {
 	th := r.item.Theme()
 	innerPadding := th.Size(theme.SizeNameInnerPadding)
 	borderSize := th.Size(theme.SizeNameInputBorder)
 	iconInlineSize := th.Size(theme.SizeNameInlineIcon)
 
-	focusIndicatorSize := fyne.NewSquareSize(iconInlineSize + innerPadding)
+	focusIndicatorSize := granio.NewSquareSize(iconInlineSize + innerPadding)
 	r.focusIndicator.Resize(focusIndicatorSize)
-	r.focusIndicator.Move(fyne.NewPos(borderSize, (size.Height-focusIndicatorSize.Height)/2))
+	r.focusIndicator.Move(granio.NewPos(borderSize, (size.Height-focusIndicatorSize.Height)/2))
 
-	labelSize := fyne.NewSize(size.Width, size.Height)
+	labelSize := granio.NewSize(size.Width, size.Height)
 	r.label.Resize(labelSize)
-	r.label.Move(fyne.NewPos(focusIndicatorSize.Width+th.Size(theme.SizeNamePadding), 0))
+	r.label.Move(granio.NewPos(focusIndicatorSize.Width+th.Size(theme.SizeNamePadding), 0))
 
-	iconPos := fyne.NewPos(innerPadding/2+borderSize, (size.Height-iconInlineSize)/2)
-	iconSize := fyne.NewSquareSize(iconInlineSize)
+	iconPos := granio.NewPos(innerPadding/2+borderSize, (size.Height-iconInlineSize)/2)
+	iconSize := granio.NewSquareSize(iconInlineSize)
 	r.icon.Resize(iconSize)
 	r.icon.Move(iconPos)
 	r.over.Resize(iconSize)
 	r.over.Move(iconPos)
 }
 
-func (r *radioItemRenderer) MinSize() fyne.Size {
+func (r *radioItemRenderer) MinSize() granio.Size {
 	th := r.item.Theme()
 	inPad := th.Size(theme.SizeNameInnerPadding) * 2
 
-	return r.label.MinSize().
-		AddWidthHeight(inPad+th.Size(theme.SizeNameInlineIcon)+th.Size(theme.SizeNamePadding), inPad)
+	return minimumComponentHeight(r.label.MinSize().
+		AddWidthHeight(inPad+th.Size(theme.SizeNameInlineIcon)+th.Size(theme.SizeNamePadding), inPad), th, granio.ComponentChoice)
 }
 
 func (r *radioItemRenderer) Refresh() {
@@ -164,7 +164,7 @@ func (r *radioItemRenderer) Refresh() {
 
 func (r *radioItemRenderer) update() {
 	th := r.item.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	r.label.Text = r.item.Label
 	r.label.TextSize = th.Size(theme.SizeNameText)
@@ -203,4 +203,5 @@ func (r *radioItemRenderer) update() {
 			r.focusIndicator.FillColor = th.Color(theme.ColorNameHover, v)
 		}
 	}
+	applySystemFocusCircle(&r.focusIndicator, th, r.item.focused && !r.item.Disabled())
 }

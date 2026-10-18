@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	internalWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 type myWidget struct {
@@ -24,16 +24,16 @@ func (m *myWidget) Refresh() {
 	m.refreshed <- true
 }
 
-func (m *myWidget) CreateRenderer() fyne.WidgetRenderer {
+func (m *myWidget) CreateRenderer() granio.WidgetRenderer {
 	m.ExtendBaseWidget(m)
-	return internalWidget.NewSimpleRenderer(&fyne.Container{})
+	return internalWidget.NewSimpleRenderer(&granio.Container{})
 }
 
 func TestApplyThemeCalled(t *testing.T) {
 	widget := &myWidget{refreshed: make(chan bool, 10)}
 
 	test.NewTempWindow(t, widget)
-	fyne.CurrentApp().Settings().SetTheme(test.NewTheme())
+	granio.CurrentApp().Settings().SetTheme(test.NewTheme())
 
 	func() {
 		select {
@@ -46,10 +46,10 @@ func TestApplyThemeCalled(t *testing.T) {
 
 func TestApplyThemeCalledChild(t *testing.T) {
 	child := &myWidget{refreshed: make(chan bool, 10)}
-	parent := &fyne.Container{Layout: layout.NewVBoxLayout(), Objects: []fyne.CanvasObject{child}}
+	parent := &granio.Container{Layout: layout.NewVBoxLayout(), Objects: []granio.CanvasObject{child}}
 
 	test.NewTempWindow(t, parent)
-	fyne.CurrentApp().Settings().SetTheme(test.NewTheme())
+	granio.CurrentApp().Settings().SetTheme(test.NewTheme())
 	func() {
 		select {
 		case <-child.refreshed:
@@ -62,7 +62,7 @@ func TestApplyThemeCalledChild(t *testing.T) {
 func TestSimpleRenderer(t *testing.T) {
 	test.NewTempApp(t)
 
-	c := &fyne.Container{Layout: layout.NewStackLayout(), Objects: []fyne.CanvasObject{
+	c := &granio.Container{Layout: layout.NewStackLayout(), Objects: []granio.CanvasObject{
 		newTestWidget(canvas.NewRectangle(color.Gray{Y: 0x79})),
 		newTestWidget(canvas.NewText("Hi", color.Black)),
 	}}
@@ -75,16 +75,16 @@ func TestSimpleRenderer(t *testing.T) {
 
 type testWidget struct {
 	BaseWidget
-	obj fyne.CanvasObject
+	obj granio.CanvasObject
 }
 
-func newTestWidget(o fyne.CanvasObject) fyne.Widget {
+func newTestWidget(o granio.CanvasObject) granio.Widget {
 	t := &testWidget{obj: o}
 	t.ExtendBaseWidget(t)
 	return t
 }
 
-func (t *testWidget) CreateRenderer() fyne.WidgetRenderer {
+func (t *testWidget) CreateRenderer() granio.WidgetRenderer {
 	return NewSimpleRenderer(t.obj)
 }
 

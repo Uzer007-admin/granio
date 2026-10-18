@@ -3,9 +3,9 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestEntry_TouchDown_AccountsForScroll(t *testing.T) {
@@ -17,8 +17,8 @@ func TestEntry_TouchDown_AccountsForScroll(t *testing.T) {
 	e.scroller.Offset.Y = 50
 
 	touch := &mobile.TouchEvent{
-		PointEvent: fyne.PointEvent{
-			Position: fyne.NewPos(10, 10),
+		PointEvent: granio.PointEvent{
+			Position: granio.NewPos(10, 10),
 		},
 	}
 

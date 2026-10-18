@@ -2,16 +2,18 @@ package widget
 
 import (
 	"fmt"
+	"slices"
+	"sort"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // TreeNodeID represents the unique id of a tree node.
@@ -25,8 +27,8 @@ const (
 
 // Declare conformity with interfaces
 var (
-	_ fyne.Focusable = (*Tree)(nil)
-	_ fyne.Widget    = (*Tree)(nil)
+	_ granio.Focusable = (*Tree)(nil)
+	_ granio.Widget    = (*Tree)(nil)
 )
 
 // Tree widget displays hierarchical data.
@@ -35,21 +37,22 @@ var (
 // Since: 1.4
 type Tree struct {
 	BaseWidget
-	Root TreeNodeID
+	SelectionMode SelectionMode
+	Root          TreeNodeID
 
 	// HideSeparators hides the separators between tree nodes
 	//
 	// Since: 2.5
 	HideSeparators bool
 
-	ChildUIDs      func(uid TreeNodeID) (c []TreeNodeID)                     `json:"-"` // Return a sorted slice of Children TreeNodeIDs for the given Node TreeNodeID
-	CreateNode     func(branch bool) (o fyne.CanvasObject)                   `json:"-"` // Return a CanvasObject that can represent a Branch (if branch is true), or a Leaf (if branch is false)
-	IsBranch       func(uid TreeNodeID) (ok bool)                            `json:"-"` // Return true if the given TreeNodeID represents a Branch
-	OnBranchClosed func(uid TreeNodeID)                                      `json:"-"` // Called when a Branch is closed
-	OnBranchOpened func(uid TreeNodeID)                                      `json:"-"` // Called when a Branch is opened
-	OnSelected     func(uid TreeNodeID)                                      `json:"-"` // Called when the Node with the given TreeNodeID is selected.
-	OnUnselected   func(uid TreeNodeID)                                      `json:"-"` // Called when the Node with the given TreeNodeID is unselected.
-	UpdateNode     func(uid TreeNodeID, branch bool, node fyne.CanvasObject) `json:"-"` // Called to update the given CanvasObject to represent the data at the given TreeNodeID
+	ChildUIDs      func(uid TreeNodeID) (c []TreeNodeID)                       `json:"-"` // Return a sorted slice of Children TreeNodeIDs for the given Node TreeNodeID
+	CreateNode     func(branch bool) (o granio.CanvasObject)                   `json:"-"` // Return a CanvasObject that can represent a Branch (if branch is true), or a Leaf (if branch is false)
+	IsBranch       func(uid TreeNodeID) (ok bool)                              `json:"-"` // Return true if the given TreeNodeID represents a Branch
+	OnBranchClosed func(uid TreeNodeID)                                        `json:"-"` // Called when a Branch is closed
+	OnBranchOpened func(uid TreeNodeID)                                        `json:"-"` // Called when a Branch is opened
+	OnSelected     func(uid TreeNodeID)                                        `json:"-"` // Called when the Node with the given TreeNodeID is selected.
+	OnUnselected   func(uid TreeNodeID)                                        `json:"-"` // Called when the Node with the given TreeNodeID is unselected.
+	UpdateNode     func(uid TreeNodeID, branch bool, node granio.CanvasObject) `json:"-"` // Called to update the given CanvasObject to represent the data at the given TreeNodeID
 
 	// OnHighlighted is a callback to be notified when a given item
 	// in the tree has been highlighted by keyboard navigation and mouse hover
@@ -57,14 +60,18 @@ type Tree struct {
 	// Since: 2.8
 	OnHighlighted func(id TreeNodeID) `json:"-"`
 
-	branchMinSize    fyne.Size
-	currentHighlight TreeNodeID
-	focused          bool
-	leafMinSize      fyne.Size
-	offset           fyne.Position
-	open             map[TreeNodeID]bool
-	scroller         *widget.Scroll
-	selected         []TreeNodeID
+	branchMinSize     granio.Size
+	currentHighlight  TreeNodeID
+	focused           bool
+	leafMinSize       granio.Size
+	offset            granio.Position
+	open              map[TreeNodeID]bool
+	scroller          *widget.Scroll
+	selected          []TreeNodeID
+	geometryVersion   uint64
+	selectionAnchor   TreeNodeID
+	selectionAnchored bool
+	selectionSet      map[TreeNodeID]struct{}
 }
 
 // NewTree returns a new performant tree widget defined by the passed functions.
@@ -74,7 +81,7 @@ type Tree struct {
 // update is used to apply data at specified data location to the passed template CanvasObject.
 //
 // Since: 1.4
-func NewTree(childUIDs func(TreeNodeID) []TreeNodeID, isBranch func(TreeNodeID) bool, create func(bool) fyne.CanvasObject, update func(TreeNodeID, bool, fyne.CanvasObject)) *Tree {
+func NewTree(childUIDs func(TreeNodeID) []TreeNodeID, isBranch func(TreeNodeID) bool, create func(bool) granio.CanvasObject, update func(TreeNodeID, bool, granio.CanvasObject)) *Tree {
 	t := &Tree{ChildUIDs: childUIDs, IsBranch: isBranch, CreateNode: create, UpdateNode: update}
 	t.ExtendBaseWidget(t)
 	return t
@@ -83,7 +90,7 @@ func NewTree(childUIDs func(TreeNodeID) []TreeNodeID, isBranch func(TreeNodeID) 
 // NewTreeWithData creates a new tree widget that will display the contents of the provided data.
 //
 // Since: 2.4
-func NewTreeWithData(data binding.DataTree, createItem func(bool) fyne.CanvasObject, updateItem func(binding.DataItem, bool, fyne.CanvasObject)) *Tree {
+func NewTreeWithData(data binding.DataTree, createItem func(bool) granio.CanvasObject, updateItem func(binding.DataItem, bool, granio.CanvasObject)) *Tree {
 	t := NewTree(
 		data.ChildIDs,
 		func(id TreeNodeID) bool {
@@ -91,10 +98,10 @@ func NewTreeWithData(data binding.DataTree, createItem func(bool) fyne.CanvasObj
 			return len(children) > 0
 		},
 		createItem,
-		func(i TreeNodeID, branch bool, o fyne.CanvasObject) {
+		func(i TreeNodeID, branch bool, o granio.CanvasObject) {
 			item, err := data.GetItem(i)
 			if err != nil {
-				fyne.LogError(fmt.Sprintf("Error getting data item %s", i), err)
+				granio.LogError(fmt.Sprintf("Error getting data item %s", i), err)
 				return
 			}
 			updateItem(item, branch, o)
@@ -119,10 +126,10 @@ func NewTreeWithStrings(data map[string][]string) (t *Tree) {
 			_, b = data[uid]
 			return b
 		},
-		CreateNode: func(bool) fyne.CanvasObject {
+		CreateNode: func(bool) granio.CanvasObject {
 			return NewLabel("Template Object")
 		},
-		UpdateNode: func(uid string, _ bool, node fyne.CanvasObject) {
+		UpdateNode: func(uid string, _ bool, node granio.CanvasObject) {
 			node.(*Label).SetText(uid)
 		},
 	}
@@ -147,13 +154,13 @@ func (t *Tree) CloseBranch(uid TreeNodeID) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (t *Tree) CreateRenderer() fyne.WidgetRenderer {
+func (t *Tree) CreateRenderer() granio.WidgetRenderer {
 	t.ExtendBaseWidget(t)
 	c := newTreeContent(t)
 	s := widget.NewScroll(c)
 	t.scroller = s
 	r := &treeRenderer{
-		BaseRenderer: widget.NewBaseRenderer([]fyne.CanvasObject{s}),
+		BaseRenderer: widget.NewBaseRenderer([]granio.CanvasObject{s}),
 		tree:         t,
 		content:      c,
 		scroller:     s,
@@ -197,7 +204,7 @@ func (t *Tree) FocusLost() {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (t *Tree) MinSize() fyne.Size {
+func (t *Tree) MinSize() granio.Size {
 	t.ExtendBaseWidget(t)
 	return t.BaseWidget.MinSize()
 }
@@ -262,7 +269,7 @@ func (t *Tree) openBranches(uid TreeNodeID) {
 }
 
 // Resize sets a new size for a widget.
-func (t *Tree) Resize(size fyne.Size) {
+func (t *Tree) Resize(size granio.Size) {
 	if size == t.Size() {
 		return
 	}
@@ -324,7 +331,7 @@ func (t *Tree) ScrollTo(uid TreeNodeID) {
 		newY = y + size.Height - t.scroller.Size().Height
 	}
 
-	t.scroller.ScrollToOffset(fyne.NewPos(t.scroller.Offset.X, newY))
+	t.scroller.ScrollToOffset(granio.NewPos(t.scroller.Offset.X, newY))
 	t.offsetUpdated(t.scroller.Offset)
 }
 
@@ -339,7 +346,7 @@ func (t *Tree) ScrollToOffset(offset float32) {
 		offset = 0
 	}
 
-	t.scroller.ScrollToOffset(fyne.NewPos(t.scroller.Offset.X, offset))
+	t.scroller.ScrollToOffset(granio.NewPos(t.scroller.Offset.X, offset))
 	t.offsetUpdated(t.scroller.Offset)
 }
 
@@ -357,6 +364,14 @@ func (t *Tree) ScrollToTop() {
 
 // Select marks the specified node to be selected.
 func (t *Tree) Select(uid TreeNodeID) {
+	if t.SelectionMode == SelectionMultiple {
+		if _, ok := t.selectionSet[uid]; ok {
+			return
+		}
+		t.setSelection(append(append([]TreeNodeID(nil), t.selected...), uid))
+		t.setItemFocus(uid)
+		return
+	}
 	t.setItemFocus(uid)
 	if len(t.selected) > 0 {
 		if uid == t.selected[0] {
@@ -367,7 +382,9 @@ func (t *Tree) Select(uid TreeNodeID) {
 		}
 	}
 	t.selected = []TreeNodeID{uid}
-	t.Refresh()
+	if t.scroller != nil {
+		t.scroller.Content.(*treeContent).refreshForID(allTreeNodesID)
+	}
 	t.ScrollTo(uid)
 	if f := t.OnSelected; f != nil {
 		f(uid)
@@ -396,13 +413,17 @@ func (t *Tree) ToggleBranch(uid string) {
 }
 
 // TypedKey is called if a key event happens while this Tree is focused.
-func (t *Tree) TypedKey(event *fyne.KeyEvent) {
+func (t *Tree) TypedKey(event *granio.KeyEvent) {
 	oldHighlight := t.currentHighlight
 
 	switch event.Name {
-	case fyne.KeySpace:
-		t.Select(t.currentHighlight)
-	case fyne.KeyDown:
+	case granio.KeySpace:
+		if t.SelectionMode == SelectionMultiple {
+			t.pointerSelect(t.currentHighlight, selectionModifiers()|granio.KeyModifierControl)
+		} else {
+			t.Select(t.currentHighlight)
+		}
+	case granio.KeyDown:
 		next := false
 		t.walk(t.Root, "", 0, false, func(id, _ TreeNodeID, _ bool, _ int) {
 			if next {
@@ -412,7 +433,7 @@ func (t *Tree) TypedKey(event *fyne.KeyEvent) {
 				next = true
 			}
 		})
-	case fyne.KeyLeft:
+	case granio.KeyLeft:
 		// If the current focus is on a branch which is open, just close it
 		if t.IsBranch(t.currentHighlight) && t.IsBranchOpen(t.currentHighlight) {
 			t.CloseBranch(t.currentHighlight)
@@ -424,7 +445,7 @@ func (t *Tree) TypedKey(event *fyne.KeyEvent) {
 				}
 			})
 		}
-	case fyne.KeyRight:
+	case granio.KeyRight:
 		if t.IsBranch(t.currentHighlight) {
 			t.OpenBranch(t.currentHighlight)
 		}
@@ -436,7 +457,7 @@ func (t *Tree) TypedKey(event *fyne.KeyEvent) {
 		if len(children) > 0 {
 			t.setItemFocus(children[0])
 		}
-	case fyne.KeyUp:
+	case granio.KeyUp:
 		previous := ""
 		t.walk(t.Root, "", 0, false, func(id, _ TreeNodeID, _ bool, _ int) {
 			if id == t.currentHighlight && previous != "" {
@@ -447,6 +468,9 @@ func (t *Tree) TypedKey(event *fyne.KeyEvent) {
 	}
 
 	if oldHighlight != t.currentHighlight {
+		if t.SelectionMode == SelectionMultiple && selectionModifiers()&granio.KeyModifierShift != 0 {
+			t.pointerSelect(t.currentHighlight, selectionModifiers())
+		}
 		if f := t.OnHighlighted; f != nil {
 			f(t.currentHighlight)
 		}
@@ -460,6 +484,15 @@ func (*Tree) TypedRune(_ rune) {
 
 // Unselect marks the specified node to be not selected.
 func (t *Tree) Unselect(uid TreeNodeID) {
+	if t.SelectionMode == SelectionMultiple {
+		for i, id := range t.selected {
+			if id == uid {
+				t.setSelection(append(append([]TreeNodeID(nil), t.selected[:i]...), t.selected[i+1:]...))
+				return
+			}
+		}
+		return
+	}
 	if len(t.selected) == 0 || t.selected[0] != uid {
 		return
 	}
@@ -481,6 +514,7 @@ func (t *Tree) UnselectAll() {
 
 	selected := t.selected
 	t.selected = nil
+	t.selectionSet = nil
 	t.Refresh()
 	if f := t.OnUnselected; f != nil {
 		for _, uid := range selected {
@@ -517,7 +551,20 @@ func (t *Tree) ensureOpenMap() {
 	}
 }
 
-func (t *Tree) offsetAndSize(uid TreeNodeID) (y float32, size fyne.Size, found bool) {
+func (t *Tree) offsetAndSize(uid TreeNodeID) (y float32, size granio.Size, found bool) {
+	if t.scroller != nil {
+		r := cache.Renderer(t.scroller.Content.(*treeContent)).(*treeContentRenderer)
+		r.prepareGeometry()
+		if index, ok := r.rowIndex[uid]; ok {
+			row := r.rows[index]
+			y = row.y
+			if index > 0 {
+				y -= r.geometryPadding
+			}
+			return y, row.size, true
+		}
+		return 0, granio.Size{}, false
+	}
 	pad := t.Theme().Size(theme.SizeNamePadding)
 
 	t.walkAll(func(id, _ TreeNodeID, branch bool, _ int) {
@@ -545,7 +592,7 @@ func (t *Tree) offsetAndSize(uid TreeNodeID) (y float32, size fyne.Size, found b
 	return y, size, found
 }
 
-func (t *Tree) offsetUpdated(pos fyne.Position) {
+func (t *Tree) offsetUpdated(pos granio.Position) {
 	if t.offset == pos {
 		return
 	}
@@ -575,7 +622,7 @@ func (t *Tree) walkAll(onNode func(TreeNodeID, TreeNodeID, bool, int)) {
 	t.walk(t.Root, "", 0, false, onNode)
 }
 
-var _ fyne.WidgetRenderer = (*treeRenderer)(nil)
+var _ granio.WidgetRenderer = (*treeRenderer)(nil)
 
 type treeRenderer struct {
 	widget.BaseRenderer
@@ -584,20 +631,21 @@ type treeRenderer struct {
 	scroller *widget.Scroll
 }
 
-func (r *treeRenderer) MinSize() fyne.Size {
+func (r *treeRenderer) MinSize() granio.Size {
 	minSize := r.scroller.MinSize()
 	minSize = internal.MaxSizes(minSize, r.tree.branchMinSize)
 	minSize = internal.MaxSizes(minSize, r.tree.leafMinSize)
 	return minSize
 }
 
-func (r *treeRenderer) Layout(size fyne.Size) {
+func (r *treeRenderer) Layout(size granio.Size) {
 	r.content.viewport = size
 	r.scroller.Resize(size)
 	r.tree.offsetUpdated(r.scroller.Offset)
 }
 
 func (r *treeRenderer) Refresh() {
+	r.tree.geometryVersion++
 	r.updateMinSizes()
 	s := r.tree.Size()
 	if s.IsZero() {
@@ -612,20 +660,20 @@ func (r *treeRenderer) Refresh() {
 
 func (r *treeRenderer) updateMinSizes() {
 	if f := r.tree.CreateNode; f != nil {
-		branch := createItemAndApplyThemeScope(func() fyne.CanvasObject { return f(true) }, r.tree)
+		branch := createItemAndApplyThemeScope(func() granio.CanvasObject { return f(true) }, r.tree)
 		r.tree.branchMinSize = newBranch(r.tree, branch).MinSize()
 
-		leaf := createItemAndApplyThemeScope(func() fyne.CanvasObject { return f(false) }, r.tree)
+		leaf := createItemAndApplyThemeScope(func() granio.CanvasObject { return f(false) }, r.tree)
 		r.tree.leafMinSize = newLeaf(r.tree, leaf).MinSize()
 	}
 }
 
-var _ fyne.Widget = (*treeContent)(nil)
+var _ granio.Widget = (*treeContent)(nil)
 
 type treeContent struct {
 	BaseWidget
 	tree     *Tree
-	viewport fyne.Size
+	viewport granio.Size
 
 	nextRefreshID TreeNodeID
 }
@@ -638,7 +686,7 @@ func newTreeContent(tree *Tree) (c *treeContent) {
 	return c
 }
 
-func (c *treeContent) CreateRenderer() fyne.WidgetRenderer {
+func (c *treeContent) CreateRenderer() granio.WidgetRenderer {
 	return &treeContentRenderer{
 		BaseRenderer: widget.BaseRenderer{},
 		treeContent:  c,
@@ -647,7 +695,7 @@ func (c *treeContent) CreateRenderer() fyne.WidgetRenderer {
 	}
 }
 
-func (c *treeContent) Resize(size fyne.Size) {
+func (c *treeContent) Resize(size granio.Size) {
 	if size == c.Size() {
 		return
 	}
@@ -667,26 +715,83 @@ func (c *treeContent) Refresh() {
 	c.BaseWidget.Refresh()
 }
 
-var _ fyne.WidgetRenderer = (*treeContentRenderer)(nil)
+var _ granio.WidgetRenderer = (*treeContentRenderer)(nil)
 
 type treeContentRenderer struct {
 	widget.BaseRenderer
 	treeContent *treeContent
-	separators  []fyne.CanvasObject
-	objects     []fyne.CanvasObject
+	separators  []granio.CanvasObject
+	objects     []granio.CanvasObject
 	branches    map[string]*branch
 	leaves      map[string]*leaf
 	branchPool  async.Pool[*branch]
 	leafPool    async.Pool[*leaf]
 
-	wasVisible   []TreeNodeID
-	visible      []TreeNodeID
-	minSizeCache fyne.Size
+	wasVisible                    []TreeNodeID
+	visible                       []TreeNodeID
+	minSizeCache                  granio.Size
+	rows                          []treeRow
+	rowIndex                      map[TreeNodeID]int
+	geometryReady                 bool
+	geometryVersion               uint64
+	geometryPadding, geometryIcon float32
+	geometryBranch, geometryLeaf  granio.Size
 }
 
-func (r *treeContentRenderer) Layout(size fyne.Size) {
+type treeRow struct {
+	id     TreeNodeID
+	branch bool
+	depth  int
+	y      float32
+	size   granio.Size
+}
+
+// prepareGeometry flattens open nodes only when the data or theme changes.
+// Scrolling then visits the viewport rather than every open node.
+func (r *treeContentRenderer) prepareGeometry() {
+	t := r.treeContent.tree
 	th := r.treeContent.Theme()
-	r.objects = nil
+	pad, icon := th.Size(theme.SizeNamePadding), th.Size(theme.SizeNameInlineIcon)
+	if r.geometryReady && r.geometryVersion == t.geometryVersion && r.geometryPadding == pad &&
+		r.geometryIcon == icon && r.geometryBranch == t.branchMinSize && r.geometryLeaf == t.leafMinSize {
+		return
+	}
+	clear(r.rows)
+	r.rows = r.rows[:0]
+	r.rowIndex = make(map[TreeNodeID]int)
+	var minimum granio.Size
+	t.walkAll(func(id, _ TreeNodeID, branch bool, depth int) {
+		if t.Root == "" {
+			if id == "" {
+				return
+			}
+			depth--
+		}
+		if minimum.Height > 0 {
+			minimum.Height += pad
+		}
+		size := t.leafMinSize
+		if branch {
+			size = t.branchMinSize
+		}
+		r.rowIndex[id] = len(r.rows)
+		r.rows = append(r.rows, treeRow{id: id, branch: branch, depth: depth, y: minimum.Height, size: size})
+		minimum.Width = max(minimum.Width, size.Width+float32(depth)*(icon+pad))
+		minimum.Height += size.Height
+	})
+	r.minSizeCache = minimum
+	if len(r.rows) < cap(r.rows)/4 {
+		r.rows = slices.Clone(r.rows)
+	}
+	r.geometryVersion, r.geometryPadding, r.geometryIcon = t.geometryVersion, pad, icon
+	r.geometryBranch, r.geometryLeaf = t.branchMinSize, t.leafMinSize
+	r.geometryReady = true
+}
+
+func (r *treeContentRenderer) Layout(size granio.Size) {
+	r.prepareGeometry()
+	th := r.treeContent.Theme()
+	r.objects = r.objects[:0]
 	branches := make(map[string]*branch)
 	leaves := make(map[string]*leaf)
 
@@ -696,42 +801,26 @@ func (r *treeContentRenderer) Layout(size fyne.Size) {
 	width := max(size.Width, viewport.Width)
 	separatorCount := 0
 	separatorThickness := th.Size(theme.SizeNameSeparatorThickness)
-	separatorSize := fyne.NewSize(width, separatorThickness)
+	separatorSize := granio.NewSize(width, separatorThickness)
 	separatorOff := (pad + separatorThickness) / 2
 	hideSeparators := r.treeContent.tree.HideSeparators
-	y := float32(0)
 
 	r.wasVisible, r.visible = r.visible, r.wasVisible
 	r.visible = r.visible[:0]
 
-	// walkAll open branches and obtain nodes to render in scroller's viewport
-	r.treeContent.tree.walkAll(func(uid, _ string, isBranch bool, depth int) {
-		// Root node is not rendered unless it has been customized
-		if r.treeContent.tree.Root == "" {
-			depth = depth - 1
-			if uid == "" {
-				// This is root node, skip
-				return
-			}
+	first := sort.Search(len(r.rows), func(i int) bool { return r.rows[i].y+r.rows[i].size.Height >= offsetY })
+	for _, row := range r.rows[first:] {
+		uid, isBranch, depth, y, m := row.id, row.branch, row.depth, row.y, row.size
+		if y > offsetY+viewport.Height {
+			break
 		}
-
-		// If this is not the first item, add a separator
 		addSeparator := y > 0
-		if addSeparator {
-			y += pad
-			separatorCount++
-		}
-
-		m := r.treeContent.tree.leafMinSize
-		if isBranch {
-			m = r.treeContent.tree.branchMinSize
-		}
 		if y+m.Height >= offsetY && y <= offsetY+viewport.Height {
 			// Node is in viewport
 			r.visible = append(r.visible, uid)
 
 			if addSeparator && !hideSeparators {
-				var separator fyne.CanvasObject
+				var separator granio.CanvasObject
 				if separatorCount < len(r.separators) {
 					separator = r.separators[separatorCount]
 					separator.Show() // it may previously have been hidden
@@ -739,13 +828,13 @@ func (r *treeContentRenderer) Layout(size fyne.Size) {
 					separator = NewSeparator()
 					r.separators = append(r.separators, separator)
 				}
-				separator.Move(fyne.NewPos(0, y-separatorOff))
+				separator.Move(granio.NewPos(0, y-separatorOff))
 				separator.Resize(separatorSize)
 				r.objects = append(r.objects, separator)
 				separatorCount++
 			}
 
-			var n fyne.CanvasObject
+			var n granio.CanvasObject
 			if isBranch {
 				b, ok := r.branches[uid]
 				if !ok {
@@ -772,12 +861,11 @@ func (r *treeContentRenderer) Layout(size fyne.Size) {
 				r.objects = append(r.objects, l)
 			}
 			if n != nil {
-				n.Move(fyne.NewPos(0, y))
-				n.Resize(fyne.NewSize(width, m.Height))
+				n.Move(granio.NewPos(0, y))
+				n.Resize(granio.NewSize(width, m.Height))
 			}
 		}
-		y += m.Height
-	})
+	}
 
 	if hideSeparators {
 		// start below iteration from 0 to hide all separators
@@ -804,49 +892,16 @@ func (r *treeContentRenderer) Layout(size fyne.Size) {
 	r.leaves = leaves
 }
 
-func (r *treeContentRenderer) MinSize() fyne.Size {
-	if !r.minSizeCache.IsZero() {
-		return r.minSizeCache
-	}
-	th := r.treeContent.Theme()
-	pad := th.Size(theme.SizeNamePadding)
-	iconSize := th.Size(theme.SizeNameInlineIcon)
-
-	var minSize fyne.Size
-	r.treeContent.tree.walkAll(func(uid, _ string, isBranch bool, depth int) {
-		// Root node is not rendered unless it has been customized
-		if r.treeContent.tree.Root == "" {
-			depth = depth - 1
-			if uid == "" {
-				// This is root node, skip
-				return
-			}
-		}
-
-		// If this is not the first item, add a separator
-		if minSize.Height > 0 {
-			minSize.Height += pad
-		}
-
-		m := r.treeContent.tree.leafMinSize
-		if isBranch {
-			m = r.treeContent.tree.branchMinSize
-		}
-		m.Width += float32(depth) * (iconSize + pad)
-		minSize.Width = max(minSize.Width, m.Width)
-		minSize.Height += m.Height
-	})
-
-	r.minSizeCache = minSize
-	return minSize
+func (r *treeContentRenderer) MinSize() granio.Size {
+	r.prepareGeometry()
+	return r.minSizeCache
 }
 
-func (r *treeContentRenderer) Objects() []fyne.CanvasObject {
+func (r *treeContentRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
 func (r *treeContentRenderer) Refresh() {
-	r.minSizeCache = fyne.Size{}
 	r.refreshForID(r.treeContent.nextRefreshID)
 	for _, s := range r.separators {
 		s.Refresh()
@@ -892,9 +947,9 @@ func (r *treeContentRenderer) getBranch() *branch {
 		return o
 	}
 
-	var content fyne.CanvasObject
+	var content granio.CanvasObject
 	if f := r.treeContent.tree.CreateNode; f != nil {
-		content = createItemAndApplyThemeScope(func() fyne.CanvasObject { return f(true) }, r.treeContent.tree)
+		content = createItemAndApplyThemeScope(func() granio.CanvasObject { return f(true) }, r.treeContent.tree)
 	}
 	return newBranch(r.treeContent.tree, content)
 }
@@ -904,37 +959,41 @@ func (r *treeContentRenderer) getLeaf() *leaf {
 		return o
 	}
 
-	var content fyne.CanvasObject
+	var content granio.CanvasObject
 	if f := r.treeContent.tree.CreateNode; f != nil {
-		content = createItemAndApplyThemeScope(func() fyne.CanvasObject { return f(false) }, r.treeContent.tree)
+		content = createItemAndApplyThemeScope(func() granio.CanvasObject { return f(false) }, r.treeContent.tree)
 	}
 	return newLeaf(r.treeContent.tree, content)
 }
 
 var (
-	_ desktop.Hoverable = (*treeNode)(nil)
-	_ fyne.CanvasObject = (*treeNode)(nil)
-	_ fyne.Tappable     = (*treeNode)(nil)
+	_ desktop.Hoverable   = (*treeNode)(nil)
+	_ granio.CanvasObject = (*treeNode)(nil)
+	_ granio.Tappable     = (*treeNode)(nil)
 )
 
 type treeNode struct {
 	BaseWidget
-	tree     *Tree
-	uid      string
-	depth    int
-	hovered  bool
-	icon     fyne.CanvasObject
-	isBranch bool
-	content  fyne.CanvasObject
+	clickModifiers granio.KeyModifier
+	tree           *Tree
+	uid            string
+	depth          int
+	hovered        bool
+	icon           granio.CanvasObject
+	isBranch       bool
+	content        granio.CanvasObject
 }
 
-func (n *treeNode) Content() fyne.CanvasObject {
+func (n *treeNode) MouseDown(event *desktop.MouseEvent) { n.clickModifiers = event.Modifier }
+func (*treeNode) MouseUp(*desktop.MouseEvent)           {}
+
+func (n *treeNode) Content() granio.CanvasObject {
 	return n.content
 }
 
-func (n *treeNode) CreateRenderer() fyne.WidgetRenderer {
+func (n *treeNode) CreateRenderer() granio.WidgetRenderer {
 	th := n.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
@@ -970,12 +1029,16 @@ func (n *treeNode) MouseOut() {
 	n.partialRefresh()
 }
 
-func (n *treeNode) Tapped(*fyne.PointEvent) {
-	n.tree.Select(n.uid)
-	c := fyne.CurrentApp().Driver().CanvasForObject(n.tree.super())
+func (n *treeNode) Tapped(*granio.PointEvent) {
+	if n.tree.SelectionMode == SelectionMultiple {
+		n.tree.pointerSelect(n.uid, n.clickModifiers)
+	} else {
+		n.tree.Select(n.uid)
+	}
+	c := granio.CurrentApp().Driver().CanvasForObject(n.tree.super())
 	if c != nil && c.Focused() != n.tree {
-		if !fyne.CurrentDevice().IsMobile() {
-			c.Focus(n.tree.super().(fyne.Focusable))
+		if !granio.CurrentDevice().IsMobile() {
+			c.Focus(n.tree.super().(granio.Focusable))
 		}
 	}
 	n.Refresh()
@@ -994,7 +1057,7 @@ func (n *treeNode) update(uid string, depth int) {
 	n.partialRefresh()
 }
 
-var _ fyne.WidgetRenderer = (*treeNodeRenderer)(nil)
+var _ granio.WidgetRenderer = (*treeNodeRenderer)(nil)
 
 type treeNodeRenderer struct {
 	widget.BaseRenderer
@@ -1002,7 +1065,7 @@ type treeNodeRenderer struct {
 	background *canvas.Rectangle
 }
 
-func (r *treeNodeRenderer) Layout(size fyne.Size) {
+func (r *treeNodeRenderer) Layout(size granio.Size) {
 	th := r.treeNode.Theme()
 	pad := th.Size(theme.SizeNamePadding)
 	iconSize := th.Size(theme.SizeNameInlineIcon)
@@ -1010,19 +1073,19 @@ func (r *treeNodeRenderer) Layout(size fyne.Size) {
 	y := float32(0)
 	r.background.Resize(size)
 	if r.treeNode.icon != nil {
-		r.treeNode.icon.Move(fyne.NewPos(x, y))
-		r.treeNode.icon.Resize(fyne.NewSize(iconSize, size.Height))
+		r.treeNode.icon.Move(granio.NewPos(x, y))
+		r.treeNode.icon.Resize(granio.NewSize(iconSize, size.Height))
 	}
 	x += iconSize
 	x += pad
 	if r.treeNode.content != nil {
-		r.treeNode.content.Move(fyne.NewPos(x, y))
-		r.treeNode.content.Resize(fyne.NewSize(size.Width-x, size.Height))
+		r.treeNode.content.Move(granio.NewPos(x, y))
+		r.treeNode.content.Resize(granio.NewSize(size.Width-x, size.Height))
 	}
 }
 
-func (r *treeNodeRenderer) MinSize() fyne.Size {
-	var minSize fyne.Size
+func (r *treeNodeRenderer) MinSize() granio.Size {
+	var minSize granio.Size
 	if r.treeNode.content != nil {
 		minSize = r.treeNode.content.MinSize()
 	}
@@ -1034,7 +1097,7 @@ func (r *treeNodeRenderer) MinSize() fyne.Size {
 	return minSize
 }
 
-func (r *treeNodeRenderer) Objects() (objects []fyne.CanvasObject) {
+func (r *treeNodeRenderer) Objects() (objects []granio.CanvasObject) {
 	objects = append(objects, r.background)
 	if r.treeNode.content != nil {
 		objects = append(objects, r.treeNode.content)
@@ -1056,14 +1119,15 @@ func (r *treeNodeRenderer) Refresh() {
 
 func (r *treeNodeRenderer) partialRefresh() {
 	th := r.treeNode.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if r.treeNode.icon != nil {
 		r.treeNode.icon.Refresh()
 	}
 	r.background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
-	if len(r.treeNode.tree.selected) > 0 && r.treeNode.uid == r.treeNode.tree.selected[0] {
-		r.background.FillColor = th.Color(theme.ColorNameSelection, v)
+	r.background.StrokeWidth = 0
+	if r.treeNode.tree.isSelected(r.treeNode.uid) {
+		applySelectionStyle(r.background, th, v)
 		r.background.Show()
 	} else if r.treeNode.hovered || (r.treeNode.tree.focused && r.treeNode.tree.currentHighlight == r.treeNode.uid) {
 		r.background.FillColor = th.Color(theme.ColorNameHover, v)
@@ -1076,13 +1140,13 @@ func (r *treeNodeRenderer) partialRefresh() {
 	canvas.Refresh(r.treeNode.super())
 }
 
-var _ fyne.Widget = (*branch)(nil)
+var _ granio.Widget = (*branch)(nil)
 
 type branch struct {
 	*treeNode
 }
 
-func newBranch(tree *Tree, content fyne.CanvasObject) (b *branch) {
+func newBranch(tree *Tree, content granio.CanvasObject) (b *branch) {
 	b = &branch{
 		treeNode: &treeNode{
 			tree:     tree,
@@ -1104,7 +1168,7 @@ func (b *branch) update(uid string, depth int) {
 	b.icon.(*branchIcon).update(uid)
 }
 
-var _ fyne.Tappable = (*branchIcon)(nil)
+var _ granio.Tappable = (*branchIcon)(nil)
 
 type branchIcon struct {
 	Icon
@@ -1129,7 +1193,7 @@ func (i *branchIcon) Refresh() {
 	i.Icon.Refresh()
 }
 
-func (i *branchIcon) Tapped(*fyne.PointEvent) {
+func (i *branchIcon) Tapped(*granio.PointEvent) {
 	i.tree.ToggleBranch(i.uid)
 }
 
@@ -1138,13 +1202,13 @@ func (i *branchIcon) update(uid string) {
 	i.Refresh()
 }
 
-var _ fyne.Widget = (*leaf)(nil)
+var _ granio.Widget = (*leaf)(nil)
 
 type leaf struct {
 	*treeNode
 }
 
-func newLeaf(tree *Tree, content fyne.CanvasObject) (l *leaf) {
+func newLeaf(tree *Tree, content granio.CanvasObject) (l *leaf) {
 	l = &leaf{
 		&treeNode{
 			tree:     tree,

@@ -1,0 +1,230 @@
+[
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/anthonynsimon/bild",
+    "before": "v0.14.0",
+    "after": "v0.17.1"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/fsnotify/fsnotify",
+    "before": "v1.9.0",
+    "after": "v1.10.1"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/mattn/go-runewidth",
+    "before": "v0.0.24",
+    "after": "v0.0.31"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/nicksnyder/go-i18n/v2",
+    "before": "v2.5.1",
+    "after": "v2.6.1"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/stretchr/testify",
+    "before": "v1.11.1",
+    "after": "v1.12.1"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/yuin/goldmark",
+    "before": "v1.8.2",
+    "after": "v1.8.6"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/image",
+    "before": "v0.24.0",
+    "after": "v0.47.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/mod",
+    "before": "v0.23.0",
+    "after": "v0.42.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/sys",
+    "before": "v0.30.0",
+    "after": "v0.49.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/text",
+    "before": "v0.22.0",
+    "after": "v0.43.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/tools",
+    "before": "v0.30.0",
+    "after": "v0.52.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/clipperhouse/uax29/v2",
+    "before": "v2.2.0",
+    "after": "v2.7.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/hack-pad/safejs",
+    "before": "v0.1.0",
+    "after": "v0.1.1"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "github.com/xrash/smetrics",
+    "before": "v0.0.0-20240521201337-686a1a2994c1",
+    "after": "v0.0.0-20250705151800-55b8f293f342"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/net",
+    "before": "v0.35.0",
+    "after": "v0.61.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "golang.org/x/sync",
+    "before": "v0.11.0",
+    "after": "v0.24.0"
+  },
+  {
+    "module_file": ".\\go.mod",
+    "dependency": "gopkg.in/check.v1",
+    "before": "v1.0.0-20200227125254-8fa46927fb4f",
+    "after": "v1.0.0-20201130134442-10cb98267c6c"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "fyne.io/fyne/v2",
+    "before": "v2.8.0",
+    "after": "v2.8.1"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/stretchr/testify",
+    "before": "v1.11.1",
+    "after": "v1.12.1"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "fyne.io/systray",
+    "before": "v1.12.2",
+    "after": "v1.12.3-0.20260810170012-af4e8e793ec4"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/anthonynsimon/bild",
+    "before": "v0.14.0",
+    "after": "v0.17.1"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/clipperhouse/uax29/v2",
+    "before": "v2.2.0",
+    "after": "v2.7.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/fsnotify/fsnotify",
+    "before": "v1.9.0",
+    "after": "v1.10.1"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/fyne-io/oksvg",
+    "before": "v0.2.0",
+    "after": "v0.2.1-0.20260918172519-a9af55fa95d9"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/go-gl/glfw/v3.4/glfw",
+    "before": "v0.1.0-pre.1.0.20260707082822-2a407d02d01a",
+    "after": "v0.1.0-pre.2"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/go-text/typesetting",
+    "before": "v0.3.4",
+    "after": "v0.3.5"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/hack-pad/safejs",
+    "before": "v0.1.0",
+    "after": "v0.1.1"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/mattn/go-runewidth",
+    "before": "v0.0.24",
+    "after": "v0.0.31"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/nicksnyder/go-i18n/v2",
+    "before": "v2.5.1",
+    "after": "v2.6.1"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/xrash/smetrics",
+    "before": "v0.0.0-20240521201337-686a1a2994c1",
+    "after": "v0.0.0-20250705151800-55b8f293f342"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "github.com/yuin/goldmark",
+    "before": "v1.8.2",
+    "after": "v1.8.6"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/image",
+    "before": "v0.24.0",
+    "after": "v0.47.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/mod",
+    "before": "v0.23.0",
+    "after": "v0.42.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/net",
+    "before": "v0.35.0",
+    "after": "v0.61.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/sync",
+    "before": "v0.11.0",
+    "after": "v0.24.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/sys",
+    "before": "v0.30.0",
+    "after": "v0.49.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/text",
+    "before": "v0.22.0",
+    "after": "v0.43.0"
+  },
+  {
+    "module_file": "extras\\apps\\go.mod",
+    "dependency": "golang.org/x/tools",
+    "before": "v0.30.0",
+    "after": "v0.52.0"
+  }
+]

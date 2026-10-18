@@ -1,0 +1,96 @@
+Date: 2026-10-12 MSK
+[19:09:57.159] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[19:09:57.159] Command line: weston --backend=headless-backend.so --use-pixman --scale=2 --width=1280 --height=720 --idle-time=0 --no-config --socket=material-runtime --log=/tmp/fmrt-31fa438ce5f24f4aa285393d83952303/logs/weston.txt
+[19:09:57.159] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[19:09:57.159] Flight recorder: enabled
+[19:09:57.159] Starting with no config file.
+[19:09:57.159] Output repaint window is 7 ms maximum.
+[19:09:57.159] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[19:09:57.159] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[19:09:57.159] Color manager: no-op
+[19:09:57.159] Output 'headless' using color profile: built-in default sRGB SDR profile
+[19:09:57.159] Output 'headless' enabled with head(s) headless
+[19:09:57.159] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[19:09:57.160] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[19:09:57.160] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[19:09:57.160] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[19:09:57.160] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[19:10:02.796] caught signal 15
+[19:10:02.796] panel surface gone
+[19:10:02.796] background surface gone
+Date: 2026-10-12 MSK
+[19:20:15.532] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[19:20:15.532] Command line: weston --backend=headless-backend.so --use-pixman --scale=2 --width=1280 --height=720 --idle-time=0 --no-config --socket=material-runtime --log=/tmp/fmrt-31fa438ce5f24f4aa285393d83952303/logs/weston.txt
+[19:20:15.532] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[19:20:15.532] Flight recorder: enabled
+[19:20:15.532] Starting with no config file.
+[19:20:15.532] Output repaint window is 7 ms maximum.
+[19:20:15.532] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[19:20:15.532] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[19:20:15.532] Color manager: no-op
+[19:20:15.532] Output 'headless' using color profile: built-in default sRGB SDR profile
+[19:20:15.532] Output 'headless' enabled with head(s) headless
+[19:20:15.532] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[19:20:15.532] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[19:20:15.533] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[19:20:15.533] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[19:20:15.533] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[19:20:18.936] caught signal 15
+[19:20:18.936] panel surface gone
+[19:20:18.936] background surface gone
+Date: 2026-10-12 MSK
+[19:24:15.558] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[19:24:15.558] Command line: weston --backend=headless-backend.so --use-pixman --scale=2 --width=1280 --height=720 --idle-time=0 --no-config --socket=material-runtime --log=/tmp/fmrt-31fa438ce5f24f4aa285393d83952303/logs/weston.txt
+[19:24:15.558] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[19:24:15.558] Flight recorder: enabled
+[19:24:15.558] Starting with no config file.
+[19:24:15.558] Output repaint window is 7 ms maximum.
+[19:24:15.558] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[19:24:15.558] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[19:24:15.558] Color manager: no-op
+[19:24:15.558] Output 'headless' using color profile: built-in default sRGB SDR profile
+[19:24:15.558] Output 'headless' enabled with head(s) headless
+[19:24:15.558] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[19:24:15.558] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[19:24:15.558] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[19:24:15.559] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[19:24:15.559] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[19:24:19.110] caught signal 15
+[19:24:19.110] panel surface gone
+[19:24:19.110] background surface gone

@@ -1,0 +1,6 @@
+FYNE-XIM: callback context enabled
+=== RUN   TestIBusNativePasswordAndLifecycle
+FYNE-XIM: callback context enabled
+--- PASS: TestIBusNativePasswordAndLifecycle (0.36s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.582s

@@ -1,0 +1,16 @@
+{
+  "sources": {
+    "unicode": "seat:3\nready\nready\npointer-enter:10\nstarted\nsource-device-enter:14\ntarget:none\naction:1\naction:0\ntarget:text/plain\naction:1\ndrop-performed\nsent:text/plain:24\nfinished\n",
+    "html": "seat:3\nready\nready\npointer-enter:21\nstarted\nsource-device-enter:25\ntarget:none\naction:1\naction:0\ntarget:text/html\naction:1\ndrop-performed\nsent:text/html:18\nfinished\n",
+    "files": "seat:3\nready\nready\npointer-enter:32\nstarted\nsource-device-enter:36\ntarget:none\naction:1\naction:0\ntarget:text/uri-list\naction:1\ndrop-performed\nsent:text/uri-list:32\nfinished\n",
+    "binary": "seat:3\nready\nready\npointer-enter:43\nstarted\nsource-device-enter:47\ntarget:none\naction:1\naction:0\ntarget:application/x-fyne-drag-test\naction:1\ndrop-performed\nsent:application/x-fyne-drag-test:524288\nfinished\n",
+    "rejected": "seat:3\nready\nready\npointer-enter:54\nstarted\nsource-device-enter:58\ntarget:none\naction:1\naction:0\ntarget:none\ncancelled\n"
+  },
+  "gestures": {
+    "unicode": "real compositor gesture: 518,578 -> 479,484\n",
+    "html": "real compositor gesture: 414,482 -> 486,490\n",
+    "files": "real compositor gesture: 566,574 -> 476,484\n",
+    "binary": "real compositor gesture: 790,646 -> 476,486\n",
+    "rejected": "real compositor gesture: 662,406 -> 471,495\n"
+  }
+}

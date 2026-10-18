@@ -6,11 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestAddTranslations(t *testing.T) {
-	err := AddTranslations(fyne.NewStaticResource("en.json", []byte(`{
+	err := AddTranslations(granio.NewStaticResource("en.json", []byte(`{
 		"Test": "Match"
 	}`)))
 	if assert.NoError(t, err) {
@@ -29,7 +29,7 @@ func TestAddTranslations(t *testing.T) {
 
 func TestLocalize_Default(t *testing.T) {
 	fallback := closestSupportedLocale([]string{"xx"})
-	assert.Equal(t, fyne.Locale("en"), fallback[0:2])
+	assert.Equal(t, granio.Locale("en"), fallback[0:2])
 }
 
 func TestLocalize_Fallback(t *testing.T) {
@@ -49,7 +49,7 @@ func TestLocalize_Map(t *testing.T) {
 }
 
 func TestLocalizePlural_Fallback(t *testing.T) {
-	require.NoError(t, AddTranslations(fyne.NewStaticResource("en.json", []byte(`{
+	require.NoError(t, AddTranslations(granio.NewStaticResource("en.json", []byte(`{
 		"Apple": {
 			"one": "Apple",
 			"other": "Apples"
@@ -63,7 +63,7 @@ func TestLocalizePlural_Fallback(t *testing.T) {
 }
 
 func TestLocalizeKey_Fallback(t *testing.T) {
-	require.NoError(t, AddTranslations(fyne.NewStaticResource("en.json", []byte(`{
+	require.NoError(t, AddTranslations(granio.NewStaticResource("en.json", []byte(`{
 		"appleID": "Apple Matched"
 	}`))))
 
@@ -73,7 +73,7 @@ func TestLocalizeKey_Fallback(t *testing.T) {
 }
 
 func TestLocalizePluralKey_Fallback(t *testing.T) {
-	require.NoError(t, AddTranslations(fyne.NewStaticResource("en.json", []byte(`{
+	require.NoError(t, AddTranslations(granio.NewStaticResource("en.json", []byte(`{
 		"appleID": {
 			"one": "Apple",
 			"other": "Apples"
@@ -103,7 +103,7 @@ func TestUpdateLocalizer_RetriesAfterRuntimeIsReady(t *testing.T) {
 	runtimeReady = func() bool { return false }
 	updateLocalizer()
 	require.True(t, localePending.Load())
-	require.NotNil(t, localizer)
+	require.NotNil(t, localizer.Load())
 
 	assert.Equal(t, "Missing", L("Missing"))
 	require.True(t, localePending.Load())
@@ -111,4 +111,32 @@ func TestUpdateLocalizer_RetriesAfterRuntimeIsReady(t *testing.T) {
 	runtimeReady = origReady
 	assert.Equal(t, "Missing", L("Missing"))
 	assert.False(t, localePending.Load())
+}
+
+func TestSetLocale(t *testing.T) {
+	orig := localeOverride.Load()
+	t.Cleanup(func() {
+		localeOverride.Store(orig)
+		updateLocalizer()
+	})
+	SetLocale("")
+	systemTranslation := L("Cancel")
+
+	SetLocale("en")
+	assert.Equal(t, "Cancel", L("Cancel"))
+	assert.Equal(t, "(Select one)", L("(Select one)"))
+	SetLocale("ru")
+	assert.Equal(t, "Отмена", L("Cancel"))
+	assert.Equal(t, "(Выберите вариант)", L("(Select one)"))
+
+	SetLocale("en")
+	require.NoError(t, AddTranslationsForLocale([]byte(`{"locale_override_test": "Override retained"}`), "en"))
+	assert.Equal(t, "Cancel", L("Cancel"))
+	assert.Equal(t, "Override retained", L("locale_override_test"))
+
+	SetLocale("und")
+	assert.Equal(t, "Cancel", L("Cancel"))
+	SetLocale("")
+	assert.Nil(t, localeOverride.Load())
+	assert.Equal(t, systemTranslation, L("Cancel"))
 }

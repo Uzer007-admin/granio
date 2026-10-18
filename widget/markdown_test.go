@@ -6,11 +6,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	internalWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestRichTextMarkdown_Blockquote(t *testing.T) {
@@ -116,9 +116,9 @@ func TestRichTextMarkdown_CodeBlockWraps(t *testing.T) {
 
 	long := strings.Repeat("abcdefghij", 50) // one ~500-char line
 	r := NewRichTextFromMarkdown("```\n" + long + "\n```")
-	r.Wrapping = fyne.TextWrapBreak
+	r.Wrapping = granio.TextWrapBreak
 	w := test.NewTempWindow(t, r)
-	w.Resize(fyne.NewSize(200, 300))
+	w.Resize(granio.NewSize(200, 300))
 	r.Refresh()
 
 	assert.Greater(t, r.rows(), 2) // the long line wraps into rows on the panel
@@ -141,8 +141,8 @@ func TestRichTextMarkdown_Table(t *testing.T) {
 	assert.Len(t, table.Rows[0], 2)
 
 	// Per-column alignment from the delimiter row.
-	assert.Equal(t, fyne.TextAlignLeading, table.Alignments[0])
-	assert.Equal(t, fyne.TextAlignTrailing, table.Alignments[1])
+	assert.Equal(t, granio.TextAlignLeading, table.Alignments[0])
+	assert.Equal(t, granio.TextAlignTrailing, table.Alignments[1])
 
 	// Header text.
 	if text, ok := table.Headers[0][0].(*TextSegment); ok {
@@ -173,11 +173,11 @@ func TestRichTextMarkdown_TableAlignment(t *testing.T) {
 		t.Fatal("Segment should be a Table")
 	}
 
-	want := []fyne.TextAlign{
-		fyne.TextAlignLeading,  // :---
-		fyne.TextAlignCenter,   // :---:
-		fyne.TextAlignTrailing, // ---:
-		fyne.TextAlignLeading,  // --- (no marker defaults to leading)
+	want := []granio.TextAlign{
+		granio.TextAlignLeading,  // :---
+		granio.TextAlignCenter,   // :---:
+		granio.TextAlignTrailing, // ---:
+		granio.TextAlignLeading,  // --- (no marker defaults to leading)
 	}
 	assert.Equal(t, want, table.Alignments)
 
@@ -186,7 +186,7 @@ func TestRichTextMarkdown_TableAlignment(t *testing.T) {
 	for col, a := range want {
 		assert.Equal(t, a, table.alignFor(col))
 	}
-	assert.Equal(t, fyne.TextAlignLeading, table.alignFor(len(want)))
+	assert.Equal(t, granio.TextAlignLeading, table.alignFor(len(want)))
 }
 
 func TestTableCellAppliesAlignment(t *testing.T) {
@@ -194,20 +194,20 @@ func TestTableCellAppliesAlignment(t *testing.T) {
 
 	// A body cell applies the column alignment to its text without bolding it.
 	body := &TextSegment{Style: RichTextStyleInline, Text: "x"}
-	newTableCell([]RichTextSegment{body}, fyne.TextAlignTrailing, false)
-	assert.Equal(t, fyne.TextAlignTrailing, body.Style.Alignment)
+	newTableCell([]RichTextSegment{body}, granio.TextAlignTrailing, false)
+	assert.Equal(t, granio.TextAlignTrailing, body.Style.Alignment)
 	assert.False(t, body.Style.TextStyle.Bold)
 
 	// A header cell applies the alignment and makes the text bold.
 	header := &TextSegment{Style: RichTextStyleInline, Text: "h"}
-	newTableCell([]RichTextSegment{header}, fyne.TextAlignCenter, true)
-	assert.Equal(t, fyne.TextAlignCenter, header.Style.Alignment)
+	newTableCell([]RichTextSegment{header}, granio.TextAlignCenter, true)
+	assert.Equal(t, granio.TextAlignCenter, header.Style.Alignment)
 	assert.True(t, header.Style.TextStyle.Bold)
 
 	// Hyperlink cells are aligned via their own Alignment field.
 	link := &HyperlinkSegment{Text: "l"}
-	newTableCell([]RichTextSegment{link}, fyne.TextAlignTrailing, false)
-	assert.Equal(t, fyne.TextAlignTrailing, link.Alignment)
+	newTableCell([]RichTextSegment{link}, granio.TextAlignTrailing, false)
+	assert.Equal(t, granio.TextAlignTrailing, link.Alignment)
 }
 
 func TestRichTextMarkdown_TableAlignmentAppliedThroughVisual(t *testing.T) {
@@ -219,8 +219,8 @@ func TestRichTextMarkdown_TableAlignmentAppliedThroughVisual(t *testing.T) {
 	// Visual builds the cells, feeding alignFor(col) into each via newTableCell.
 	table.Visual()
 
-	assert.Equal(t, fyne.TextAlignLeading, table.Rows[0][0][0].(*TextSegment).Style.Alignment)
-	assert.Equal(t, fyne.TextAlignTrailing, table.Rows[0][1][0].(*TextSegment).Style.Alignment)
+	assert.Equal(t, granio.TextAlignLeading, table.Rows[0][0][0].(*TextSegment).Style.Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, table.Rows[0][1][0].(*TextSegment).Style.Alignment)
 }
 
 func TestRichTextMarkdown_TableScrollsHorizontally(t *testing.T) {
@@ -684,7 +684,7 @@ func TestRichTextMarkdown_ListBulletsAreNotContent(t *testing.T) {
 
 	r := NewRichTextFromMarkdown("- one\n- two")
 	w := test.NewTempWindow(t, r)
-	w.Resize(fyne.NewSize(200, 100))
+	w.Resize(granio.NewSize(200, 100))
 	r.Refresh()
 
 	// the bullets are drawn beside the items rather than being part of them
@@ -699,7 +699,7 @@ func TestRichTextMarkdown_CodeBlockRowsOnPanel(t *testing.T) {
 
 	r := NewRichTextFromMarkdown("intro\n\n```\none\ntwo\n```\n\nafter")
 	w := test.NewTempWindow(t, r)
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 	r.Refresh()
 
 	var onPanel []string

@@ -1,0 +1,1457 @@
+{
+  "note": "Pass counts include tests and subtests; package counts exclude packages without tests. Existing upstream skips are retained.",
+  "profiles": [
+    {
+      "profile": "Windows amd64 v3, desktop",
+      "go_version": "go1.27.1",
+      "command": "go test -race -tags=migrated_fynedo -count=1 -timeout=5m ./... ./extras/apps/...",
+      "started_at": "2026-10-12T02:22:04.2421943+03:00",
+      "finished_at": "2026-10-12T02:23:16.9754345+03:00",
+      "packages_with_tests": 47,
+      "test_pass_actions": 4855,
+      "test_skip_actions": 3,
+      "failures": 0,
+      "packages": [
+        {
+          "Package": "fyne.io/fyne/v2",
+          "Action": "pass",
+          "Elapsed": 1.9140000000000001
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/templates",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/tutorials",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/hello",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/commands",
+          "Action": "pass",
+          "Elapsed": 2.052
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/util",
+          "Action": "pass",
+          "Elapsed": 1.663
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres",
+          "Action": "pass",
+          "Elapsed": 1.87
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo",
+          "Action": "pass",
+          "Elapsed": 1.837
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/embedded",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/binding",
+          "Action": "pass",
+          "Elapsed": 2.338
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/validation",
+          "Action": "pass",
+          "Elapsed": 1.72
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver",
+          "Action": "pass",
+          "Elapsed": 1.6360000000000001
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/desktop",
+          "Action": "pass",
+          "Elapsed": 1.6520000000000001
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/build",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/canvas",
+          "Action": "pass",
+          "Elapsed": 5.933
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/commands",
+          "Action": "pass",
+          "Elapsed": 3.901
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/settings",
+          "Action": "pass",
+          "Elapsed": 3.346
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/cache",
+          "Action": "pass",
+          "Elapsed": 1.782
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/color",
+          "Action": "pass",
+          "Elapsed": 1.736
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/app",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/key",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/mouse",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/paint",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/size",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/touch",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/gl",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/mobileinit",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/goos",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/app",
+          "Action": "pass",
+          "Elapsed": 2.153
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/geom",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/animation",
+          "Action": "pass",
+          "Elapsed": 2.57
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/embedded",
+          "Action": "pass",
+          "Elapsed": 1.908
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver",
+          "Action": "pass",
+          "Elapsed": 2.638
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/software",
+          "Action": "pass",
+          "Elapsed": 4.188
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/common",
+          "Action": "pass",
+          "Elapsed": 2.615
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal",
+          "Action": "pass",
+          "Elapsed": 4.813
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/metadata",
+          "Action": "pass",
+          "Elapsed": 2.356
+        },
+        {
+          "Package": "fyne.io/fyne/v2/container",
+          "Action": "pass",
+          "Elapsed": 6.799
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/async",
+          "Action": "pass",
+          "Elapsed": 5.428
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile",
+          "Action": "pass",
+          "Elapsed": 7.42
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/gl",
+          "Action": "pass",
+          "Elapsed": 2.76
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter",
+          "Action": "pass",
+          "Elapsed": 10.213
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scale",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository/mime",
+          "Action": "pass",
+          "Elapsed": 2.498
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/svg",
+          "Action": "pass",
+          "Elapsed": 2.416
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/theme",
+          "Action": "pass",
+          "Elapsed": 2.226
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/test",
+          "Action": "pass",
+          "Elapsed": 2.726
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scheduler",
+          "Action": "pass",
+          "Elapsed": 5.599
+        },
+        {
+          "Package": "fyne.io/fyne/v2/app",
+          "Action": "pass",
+          "Elapsed": 27.166
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage/repository",
+          "Action": "pass",
+          "Elapsed": 2.798
+        },
+        {
+          "Package": "fyne.io/fyne/v2/lang",
+          "Action": "pass",
+          "Elapsed": 3.168
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage",
+          "Action": "pass",
+          "Elapsed": 3.621
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/software",
+          "Action": "pass",
+          "Elapsed": 14.395
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/widget",
+          "Action": "pass",
+          "Elapsed": 3.731
+        },
+        {
+          "Package": "fyne.io/fyne/v2/layout",
+          "Action": "pass",
+          "Elapsed": 4.171
+        },
+        {
+          "Package": "fyne.io/fyne/v2/theme",
+          "Action": "pass",
+          "Elapsed": 1.624
+        },
+        {
+          "Package": "fyne.io/fyne/v2/tools/playground",
+          "Action": "pass",
+          "Elapsed": 1.701
+        },
+        {
+          "Package": "fyne.io/fyne/v2/test",
+          "Action": "pass",
+          "Elapsed": 3.163
+        },
+        {
+          "Package": "fyne.io/apps",
+          "Action": "pass",
+          "Elapsed": 1.767
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/glfw",
+          "Action": "pass",
+          "Elapsed": 34.516
+        },
+        {
+          "Package": "fyne.io/fyne/v2/dialog",
+          "Action": "pass",
+          "Elapsed": 37.481
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository",
+          "Action": "pass",
+          "Elapsed": 36.412
+        },
+        {
+          "Package": "fyne.io/fyne/v2/widget",
+          "Action": "pass",
+          "Elapsed": 28.506
+        }
+      ]
+    },
+    {
+      "profile": "Windows amd64 v3, CI",
+      "go_version": "go1.27.1",
+      "command": "go test -race -tags=no_glfw,migrated_fynedo -count=1 ./... ./extras/apps/...",
+      "started_at": "2026-10-12T01:31:20.5538782+03:00",
+      "finished_at": "2026-10-12T01:32:35.9818057+03:00",
+      "packages_with_tests": 47,
+      "test_pass_actions": 4702,
+      "test_skip_actions": 3,
+      "failures": 0,
+      "packages": [
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2",
+          "Action": "pass",
+          "Elapsed": 2.4699999999999998
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/templates",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/util",
+          "Action": "pass",
+          "Elapsed": 2.014
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/commands",
+          "Action": "pass",
+          "Elapsed": 2.408
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/tutorials",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres",
+          "Action": "pass",
+          "Elapsed": 2.298
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/hello",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/commands",
+          "Action": "pass",
+          "Elapsed": 4.182
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo",
+          "Action": "pass",
+          "Elapsed": 2.417
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/embedded",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/build",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/settings",
+          "Action": "pass",
+          "Elapsed": 3.581
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/binding",
+          "Action": "pass",
+          "Elapsed": 1.7229999999999999
+        },
+        {
+          "Package": "fyne.io/fyne/v2/canvas",
+          "Action": "pass",
+          "Elapsed": 6.204
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/validation",
+          "Action": "pass",
+          "Elapsed": 1.705
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/desktop",
+          "Action": "pass",
+          "Elapsed": 1.474
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver",
+          "Action": "pass",
+          "Elapsed": 1.6280000000000001
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/cache",
+          "Action": "pass",
+          "Elapsed": 1.521
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/color",
+          "Action": "pass",
+          "Elapsed": 1.393
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/app",
+          "Action": "pass",
+          "Elapsed": 2.02
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/animation",
+          "Action": "pass",
+          "Elapsed": 2.468
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/embedded",
+          "Action": "pass",
+          "Elapsed": 2.032
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal",
+          "Action": "pass",
+          "Elapsed": 3.467
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/software",
+          "Action": "pass",
+          "Elapsed": 4.484
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver",
+          "Action": "pass",
+          "Elapsed": 4.083
+        },
+        {
+          "Package": "fyne.io/fyne/v2/container",
+          "Action": "pass",
+          "Elapsed": 7.692
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/glfw",
+          "Action": "pass",
+          "Elapsed": 2.154
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/common",
+          "Action": "pass",
+          "Elapsed": 4.287
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/async",
+          "Action": "pass",
+          "Elapsed": 5.849
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/app",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/key",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/mouse",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/paint",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/size",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/touch",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/gl",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/mobileinit",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/goos",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/geom",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/metadata",
+          "Action": "pass",
+          "Elapsed": 3.701
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scale",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/gl",
+          "Action": "pass",
+          "Elapsed": 4.423
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository/mime",
+          "Action": "pass",
+          "Elapsed": 2.281
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/svg",
+          "Action": "pass",
+          "Elapsed": 2.107
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scheduler",
+          "Action": "pass",
+          "Elapsed": 4.884
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile",
+          "Action": "pass",
+          "Elapsed": 9.109
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/theme",
+          "Action": "pass",
+          "Elapsed": 3.033
+        },
+        {
+          "Package": "fyne.io/fyne/v2/lang",
+          "Action": "pass",
+          "Elapsed": 2.939
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/test",
+          "Action": "pass",
+          "Elapsed": 4.331
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/widget",
+          "Action": "pass",
+          "Elapsed": 3.607
+        },
+        {
+          "Package": "fyne.io/fyne/v2/app",
+          "Action": "pass",
+          "Elapsed": 31.107
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage",
+          "Action": "pass",
+          "Elapsed": 2.325
+        },
+        {
+          "Package": "fyne.io/fyne/v2/layout",
+          "Action": "pass",
+          "Elapsed": 3.942
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/software",
+          "Action": "pass",
+          "Elapsed": 14.039
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage/repository",
+          "Action": "pass",
+          "Elapsed": 1.512
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter",
+          "Action": "pass",
+          "Elapsed": 15.37
+        },
+        {
+          "Package": "fyne.io/fyne/v2/test",
+          "Action": "pass",
+          "Elapsed": 3.146
+        },
+        {
+          "Package": "fyne.io/fyne/v2/theme",
+          "Action": "pass",
+          "Elapsed": 2.003
+        },
+        {
+          "Package": "fyne.io/fyne/v2/tools/playground",
+          "Action": "pass",
+          "Elapsed": 2.064
+        },
+        {
+          "Package": "fyne.io/apps",
+          "Action": "pass",
+          "Elapsed": 2.047
+        },
+        {
+          "Package": "fyne.io/fyne/v2/dialog",
+          "Action": "pass",
+          "Elapsed": 37.244
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository",
+          "Action": "pass",
+          "Elapsed": 37.132
+        },
+        {
+          "Package": "fyne.io/fyne/v2/widget",
+          "Action": "pass",
+          "Elapsed": 38.842
+        }
+      ]
+    },
+    {
+      "profile": "Windows amd64 v1, CI",
+      "go_version": "go1.27.1",
+      "command": "go test -tags=no_glfw,migrated_fynedo -count=1 ./... ./extras/apps/...",
+      "started_at": "2026-10-12T01:50:49.4106253+03:00",
+      "finished_at": "2026-10-12T01:55:54.4074237+03:00",
+      "packages_with_tests": 47,
+      "test_pass_actions": 4702,
+      "test_skip_actions": 3,
+      "failures": 0,
+      "packages": [
+        {
+          "Package": "fyne.io/fyne/v2",
+          "Action": "pass",
+          "Elapsed": 1.685
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/templates",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/tutorials",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/hello",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/embedded",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/util",
+          "Action": "pass",
+          "Elapsed": 1.215
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres",
+          "Action": "pass",
+          "Elapsed": 1.347
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/validation",
+          "Action": "pass",
+          "Elapsed": 1.361
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/commands",
+          "Action": "pass",
+          "Elapsed": 2.077
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/build",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/desktop",
+          "Action": "pass",
+          "Elapsed": 1.6320000000000001
+        },
+        {
+          "Package": "fyne.io/fyne/v2/canvas",
+          "Action": "pass",
+          "Elapsed": 2.505
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/commands",
+          "Action": "pass",
+          "Elapsed": 2.667
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver",
+          "Action": "pass",
+          "Elapsed": 2.297
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo",
+          "Action": "pass",
+          "Elapsed": 3.026
+        },
+        {
+          "Package": "fyne.io/fyne/v2/app",
+          "Action": "pass",
+          "Elapsed": 3.941
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/software",
+          "Action": "pass",
+          "Elapsed": 3.502
+        },
+        {
+          "Package": "fyne.io/fyne/v2/container",
+          "Action": "pass",
+          "Elapsed": 4.007
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/app",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/key",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/mouse",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/paint",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/size",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/touch",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/gl",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/mobileinit",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/goos",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/binding",
+          "Action": "pass",
+          "Elapsed": 4.053
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/settings",
+          "Action": "pass",
+          "Elapsed": 4.198
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/geom",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal",
+          "Action": "pass",
+          "Elapsed": 4.757
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/cache",
+          "Action": "pass",
+          "Elapsed": 3.512
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/color",
+          "Action": "pass",
+          "Elapsed": 3.549
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/app",
+          "Action": "pass",
+          "Elapsed": 4.494
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scale",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/animation",
+          "Action": "pass",
+          "Elapsed": 4.944
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver",
+          "Action": "pass",
+          "Elapsed": 4.541
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/common",
+          "Action": "pass",
+          "Elapsed": 4.755
+        },
+        {
+          "Package": "fyne.io/fyne/v2/dialog",
+          "Action": "pass",
+          "Elapsed": 6.997
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/glfw",
+          "Action": "pass",
+          "Elapsed": 3.713
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/embedded",
+          "Action": "pass",
+          "Elapsed": 4.84
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/async",
+          "Action": "pass",
+          "Elapsed": 6.1
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/metadata",
+          "Action": "pass",
+          "Elapsed": 3.519
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository/mime",
+          "Action": "pass",
+          "Elapsed": 2.752
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter",
+          "Action": "pass",
+          "Elapsed": 4.547
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/gl",
+          "Action": "pass",
+          "Elapsed": 4.781
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/theme",
+          "Action": "pass",
+          "Elapsed": 2.527
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/svg",
+          "Action": "pass",
+          "Elapsed": 3.803
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/software",
+          "Action": "pass",
+          "Elapsed": 5.023
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile",
+          "Action": "pass",
+          "Elapsed": 6.952
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scheduler",
+          "Action": "pass",
+          "Elapsed": 5.612
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage/repository",
+          "Action": "pass",
+          "Elapsed": 3.394
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/widget",
+          "Action": "pass",
+          "Elapsed": 4.88
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/test",
+          "Action": "pass",
+          "Elapsed": 5.416
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage",
+          "Action": "pass",
+          "Elapsed": 4.451
+        },
+        {
+          "Package": "fyne.io/fyne/v2/theme",
+          "Action": "pass",
+          "Elapsed": 3.326
+        },
+        {
+          "Package": "fyne.io/fyne/v2/tools/playground",
+          "Action": "pass",
+          "Elapsed": 3.177
+        },
+        {
+          "Package": "fyne.io/fyne/v2/layout",
+          "Action": "pass",
+          "Elapsed": 4.883
+        },
+        {
+          "Package": "fyne.io/fyne/v2/test",
+          "Action": "pass",
+          "Elapsed": 4.273
+        },
+        {
+          "Package": "fyne.io/apps",
+          "Action": "pass",
+          "Elapsed": 2.83
+        },
+        {
+          "Package": "fyne.io/fyne/v2/lang",
+          "Action": "pass",
+          "Elapsed": 5.984
+        },
+        {
+          "Package": "fyne.io/fyne/v2/widget",
+          "Action": "pass",
+          "Elapsed": 11.096
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository",
+          "Action": "pass",
+          "Elapsed": 37.887
+        }
+      ]
+    },
+    {
+      "profile": "OSnova Linux amd64 v3, CI",
+      "go_version": "go1.27.1",
+      "command": "go test -p 4 -race -tags=no_glfw,ci,migrated_fynedo -count=1 ./... ./extras/apps/...",
+      "started_at": "2026-10-12T02:00:58.650696875+03:00",
+      "finished_at": "2026-10-12T02:02:34.937189268+03:00",
+      "packages_with_tests": 49,
+      "test_pass_actions": 4722,
+      "test_skip_actions": 3,
+      "failures": 0,
+      "packages": [
+        {
+          "Package": "fyne.io/fyne/v2",
+          "Action": "pass",
+          "Elapsed": 1.017
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/commands",
+          "Action": "pass",
+          "Elapsed": 1.029
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres",
+          "Action": "pass",
+          "Elapsed": 1.078
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/templates",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/commands",
+          "Action": "pass",
+          "Elapsed": 2.9210000000000003
+        },
+        {
+          "Package": "fyne.io/fyne/v2/canvas",
+          "Action": "pass",
+          "Elapsed": 3.882
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne/internal/util",
+          "Action": "pass",
+          "Elapsed": 1.01
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo/tutorials",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/data",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/hello",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_demo",
+          "Action": "pass",
+          "Elapsed": 1.026
+        },
+        {
+          "Package": "fyne.io/fyne/v2/cmd/fyne_settings/settings",
+          "Action": "pass",
+          "Elapsed": 1.086
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/binding",
+          "Action": "pass",
+          "Elapsed": 1.038
+        },
+        {
+          "Package": "fyne.io/fyne/v2/data/validation",
+          "Action": "pass",
+          "Elapsed": 1.01
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver",
+          "Action": "pass",
+          "Elapsed": 1.016
+        },
+        {
+          "Package": "fyne.io/fyne/v2/container",
+          "Action": "pass",
+          "Elapsed": 3.7039999999999997
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/embedded",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/mobile",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/desktop",
+          "Action": "pass",
+          "Elapsed": 1.024
+        },
+        {
+          "Package": "fyne.io/fyne/v2/driver/software",
+          "Action": "pass",
+          "Elapsed": 2.039
+        },
+        {
+          "Package": "fyne.io/fyne/v2/app",
+          "Action": "pass",
+          "Elapsed": 18.757
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal",
+          "Action": "pass",
+          "Elapsed": 1.928
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/animation",
+          "Action": "pass",
+          "Elapsed": 2.165
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/build",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/app",
+          "Action": "pass",
+          "Elapsed": 1.039
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/cache",
+          "Action": "pass",
+          "Elapsed": 1.02
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/color",
+          "Action": "pass",
+          "Elapsed": 1.029
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver",
+          "Action": "pass",
+          "Elapsed": 1.147
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/common",
+          "Action": "pass",
+          "Elapsed": 1.12
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/async",
+          "Action": "pass",
+          "Elapsed": 3.5789999999999997
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/embedded",
+          "Action": "pass",
+          "Elapsed": 1.242
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/glfw",
+          "Action": "pass",
+          "Elapsed": 1.054
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/key",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/mouse",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/paint",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/size",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/event/touch",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/app",
+          "Action": "pass",
+          "Elapsed": 1.031
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/mobileinit",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/goos",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile/gl",
+          "Action": "pass",
+          "Elapsed": 1.027
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/metadata",
+          "Action": "pass",
+          "Elapsed": 1.75
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/geom",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/driver/mobile",
+          "Action": "pass",
+          "Elapsed": 4.507
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/gl",
+          "Action": "pass",
+          "Elapsed": 2.3609999999999998
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository",
+          "Action": "pass",
+          "Elapsed": 1.04
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter",
+          "Action": "pass",
+          "Elapsed": 6.213
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scale",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/repository/mime",
+          "Action": "pass",
+          "Elapsed": 1.022
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/svg",
+          "Action": "pass",
+          "Elapsed": 1.127
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/scheduler",
+          "Action": "pass",
+          "Elapsed": 3.332
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/test",
+          "Action": "pass",
+          "Elapsed": 1.082
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/theme",
+          "Action": "pass",
+          "Elapsed": 1.029
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/painter/software",
+          "Action": "pass",
+          "Elapsed": 9.314
+        },
+        {
+          "Package": "fyne.io/fyne/v2/internal/widget",
+          "Action": "pass",
+          "Elapsed": 1.21
+        },
+        {
+          "Package": "fyne.io/fyne/v2/lang",
+          "Action": "pass",
+          "Elapsed": 1.037
+        },
+        {
+          "Package": "fyne.io/fyne/v2/layout",
+          "Action": "pass",
+          "Elapsed": 1.126
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage",
+          "Action": "pass",
+          "Elapsed": 1.047
+        },
+        {
+          "Package": "fyne.io/fyne/v2/storage/repository",
+          "Action": "pass",
+          "Elapsed": 1.021
+        },
+        {
+          "Package": "fyne.io/fyne/v2/test",
+          "Action": "pass",
+          "Elapsed": 1.405
+        },
+        {
+          "Package": "fyne.io/fyne/v2/dialog",
+          "Action": "pass",
+          "Elapsed": 37.605
+        },
+        {
+          "Package": "fyne.io/fyne/v2/tools/playground",
+          "Action": "pass",
+          "Elapsed": 1.025
+        },
+        {
+          "Package": "fyne.io/fyne/v2/theme",
+          "Action": "pass",
+          "Elapsed": 1.043
+        },
+        {
+          "Package": "fyne.io/apps",
+          "Action": "pass",
+          "Elapsed": 1.036
+        },
+        {
+          "Package": "fyne.io/fyne/v2/widget",
+          "Action": "pass",
+          "Elapsed": 35.159
+        }
+      ]
+    }
+  ]
+}

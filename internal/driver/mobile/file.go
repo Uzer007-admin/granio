@@ -3,22 +3,22 @@ package mobile
 import (
 	"io"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 type fileOpen struct {
 	io.ReadCloser
-	uri  fyne.URI
+	uri  granio.URI
 	done func()
 }
 
-func (f *fileOpen) URI() fyne.URI {
+func (f *fileOpen) URI() granio.URI {
 	return f.uri
 }
 
-func fileReaderForURI(u fyne.URI) (fyne.URIReadCloser, error) {
+func fileReaderForURI(u granio.URI) (granio.URIReadCloser, error) {
 	file := &fileOpen{uri: u}
 	read, err := nativeFileOpen(file)
 	if read == nil {
@@ -36,7 +36,7 @@ func mobileFilter(filter storage.FileFilter) *app.FileFilter {
 	} else if f, ok := filter.(*storage.ExtensionFileFilter); ok {
 		mobile.Extensions = f.Extensions
 	} else if filter != nil {
-		fyne.LogError("Custom filter types not supported on mobile", nil)
+		granio.LogError("Custom filter types not supported on mobile", nil)
 	}
 
 	return mobile
@@ -47,8 +47,8 @@ type hasOpenPicker interface {
 }
 
 // ShowFileOpenPicker loads the native file open dialog and returns the chosen file path via the callback func.
-func ShowFileOpenPicker(callback func(fyne.URIReadCloser, error), filter storage.FileFilter) {
-	drv, _ := fyne.CurrentApp().Driver().(*driver)
+func ShowFileOpenPicker(callback func(granio.URIReadCloser, error), filter storage.FileFilter) {
+	drv, _ := granio.CurrentApp().Driver().(*driver)
 	if a, ok := drv.app.(hasOpenPicker); ok {
 		a.ShowFileOpenPicker(func(uri string, closer func()) {
 			if uri == "" {
@@ -65,9 +65,9 @@ func ShowFileOpenPicker(callback func(fyne.URIReadCloser, error), filter storage
 }
 
 // ShowFolderOpenPicker loads the native folder open dialog and calls back the chosen directory path as a ListableURI.
-func ShowFolderOpenPicker(callback func(fyne.ListableURI, error)) {
+func ShowFolderOpenPicker(callback func(granio.ListableURI, error)) {
 	filter := storage.NewMimeTypeFileFilter([]string{"application/x-directory"})
-	drv, _ := fyne.CurrentApp().Driver().(*driver)
+	drv, _ := granio.CurrentApp().Driver().(*driver)
 	if a, ok := drv.app.(hasOpenPicker); ok {
 		a.ShowFileOpenPicker(func(path string, _ func()) {
 			if path == "" {
@@ -88,15 +88,15 @@ func ShowFolderOpenPicker(callback func(fyne.ListableURI, error)) {
 
 type fileSave struct {
 	io.WriteCloser
-	uri  fyne.URI
+	uri  granio.URI
 	done func()
 }
 
-func (f *fileSave) URI() fyne.URI {
+func (f *fileSave) URI() granio.URI {
 	return f.uri
 }
 
-func fileWriterForURI(u fyne.URI, truncate bool) (fyne.URIWriteCloser, error) {
+func fileWriterForURI(u granio.URI, truncate bool) (granio.URIWriteCloser, error) {
 	file := &fileSave{uri: u}
 	write, err := nativeFileSave(file, truncate)
 	if write == nil {
@@ -111,8 +111,8 @@ type hasSavePicker interface {
 }
 
 // ShowFileSavePicker loads the native file save dialog and returns the chosen file path via the callback func.
-func ShowFileSavePicker(callback func(fyne.URIWriteCloser, error), filter storage.FileFilter, filename string) {
-	drv, _ := fyne.CurrentApp().Driver().(*driver)
+func ShowFileSavePicker(callback func(granio.URIWriteCloser, error), filter storage.FileFilter, filename string) {
+	drv, _ := granio.CurrentApp().Driver().(*driver)
 	if a, ok := drv.app.(hasSavePicker); ok {
 		a.ShowFileSavePicker(func(path string, closer func()) {
 			if path == "" {

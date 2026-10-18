@@ -1,0 +1,39 @@
+go: downloading github.com/Uzer007-admin/granio-systray v1.12.3-0.20260810170012-af4e8e793ec4
+go: downloading github.com/Uzer007-admin/granio-image v0.1.1
+go: downloading github.com/stretchr/testify v1.12.1
+go: downloading github.com/Uzer007-admin/granio-oksvg v0.2.1-0.20260918172519-a9af55fa95d9
+go: downloading github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef
+go: downloading github.com/jeandeaual/go-locale v0.0.0-20250612000132-0ef82f21eade
+go: downloading github.com/nicksnyder/go-i18n/v2 v2.6.1
+go: downloading golang.org/x/text v0.43.0
+go: downloading github.com/go-text/render v0.2.1
+go: downloading github.com/go-text/typesetting v0.3.5
+go: downloading golang.org/x/image v0.47.0
+go: downloading github.com/mattn/go-runewidth v0.0.31
+go: downloading github.com/yuin/goldmark v1.8.6
+go: downloading github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25
+go: downloading github.com/anthonynsimon/bild v0.17.1
+go: downloading golang.org/x/net v0.61.0
+go: downloading github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c
+go: downloading github.com/clipperhouse/uax29/v2 v2.7.0
+go: downloading golang.org/x/sys v0.49.0
+go: downloading go.yaml.in/yaml/v3 v3.0.5
+dbus-daemon[2294928]: [session uid=0 pid=2294928] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=0 pid=2301408 comm="/tmp/go-build3658187184/b001/glfw.test -test.panic")
+dbus-daemon[2294928]: [session uid=0 pid=2294928] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2301443]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2301408 comm="/tmp/go-build3658187184/b001/glfw.test -test.panic")
+dbus-daemon[2301443]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+=== RUN   TestNativeFrameRates
+    frame_rate_test.go:26: target=120Hz observed=49 animation ticks in 400ms
+    frame_rate_test.go:26: target=144Hz observed=57 animation ticks in 400ms
+    frame_rate_test.go:26: target=160Hz observed=64 animation ticks in 400ms
+    frame_rate_test.go:26: target=180Hz observed=72 animation ticks in 400ms
+    frame_rate_test.go:26: target=240Hz observed=96 animation ticks in 400ms
+    frame_rate_test.go:26: target=280Hz observed=112 animation ticks in 400ms
+    frame_rate_test.go:26: target=300Hz observed=120 animation ticks in 400ms
+    frame_rate_test.go:26: target=360Hz observed=144 animation ticks in 400ms
+--- PASS: TestNativeFrameRates (3.21s)
+=== RUN   TestQueuedWorkWakesNativeIdle
+--- PASS: TestQueuedWorkWakesNativeIdle (0.00s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	4.442s

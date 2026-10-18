@@ -1,10 +1,10 @@
 package container
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // Navigation container is used to provide your application with a control bar and an area for content objects.
@@ -14,27 +14,27 @@ import (
 type Navigation struct {
 	widget.BaseWidget
 
-	Root      fyne.CanvasObject
+	Root      granio.CanvasObject
 	Title     string
 	OnBack    func() `json:"-"`
 	OnForward func() `json:"-"`
 
 	level  int
-	stack  fyne.Container
+	stack  granio.Container
 	titles []string
 }
 
 // NewNavigation creates a new navigation container with a given root object.
 //
 // Since: 2.7
-func NewNavigation(root fyne.CanvasObject) *Navigation {
+func NewNavigation(root granio.CanvasObject) *Navigation {
 	return NewNavigationWithTitle(root, "")
 }
 
 // NewNavigationWithTitle creates a new navigation container with a given root object and a default title.
 //
 // Since: 2.7
-func NewNavigationWithTitle(root fyne.CanvasObject, s string) *Navigation {
+func NewNavigationWithTitle(root granio.CanvasObject, s string) *Navigation {
 	var nav *Navigation
 	nav = &Navigation{
 		Root:      root,
@@ -48,14 +48,14 @@ func NewNavigationWithTitle(root fyne.CanvasObject, s string) *Navigation {
 // Push puts the given object on top of the navigation stack and hides the object below.
 //
 // Since: 2.7
-func (nav *Navigation) Push(obj fyne.CanvasObject) {
+func (nav *Navigation) Push(obj granio.CanvasObject) {
 	nav.PushWithTitle(obj, nav.Title)
 }
 
 // PushWithTitle puts the given CanvasObject on top, hides the object below, and uses the given title as label text.
 //
 // Since: 2.7
-func (nav *Navigation) PushWithTitle(obj fyne.CanvasObject, s string) {
+func (nav *Navigation) PushWithTitle(obj granio.CanvasObject, s string) {
 	nav.setup()
 	obj.Show()
 	objs := nav.stack.Objects[:nav.level]
@@ -72,7 +72,7 @@ func (nav *Navigation) PushWithTitle(obj fyne.CanvasObject, s string) {
 // when no more objects are left to go back to.
 //
 // Since: 2.7
-func (nav *Navigation) Back() fyne.CanvasObject {
+func (nav *Navigation) Back() granio.CanvasObject {
 	if nav.level == 0 || nav.level == 1 && nav.Root != nil {
 		return nil
 	}
@@ -93,7 +93,7 @@ func (nav *Navigation) Back() fyne.CanvasObject {
 // and returns the object that was visible before.
 //
 // Since: 2.7
-func (nav *Navigation) Forward() fyne.CanvasObject {
+func (nav *Navigation) Forward() granio.CanvasObject {
 	if nav.level >= len(nav.stack.Objects) {
 		return nil
 	}
@@ -135,7 +135,7 @@ func (nav *Navigation) setup() {
 		return
 	}
 
-	objs := []fyne.CanvasObject{}
+	objs := []granio.CanvasObject{}
 	titles := []string{}
 	if nav.Root != nil {
 		objs = append(objs, nav.Root)
@@ -148,24 +148,24 @@ func (nav *Navigation) setup() {
 	nav.ExtendBaseWidget(nav)
 }
 
-var _ fyne.WidgetRenderer = (*navigatorRenderer)(nil)
+var _ granio.WidgetRenderer = (*navigatorRenderer)(nil)
 
 type navigatorRenderer struct {
 	nav     *Navigation
 	back    widget.Button
 	forward widget.Button
 	title   widget.Label
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
-// CreateRenderer implements the [fyne.Widget] interface.
-func (nav *Navigation) CreateRenderer() fyne.WidgetRenderer {
+// CreateRenderer implements the [granio.Widget] interface.
+func (nav *Navigation) CreateRenderer() granio.WidgetRenderer {
 	r := &navigatorRenderer{
 		nav: nav,
 		title: widget.Label{
 			Text:       nav.Title,
-			Alignment:  fyne.TextAlignCenter,
-			Truncation: fyne.TextTruncateEllipsis,
+			Alignment:  granio.TextAlignCenter,
+			Truncation: granio.TextTruncateEllipsis,
 		},
 		back: widget.Button{
 			Icon:     theme.NavigateBackIcon(),
@@ -182,9 +182,9 @@ func (nav *Navigation) CreateRenderer() fyne.WidgetRenderer {
 	nav.setup()
 
 	pad := r.back.MinSize().Width
-	r.objects = []fyne.CanvasObject{NewBorder(
+	r.objects = []granio.CanvasObject{NewBorder(
 		NewStack(NewHBox(&r.back, layout.NewSpacer(), &r.forward),
-			&fyne.Container{Layout: layout.NewCustomPaddedLayout(0, 0, pad, pad), Objects: []fyne.CanvasObject{&r.title}}),
+			&granio.Container{Layout: layout.NewCustomPaddedLayout(0, 0, pad, pad), Objects: []granio.CanvasObject{&r.title}}),
 		nil,
 		nil,
 		nil,
@@ -197,15 +197,15 @@ func (nav *Navigation) CreateRenderer() fyne.WidgetRenderer {
 func (*navigatorRenderer) Destroy() {
 }
 
-func (r *navigatorRenderer) Layout(s fyne.Size) {
+func (r *navigatorRenderer) Layout(s granio.Size) {
 	r.objects[0].Resize(s)
 }
 
-func (r *navigatorRenderer) MinSize() fyne.Size {
+func (r *navigatorRenderer) MinSize() granio.Size {
 	return r.objects[0].MinSize()
 }
 
-func (r *navigatorRenderer) Objects() []fyne.CanvasObject {
+func (r *navigatorRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 

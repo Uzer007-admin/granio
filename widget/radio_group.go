@@ -1,9 +1,9 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
 )
 
 // RadioGroup widget has a list of text labels and checks check icons next to each.
@@ -24,7 +24,7 @@ type RadioGroup struct {
 	_selIdx int
 }
 
-var _ fyne.Widget = (*RadioGroup)(nil)
+var _ granio.Widget = (*RadioGroup)(nil)
 
 // NewRadioGroup creates a new radio group widget with the set options and change handler
 //
@@ -46,10 +46,10 @@ func (r *RadioGroup) Append(option string) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (r *RadioGroup) CreateRenderer() fyne.WidgetRenderer {
+func (r *RadioGroup) CreateRenderer() granio.WidgetRenderer {
 	r.ExtendBaseWidget(r)
 
-	items := make([]fyne.CanvasObject, len(r.Options))
+	items := make([]granio.CanvasObject, len(r.Options))
 	for i, option := range r.Options {
 		idx := i
 		items[idx] = newRadioItem(option, func(item *radioItem) {
@@ -64,7 +64,7 @@ func (r *RadioGroup) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (r *RadioGroup) MinSize() fyne.Size {
+func (r *RadioGroup) MinSize() granio.Size {
 	r.ExtendBaseWidget(r)
 	return r.BaseWidget.MinSize()
 }
@@ -109,7 +109,7 @@ func (r *RadioGroup) itemTapped(item *radioItem, idx int) {
 	r.Refresh()
 }
 
-// Refresh implements the [fyne.CanvasObject] interface.
+// Refresh implements the [granio.CanvasObject] interface.
 func (r *RadioGroup) Refresh() {
 	r.updateSelectedIndex()
 	r.BaseWidget.Refresh()
@@ -148,14 +148,14 @@ func (r *RadioGroup) updateSelectedIndex() {
 type radioGroupRenderer struct {
 	widget.BaseRenderer
 
-	// slice of *radioItem, but using fyne.CanvasObject as the type
+	// slice of *radioItem, but using granio.CanvasObject as the type
 	// so we can directly set it to the BaseRenderer's objects slice
-	items []fyne.CanvasObject
+	items []granio.CanvasObject
 	radio *RadioGroup
 }
 
 // Layout the components of the radio widget
-func (r *radioGroupRenderer) Layout(_ fyne.Size) {
+func (r *radioGroupRenderer) Layout(_ granio.Size) {
 	count := 1
 	if len(r.items) > 0 {
 		count = len(r.items)
@@ -170,11 +170,11 @@ func (r *radioGroupRenderer) Layout(_ fyne.Size) {
 		itemWidth = minSize.Width
 	}
 
-	itemSize := fyne.NewSize(itemWidth, itemHeight)
+	itemSize := granio.NewSize(itemWidth, itemHeight)
 	x, y := float32(0), float32(0)
 	for _, item := range r.items {
 		item.Resize(itemSize)
-		item.Move(fyne.NewPos(x, y))
+		item.Move(granio.NewPos(x, y))
 		if r.radio.Horizontal {
 			x += itemWidth
 		} else {
@@ -186,7 +186,7 @@ func (r *radioGroupRenderer) Layout(_ fyne.Size) {
 // MinSize calculates the minimum size of a radio item.
 // This is based on the contained text, the radio icon and a standard amount of padding
 // between each item.
-func (r *radioGroupRenderer) MinSize() fyne.Size {
+func (r *radioGroupRenderer) MinSize() granio.Size {
 	width := float32(0)
 	height := float32(0)
 	for _, item := range r.items {
@@ -202,7 +202,7 @@ func (r *radioGroupRenderer) MinSize() fyne.Size {
 		height = height * float32(len(r.items))
 	}
 
-	return fyne.NewSize(width, height)
+	return granio.NewSize(width, height)
 }
 
 func (r *radioGroupRenderer) Refresh() {

@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Widget defines the standard behaviours of any widget. This extends
 // [CanvasObject]. A widget behaves in the same basic way but will encapsulate

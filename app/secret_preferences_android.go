@@ -18,8 +18,8 @@ import (
 	"sync"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
 )
 
 var errKeystoreUnavailable = errors.New("android keystore is not available")
@@ -50,7 +50,7 @@ func (k *keystoreStore) check() bool {
 		_, err := keystoreCrypt(keystoreEncrypt, []byte{0})
 		k.available = err == nil
 		if !k.available {
-			fyne.LogError("Android keystore unavailable, using encrypted file store", err)
+			granio.LogError("Android keystore unavailable, using encrypted file store", err)
 			k.alt = k.fallback()
 		}
 	})

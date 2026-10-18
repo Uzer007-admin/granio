@@ -9,8 +9,8 @@ import (
 	"syscall/js"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 
 	"github.com/hack-pad/go-indexeddb/idb"
 )
@@ -26,8 +26,8 @@ func init() {
 }
 
 var (
-	_ fyne.URIReadCloser  = (*idbfile)(nil)
-	_ fyne.URIWriteCloser = (*idbfile)(nil)
+	_ granio.URIReadCloser  = (*idbfile)(nil)
+	_ granio.URIWriteCloser = (*idbfile)(nil)
 )
 
 type idbfile struct {
@@ -46,7 +46,7 @@ func (f *idbfile) Close() error {
 	return nil
 }
 
-func (f *idbfile) URI() fyne.URI {
+func (f *idbfile) URI() granio.URI {
 	u, _ := storage.ParseURI(idbfileSchemePrefix + f.path)
 	return u
 }

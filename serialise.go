@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 func (r *StaticResource) GoString() string {
 	buffer := strings.Builder{}
 
-	buffer.WriteString("&fyne.StaticResource{\n\tStaticName: \"")
+	buffer.WriteString("&granio.StaticResource{\n\tStaticName: \"")
 	buffer.WriteString(r.StaticName)
 	buffer.WriteString("\",\n\tStaticContent: []byte{\n\t\t")
 	for i, v := range r.StaticContent {

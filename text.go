@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // TextAlign represents the horizontal alignment of text within a widget or
 // canvas object.

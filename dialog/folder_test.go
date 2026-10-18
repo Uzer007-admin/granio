@@ -6,21 +6,21 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	intWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/lang"
+	intWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/lang"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestShowFolderOpen(t *testing.T) {
-	var chosen fyne.ListableURI
+	var chosen granio.ListableURI
 	var openErr error
 	win := test.NewTempWindow(t, widget.NewLabel("OpenDir"))
-	d := NewFolderOpen(func(file fyne.ListableURI, err error) {
+	d := NewFolderOpen(func(file granio.ListableURI, err error) {
 		chosen = file
 		openErr = err
 	}, win)
@@ -36,23 +36,23 @@ func TestShowFolderOpen(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
-	title := ui.Objects[1].(*fyne.Container).Objects[0].(*widget.Label)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
+	title := ui.Objects[1].(*granio.Container).Objects[0].(*widget.Label)
 	assert.Equal(t, lang.L("Open")+" "+lang.L("Folder"), title.Text)
 
-	nameLabel := ui.Objects[2].(*fyne.Container).Objects[0].(*container.Scroll).Content.(*widget.Label)
-	buttons := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container)
+	nameLabel := ui.Objects[2].(*granio.Container).Objects[0].(*container.Scroll).Content.(*widget.Label)
+	buttons := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container)
 	open := buttons.Objects[1].(*widget.Button)
 
-	files := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0].(*widget.GridWrap)
+	files := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0].(*widget.GridWrap)
 	assert.NotEmpty(t, d.dialog.data)
 
-	item := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
-	fileName := test.TempWidgetRenderer(t, item.(fyne.Widget)).Objects()[1].(*fileDialogItem).name
+	item := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
+	fileName := test.TempWidgetRenderer(t, item.(granio.Widget)).Objects()[1].(*fileDialogItem).name
 	assert.Equal(t, lang.L("(Parent)"), fileName)
 	assert.False(t, open.Disabled())
 
-	var target fyne.URI
+	var target granio.URI
 	id := -1
 	for i, uri := range d.dialog.data {
 		ok, _ := storage.CanList(uri)

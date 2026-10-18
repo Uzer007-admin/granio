@@ -1,777 +1,437 @@
 //go:build accessibility && windows
-
 #define CINTERFACE
 #define COBJMACROS
-#include "accessibility_windows.h"
 #include <windows.h>
+#include <commctrl.h>
 #include <ole2.h>
-#include <oleacc.h>
+#include <wchar.h>
+#include <math.h>
+#include <uiautomationcore.h>
+#include <uiautomationcoreapi.h>
+#include <uiautomationclient.h>
+#include "accessibility_windows.h"
+#include "_cgo_export.h"
 
-// ============================================================
-// UIA type definitions (manual, for MinGW/CGo compatibility)
-// ============================================================
-
-typedef struct FyneUIAElement FyneUIAElement;
-
-typedef struct IRawSimple { struct IRawSimpleVtbl* lpVtbl; } IRawSimple;
-typedef struct IRawFragment { struct IRawFragmentVtbl* lpVtbl; } IRawFragment;
-typedef struct IRawFragRoot { struct IRawFragRootVtbl* lpVtbl; } IRawFragRoot;
-
-typedef int PROPERTYID;
-typedef int PATTERNID;
-typedef int EVENTID;
-
-enum UIAProviderOptions {
-    UIAProviderOptions_ServerSideProvider = 0x2,
-    UIAProviderOptions_UseComThreading = 0x20,
-};
-
-enum UIANavigateDirection {
-    UIANavigateDirection_Parent = 0,
-    UIANavigateDirection_NextSibling = 1,
-    UIANavigateDirection_PreviousSibling = 2,
-    UIANavigateDirection_FirstChild = 3,
-    UIANavigateDirection_LastChild = 4,
-};
-
-enum UIAStructureChangeType {
-    UIAStructureChangeType_ChildrenInvalidated = 2,
-};
-
-typedef struct { double left, top, width, height; } UIARect;
-
-struct IRawSimpleVtbl {
-    HRESULT (STDMETHODCALLTYPE *QueryInterface)(IRawSimple*, REFIID, void**);
-    ULONG   (STDMETHODCALLTYPE *AddRef)(IRawSimple*);
-    ULONG   (STDMETHODCALLTYPE *Release)(IRawSimple*);
-    HRESULT (STDMETHODCALLTYPE *get_ProviderOptions)(IRawSimple*, int*);
-    HRESULT (STDMETHODCALLTYPE *GetPatternProvider)(IRawSimple*, PATTERNID, IUnknown**);
-    HRESULT (STDMETHODCALLTYPE *GetPropertyValue)(IRawSimple*, PROPERTYID, VARIANT*);
-    HRESULT (STDMETHODCALLTYPE *get_HostRawElementProvider)(IRawSimple*, IRawSimple**);
-};
-
-struct IRawFragmentVtbl {
-    HRESULT (STDMETHODCALLTYPE *QueryInterface)(IRawFragment*, REFIID, void**);
-    ULONG   (STDMETHODCALLTYPE *AddRef)(IRawFragment*);
-    ULONG   (STDMETHODCALLTYPE *Release)(IRawFragment*);
-    HRESULT (STDMETHODCALLTYPE *Navigate)(IRawFragment*, int, IRawFragment**);
-    HRESULT (STDMETHODCALLTYPE *GetRuntimeId)(IRawFragment*, SAFEARRAY**);
-    HRESULT (STDMETHODCALLTYPE *get_BoundingRectangle)(IRawFragment*, UIARect*);
-    HRESULT (STDMETHODCALLTYPE *GetEmbeddedFragmentRoots)(IRawFragment*, SAFEARRAY**);
-    HRESULT (STDMETHODCALLTYPE *SetFocus)(IRawFragment*);
-    HRESULT (STDMETHODCALLTYPE *get_FragmentRoot)(IRawFragment*, IRawFragRoot**);
-};
-
-struct IRawFragRootVtbl {
-    HRESULT (STDMETHODCALLTYPE *QueryInterface)(IRawFragRoot*, REFIID, void**);
-    ULONG   (STDMETHODCALLTYPE *AddRef)(IRawFragRoot*);
-    ULONG   (STDMETHODCALLTYPE *Release)(IRawFragRoot*);
-    HRESULT (STDMETHODCALLTYPE *ElementProviderFromPoint)(IRawFragRoot*, double, double, IRawSimple**);
-    HRESULT (STDMETHODCALLTYPE *GetFocus)(IRawFragRoot*, IRawFragment**);
-};
-
-// ============================================================
-// Element struct
-// ============================================================
-
-struct FyneUIAElement {
-    IRawSimple    simple;
-    IRawFragment  fragment;
-    IRawFragRoot  fragRoot;
-
-    LONG refCount;
-    int  isRoot;
+// Native clients can retain a provider after its control or window disappears.
+// The window owns one reference; removed providers are detached and remain valid
+// COM objects returning ELEMENTNOTAVAILABLE until their final external Release.
+typedef struct FyneElement FyneElement;
+typedef struct FyneWindow FyneWindow;
+typedef struct FyneRange FyneRange;
+struct FyneElement {
+    IRawElementProviderSimple simple;
+    IRawElementProviderFragment fragment;
+    IRawElementProviderFragmentRoot root;
+    IInvokeProvider invoke;
+    IValueProvider valueProvider;
+    IToggleProvider toggle;
+    ISelectionItemProvider selection;
+    IExpandCollapseProvider expand;
+    ITextProvider textProvider;
+    IRangeValueProvider rangeValue;
+    ISelectionProvider selectionContainer;
+    IGridProvider grid;
+    IGridItemProvider gridItem;
+    IVirtualizedItemProvider virtualItem;
+    IScrollItemProvider scrollItem;
+    IItemContainerProvider itemContainer;
+    LONG refs;
     HWND hwnd;
-    int  uniqueId;
-
-    FyneUIAElement* parent;
-    WCHAR* name;
-    int    controlType;
-    double x, y, width, height;
-    int    childIndex;
-
-    FyneUIAElement** children;
-    int childCount;
-    int childCapacity;
+    uint64_t id, parentID;
+    unsigned generation;
+    int detached, isRoot, role, states, patterns;
+    WCHAR *name, *value;
+    double x,y,width,height;
+    FyneElement *parent;
+    FyneElement **children;
+    int count, capacity;
+    int selectionStart, selectionEnd, rows, columns, row, column, multiple;
+    double number, minimum, maximum, step;
+    FyneRange *ranges;
 };
-
-#define ELEM_FROM_SIMPLE(p)   ((FyneUIAElement*)(p))
-#define ELEM_FROM_FRAGMENT(p) ((FyneUIAElement*)((char*)(p) - offsetof(FyneUIAElement, fragment)))
-#define ELEM_FROM_FRAGROOT(p) ((FyneUIAElement*)((char*)(p) - offsetof(FyneUIAElement, fragRoot)))
-
-// ============================================================
-// GUIDs
-// ============================================================
-
-static const IID LOCAL_IID_IUnknown =
-    {0x00000000,0x0000,0x0000,{0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
-static const IID IID_IRawSimple =
-    {0xd6dd68d1,0x86fd,0x4332,{0x86,0x66,0x9a,0xbe,0xde,0xa2,0xd2,0x4c}};
-static const IID IID_IRawFragment =
-    {0xf7063da8,0x8359,0x439c,{0x92,0x97,0xbb,0xc5,0x29,0x9a,0x7d,0x87}};
-static const IID IID_IRawFragRoot =
-    {0x620ce2a5,0xab8f,0x40a9,{0x86,0xcb,0xde,0x3c,0x75,0x59,0x9b,0x58}};
-
-// UIA property IDs
-#define UIA_ControlTypePropertyId          30003
-#define UIA_NamePropertyId                 30005
-#define UIA_HasKeyboardFocusPropertyId     30008
-#define UIA_IsKeyboardFocusablePropertyId  30009
-#define UIA_IsEnabledPropertyId            30010
-#define UIA_AutomationIdPropertyId         30011
-#define UIA_IsControlElementPropertyId     30016
-#define UIA_IsContentElementPropertyId     30017
-#define UIA_ProviderDescriptionPropertyId  30107
-
-// UIA control type IDs
-#define UIA_ButtonControlTypeId    50000
-#define UIA_HyperlinkControlTypeId 50005
-#define UIA_TextControlTypeId      50020
-#define UIA_GroupControlTypeId     50026
-#define UIA_PaneControlTypeId      50033
-
-#define UiaAppendRuntimeId  3
-#define UiaRootObjectId    (-25)
-
-#define UIA_AutomationFocusChangedEventId 20005
-
-#define WM_FYNE_RAISE_FOCUS (WM_APP + 100)
-#define WM_FYNE_FOCUS_CHILD (WM_APP + 101)
-
-// ============================================================
-// Dynamically loaded UIA functions
-// ============================================================
-
-typedef LRESULT (WINAPI *PFN_UiaReturnRawElementProvider)(HWND, WPARAM, LPARAM, void*);
-typedef HRESULT (WINAPI *PFN_UiaHostProviderFromHwnd)(HWND, void**);
-typedef HRESULT (WINAPI *PFN_UiaRaiseAutomationEvent)(void*, EVENTID);
-typedef HRESULT (WINAPI *PFN_UiaRaiseStructureChangedEvent)(void*, int, int*, int);
-typedef HRESULT (WINAPI *PFN_UiaDisconnectProvider)(void*);
-
-static PFN_UiaReturnRawElementProvider pfnUiaReturn = NULL;
-static PFN_UiaHostProviderFromHwnd     pfnUiaHost   = NULL;
-static PFN_UiaRaiseAutomationEvent     pfnUiaRaiseEvent = NULL;
-static PFN_UiaRaiseStructureChangedEvent pfnUiaRaiseStructure = NULL;
-static PFN_UiaDisconnectProvider       pfnUiaDisconnect = NULL;
-static HMODULE hUiaCore = NULL;
-
-static void loadUiaFunctions(void) {
-    if (hUiaCore) return;
-    hUiaCore = LoadLibraryW(L"uiautomationcore.dll");
-    if (!hUiaCore) return;
-    pfnUiaReturn = (PFN_UiaReturnRawElementProvider)GetProcAddress(hUiaCore, "UiaReturnRawElementProvider");
-    pfnUiaHost   = (PFN_UiaHostProviderFromHwnd)GetProcAddress(hUiaCore, "UiaHostProviderFromHwnd");
-    pfnUiaRaiseEvent = (PFN_UiaRaiseAutomationEvent)GetProcAddress(hUiaCore, "UiaRaiseAutomationEvent");
-    pfnUiaRaiseStructure = (PFN_UiaRaiseStructureChangedEvent)GetProcAddress(hUiaCore, "UiaRaiseStructureChangedEvent");
-    pfnUiaDisconnect = (PFN_UiaDisconnectProvider)GetProcAddress(hUiaCore, "UiaDisconnectProvider");
+struct FyneWindow {
+    HWND hwnd;
+    FyneElement **elements;
+    int count, capacity;
+    unsigned generation;
+    int structureChanged;
+    FyneElement *root;
+    FyneWindow *next;
+};
+static SRWLOCK providerLock = SRWLOCK_INIT;
+static FyneWindow *windows;
+static INIT_ONCE initOnce = INIT_ONCE_STATIC_INIT;
+static HMODULE uia;
+static LRESULT (WINAPI *uiaReturn)(HWND, WPARAM, LPARAM, IRawElementProviderSimple*);
+static HRESULT (WINAPI *uiaHost)(HWND, IRawElementProviderSimple**);
+static HRESULT (WINAPI *uiaEvent)(IRawElementProviderSimple*, EVENTID);
+static HRESULT (WINAPI *uiaProperty)(IRawElementProviderSimple*, PROPERTYID, VARIANT, VARIANT);
+static BOOL (WINAPI *uiaListening)(void);
+static HRESULT (WINAPI *uiaStructure)(IRawElementProviderSimple*, enum StructureChangeType, int*, int);
+static HRESULT (WINAPI *uiaDisconnect)(IRawElementProviderSimple*);
+#define ELEMENT(p, field) ((FyneElement*)((char*)(p)-offsetof(FyneElement,field)))
+#define UNAVAILABLE ((HRESULT)UIA_E_ELEMENTNOTAVAILABLE)
+static const IID simpleIID = {0xd6dd68d1,0x86fd,0x4332,{0x86,0x66,0x9a,0xbe,0xde,0xa2,0xd2,0x4c}};
+static const IID unknownIID = {0,0,0,{0xc0,0,0,0,0,0,0,0x46}};
+static const IID fragmentIID = {0xf7063da8,0x8359,0x439c,{0x92,0x97,0xbb,0xc5,0x29,0x9a,0x7d,0x87}};
+static const IID rootIID = {0x620ce2a5,0xab8f,0x40a9,{0x86,0xcb,0xde,0x3c,0x75,0x59,0x9b,0x58}};
+static const IID invokeIID = {0x54fcb24b,0xe18e,0x47a2,{0xb4,0xd3,0xec,0xcb,0xe7,0x75,0x99,0xa2}};
+static const IID valueIID = {0xc7935180,0x6fb3,0x4201,{0xb1,0x74,0x7d,0xf7,0x3a,0xdb,0xf6,0x4a}};
+static const IID toggleIID = {0x56d00bd0,0xc4f4,0x433c,{0xa8,0x36,0x1a,0x52,0xa5,0x7e,0x08,0x92}};
+static const IID selectionIID = {0x2acad808,0xb2d4,0x452d,{0xa4,0x07,0x91,0xff,0x1a,0xd1,0x67,0xb2}};
+static const IID expandIID = {0xd847d3a5,0xcab0,0x4a98,{0x8c,0x32,0xec,0xb4,0x5c,0x59,0xad,0x24}};
+static const IID textIID={0x3589c92c,0x63f3,0x4367,{0x99,0xbb,0xad,0xa6,0x53,0xb7,0x7c,0xf2}};
+static const IID textRangeIID={0x5347ad7b,0xc355,0x46f8,{0xaf,0xf5,0x90,0x90,0x33,0x58,0x2f,0x63}};
+static const IID rangeValueIID={0x36dc7aef,0x33e6,0x4691,{0xaf,0xe1,0x2b,0xe7,0x27,0x4b,0x3d,0x33}};
+static const IID selectionContainerIID={0xfb8b03af,0x3bdf,0x48d4,{0xbd,0x36,0x1a,0x65,0x79,0x3b,0xe1,0x68}};
+static const IID gridIID={0xb17d6187,0x0907,0x464b,{0xa1,0x68,0x0e,0xf1,0x7a,0x15,0x72,0xb1}};
+static const IID gridItemIID={0xd02541f1,0xfb81,0x4d64,{0xae,0x32,0xf5,0x20,0xf8,0xa6,0xdb,0xd1}};
+static const IID virtualItemIID={0xcb98b665,0x2d35,0x4fac,{0xad,0x35,0xf3,0xc6,0x0d,0x0c,0x0b,0x8b}};
+static const IID scrollItemIID={0x2360c714,0x4bf1,0x4b26,{0xba,0x65,0x9b,0x21,0x31,0x61,0x27,0xeb}};
+static const IID itemContainerIID={0xe747770b,0x39ce,0x4382,{0xab,0x30,0xd8,0xfb,0x3f,0x33,0x6f,0x24}};
+static ULONG retain(FyneElement *e) { return InterlockedIncrement(&e->refs); }
+static ULONG release(FyneElement *e) {
+    ULONG count=InterlockedDecrement(&e->refs);
+    if (!count) { free(e->name); free(e->value); free(e->children); free(e); }
+    return count;
 }
+static HRESULT query(FyneElement *e, REFIID iid, void **out) {
+    if (!out) return E_POINTER;
+    *out=NULL;
+    AcquireSRWLockShared(&providerLock);
+    if (IsEqualIID(iid,&unknownIID) || IsEqualIID(iid,&simpleIID)) *out=&e->simple;
+    else if (IsEqualIID(iid,&fragmentIID)) *out=&e->fragment;
+    else if (IsEqualIID(iid,&rootIID) && e->isRoot) *out=&e->root;
+    else if (IsEqualIID(iid,&invokeIID) && (e->patterns&1)) *out=&e->invoke;
+    else if (IsEqualIID(iid,&valueIID) && (e->patterns&2)) *out=&e->valueProvider;
+    else if (IsEqualIID(iid,&toggleIID) && (e->patterns&4)) *out=&e->toggle;
+    else if (IsEqualIID(iid,&selectionIID) && (e->patterns&8)) *out=&e->selection;
+    else if (IsEqualIID(iid,&expandIID) && (e->patterns&16)) *out=&e->expand;
+    else if (IsEqualIID(iid,&textIID) && (e->patterns&64)) *out=&e->textProvider;
+    else if (IsEqualIID(iid,&rangeValueIID) && (e->patterns&128)) *out=&e->rangeValue;
+    else if (IsEqualIID(iid,&selectionContainerIID) && (e->patterns&256)) *out=&e->selectionContainer;
+    else if (IsEqualIID(iid,&gridIID) && (e->patterns&512)) *out=&e->grid;
+    else if (IsEqualIID(iid,&gridItemIID) && (e->patterns&1024)) *out=&e->gridItem;
+    else if (IsEqualIID(iid,&virtualItemIID) && (e->patterns&4096)) *out=&e->virtualItem;
+    else if (IsEqualIID(iid,&scrollItemIID) && (e->patterns&4096)) *out=&e->scrollItem;
+    else if (IsEqualIID(iid,&itemContainerIID) && (e->patterns&2048)) *out=&e->itemContainer;
+    if (*out) retain(e);
+    ReleaseSRWLockShared(&providerLock);
+    return *out ? S_OK:E_NOINTERFACE;
+}
+#define COM_BASE(prefix, type, field) \
+ static HRESULT STDMETHODCALLTYPE prefix##_QI(type *p, REFIID iid, void **out) {return query(ELEMENT(p,field),iid,out);} \
+ static ULONG STDMETHODCALLTYPE prefix##_AddRef(type *p) {return retain(ELEMENT(p,field));} \
+ static ULONG STDMETHODCALLTYPE prefix##_Release(type *p) {return release(ELEMENT(p,field));}
+COM_BASE(S,IRawElementProviderSimple,simple)
+COM_BASE(F,IRawElementProviderFragment,fragment)
+COM_BASE(R,IRawElementProviderFragmentRoot,root)
+COM_BASE(I,IInvokeProvider,invoke)
+COM_BASE(V,IValueProvider,valueProvider)
+COM_BASE(T,IToggleProvider,toggle)
+COM_BASE(L,ISelectionItemProvider,selection)
+COM_BASE(E,IExpandCollapseProvider,expand)
 
-// ============================================================
-// Globals
-// ============================================================
-
-static FyneUIAElement* g_root = NULL;
-static HWND g_hwnd = NULL;
-static WNDPROC g_origWndProc = NULL;
-static struct IRawSimpleVtbl   g_simpleVtbl;
-static struct IRawFragmentVtbl g_fragmentVtbl;
-static struct IRawFragRootVtbl g_fragRootVtbl;
-static int g_vtblInit = 0;
-static int g_nextId = 1;
-static int g_focusedIndex = -1;
-
-static FyneUIAElement** g_staging = NULL;
-static int g_stagingCount = 0;
-static int g_stagingCapacity = 0;
-
-// ============================================================
-// Helpers
-// ============================================================
-
-static WCHAR* utf8ToWide(const char* utf8) {
-    if (!utf8 || !utf8[0]) {
-        WCHAR* e = (WCHAR*)malloc(sizeof(WCHAR));
-        if (e) e[0] = L'\0';
-        return e;
+static HRESULT STDMETHODCALLTYPE S_Options(IRawElementProviderSimple *p,enum ProviderOptions *out) {
+    if (!out) return E_POINTER;
+    *out=ProviderOptions_ServerSideProvider|ProviderOptions_UseComThreading;return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE S_Pattern(IRawElementProviderSimple *p,PATTERNID id,IUnknown **out) {
+    if (!out) return E_POINTER; *out=NULL;
+    FyneElement *e=ELEMENT(p,simple);
+    AcquireSRWLockShared(&providerLock);
+    HRESULT result=e->detached?UNAVAILABLE:S_OK;
+    if (!e->detached) {
+        if (id==UIA_InvokePatternId && (e->patterns&1)) *out=(IUnknown*)&e->invoke;
+        if (id==UIA_ValuePatternId && (e->patterns&2)) *out=(IUnknown*)&e->valueProvider;
+        if (id==UIA_TogglePatternId && (e->patterns&4)) *out=(IUnknown*)&e->toggle;
+        if (id==UIA_SelectionItemPatternId && (e->patterns&8)) *out=(IUnknown*)&e->selection;
+        if (id==UIA_ExpandCollapsePatternId && (e->patterns&16)) *out=(IUnknown*)&e->expand;
+        if (id==UIA_TextPatternId && (e->patterns&64)) *out=(IUnknown*)&e->textProvider;
+        if (id==UIA_RangeValuePatternId && (e->patterns&128)) *out=(IUnknown*)&e->rangeValue;
+        if (id==UIA_SelectionPatternId && (e->patterns&256)) *out=(IUnknown*)&e->selectionContainer;
+        if (id==UIA_GridPatternId && (e->patterns&512)) *out=(IUnknown*)&e->grid;
+        if (id==UIA_GridItemPatternId && (e->patterns&1024)) *out=(IUnknown*)&e->gridItem;
+        if (id==UIA_VirtualizedItemPatternId && (e->patterns&4096)) *out=(IUnknown*)&e->virtualItem;
+        if (id==UIA_ScrollItemPatternId && (e->patterns&4096)) *out=(IUnknown*)&e->scrollItem;
+        if (id==UIA_ItemContainerPatternId && (e->patterns&2048)) *out=(IUnknown*)&e->itemContainer;
+        if (*out) retain(e);
     }
-    int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
-    WCHAR* w = (WCHAR*)malloc(len * sizeof(WCHAR));
-    if (w) MultiByteToWideChar(CP_UTF8, 0, utf8, -1, w, len);
-    return w;
+    ReleaseSRWLockShared(&providerLock);return result;
 }
-
-static int roleToUIA(WinAccessibilityRole role) {
-    switch (role) {
-    case WinAccessibilityRoleButton: return UIA_ButtonControlTypeId;
-    case WinAccessibilityRoleText:   return UIA_TextControlTypeId;
-    case WinAccessibilityRoleLink:   return UIA_HyperlinkControlTypeId;
-    case WinAccessibilityRoleGroup:  return UIA_GroupControlTypeId;
-    default:                         return UIA_PaneControlTypeId;
+static HRESULT STDMETHODCALLTYPE S_Property(IRawElementProviderSimple *p,PROPERTYID id,VARIANT *out) {
+    if (!out) return E_POINTER;VariantInit(out);FyneElement *e=ELEMENT(p,simple);
+    AcquireSRWLockShared(&providerLock);
+    if (e->detached) {ReleaseSRWLockShared(&providerLock);return UNAVAILABLE;}
+    switch(id) {
+    case UIA_ControlTypePropertyId:out->vt=VT_I4;out->lVal=e->role;break;
+    case UIA_NamePropertyId:out->vt=VT_BSTR;out->bstrVal=SysAllocString(e->name);break;
+    case UIA_AutomationIdPropertyId:{WCHAR text[48];swprintf(text,48,L"fyne_%llu",(unsigned long long)e->id);out->vt=VT_BSTR;out->bstrVal=SysAllocString(text);break;}
+    case UIA_HasKeyboardFocusPropertyId:out->vt=VT_BOOL;out->boolVal=(e->states&2)?VARIANT_TRUE:VARIANT_FALSE;break;
+    case UIA_IsKeyboardFocusablePropertyId:out->vt=VT_BOOL;out->boolVal=(e->patterns&32)?VARIANT_TRUE:VARIANT_FALSE;break;
+    case UIA_IsEnabledPropertyId:out->vt=VT_BOOL;out->boolVal=(e->states&1)?VARIANT_FALSE:VARIANT_TRUE;break;
+    case UIA_IsPasswordPropertyId:out->vt=VT_BOOL;out->boolVal=(e->states&32)?VARIANT_TRUE:VARIANT_FALSE;break;
+    case UIA_IsOffscreenPropertyId:out->vt=VT_BOOL;out->boolVal=(e->states&128)?VARIANT_TRUE:VARIANT_FALSE;break;
+    case UIA_IsControlElementPropertyId:case UIA_IsContentElementPropertyId:out->vt=VT_BOOL;out->boolVal=VARIANT_TRUE;break;
+    case UIA_FrameworkIdPropertyId:out->vt=VT_BSTR;out->bstrVal=SysAllocString(L"Fyne");break;
     }
+    ReleaseSRWLockShared(&providerLock);return S_OK;
 }
-
-static HRESULT elemQI(FyneUIAElement* elem, REFIID riid, void** ppv) {
-    if (!ppv) return E_POINTER;
-    if (IsEqualIID(riid, &LOCAL_IID_IUnknown) || IsEqualIID(riid, &IID_IRawSimple)) {
-        *ppv = &elem->simple;
-        InterlockedIncrement(&elem->refCount);
-        return S_OK;
+static HRESULT STDMETHODCALLTYPE S_Host(IRawElementProviderSimple *p,IRawElementProviderSimple **out) {
+    if (!out) return E_POINTER;*out=NULL;FyneElement *e=ELEMENT(p,simple);
+    AcquireSRWLockShared(&providerLock);HWND hwnd=e->hwnd;int root=e->isRoot,dead=e->detached;ReleaseSRWLockShared(&providerLock);
+    if (dead) return UNAVAILABLE;
+    return root&&uiaHost?uiaHost(hwnd,out):S_OK;
+}
+static HRESULT STDMETHODCALLTYPE F_Navigate(IRawElementProviderFragment *p,enum NavigateDirection direction,IRawElementProviderFragment **out) {
+    if (!out) return E_POINTER;*out=NULL;FyneElement *e=ELEMENT(p,fragment),*target=NULL;
+    AcquireSRWLockShared(&providerLock);
+    if (e->detached) {ReleaseSRWLockShared(&providerLock);return UNAVAILABLE;}
+    if((e->patterns&2048)&&((e->patterns&4096)||direction==NavigateDirection_FirstChild||direction==NavigateDirection_LastChild)){
+        HWND hwnd=e->hwnd;uint64_t id=e->id;ReleaseSRWLockShared(&providerLock);
+        uint64_t next=goWinAccessibilityVirtualNavigate((uintptr_t)hwnd,id,direction,0);
+        AcquireSRWLockShared(&providerLock);
+        for(FyneWindow*w=windows;w;w=w->next)if(w->hwnd==hwnd)for(int i=0;i<w->count;i++)if(w->elements[i]->id==next){*out=&w->elements[i]->fragment;retain(w->elements[i]);break;}
+        ReleaseSRWLockShared(&providerLock);return S_OK;
     }
-    if (IsEqualIID(riid, &IID_IRawFragment)) {
-        *ppv = &elem->fragment;
-        InterlockedIncrement(&elem->refCount);
-        return S_OK;
+    if (direction==NavigateDirection_Parent) target=e->parent;
+    else if(direction==NavigateDirection_FirstChild&&e->count)target=e->children[0];
+    else if(direction==NavigateDirection_LastChild&&e->count)target=e->children[e->count-1];
+    else if(e->parent) for(int i=0;i<e->parent->count;i++) if(e->parent->children[i]==e) {
+        if(direction==NavigateDirection_NextSibling&&i+1<e->parent->count)target=e->parent->children[i+1];
+        if(direction==NavigateDirection_PreviousSibling&&i>0)target=e->parent->children[i-1];break;
     }
-    if (elem->isRoot && IsEqualIID(riid, &IID_IRawFragRoot)) {
-        *ppv = &elem->fragRoot;
-        InterlockedIncrement(&elem->refCount);
-        return S_OK;
+    if(target){*out=&target->fragment;retain(target);}
+    ReleaseSRWLockShared(&providerLock);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE F_Runtime(IRawElementProviderFragment *p,SAFEARRAY **out) {
+    if(!out)return E_POINTER; FyneElement *e=ELEMENT(p,fragment);
+    SAFEARRAYBOUND bound={3,0};*out=SafeArrayCreate(VT_I4,1,&bound);if(!*out)return E_OUTOFMEMORY;
+    int values[]={UiaAppendRuntimeId,(int)(e->id>>32),(int)e->id};for(LONG i=0;i<3;i++)SafeArrayPutElement(*out,&i,&values[i]);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE F_Rect(IRawElementProviderFragment *p,struct UiaRect *out) {
+    if(!out)return E_POINTER;FyneElement *e=ELEMENT(p,fragment);AcquireSRWLockShared(&providerLock);
+    if(e->detached){ReleaseSRWLockShared(&providerLock);return UNAVAILABLE;}
+    POINT origin={0,0};ClientToScreen(e->hwnd,&origin);
+    out->left=origin.x+e->x;out->top=origin.y+e->y;out->width=e->width;out->height=e->height;
+    ReleaseSRWLockShared(&providerLock);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE F_Embedded(IRawElementProviderFragment *p,SAFEARRAY **out){if(!out)return E_POINTER;*out=NULL;return S_OK;}
+static HRESULT action(FyneElement *e,int operation,LPCWSTR value) {
+    AcquireSRWLockShared(&providerLock);int dead=e->detached,disabled=e->states&1;HWND hwnd=e->hwnd;uint64_t id=e->id;ReleaseSRWLockShared(&providerLock);
+    if(dead)return UNAVAILABLE;if(disabled)return UIA_E_ELEMENTNOTENABLED;
+    goWinAccessibilityAction((uintptr_t)hwnd,id,operation,(unsigned short*)value);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE F_Focus(IRawElementProviderFragment *p){return action(ELEMENT(p,fragment),32,NULL);}
+static HRESULT STDMETHODCALLTYPE F_Root(IRawElementProviderFragment *p,IRawElementProviderFragmentRoot **out) {
+    if(!out)return E_POINTER;*out=NULL;FyneElement *e=ELEMENT(p,fragment);AcquireSRWLockShared(&providerLock);
+    if(e->detached){ReleaseSRWLockShared(&providerLock);return UNAVAILABLE;}
+    while(e->parent)e=e->parent;if(e->isRoot){*out=&e->root;retain(e);}ReleaseSRWLockShared(&providerLock);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE R_Point(IRawElementProviderFragmentRoot *p,double x,double y,IRawElementProviderFragment **out) {
+    if(!out)return E_POINTER;*out=NULL;FyneElement *root=ELEMENT(p,root),*found=root;AcquireSRWLockShared(&providerLock);
+    if(root->detached){ReleaseSRWLockShared(&providerLock);return UNAVAILABLE;}
+    POINT pt={(LONG)x,(LONG)y};ScreenToClient(root->hwnd,&pt);
+    for(;;){FyneElement *child=NULL;for(int i=0;i<found->count;i++){FyneElement *c=found->children[i];if(pt.x>=c->x&&pt.x<c->x+c->width&&pt.y>=c->y&&pt.y<c->y+c->height)child=c;}if(!child)break;found=child;}
+    *out=&found->fragment;retain(found);ReleaseSRWLockShared(&providerLock);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE R_Focus(IRawElementProviderFragmentRoot *p,IRawElementProviderFragment **out) {
+    if(!out)return E_POINTER;*out=NULL;FyneElement *root=ELEMENT(p,root);AcquireSRWLockShared(&providerLock);
+    if(root->detached){ReleaseSRWLockShared(&providerLock);return UNAVAILABLE;}
+    for(FyneWindow *w=windows;w;w=w->next)if(w->root==root)for(int i=0;i<w->count;i++)if(w->elements[i]->states&2){*out=&w->elements[i]->fragment;retain(w->elements[i]);break;}
+    ReleaseSRWLockShared(&providerLock);return S_OK;
+}
+static HRESULT STDMETHODCALLTYPE I_Invoke(IInvokeProvider *p){return action(ELEMENT(p,invoke),1,NULL);}
+static HRESULT STDMETHODCALLTYPE V_Set(IValueProvider *p,LPCWSTR value){return action(ELEMENT(p,valueProvider),2,value);}
+static HRESULT STDMETHODCALLTYPE V_Get(IValueProvider *p,BSTR *out){if(!out)return E_POINTER;*out=NULL;FyneElement *e=ELEMENT(p,valueProvider);AcquireSRWLockShared(&providerLock);HRESULT result=e->detached?UNAVAILABLE:(e->states&32)?E_ACCESSDENIED:S_OK;if(result==S_OK)*out=SysAllocString(e->value);ReleaseSRWLockShared(&providerLock);return result;}
+static HRESULT STDMETHODCALLTYPE V_ReadOnly(IValueProvider *p,BOOL *out){if(!out)return E_POINTER;FyneElement *e=ELEMENT(p,valueProvider);AcquireSRWLockShared(&providerLock);*out=(e->states&1)!=0;ReleaseSRWLockShared(&providerLock);return S_OK;}
+static HRESULT STDMETHODCALLTYPE T_Toggle(IToggleProvider *p){return action(ELEMENT(p,toggle),4,NULL);}
+static HRESULT STDMETHODCALLTYPE T_State(IToggleProvider *p,enum ToggleState *out){if(!out)return E_POINTER;FyneElement *e=ELEMENT(p,toggle);AcquireSRWLockShared(&providerLock);*out=(e->states&4)?ToggleState_On:ToggleState_Off;int dead=e->detached;ReleaseSRWLockShared(&providerLock);return dead?UNAVAILABLE:S_OK;}
+static HRESULT STDMETHODCALLTYPE L_Select(ISelectionItemProvider *p){return action(ELEMENT(p,selection),8,NULL);}
+static HRESULT STDMETHODCALLTYPE L_Add(ISelectionItemProvider *p){return action(ELEMENT(p,selection),9,NULL);}
+static HRESULT STDMETHODCALLTYPE L_Remove(ISelectionItemProvider *p){return action(ELEMENT(p,selection),10,NULL);}
+static HRESULT STDMETHODCALLTYPE L_Selected(ISelectionItemProvider *p,BOOL *out){if(!out)return E_POINTER;FyneElement *e=ELEMENT(p,selection);AcquireSRWLockShared(&providerLock);*out=(e->states&8)!=0;int dead=e->detached;ReleaseSRWLockShared(&providerLock);return dead?UNAVAILABLE:S_OK;}
+static HRESULT STDMETHODCALLTYPE L_Container(ISelectionItemProvider *p,IRawElementProviderSimple **out){if(!out)return E_POINTER;*out=NULL;FyneElement *e=ELEMENT(p,selection);AcquireSRWLockShared(&providerLock);for(FyneElement*parent=e->parent;parent;parent=parent->parent)if(parent->patterns&256){*out=&parent->simple;retain(parent);break;}int dead=e->detached;ReleaseSRWLockShared(&providerLock);return dead?UNAVAILABLE:S_OK;}
+static HRESULT expandTo(FyneElement *e,int expanded){AcquireSRWLockShared(&providerLock);int current=(e->states&16)!=0;ReleaseSRWLockShared(&providerLock);return current==expanded?S_OK:action(e,16,NULL);}
+static HRESULT STDMETHODCALLTYPE E_Expand(IExpandCollapseProvider *p){return expandTo(ELEMENT(p,expand),1);}
+static HRESULT STDMETHODCALLTYPE E_Collapse(IExpandCollapseProvider *p){return expandTo(ELEMENT(p,expand),0);}
+static HRESULT STDMETHODCALLTYPE E_State(IExpandCollapseProvider *p,enum ExpandCollapseState *out){if(!out)return E_POINTER;FyneElement *e=ELEMENT(p,expand);AcquireSRWLockShared(&providerLock);*out=(e->states&16)?ExpandCollapseState_Expanded:ExpandCollapseState_Collapsed;int dead=e->detached;ReleaseSRWLockShared(&providerLock);return dead?UNAVAILABLE:S_OK;}
+
+static IRawElementProviderSimpleVtbl simpleVtbl={S_QI,S_AddRef,S_Release,S_Options,S_Pattern,S_Property,S_Host};
+static IRawElementProviderFragmentVtbl fragmentVtbl={F_QI,F_AddRef,F_Release,F_Navigate,F_Runtime,F_Rect,F_Embedded,F_Focus,F_Root};
+static IRawElementProviderFragmentRootVtbl rootVtbl={R_QI,R_AddRef,R_Release,R_Point,R_Focus};
+static IInvokeProviderVtbl invokeVtbl={I_QI,I_AddRef,I_Release,I_Invoke};
+static IValueProviderVtbl valueVtbl={V_QI,V_AddRef,V_Release,V_Set,V_Get,V_ReadOnly};
+static IToggleProviderVtbl toggleVtbl={T_QI,T_AddRef,T_Release,T_Toggle,T_State};
+static ISelectionItemProviderVtbl selectionVtbl={L_QI,L_AddRef,L_Release,L_Select,L_Add,L_Remove,L_Selected,L_Container};
+static IExpandCollapseProviderVtbl expandVtbl={E_QI,E_AddRef,E_Release,E_Expand,E_Collapse,E_State};
+#include "accessibility_windows_patterns.h"
+static BOOL CALLBACK initialise(PINIT_ONCE once,PVOID arg,PVOID *context) {
+    uia=LoadLibraryW(L"uiautomationcore.dll");if(!uia)return TRUE;
+    uiaReturn=(void*)GetProcAddress(uia,"UiaReturnRawElementProvider");uiaHost=(void*)GetProcAddress(uia,"UiaHostProviderFromHwnd");
+    uiaEvent=(void*)GetProcAddress(uia,"UiaRaiseAutomationEvent");uiaStructure=(void*)GetProcAddress(uia,"UiaRaiseStructureChangedEvent");uiaDisconnect=(void*)GetProcAddress(uia,"UiaDisconnectProvider");
+    uiaProperty=(void*)GetProcAddress(uia,"UiaRaiseAutomationPropertyChangedEvent");uiaListening=(void*)GetProcAddress(uia,"UiaClientsAreListening");return TRUE;
+}
+static LRESULT CALLBACK windowProc(HWND hwnd,UINT message,WPARAM wp,LPARAM lp,UINT_PTR id,DWORD_PTR reference) {
+    FyneWindow *w=(FyneWindow*)reference;
+    if(message==WM_GETOBJECT&&lp==UiaRootObjectId&&uiaReturn){AcquireSRWLockShared(&providerLock);FyneElement *root=w->root;if(root)retain(root);ReleaseSRWLockShared(&providerLock);if(root){LRESULT result=uiaReturn(hwnd,wp,lp,&root->simple);release(root);return result;}}
+    return DefSubclassProc(hwnd,message,wp,lp);
+}
+static WCHAR* wide(const char *utf8) {int n=MultiByteToWideChar(CP_UTF8,0,utf8,-1,NULL,0);if(n<1)n=1;WCHAR *out=calloc(n,sizeof(WCHAR));if(out)MultiByteToWideChar(CP_UTF8,0,utf8,-1,out,n);return out;}
+static FyneWindow* findWindow(HWND hwnd){for(FyneWindow *w=windows;w;w=w->next)if(w->hwnd==hwnd)return w;return NULL;}
+void WinAccessibilityBegin(uintptr_t handle) {
+    HWND hwnd=(HWND)handle;InitOnceExecuteOnce(&initOnce,initialise,NULL,NULL);
+    AcquireSRWLockExclusive(&providerLock);
+    FyneWindow *w=findWindow(hwnd);
+    if(!w){w=calloc(1,sizeof(*w));if(!w){ReleaseSRWLockExclusive(&providerLock);return;}w->hwnd=hwnd;w->next=windows;windows=w;SetWindowSubclass(hwnd,windowProc,0xF1A11,(DWORD_PTR)w);}
+    w->generation++;
+    w->structureChanged=0;
+    // The UI thread holds the exclusive lock until End, publishing one coherent
+    // snapshot to concurrent COM readers. Add performs no COM calls.
+}
+void WinAccessibilityAdd(uintptr_t handle,uint64_t id,uint64_t parent,const char *name,const char *value,int role,int states,int patterns,double x,double y,double width,double height) {
+    FyneWindow *w=findWindow((HWND)handle);if(!w)return;FyneElement *e=NULL;
+    for(int i=0;i<w->count;i++)if(w->elements[i]->id==id){e=w->elements[i];break;}
+    if(!e){
+        if(w->count==w->capacity){int capacity=w->capacity?w->capacity*2:16;FyneElement **items=realloc(w->elements,capacity*sizeof(*items));if(!items)return;w->elements=items;w->capacity=capacity;}
+        e=calloc(1,sizeof(*e));if(!e)return;e->refs=1;e->id=id;e->hwnd=w->hwnd;
+        e->simple.lpVtbl=&simpleVtbl;e->fragment.lpVtbl=&fragmentVtbl;e->root.lpVtbl=&rootVtbl;e->invoke.lpVtbl=&invokeVtbl;e->valueProvider.lpVtbl=&valueVtbl;e->toggle.lpVtbl=&toggleVtbl;e->selection.lpVtbl=&selectionVtbl;e->expand.lpVtbl=&expandVtbl;
+        e->textProvider.lpVtbl=&textVtbl;e->rangeValue.lpVtbl=&rangeValueVtbl;e->selectionContainer.lpVtbl=&selectionContainerVtbl;e->grid.lpVtbl=&gridVtbl;e->gridItem.lpVtbl=&gridItemVtbl;
+        e->virtualItem.lpVtbl=&virtualItemVtbl;e->scrollItem.lpVtbl=&scrollItemVtbl;e->itemContainer.lpVtbl=&itemContainerVtbl;
+        w->elements[w->count++]=e;
+        w->structureChanged=1;
     }
-    *ppv = NULL;
-    return E_NOINTERFACE;
+    WCHAR *newName=wide(name),*newValue=wide(value);adjustRanges(e,e->value,newValue);free(e->name);free(e->value);e->name=newName;e->value=newValue;
+    e->generation=w->generation;e->parentID=parent;e->isRoot=!parent;e->role=role;e->states=states;e->patterns=patterns;e->x=x;e->y=y;e->width=width;e->height=height;e->parent=NULL;e->count=0;
+    if(!parent)w->root=e;
 }
-
-// ============================================================
-// IRawElementProviderSimple
-// ============================================================
-
-static HRESULT STDMETHODCALLTYPE S_QI(IRawSimple* This, REFIID riid, void** ppv) {
-    return elemQI(ELEM_FROM_SIMPLE(This), riid, ppv);
+void WinAccessibilityKeep(uintptr_t handle,uint64_t id,uint64_t parent){FyneWindow*w=findWindow((HWND)handle);if(!w)return;for(int i=0;i<w->count;i++){FyneElement*e=w->elements[i];if(e->id==id){e->generation=w->generation;e->parentID=parent;e->parent=NULL;e->count=0;break;}}}
+void WinAccessibilityDetails(uintptr_t handle,uint64_t id,int start,int end,int rows,int columns,int row,int column,int multiple,double value,double minimum,double maximum,double step) {
+    FyneWindow*w=findWindow((HWND)handle);if(!w)return;for(int i=0;i<w->count;i++){FyneElement*e=w->elements[i];if(e->id!=id)continue;e->selectionStart=start;e->selectionEnd=end;e->rows=rows;e->columns=columns;e->row=row;e->column=column;e->multiple=multiple;e->number=value;e->minimum=minimum;e->maximum=maximum;e->step=step;break;}
 }
-static ULONG STDMETHODCALLTYPE S_AddRef(IRawSimple* This) {
-    return InterlockedIncrement(&ELEM_FROM_SIMPLE(This)->refCount);
+void WinAccessibilityEnd(uintptr_t handle) {
+    FyneWindow *w=findWindow((HWND)handle);if(!w)return;
+    int changed=w->structureChanged,write=0;
+    for(int i=0;i<w->count;i++){FyneElement *e=w->elements[i];if(e->generation!=w->generation){e->detached=1;e->parent=NULL;e->count=0;release(e);changed=1;}else w->elements[write++]=e;}
+    w->count=write;
+    for(int i=0;i<w->count;i++){FyneElement *e=w->elements[i];if(!e->parentID)continue;for(int n=0;n<w->count;n++){FyneElement *p=w->elements[n];if(p->id!=e->parentID)continue;e->parent=p;if(p->count==p->capacity){int capacity=p->capacity?p->capacity*2:8;FyneElement **items=realloc(p->children,capacity*sizeof(*items));if(!items)break;p->children=items;p->capacity=capacity;}p->children[p->count++]=e;break;}}
+    FyneElement *root=w->root;if(root)retain(root);ReleaseSRWLockExclusive(&providerLock);
+    if(root){if(changed&&uiaStructure){int id[3]={UiaAppendRuntimeId,(int)(root->id>>32),(int)root->id};uiaStructure(&root->simple,StructureChangeType_ChildrenInvalidated,id,3);}release(root);}
 }
-static ULONG STDMETHODCALLTYPE S_Release(IRawSimple* This) {
-    FyneUIAElement* e = ELEM_FROM_SIMPLE(This);
-    ULONG c = InterlockedDecrement(&e->refCount);
-    if (c == 0 && !e->isRoot) { free(e->name); free(e); }
-    return c;
+// Never call UI Automation while holding providerLock: an event client can
+// synchronously read this provider. Retain the element across that callback.
+static FyneElement* eventElement(uintptr_t handle,uint64_t id){
+    FyneElement*e=NULL;AcquireSRWLockShared(&providerLock);FyneWindow*w=findWindow((HWND)handle);
+    if(w)for(int i=0;i<w->count;i++)if(w->elements[i]->id==id){e=w->elements[i];retain(e);break;}
+    ReleaseSRWLockShared(&providerLock);return e;
 }
-
-static HRESULT STDMETHODCALLTYPE S_get_ProviderOptions(IRawSimple* This, int* pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = UIAProviderOptions_ServerSideProvider | UIAProviderOptions_UseComThreading;
+int WinAccessibilityListening(void){return uiaListening&&uiaListening();}
+void WinAccessibilityEvent(uintptr_t handle,uint64_t id,int event){
+    if(!uiaEvent)return;FyneElement*e=eventElement(handle,id);if(!e)return;
+    uiaEvent(&e->simple,event);release(e);
+}
+static void propertyEvent(uintptr_t handle,uint64_t id,int property,VARIANT before,VARIANT after){
+    if(!uiaProperty)return;FyneElement*e=eventElement(handle,id);if(!e)return;
+    uiaProperty(&e->simple,property,before,after);release(e);
+}
+void WinAccessibilityBoolProperty(uintptr_t handle,uint64_t id,int property,int before,int after,int boolean){
+    VARIANT a,b;VariantInit(&a);VariantInit(&b);a.vt=b.vt=boolean?VT_BOOL:VT_I4;
+    if(boolean){a.boolVal=before?VARIANT_TRUE:VARIANT_FALSE;b.boolVal=after?VARIANT_TRUE:VARIANT_FALSE;}
+    else {a.lVal=before;b.lVal=after;}propertyEvent(handle,id,property,a,b);
+}
+void WinAccessibilityNumberProperty(uintptr_t handle,uint64_t id,int property,double before,double after){
+    VARIANT a,b;VariantInit(&a);VariantInit(&b);a.vt=b.vt=VT_R8;a.dblVal=before;b.dblVal=after;propertyEvent(handle,id,property,a,b);
+}
+void WinAccessibilityTextProperty(uintptr_t handle,uint64_t id,int property,const char* before,const char* after){
+    WCHAR*x=wide(before),*y=wide(after);VARIANT a,b;VariantInit(&a);VariantInit(&b);
+    a.vt=b.vt=VT_BSTR;a.bstrVal=x?SysAllocString(x):NULL;b.bstrVal=y?SysAllocString(y):NULL;
+    free(x);free(y);if(a.bstrVal&&b.bstrVal)propertyEvent(handle,id,property,a,b);VariantClear(&a);VariantClear(&b);
+}
+int WinAccessibilityScrollTextRange(uintptr_t handle,uint64_t id,int start,int end,int top){
+    FyneRange*r=NULL;AcquireSRWLockExclusive(&providerLock);FyneWindow*w=findWindow((HWND)handle);
+    if(w)for(int i=0;i<w->count;i++)if(w->elements[i]->id==id){r=newRange(w->elements[i],start,end);break;}
+    ReleaseSRWLockExclusive(&providerLock);if(!r)return 0;
+    HRESULT hr=ITextRangeProvider_ScrollIntoView(&r->iface,top);TR_R(&r->iface);return SUCCEEDED(hr);
+}
+int WinAccessibilitySelectionContractTest(uintptr_t handle,uint64_t id,uint64_t childID){
+    FyneElement*e=eventElement(handle,id);if(!e)return 0;SAFEARRAY*selected=NULL;
+    HRESULT hr=ISelectionProvider_GetSelection(&e->selectionContainer,&selected);int ok=SUCCEEDED(hr)&&selected;
+    if(selected){LONG low=0,high=-1;SafeArrayGetLBound(selected,1,&low);SafeArrayGetUBound(selected,1,&high);ok=ok&&high-low==0;
+        IUnknown*value=NULL;if(high>=low&&SUCCEEDED(SafeArrayGetElement(selected,&low,&value))&&value){
+            IRawElementProviderSimple*simple=NULL;hr=IUnknown_QueryInterface(value,&simpleIID,(void**)&simple);
+            if(SUCCEEDED(hr)&&simple){FyneElement*child=ELEMENT(simple,simple);BOOL state=FALSE;IRawElementProviderSimple*parent=NULL;
+                ok=ok&&child->id==childID&&SUCCEEDED(ISelectionItemProvider_get_IsSelected(&child->selection,&state))&&state;
+                ok=ok&&SUCCEEDED(ISelectionItemProvider_get_SelectionContainer(&child->selection,&parent))&&parent==&e->simple;
+                if(parent)IRawElementProviderSimple_Release(parent);IRawElementProviderSimple_Release(simple);
+            }else ok=0;IUnknown_Release(value);
+        }else ok=0;SafeArrayDestroy(selected);
+    }release(e);return ok;
+}
+int WinAccessibilityVirtualContractTest(uintptr_t handle,uint64_t id){
+    FyneElement*e=NULL;AcquireSRWLockShared(&providerLock);FyneWindow*w=findWindow((HWND)handle);if(w)for(int i=0;i<w->count;i++)if(w->elements[i]->id==id){e=w->elements[i];retain(e);break;}ReleaseSRWLockShared(&providerLock);if(!e)return 0;
+    IUnknown*pattern=NULL;int ok=SUCCEEDED(IRawElementProviderSimple_GetPatternProvider(&e->simple,UIA_ItemContainerPatternId,&pattern))&&pattern;if(pattern)IUnknown_Release(pattern);
+    // A virtual collection still has ordinary siblings in its parent layout.
+    // Its logical row navigation must not swallow the neighbouring controls.
+    IRawElementProviderFragment*neighbour=NULL;
+    ok=ok&&SUCCEEDED(IRawElementProviderFragment_Navigate(&e->fragment,NavigateDirection_NextSibling,&neighbour))&&neighbour;
+    if(neighbour){FyneElement*item=ELEMENT(neighbour,fragment);ok=ok&&wcscmp(item->name,L"After collection")==0;IRawElementProviderFragment_Release(neighbour);}
+    neighbour=NULL;ok=ok&&SUCCEEDED(IRawElementProviderFragment_Navigate(&e->fragment,NavigateDirection_PreviousSibling,&neighbour))&&neighbour;
+    if(neighbour){FyneElement*item=ELEMENT(neighbour,fragment);ok=ok&&wcscmp(item->name,L"Before collection")==0;IRawElementProviderFragment_Release(neighbour);}
+    IRawElementProviderFragment*last=NULL;ok=ok&&SUCCEEDED(IRawElementProviderFragment_Navigate(&e->fragment,NavigateDirection_LastChild,&last))&&last;
+    if(last){FyneElement*child=ELEMENT(last,fragment);VARIANT value;VariantInit(&value);ok=ok&&SUCCEEDED(IRawElementProviderSimple_GetPropertyValue(&child->simple,UIA_IsOffscreenPropertyId,&value))&&value.vt==VT_BOOL&&value.boolVal==VARIANT_TRUE;VariantClear(&value);
+        IUnknown*virtual=NULL;ok=ok&&SUCCEEDED(IRawElementProviderSimple_GetPatternProvider(&child->simple,UIA_VirtualizedItemPatternId,&virtual))&&virtual;if(virtual)IUnknown_Release(virtual);
+        IRawElementProviderFragment*parent=NULL;ok=ok&&SUCCEEDED(IRawElementProviderFragment_Navigate(last,NavigateDirection_Parent,&parent))&&parent==&e->fragment;if(parent)IRawElementProviderFragment_Release(parent);IRawElementProviderFragment_Release(last);
+    }
+    SAFEARRAY*selected=NULL;ok=ok&&SUCCEEDED(ISelectionProvider_GetSelection(&e->selectionContainer,&selected))&&selected;if(selected){LONG low=0,high=-1;SafeArrayGetLBound(selected,1,&low);SafeArrayGetUBound(selected,1,&high);ok=ok&&high-low+1==1;IUnknown*item=NULL;if(high>=low)SafeArrayGetElement(selected,&low,&item);if(item){FyneElement*child=ELEMENT((IRawElementProviderSimple*)item,simple);ok=ok&&child->name&&wcsstr(child->name,L"90000")&&(child->states&128);IUnknown_Release(item);}else ok=0;SafeArrayDestroy(selected);}release(e);return ok;
+}
+static int eventContractMask;
+static HRESULT WINAPI eventContractProperty(IRawElementProviderSimple*p,PROPERTYID property,VARIANT before,VARIANT after){
+    VARIANT name;HRESULT hr=S_Property(p,UIA_NamePropertyId,&name);if(FAILED(hr))return hr;VariantClear(&name);
+    if(property==UIA_IsEnabledPropertyId&&before.vt==VT_BOOL&&before.boolVal==VARIANT_TRUE&&after.vt==VT_BOOL&&after.boolVal==VARIANT_FALSE)eventContractMask|=1;
+    if(property==UIA_RangeValueValuePropertyId&&before.vt==VT_R8&&before.dblVal==2&&after.vt==VT_R8&&after.dblVal==7)eventContractMask|=2;
+    if(property==UIA_NamePropertyId&&before.vt==VT_BSTR&&SysStringLen(before.bstrVal)==1&&after.vt==VT_BSTR&&SysStringLen(after.bstrVal)==2&&after.bstrVal[0]==0x65E5)eventContractMask|=4;
     return S_OK;
 }
-
-static HRESULT STDMETHODCALLTYPE S_GetPatternProvider(IRawSimple* This, PATTERNID id, IUnknown** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = NULL;
-    return S_OK;
+static HRESULT WINAPI eventContractEvent(IRawElementProviderSimple*p,EVENTID event){if(event==UIA_AutomationFocusChangedEventId)eventContractMask|=8;return S_OK;}
+int WinAccessibilityEventsContractTest(void){
+    HWND hwnd=CreateWindowW(L"STATIC",L"events ABI",0,0,0,100,100,NULL,NULL,NULL,NULL);if(!hwnd)return 0;
+    WinAccessibilityBegin((uintptr_t)hwnd);WinAccessibilityAdd((uintptr_t)hwnd,30000001,0,"root","",50032,0,0,0,0,100,100);WinAccessibilityEnd((uintptr_t)hwnd);
+    HRESULT(WINAPI*savedProperty)(IRawElementProviderSimple*,PROPERTYID,VARIANT,VARIANT)=uiaProperty;
+    HRESULT(WINAPI*savedEvent)(IRawElementProviderSimple*,EVENTID)=uiaEvent;
+    eventContractMask=0;uiaProperty=eventContractProperty;uiaEvent=eventContractEvent;
+    WinAccessibilityBoolProperty((uintptr_t)hwnd,30000001,UIA_IsEnabledPropertyId,1,0,1);
+    WinAccessibilityNumberProperty((uintptr_t)hwnd,30000001,UIA_RangeValueValuePropertyId,2,7);
+    WinAccessibilityTextProperty((uintptr_t)hwnd,30000001,UIA_NamePropertyId,"a","\xe6\x97\xa5\xe6\x9c\xac");
+    WinAccessibilityEvent((uintptr_t)hwnd,30000001,UIA_AutomationFocusChangedEventId);
+    uiaProperty=savedProperty;uiaEvent=savedEvent;int ok=eventContractMask==15;
+    WinAccessibilityCleanup((uintptr_t)hwnd);DestroyWindow(hwnd);return ok;
 }
-
-static HRESULT STDMETHODCALLTYPE S_GetPropertyValue(IRawSimple* This, PROPERTYID pid, VARIANT* pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    VariantInit(pRetVal);
-    FyneUIAElement* e = ELEM_FROM_SIMPLE(This);
-
-    // Root element: let host provider handle most properties,
-    // override focus-related ones (host returns IsKeyboardFocusable=False)
-    if (e->isRoot) {
-        switch (pid) {
-        case UIA_IsKeyboardFocusablePropertyId:
-            pRetVal->vt = VT_BOOL;
-            pRetVal->boolVal = VARIANT_TRUE;
-            break;
-        case UIA_HasKeyboardFocusPropertyId:
-            pRetVal->vt = VT_BOOL;
-            pRetVal->boolVal = (GetForegroundWindow() == e->hwnd) ? VARIANT_TRUE : VARIANT_FALSE;
-            break;
-        case UIA_IsControlElementPropertyId:
-        case UIA_IsContentElementPropertyId:
-        case UIA_IsEnabledPropertyId:
-            pRetVal->vt = VT_BOOL;
-            pRetVal->boolVal = VARIANT_TRUE;
-            break;
-        case UIA_ProviderDescriptionPropertyId:
-            pRetVal->vt = VT_BSTR;
-            pRetVal->bstrVal = SysAllocString(L"Fyne Accessibility Provider");
-            break;
-        }
-        return S_OK;
-    }
-
-    // Child element properties
-    switch (pid) {
-    case UIA_ControlTypePropertyId:
-        pRetVal->vt = VT_I4;
-        pRetVal->lVal = e->controlType;
-        break;
-    case UIA_NamePropertyId:
-        pRetVal->vt = VT_BSTR;
-        pRetVal->bstrVal = SysAllocString(e->name);
-        break;
-    case UIA_AutomationIdPropertyId: {
-        WCHAR buf[32];
-        wsprintfW(buf, L"fyne_%d", e->uniqueId);
-        pRetVal->vt = VT_BSTR;
-        pRetVal->bstrVal = SysAllocString(buf);
-        break;
-    }
-    case UIA_IsControlElementPropertyId:
-    case UIA_IsContentElementPropertyId:
-    case UIA_IsEnabledPropertyId:
-    case UIA_IsKeyboardFocusablePropertyId:
-        pRetVal->vt = VT_BOOL;
-        pRetVal->boolVal = VARIANT_TRUE;
-        break;
-    case UIA_HasKeyboardFocusPropertyId:
-        pRetVal->vt = VT_BOOL;
-        pRetVal->boolVal = (g_focusedIndex == e->childIndex) ? VARIANT_TRUE : VARIANT_FALSE;
-        break;
-    case UIA_ProviderDescriptionPropertyId:
-        pRetVal->vt = VT_BSTR;
-        pRetVal->bstrVal = SysAllocString(L"Fyne Accessibility Provider");
-        break;
-    }
-    return S_OK;
+void WinAccessibilityCleanup(uintptr_t handle) {
+    HWND hwnd=(HWND)handle;AcquireSRWLockExclusive(&providerLock);FyneWindow **link=&windows;while(*link&&(*link)->hwnd!=hwnd)link=&(*link)->next;FyneWindow *w=*link;if(!w){ReleaseSRWLockExclusive(&providerLock);return;}
+    *link=w->next;RemoveWindowSubclass(hwnd,windowProc,0xF1A11);
+    for(int i=0;i<w->count;i++){FyneElement *e=w->elements[i];e->detached=1;e->parent=NULL;e->count=0;}
+    ReleaseSRWLockExclusive(&providerLock);
+    for(int i=0;i<w->count;i++){if(uiaDisconnect)uiaDisconnect(&w->elements[i]->simple);release(w->elements[i]);}free(w->elements);free(w);
 }
+int WinAccessibilityTextContractTest(void){HWND hwnd=CreateWindowW(L"STATIC",L"text ABI",0,0,0,320,200,NULL,NULL,NULL,NULL);if(!hwnd)return 0;
+    WinAccessibilityBegin((uintptr_t)hwnd);WinAccessibilityAdd((uintptr_t)hwnd,20000001,0,"root","",50032,0,0,0,0,320,200);WinAccessibilityAdd((uintptr_t)hwnd,20000002,20000001,"text","a\xcc\x81\xf0\x9f\x98\x80z",50004,0,2|64,0,0,200,40);WinAccessibilityDetails((uintptr_t)hwnd,20000002,0,0,0,0,0,0,0,0,0,0,0);WinAccessibilityEnd((uintptr_t)hwnd);
+    AcquireSRWLockShared(&providerLock);FyneElement*e=findWindow(hwnd)->elements[1];retain(e);ReleaseSRWLockShared(&providerLock);IUnknown*pattern=NULL;int ok=SUCCEEDED(S_Pattern(&e->simple,UIA_TextPatternId,&pattern))&&pattern;ITextRangeProvider*range=NULL;BSTR text=NULL;
+    if(pattern){ok=ok&&SUCCEEDED(ITextProvider_get_DocumentRange((ITextProvider*)pattern,&range));IUnknown_Release(pattern);}
+    if(range){ok=ok&&SUCCEEDED(ITextRangeProvider_GetText(range,-1,&text))&&SysStringLen(text)==5;SysFreeString(text);int moved=0;ok=ok&&SUCCEEDED(ITextRangeProvider_MoveEndpointByUnit(range,TextPatternRangeEndpoint_Start,TextUnit_Character,1,&moved))&&moved==1;ok=ok&&SUCCEEDED(ITextRangeProvider_GetText(range,-1,&text))&&SysStringLen(text)==3&&text[0]==0xD83D;SysFreeString(text);text=NULL;ok=ok&&SUCCEEDED(ITextRangeProvider_GetText(range,1,&text))&&SysStringLen(text)==0;SysFreeString(text);}
+    WinAccessibilityBegin((uintptr_t)hwnd);WinAccessibilityAdd((uintptr_t)hwnd,20000001,0,"root","",50032,0,0,0,0,320,200);WinAccessibilityEnd((uintptr_t)hwnd);if(range){text=NULL;ok=ok&&ITextRangeProvider_GetText(range,-1,&text)==UNAVAILABLE;ITextRangeProvider_Release(range);}release(e);WinAccessibilityCleanup((uintptr_t)hwnd);DestroyWindow(hwnd);return ok;}
 
-static HRESULT STDMETHODCALLTYPE S_get_HostRawElementProvider(IRawSimple* This, IRawSimple** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = NULL;
-    FyneUIAElement* e = ELEM_FROM_SIMPLE(This);
-    if (e->isRoot && pfnUiaHost) {
-        pfnUiaHost(e->hwnd, (void**)pRetVal);
-    }
-    return S_OK;
-}
-
-// ============================================================
-// IRawElementProviderFragment
-// ============================================================
-
-static HRESULT STDMETHODCALLTYPE F_QI(IRawFragment* This, REFIID riid, void** ppv) {
-    return elemQI(ELEM_FROM_FRAGMENT(This), riid, ppv);
-}
-static ULONG STDMETHODCALLTYPE F_AddRef(IRawFragment* This) {
-    return InterlockedIncrement(&ELEM_FROM_FRAGMENT(This)->refCount);
-}
-static ULONG STDMETHODCALLTYPE F_Release(IRawFragment* This) {
-    FyneUIAElement* e = ELEM_FROM_FRAGMENT(This);
-    ULONG c = InterlockedDecrement(&e->refCount);
-    if (c == 0 && !e->isRoot) { free(e->name); free(e); }
-    return c;
-}
-
-static HRESULT STDMETHODCALLTYPE F_Navigate(IRawFragment* This, int direction, IRawFragment** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = NULL;
-    FyneUIAElement* e = ELEM_FROM_FRAGMENT(This);
-    FyneUIAElement* target = NULL;
-
-    if (e->isRoot) {
-        switch (direction) {
-        case UIANavigateDirection_FirstChild:
-            if (e->childCount > 0) target = e->children[0];
-            break;
-        case UIANavigateDirection_LastChild:
-            if (e->childCount > 0) target = e->children[e->childCount - 1];
-            break;
-        }
-    } else {
-        FyneUIAElement* p = e->parent;
-        switch (direction) {
-        case UIANavigateDirection_Parent:
-            target = p;
-            break;
-        case UIANavigateDirection_NextSibling:
-            if (p && e->childIndex + 1 < p->childCount)
-                target = p->children[e->childIndex + 1];
-            break;
-        case UIANavigateDirection_PreviousSibling:
-            if (p && e->childIndex > 0)
-                target = p->children[e->childIndex - 1];
-            break;
-        }
-    }
-
-    if (target) {
-        *pRetVal = &target->fragment;
-        InterlockedIncrement(&target->refCount);
-    }
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE F_GetRuntimeId(IRawFragment* This, SAFEARRAY** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    FyneUIAElement* e = ELEM_FROM_FRAGMENT(This);
-
-    SAFEARRAYBOUND bound = {2, 0};
-    SAFEARRAY* psa = SafeArrayCreate(VT_I4, 1, &bound);
-    if (!psa) return E_OUTOFMEMORY;
-
-    long idx = 0;
-    int val = UiaAppendRuntimeId;
-    SafeArrayPutElement(psa, &idx, &val);
-    idx = 1;
-    val = e->uniqueId;
-    SafeArrayPutElement(psa, &idx, &val);
-
-    *pRetVal = psa;
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE F_get_BoundingRectangle(IRawFragment* This, UIARect* pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    FyneUIAElement* e = ELEM_FROM_FRAGMENT(This);
-
-    if (e->isRoot) {
-        RECT rc;
-        GetClientRect(e->hwnd, &rc);
-        POINT pt = {0, 0};
-        ClientToScreen(e->hwnd, &pt);
-        pRetVal->left   = pt.x;
-        pRetVal->top    = pt.y;
-        pRetVal->width  = rc.right - rc.left;
-        pRetVal->height = rc.bottom - rc.top;
-    } else {
-        POINT pt = {(LONG)e->x, (LONG)e->y};
-        ClientToScreen(e->hwnd, &pt);
-        pRetVal->left   = pt.x;
-        pRetVal->top    = pt.y;
-        pRetVal->width  = e->width;
-        pRetVal->height = e->height;
-    }
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE F_GetEmbeddedFragmentRoots(IRawFragment* This, SAFEARRAY** pRetVal) {
-    if (pRetVal) *pRetVal = NULL;
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE F_SetFocus(IRawFragment* This) {
-    FyneUIAElement* e = ELEM_FROM_FRAGMENT(This);
-    if (!e->isRoot) {
-        g_focusedIndex = e->childIndex;
-        if (pfnUiaRaiseEvent) {
-            pfnUiaRaiseEvent(&e->simple, UIA_AutomationFocusChangedEventId);
-        }
-    }
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE F_get_FragmentRoot(IRawFragment* This, IRawFragRoot** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = NULL;
-    FyneUIAElement* e = ELEM_FROM_FRAGMENT(This);
-    FyneUIAElement* root = e->isRoot ? e : e->parent;
-    if (root) {
-        *pRetVal = &root->fragRoot;
-        InterlockedIncrement(&root->refCount);
-    }
-    return S_OK;
-}
-
-// ============================================================
-// IRawElementProviderFragmentRoot
-// ============================================================
-
-static HRESULT STDMETHODCALLTYPE FR_QI(IRawFragRoot* This, REFIID riid, void** ppv) {
-    return elemQI(ELEM_FROM_FRAGROOT(This), riid, ppv);
-}
-static ULONG STDMETHODCALLTYPE FR_AddRef(IRawFragRoot* This) {
-    return InterlockedIncrement(&ELEM_FROM_FRAGROOT(This)->refCount);
-}
-static ULONG STDMETHODCALLTYPE FR_Release(IRawFragRoot* This) {
-    return InterlockedDecrement(&ELEM_FROM_FRAGROOT(This)->refCount);
-}
-
-static HRESULT STDMETHODCALLTYPE FR_ElementProviderFromPoint(IRawFragRoot* This,
-    double x, double y, IRawSimple** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = NULL;
-    FyneUIAElement* e = ELEM_FROM_FRAGROOT(This);
-
-    POINT pt = {(LONG)x, (LONG)y};
-    ScreenToClient(e->hwnd, &pt);
-
-    for (int i = 0; i < e->childCount; i++) {
-        FyneUIAElement* c = e->children[i];
-        if (pt.x >= c->x && pt.x < c->x + c->width &&
-            pt.y >= c->y && pt.y < c->y + c->height) {
-            *pRetVal = &c->simple;
-            InterlockedIncrement(&c->refCount);
-            return S_OK;
-        }
-    }
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE FR_GetFocus(IRawFragRoot* This, IRawFragment** pRetVal) {
-    if (!pRetVal) return E_POINTER;
-    *pRetVal = NULL;
-    FyneUIAElement* e = ELEM_FROM_FRAGROOT(This);
-    if (g_focusedIndex >= 0 && g_focusedIndex < e->childCount) {
-        FyneUIAElement* child = e->children[g_focusedIndex];
-        *pRetVal = &child->fragment;
-        InterlockedIncrement(&child->refCount);
-    }
-    return S_OK;
-}
-
-// ============================================================
-// Vtable setup
-// ============================================================
-
-static void initVtbls(void) {
-    if (g_vtblInit) return;
-
-    g_simpleVtbl.QueryInterface = S_QI;
-    g_simpleVtbl.AddRef = S_AddRef;
-    g_simpleVtbl.Release = S_Release;
-    g_simpleVtbl.get_ProviderOptions = S_get_ProviderOptions;
-    g_simpleVtbl.GetPatternProvider = S_GetPatternProvider;
-    g_simpleVtbl.GetPropertyValue = S_GetPropertyValue;
-    g_simpleVtbl.get_HostRawElementProvider = S_get_HostRawElementProvider;
-
-    g_fragmentVtbl.QueryInterface = F_QI;
-    g_fragmentVtbl.AddRef = F_AddRef;
-    g_fragmentVtbl.Release = F_Release;
-    g_fragmentVtbl.Navigate = F_Navigate;
-    g_fragmentVtbl.GetRuntimeId = F_GetRuntimeId;
-    g_fragmentVtbl.get_BoundingRectangle = F_get_BoundingRectangle;
-    g_fragmentVtbl.GetEmbeddedFragmentRoots = F_GetEmbeddedFragmentRoots;
-    g_fragmentVtbl.SetFocus = F_SetFocus;
-    g_fragmentVtbl.get_FragmentRoot = F_get_FragmentRoot;
-
-    g_fragRootVtbl.QueryInterface = FR_QI;
-    g_fragRootVtbl.AddRef = FR_AddRef;
-    g_fragRootVtbl.Release = FR_Release;
-    g_fragRootVtbl.ElementProviderFromPoint = FR_ElementProviderFromPoint;
-    g_fragRootVtbl.GetFocus = FR_GetFocus;
-
-    g_vtblInit = 1;
-}
-
-static FyneUIAElement* createElement(int isRoot, HWND hwnd) {
-    FyneUIAElement* e = (FyneUIAElement*)calloc(1, sizeof(FyneUIAElement));
-    if (!e) return NULL;
-    e->simple.lpVtbl   = &g_simpleVtbl;
-    e->fragment.lpVtbl  = &g_fragmentVtbl;
-    e->fragRoot.lpVtbl  = &g_fragRootVtbl;
-    e->refCount = 1;
-    e->isRoot = isRoot;
-    e->hwnd = hwnd;
-    e->uniqueId = g_nextId++;
-    return e;
-}
-
-// ============================================================
-// Window subclass
-// ============================================================
-
-static void focusChild(int index) {
-    if (!g_root || index < 0 || index >= g_root->childCount) return;
-    if (index == g_focusedIndex) return;
-    PostMessageW(g_hwnd, WM_FYNE_FOCUS_CHILD, (WPARAM)index, 0);
-}
-
-static int hitTestChild(int clientX, int clientY) {
-    if (!g_root) return -1;
-    for (int i = 0; i < g_root->childCount; i++) {
-        FyneUIAElement* c = g_root->children[i];
-        if (clientX >= c->x && clientX < c->x + c->width &&
-            clientY >= c->y && clientY < c->y + c->height) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-static LRESULT CALLBACK AccessibilityWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    if (msg == WM_GETOBJECT) {
-        if (lParam == (LPARAM)UiaRootObjectId && g_root && pfnUiaReturn) {
-            return pfnUiaReturn(hwnd, wParam, lParam, &g_root->simple);
-        }
-        return DefWindowProcW(hwnd, msg, wParam, lParam);
-    }
-
-    if (msg == WM_SETFOCUS || (msg == WM_ACTIVATE && LOWORD(wParam) != 0)) {
-        PostMessageW(hwnd, WM_FYNE_RAISE_FOCUS, 0, 0);
-    }
-
-    if (msg == WM_FYNE_RAISE_FOCUS) {
-        if (g_root && pfnUiaRaiseEvent) {
-            pfnUiaRaiseEvent(&g_root->simple, UIA_AutomationFocusChangedEventId);
-        }
-        return 0;
-    }
-
-    if (msg == WM_FYNE_FOCUS_CHILD) {
-        int index = (int)wParam;
-        if (g_root && index >= 0 && index < g_root->childCount) {
-            g_focusedIndex = index;
-            if (pfnUiaRaiseEvent) {
-                pfnUiaRaiseEvent(&g_root->children[index]->simple, UIA_AutomationFocusChangedEventId);
-            }
-        }
-        return 0;
-    }
-
-    if (msg == WM_LBUTTONDOWN) {
-        int hit = hitTestChild((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam));
-        if (hit >= 0) {
-            focusChild(hit);
-        }
-    }
-
-    if (msg == WM_KEYDOWN && wParam == VK_TAB) {
-        if (g_root && g_root->childCount > 0) {
-            int next;
-            if (GetKeyState(VK_SHIFT) & 0x8000) {
-                next = (g_focusedIndex <= 0) ? g_root->childCount - 1 : g_focusedIndex - 1;
-            } else {
-                next = (g_focusedIndex + 1) % g_root->childCount;
-            }
-            focusChild(next);
-        }
-    }
-
-    return CallWindowProcW(g_origWndProc, hwnd, msg, wParam, lParam);
-}
-
-// ============================================================
-// Public API
-// ============================================================
-
-void WinAccessibilitySetWindow(void* hwnd) {
-    HWND h = (HWND)hwnd;
-    if (h == g_hwnd && g_root) return;
-
-    loadUiaFunctions();
-
-    if (g_hwnd && g_origWndProc) {
-        SetWindowLongPtrW(g_hwnd, GWLP_WNDPROC, (LONG_PTR)g_origWndProc);
-        g_origWndProc = NULL;
-    }
-
-    g_hwnd = h;
-    initVtbls();
-
-    if (!g_root) {
-        g_root = createElement(1, h);
-        if (!g_root) return;
-    }
-    g_root->hwnd = h;
-
-    g_origWndProc = (WNDPROC)SetWindowLongPtrW(h, GWLP_WNDPROC, (LONG_PTR)AccessibilityWndProc);
-}
-
-void WinAccessibilityAddElement(const char* name, WinAccessibilityRole role,
-    double x, double y, double width, double height) {
-    if (!g_root) return;
-
-    if (g_stagingCount >= g_stagingCapacity) {
-        int newCap = g_stagingCapacity == 0 ? 16 : g_stagingCapacity * 2;
-        FyneUIAElement** a = (FyneUIAElement**)realloc(g_staging, newCap * sizeof(FyneUIAElement*));
-        if (!a) return;
-        g_staging = a;
-        g_stagingCapacity = newCap;
-    }
-
-    FyneUIAElement* child = createElement(0, g_root->hwnd);
-    if (!child) return;
-    child->parent = g_root;
-    child->name = utf8ToWide(name);
-    child->controlType = roleToUIA(role);
-    child->x = x;
-    child->y = y;
-    child->width = width;
-    child->height = height;
-    child->childIndex = g_stagingCount;
-
-    g_staging[g_stagingCount] = child;
-    g_stagingCount++;
-}
-
-void WinAccessibilityClearElements(void) {
-    g_stagingCount = 0;
-}
-
-void WinAccessibilityUpdate(void) {
-    if (!g_root || !g_hwnd) return;
-
-    // Check if tree structure changed (count or names/roles differ)
-    int structureChanged = 0;
-    if (g_stagingCount != g_root->childCount) {
-        structureChanged = 1;
-    } else {
-        for (int i = 0; i < g_stagingCount; i++) {
-            FyneUIAElement* old = g_root->children[i];
-            FyneUIAElement* neu = g_staging[i];
-            if (old->controlType != neu->controlType ||
-                wcscmp(old->name, neu->name) != 0) {
-                structureChanged = 1;
-                break;
-            }
-        }
-    }
-
-    if (structureChanged) {
-        // Free old children
-        for (int i = 0; i < g_root->childCount; i++) {
-            free(g_root->children[i]->name);
-            free(g_root->children[i]);
-        }
-        // Swap in staging
-        FyneUIAElement** oldArr = g_root->children;
-        int oldCap = g_root->childCapacity;
-        g_root->children = g_staging;
-        g_root->childCount = g_stagingCount;
-        g_root->childCapacity = g_stagingCapacity;
-        g_staging = oldArr;
-        g_stagingCapacity = oldCap;
-        g_stagingCount = 0;
-        g_focusedIndex = -1;
-
-        if (pfnUiaRaiseStructure) {
-            int runtimeId[2] = { UiaAppendRuntimeId, g_root->uniqueId };
-            pfnUiaRaiseStructure(&g_root->simple,
-                UIAStructureChangeType_ChildrenInvalidated, runtimeId, 2);
-        }
-        PostMessageW(g_hwnd, WM_FYNE_RAISE_FOCUS, 0, 0);
-    } else {
-        // Update positions in-place
-        for (int i = 0; i < g_stagingCount; i++) {
-            FyneUIAElement* old = g_root->children[i];
-            FyneUIAElement* neu = g_staging[i];
-            old->x = neu->x;
-            old->y = neu->y;
-            old->width = neu->width;
-            old->height = neu->height;
-            free(neu->name);
-            free(neu);
-        }
-        g_stagingCount = 0;
-    }
-}
-
-void WinAccessibilityCleanup(void) {
-    if (g_hwnd && g_origWndProc) {
-        SetWindowLongPtrW(g_hwnd, GWLP_WNDPROC, (LONG_PTR)g_origWndProc);
-        g_origWndProc = NULL;
-    }
-    if (g_root) {
-        if (pfnUiaDisconnect) {
-            pfnUiaDisconnect(&g_root->simple);
-        }
-        for (int i = 0; i < g_root->childCount; i++) {
-            free(g_root->children[i]->name);
-            free(g_root->children[i]);
-        }
-        free(g_root->children);
-        free(g_root);
-        g_root = NULL;
-    }
-    for (int i = 0; i < g_stagingCount; i++) {
-        free(g_staging[i]->name);
-        free(g_staging[i]);
-    }
-    free(g_staging);
-    g_staging = NULL;
-    g_stagingCount = 0;
-    g_stagingCapacity = 0;
-    g_hwnd = NULL;
+// Exercises external COM ownership across snapshots and independent windows.
+int WinAccessibilityContractTest(void) {
+    HWND a=CreateWindowW(L"STATIC",L"a",0,0,0,100,100,NULL,NULL,NULL,NULL),b=CreateWindowW(L"STATIC",L"b",0,0,0,100,100,NULL,NULL,NULL,NULL);
+    if(!a||!b)return 0;
+    WinAccessibilityBegin((uintptr_t)a);WinAccessibilityAdd((uintptr_t)a,10000001,0,"a","",50032,0,0,0,0,100,100);WinAccessibilityAdd((uintptr_t)a,10000002,10000001,"input","hello",50004,0,2|32,0,0,50,20);WinAccessibilityEnd((uintptr_t)a);
+    WinAccessibilityBegin((uintptr_t)b);WinAccessibilityAdd((uintptr_t)b,10000003,0,"b","",50032,0,0,0,0,100,100);WinAccessibilityEnd((uintptr_t)b);
+    AcquireSRWLockShared(&providerLock);FyneElement *e=findWindow(a)->elements[1];retain(e);ReleaseSRWLockShared(&providerLock);
+    IUnknown *pattern=NULL;int ok=SUCCEEDED(S_Pattern(&e->simple,UIA_ValuePatternId,&pattern))&&pattern;
+    BSTR value=NULL;if(pattern){ok=ok&&SUCCEEDED(IValueProvider_get_Value((IValueProvider*)pattern,&value))&&wcscmp(value,L"hello")==0;SysFreeString(value);IUnknown_Release(pattern);}
+    WinAccessibilityBegin((uintptr_t)a);WinAccessibilityAdd((uintptr_t)a,10000001,0,"a","",50032,0,0,0,0,100,100);WinAccessibilityEnd((uintptr_t)a);
+    VARIANT property;ok=ok&&S_Property(&e->simple,UIA_NamePropertyId,&property)==UNAVAILABLE;release(e);
+    WinAccessibilityCleanup((uintptr_t)a);AcquireSRWLockShared(&providerLock);FyneElement *root=findWindow(b)->root;retain(root);ReleaseSRWLockShared(&providerLock);
+    ok=ok&&SUCCEEDED(S_Property(&root->simple,UIA_NamePropertyId,&property));VariantClear(&property);WinAccessibilityCleanup((uintptr_t)b);ok=ok&&S_Property(&root->simple,UIA_NamePropertyId,&property)==UNAVAILABLE;release(root);
+    DestroyWindow(a);DestroyWindow(b);return ok;
 }

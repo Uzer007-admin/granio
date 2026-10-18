@@ -1,0 +1,26 @@
+=== RUN   TestSystemAppearancePreservesOverridesAndMotionPolicy
+--- PASS: TestSystemAppearancePreservesOverridesAndMotionPolicy (0.00s)
+=== RUN   TestSystemAppearanceModernThemeUpdates
+--- PASS: TestSystemAppearanceModernThemeUpdates (0.00s)
+=== RUN   TestSystemAppearanceCoalescesAndCancelsUIWork
+--- PASS: TestSystemAppearanceCoalescesAndCancelsUIWork (0.00s)
+=== RUN   TestNativeWindowsAppearanceSnapshotAndLifetime
+    system_appearance_windows_native_test.go:57: actual OS snapshot: {Generation:0 Available:true ColorScheme:{Value:1 Available:true} HighContrast:{Value:false Available:true} ReducedMotion:{Value:false Available:true} Accent:{Value:{R:0 G:99 B:177 A:255} Available:true} TextScale:{Value:1 Available:true} Transparency:{Value:true Available:true} Colors:{Value:{Window:{R:255 G:255 B:255 A:255} WindowText:{R:0 G:0 B:0 A:255} ButtonFace:{R:240 G:240 B:240 A:255} ButtonText:{R:0 G:0 B:0 A:255} Highlight:{R:0 G:120 B:215 A:255} HighlightText:{R:255 G:255 B:255 A:255} GrayText:{R:109 G:109 B:109 A:255} Hotlight:{R:0 G:102 B:204 A:255}} Available:true} UnavailableReason:}; subscriptions=0x1f
+--- PASS: TestNativeWindowsAppearanceSnapshotAndLifetime (0.62s)
+=== RUN   TestNativeWindowsAppearanceInitialAndCancel
+    system_appearance_windows_native_test.go:89: initial load and 1.1s idle/lifecycle: 1.1121019s
+--- PASS: TestNativeWindowsAppearanceInitialAndCancel (1.11s)
+PASS
+ok  	fyne.io/fyne/v2/app	3.903s
+=== RUN   TestModernSystemAppearanceOverridesAndRestore
+--- PASS: TestModernSystemAppearanceOverridesAndRestore (0.00s)
+=== RUN   TestModernSystemHighContrastPalette
+--- PASS: TestModernSystemHighContrastPalette (0.00s)
+=== RUN   TestModernContrastAndTextScaling
+--- PASS: TestModernContrastAndTextScaling (0.00s)
+PASS
+ok  	fyne.io/fyne/v2/theme	1.513s
+=== RUN   TestSystemPalettePreservesSelectionAndButtonText
+--- PASS: TestSystemPalettePreservesSelectionAndButtonText (0.05s)
+PASS
+ok  	fyne.io/fyne/v2/widget	2.125s

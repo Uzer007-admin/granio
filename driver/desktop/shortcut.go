@@ -4,29 +4,29 @@ import (
 	"runtime"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
 )
 
 // Declare conformity with Shortcut interface
 var (
-	_ fyne.Shortcut         = (*CustomShortcut)(nil)
-	_ fyne.KeyboardShortcut = (*CustomShortcut)(nil)
+	_ granio.Shortcut         = (*CustomShortcut)(nil)
+	_ granio.KeyboardShortcut = (*CustomShortcut)(nil)
 )
 
 // CustomShortcut describes a shortcut desktop event.
 type CustomShortcut struct {
-	fyne.KeyName
-	Modifier fyne.KeyModifier
+	granio.KeyName
+	Modifier granio.KeyModifier
 }
 
 // Key returns the key name of this shortcut.
-func (cs *CustomShortcut) Key() fyne.KeyName {
+func (cs *CustomShortcut) Key() granio.KeyName {
 	return cs.KeyName
 }
 
 // Mod returns the modifier of this shortcut.
-func (cs *CustomShortcut) Mod() fyne.KeyModifier {
+func (cs *CustomShortcut) Mod() granio.KeyModifier {
 	return cs.Modifier
 }
 
@@ -39,17 +39,17 @@ func (cs *CustomShortcut) ShortcutName() string {
 	return id.String()
 }
 
-func writeModifiers(w *strings.Builder, mods fyne.KeyModifier) {
-	if (mods & fyne.KeyModifierShift) != 0 {
+func writeModifiers(w *strings.Builder, mods granio.KeyModifier) {
+	if (mods & granio.KeyModifierShift) != 0 {
 		w.WriteString("Shift+")
 	}
-	if (mods & fyne.KeyModifierControl) != 0 {
+	if (mods & granio.KeyModifierControl) != 0 {
 		w.WriteString("Control+")
 	}
-	if (mods & fyne.KeyModifierAlt) != 0 {
+	if (mods & granio.KeyModifierAlt) != 0 {
 		w.WriteString("Alt+")
 	}
-	if (mods & fyne.KeyModifierSuper) != 0 {
+	if (mods & granio.KeyModifierSuper) != 0 {
 		if runtime.GOOS == goos.Darwin {
 			w.WriteString("Command+")
 		} else {

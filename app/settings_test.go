@@ -5,12 +5,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	internalapp "fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/build"
-	internalTest "fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	internalapp "github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,7 +18,7 @@ import (
 
 func TestSettingsBuildType(t *testing.T) {
 	set := test.NewApp().Settings()
-	assert.Equal(t, fyne.BuildStandard, set.BuildType()) // during test we should have a normal build
+	assert.Equal(t, granio.BuildStandard, set.BuildType()) // during test we should have a normal build
 
 	set = &settings{}
 	assert.Equal(t, build.Mode, set.BuildType()) // when testing this package only it could be debug or release
@@ -79,7 +79,7 @@ func TestOverrideTheme_IgnoresSettingsChange(t *testing.T) {
 
 func TestCustomTheme(t *testing.T) {
 	type customTheme struct {
-		fyne.Theme
+		granio.Theme
 	}
 	set := &settings{}
 	ctheme := &customTheme{internalTest.LightTheme(theme.DefaultTheme())}

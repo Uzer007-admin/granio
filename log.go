@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 import (
 	"log"
@@ -9,7 +9,7 @@ import (
 // if not nil.
 // The function also reports basic information about the code location.
 func LogError(reason string, err error) {
-	log.Println("Fyne error: ", reason)
+	log.Println("Ошибка Granio: ", reason)
 	if err != nil {
 		log.Println("  Cause:", err)
 	}

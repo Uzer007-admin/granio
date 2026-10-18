@@ -7,18 +7,18 @@ import (
 	"net/url"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func (a *fyneApp) OpenURL(_ *url.URL) error {
 	return errors.New("unable to open url for unknown operating system")
 }
 
-func (a *fyneApp) SendNotification(_ *fyne.Notification) {
-	fyne.LogError("Refusing to show notification for unknown operating system", nil)
+func (a *fyneApp) SendNotification(_ *granio.Notification) {
+	granio.LogError("Refusing to show notification for unknown operating system", nil)
 }
 
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	return a.scheduleViaScheduler(n, when)
 }
 

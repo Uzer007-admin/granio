@@ -6,17 +6,17 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
-var globalProgressRenderer fyne.WidgetRenderer
+var globalProgressRenderer granio.WidgetRenderer
 
 func BenchmarkProgressbarCreateRenderer(b *testing.B) {
-	var renderer fyne.WidgetRenderer
+	var renderer granio.WidgetRenderer
 	bar := &widget.ProgressBar{}
 	b.ReportAllocs()
 
@@ -35,7 +35,7 @@ func BenchmarkProgressBarLayout(b *testing.B) {
 	renderer := bar.CreateRenderer()
 
 	for i := 0; i < b.N; i++ {
-		renderer.Layout(fyne.NewSize(100, 100))
+		renderer.Layout(granio.NewSize(100, 100))
 	}
 }
 
@@ -132,10 +132,10 @@ func TestProgressBar_FromStruct(t *testing.T) {
 	test.AssertRendersToImage(t, "progressbar/initial.png", w.Canvas())
 }
 
-func barOnCanvas() (*widget.ProgressBar, fyne.Canvas) {
+func barOnCanvas() (*widget.ProgressBar, granio.Canvas) {
 	bar := widget.NewProgressBar()
 	window := test.NewWindow(container.NewVBox(bar))
 	window.SetPadded(false)
-	window.Resize(fyne.NewSize(100, 100))
+	window.Resize(granio.NewSize(100, 100))
 	return bar, window.Canvas()
 }

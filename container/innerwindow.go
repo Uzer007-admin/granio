@@ -4,14 +4,14 @@ import (
 	"image/color"
 	"runtime"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/goos"
-	intWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	intWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 type titleBarButtonMode int
@@ -25,7 +25,7 @@ const (
 	sizeDraggableCorner = 16
 )
 
-var _ fyne.Widget = (*InnerWindow)(nil)
+var _ granio.Widget = (*InnerWindow)(nil)
 
 // InnerWindow defines a container that wraps content in a window border - that can then be placed inside
 // a regular container/canvas.
@@ -34,10 +34,10 @@ var _ fyne.Widget = (*InnerWindow)(nil)
 type InnerWindow struct {
 	widget.BaseWidget
 
-	CloseIntercept                                      func()                `json:"-"`
-	OnDragged, OnResized                                func(*fyne.DragEvent) `json:"-"`
-	OnMinimized, OnMaximized, OnTappedBar, OnTappedIcon func()                `json:"-"`
-	Icon                                                fyne.Resource
+	CloseIntercept                                      func()                  `json:"-"`
+	OnDragged, OnResized                                func(*granio.DragEvent) `json:"-"`
+	OnMinimized, OnMaximized, OnTappedBar, OnTappedIcon func()                  `json:"-"`
+	Icon                                                granio.Resource
 
 	// Alignment allows an inner window to specify if the buttons should be on the left
 	// (`ButtonAlignLeading`) or right of the window border.
@@ -53,7 +53,7 @@ type InnerWindow struct {
 	// Content returns the current `CanvasObject` that makes the content of this inner window.
 	//
 	// Since: 2.8
-	Content *fyne.Container
+	Content *granio.Container
 
 	maximized, inactive bool
 }
@@ -62,7 +62,7 @@ type InnerWindow struct {
 // This will behave like a normal contain and will probably want to be added to a `MultipleWindows` parent.
 //
 // Since: 2.5
-func NewInnerWindow(title string, content fyne.CanvasObject) *InnerWindow {
+func NewInnerWindow(title string, content granio.CanvasObject) *InnerWindow {
 	w := &InnerWindow{Title: title, Content: NewPadded(content)}
 	w.ExtendBaseWidget(w)
 	return w
@@ -98,11 +98,11 @@ func (*InnerWindow) MouseMoved(*desktop.MouseEvent) {
 func (*InnerWindow) MouseOut() {
 }
 
-// CreateRenderer implements the [fyne.Widget] interface.
-func (w *InnerWindow) CreateRenderer() fyne.WidgetRenderer {
+// CreateRenderer implements the [granio.Widget] interface.
+func (w *InnerWindow) CreateRenderer() granio.WidgetRenderer {
 	w.ExtendBaseWidget(w)
 	th := w.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	buttonMin := newBorderButton(theme.WindowMinimizeIcon(), modeMinimize, th, w.OnMinimized)
 	if w.OnMinimized == nil {
@@ -142,7 +142,7 @@ func (w *InnerWindow) CreateRenderer() fyne.WidgetRenderer {
 		borderIcon.Hide()
 	}
 	title := newDraggableLabel(w.Title, w)
-	title.Truncation = fyne.TextTruncateEllipsis
+	title.Truncation = granio.TextTruncateEllipsis
 
 	height := w.Theme().Size(theme.SizeNameWindowTitleBarHeight)
 	off := (height - title.labelMinSize().Height) / 2
@@ -164,7 +164,7 @@ func (w *InnerWindow) CreateRenderer() fyne.WidgetRenderer {
 	if w.Content == nil {
 		w.Content = NewPadded(canvas.NewRectangle(color.Transparent))
 	}
-	objects := []fyne.CanvasObject{bg, contentBG, bar, w.Content, corner}
+	objects := []granio.CanvasObject{bg, contentBG, bar, w.Content, corner}
 	r := &innerWindowRenderer{
 		BaseRenderer: intWidget.NewBaseRenderer(objects),
 		win:          w, bar: bar, buttonBox: buttons, buttons: []*borderButton{buttonClose, buttonMin, buttonMax}, bg: bg,
@@ -183,9 +183,9 @@ func (w *InnerWindow) SetActive(active bool) {
 	w.Refresh()
 }
 
-// SetContent replaces the first [fyne.CanvasObject] of thw window’s content with the specified one.
+// SetContent replaces the first [granio.CanvasObject] of thw window’s content with the specified one.
 // The window must have a non-empty content.
-func (w *InnerWindow) SetContent(obj fyne.CanvasObject) {
+func (w *InnerWindow) SetContent(obj granio.CanvasObject) {
 	w.Content.Objects[0] = obj
 
 	w.Content.Refresh()
@@ -227,43 +227,43 @@ func (w *InnerWindow) buttonPosition() widget.ButtonAlign {
 	return widget.ButtonAlignLeading
 }
 
-var _ fyne.WidgetRenderer = (*innerWindowRenderer)(nil)
+var _ granio.WidgetRenderer = (*innerWindowRenderer)(nil)
 
 type innerWindowRenderer struct {
 	intWidget.BaseRenderer
 
 	win            *InnerWindow
-	bar, buttonBox *fyne.Container
+	bar, buttonBox *granio.Container
 	buttons        []*borderButton
 	icon           *borderButton
 	bg, contentBG  *canvas.Rectangle
-	corner         fyne.CanvasObject
+	corner         granio.CanvasObject
 }
 
-func (i *innerWindowRenderer) Layout(size fyne.Size) {
+func (i *innerWindowRenderer) Layout(size granio.Size) {
 	th := i.win.Theme()
 	pad := th.Size(theme.SizeNamePadding)
 
 	i.bg.Resize(size)
-	i.bg.Move(fyne.Position{})
+	i.bg.Move(granio.Position{})
 
 	barHeight := i.win.Theme().Size(theme.SizeNameWindowTitleBarHeight)
-	i.bar.Move(fyne.NewPos(pad, 0))
-	i.bar.Resize(fyne.NewSize(size.Width-pad*2, barHeight))
+	i.bar.Move(granio.NewPos(pad, 0))
+	i.bar.Resize(granio.NewSize(size.Width-pad*2, barHeight))
 
-	innerPos := fyne.NewPos(pad, barHeight)
-	innerSize := fyne.NewSize(size.Width-pad*2, size.Height-pad-barHeight)
+	innerPos := granio.NewPos(pad, barHeight)
+	innerSize := granio.NewSize(size.Width-pad*2, size.Height-pad-barHeight)
 	i.contentBG.Move(innerPos)
 	i.contentBG.Resize(innerSize)
 	i.win.Content.Move(innerPos)
 	i.win.Content.Resize(innerSize)
 
 	cornerSize := i.corner.MinSize()
-	i.corner.Move(fyne.NewPos(size.Components()).Subtract(cornerSize).AddXY(1, 1))
+	i.corner.Move(granio.NewPos(size.Components()).Subtract(cornerSize).AddXY(1, 1))
 	i.corner.Resize(cornerSize)
 }
 
-func (i *innerWindowRenderer) MinSize() fyne.Size {
+func (i *innerWindowRenderer) MinSize() granio.Size {
 	th := i.win.Theme()
 	pad := th.Size(theme.SizeNamePadding)
 	contentMin := i.win.Content.MinSize()
@@ -271,12 +271,12 @@ func (i *innerWindowRenderer) MinSize() fyne.Size {
 
 	innerWidth := max(i.bar.MinSize().Width, contentMin.Width)
 
-	return fyne.NewSize(innerWidth+pad*2, contentMin.Height+pad+barHeight)
+	return granio.NewSize(innerWidth+pad*2, contentMin.Height+pad+barHeight)
 }
 
 func (i *innerWindowRenderer) Refresh() {
 	th := i.win.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	i.bg.FillColor = th.Color(theme.ColorNameInnerWindowBorder, v)
 	if i.win.inactive {
 		col := th.Color(theme.ColorNameInnerWindowBorderInactive, v)
@@ -293,9 +293,9 @@ func (i *innerWindowRenderer) Refresh() {
 	i.contentBG.Refresh()
 
 	if i.win.buttonPosition() == widget.ButtonAlignTrailing {
-		i.buttonBox.Objects[0].(*fyne.Container).Objects = []fyne.CanvasObject{i.buttons[1], i.buttons[2], i.buttons[0]}
+		i.buttonBox.Objects[0].(*granio.Container).Objects = []granio.CanvasObject{i.buttons[1], i.buttons[2], i.buttons[0]}
 	} else {
-		i.buttonBox.Objects[0].(*fyne.Container).Objects = []fyne.CanvasObject{i.buttons[0], i.buttons[1], i.buttons[2]}
+		i.buttonBox.Objects[0].(*granio.Container).Objects = []granio.CanvasObject{i.buttons[0], i.buttons[1], i.buttons[2]}
 	}
 	for _, b := range i.buttons {
 		b.setTheme(th)
@@ -322,7 +322,7 @@ func (i *innerWindowRenderer) Refresh() {
 		maximize.b.SetIcon(theme.WindowMaximizeIcon())
 	}
 
-	title, _ := i.bar.Objects[2].(*fyne.Container).Objects[0].(*draggableLabel)
+	title, _ := i.bar.Objects[2].(*granio.Container).Objects[0].(*draggableLabel)
 	title.SetText(i.win.Title)
 	if i.win.OnTappedIcon == nil {
 		i.icon.Disable()
@@ -349,7 +349,7 @@ func newDraggableLabel(title string, win *InnerWindow) *draggableLabel {
 	return d
 }
 
-func (d *draggableLabel) Dragged(ev *fyne.DragEvent) {
+func (d *draggableLabel) Dragged(ev *granio.DragEvent) {
 	if f := d.win.OnDragged; f != nil {
 		f(ev)
 	}
@@ -358,19 +358,19 @@ func (d *draggableLabel) Dragged(ev *fyne.DragEvent) {
 func (*draggableLabel) DragEnd() {
 }
 
-func (d *draggableLabel) MinSize() fyne.Size {
+func (d *draggableLabel) MinSize() granio.Size {
 	width := d.Label.MinSize().Width
 	height := d.Label.Theme().Size(theme.SizeNameWindowButtonHeight)
-	return fyne.NewSize(width, height)
+	return granio.NewSize(width, height)
 }
 
-func (d *draggableLabel) Tapped(_ *fyne.PointEvent) {
+func (d *draggableLabel) Tapped(_ *granio.PointEvent) {
 	if f := d.win.OnTappedBar; f != nil {
 		f()
 	}
 }
 
-func (d *draggableLabel) labelMinSize() fyne.Size {
+func (d *draggableLabel) labelMinSize() granio.Size {
 	return d.Label.MinSize()
 }
 
@@ -385,9 +385,9 @@ func newDraggableCorner(w *InnerWindow) *draggableCorner {
 	return d
 }
 
-func (*draggableCorner) CreateRenderer() fyne.WidgetRenderer {
-	prop := canvas.NewImageFromResource(fyne.CurrentApp().Settings().Theme().Icon(theme.IconNameDragCornerIndicator))
-	prop.SetMinSize(fyne.NewSquareSize(sizeDraggableCorner))
+func (*draggableCorner) CreateRenderer() granio.WidgetRenderer {
+	prop := canvas.NewImageFromResource(granio.CurrentApp().Settings().Theme().Icon(theme.IconNameDragCornerIndicator))
+	prop.SetMinSize(granio.NewSquareSize(sizeDraggableCorner))
 	return widget.NewSimpleRenderer(prop)
 }
 
@@ -395,7 +395,7 @@ func (*draggableCorner) Cursor() desktop.Cursor {
 	return desktop.NWSEResizeCursor
 }
 
-func (c *draggableCorner) Dragged(ev *fyne.DragEvent) {
+func (c *draggableCorner) Dragged(ev *granio.DragEvent) {
 	if f := c.win.OnResized; f != nil {
 		c.win.OnResized(ev)
 	}
@@ -412,7 +412,7 @@ type borderButton struct {
 	mode titleBarButtonMode
 }
 
-func newBorderButton(icon fyne.Resource, mode titleBarButtonMode, th fyne.Theme, fn func()) *borderButton {
+func newBorderButton(icon granio.Resource, mode titleBarButtonMode, th granio.Theme, fn func()) *borderButton {
 	buttonImportance := widget.MediumImportance
 	if mode == modeIcon {
 		buttonImportance = widget.LowImportance
@@ -425,7 +425,7 @@ func newBorderButton(icon fyne.Resource, mode titleBarButtonMode, th fyne.Theme,
 	return ret
 }
 
-func (b *borderButton) CreateRenderer() fyne.WidgetRenderer {
+func (b *borderButton) CreateRenderer() granio.WidgetRenderer {
 	return widget.NewSimpleRenderer(b.c)
 }
 
@@ -441,28 +441,28 @@ func (b *borderButton) SetOnTapped(fn func()) {
 	b.b.OnTapped = fn
 }
 
-func (b *borderButton) MinSize() fyne.Size {
+func (b *borderButton) MinSize() granio.Size {
 	height := b.Theme().Size(theme.SizeNameWindowButtonHeight)
-	return fyne.NewSquareSize(height)
+	return granio.NewSquareSize(height)
 }
 
-func (b *borderButton) setTheme(th fyne.Theme) {
+func (b *borderButton) setTheme(th granio.Theme) {
 	b.c.Theme = &buttonTheme{Theme: th, mode: b.mode}
 }
 
 type buttonTheme struct {
-	fyne.Theme
+	granio.Theme
 	mode titleBarButtonMode
 }
 
-func (b *buttonTheme) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
+func (b *buttonTheme) Color(n granio.ThemeColorName, v granio.ThemeVariant) color.Color {
 	if n == theme.ColorNameHover && b.mode == modeClose {
 		n = theme.ColorNameError
 	}
 	return b.Theme.Color(n, v)
 }
 
-func (b *buttonTheme) Size(n fyne.ThemeSizeName) float32 {
+func (b *buttonTheme) Size(n granio.ThemeSizeName) float32 {
 	switch n {
 	case theme.SizeNameButtonRadius:
 		if b.mode == modeIcon {
@@ -478,44 +478,44 @@ func (b *buttonTheme) Size(n fyne.ThemeSizeName) float32 {
 
 type titleBarLayout struct {
 	win                  *InnerWindow
-	buttons, icon, title fyne.CanvasObject
+	buttons, icon, title granio.CanvasObject
 }
 
-func (t *titleBarLayout) Layout(_ []fyne.CanvasObject, s fyne.Size) {
+func (t *titleBarLayout) Layout(_ []granio.CanvasObject, s granio.Size) {
 	buttonMinWidth := t.buttons.MinSize().Width
-	t.buttons.Resize(fyne.NewSize(buttonMinWidth, s.Height))
-	t.icon.Resize(fyne.NewSquareSize(s.Height))
+	t.buttons.Resize(granio.NewSize(buttonMinWidth, s.Height))
+	t.icon.Resize(granio.NewSquareSize(s.Height))
 	usedWidth := buttonMinWidth
 	if t.icon.Visible() {
 		usedWidth += s.Height
 	}
-	t.title.Resize(fyne.NewSize(s.Width-usedWidth, s.Height))
+	t.title.Resize(granio.NewSize(s.Width-usedWidth, s.Height))
 
 	if t.win.buttonPosition() == widget.ButtonAlignTrailing {
-		t.buttons.Move(fyne.NewPos(s.Width-buttonMinWidth, 0))
-		t.icon.Move(fyne.Position{})
+		t.buttons.Move(granio.NewPos(s.Width-buttonMinWidth, 0))
+		t.icon.Move(granio.Position{})
 		if t.icon.Visible() {
-			t.title.Move(fyne.NewPos(s.Height, 0))
+			t.title.Move(granio.NewPos(s.Height, 0))
 		} else {
-			t.title.Move(fyne.Position{})
+			t.title.Move(granio.Position{})
 		}
 	} else {
-		t.buttons.Move(fyne.NewPos(0, 0))
-		t.icon.Move(fyne.NewPos(s.Width-s.Height, 0))
-		t.title.Move(fyne.NewPos(buttonMinWidth, 0))
+		t.buttons.Move(granio.NewPos(0, 0))
+		t.icon.Move(granio.NewPos(s.Width-s.Height, 0))
+		t.title.Move(granio.NewPos(buttonMinWidth, 0))
 	}
 }
 
-func (t *titleBarLayout) MinSize(_ []fyne.CanvasObject) fyne.Size {
+func (t *titleBarLayout) MinSize(_ []granio.CanvasObject) granio.Size {
 	buttonMin := t.buttons.MinSize()
 	iconMin := t.icon.MinSize()
 	titleMin := t.title.MinSize() // can truncate
 
-	return fyne.NewSize(buttonMin.Width+iconMin.Width+titleMin.Width,
+	return granio.NewSize(buttonMin.Width+iconMin.Width+titleMin.Width,
 		max(buttonMin.Height, iconMin.Height, titleMin.Height))
 }
 
-func configureShadow(bg *canvas.Rectangle, active bool, th fyne.Theme, v fyne.ThemeVariant) {
+func configureShadow(bg *canvas.Rectangle, active bool, th granio.Theme, v granio.ThemeVariant) {
 	var radius float32
 	if active {
 		radius = th.Size(theme.SizeNameWindowShadowActiveRadius)
@@ -524,7 +524,7 @@ func configureShadow(bg *canvas.Rectangle, active bool, th fyne.Theme, v fyne.Th
 	}
 
 	bg.Shadow.Color = th.Color(theme.ColorNameShadow, v)
-	bg.Shadow.Offset = fyne.NewPos(radius/8, radius/4)
+	bg.Shadow.Offset = granio.NewPos(radius/8, radius/4)
 	bg.Shadow.Spread = radius / 2
 	bg.Shadow.BlurRadius = radius
 }

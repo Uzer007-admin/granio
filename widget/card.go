@@ -1,10 +1,10 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Card widget groups title, subtitle with content and a header image
@@ -14,13 +14,13 @@ type Card struct {
 	BaseWidget
 	Title, Subtitle string
 	Image           *canvas.Image
-	Content         fyne.CanvasObject
+	Content         granio.CanvasObject
 }
 
 // NewCard creates a new card widget with the specified title, subtitle and content (all optional).
 //
 // Since: 1.4
-func NewCard(title, subtitle string, content fyne.CanvasObject) *Card {
+func NewCard(title, subtitle string, content granio.CanvasObject) *Card {
 	card := &Card{
 		Title:    title,
 		Subtitle: subtitle,
@@ -32,10 +32,10 @@ func NewCard(title, subtitle string, content fyne.CanvasObject) *Card {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (c *Card) CreateRenderer() fyne.WidgetRenderer {
+func (c *Card) CreateRenderer() granio.WidgetRenderer {
 	c.ExtendBaseWidget(c)
 	th := c.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	header := canvas.NewText(c.Title, th.Color(theme.ColorNameForeground, v))
 	header.TextStyle.Bold = true
@@ -44,7 +44,7 @@ func (c *Card) CreateRenderer() fyne.WidgetRenderer {
 	background := canvas.NewRectangle(th.Color(theme.ColorNameBackground, v))
 	background.CornerRadius = th.Size(theme.SizeNameCardRadius)
 	widget.ApplyShadowForLevel(&background.Shadow, widget.CardLevel, th.Color(theme.ColorNameShadow, v))
-	objects := []fyne.CanvasObject{background, header, subHeader}
+	objects := []granio.CanvasObject{background, header, subHeader}
 	if c.Image != nil {
 		objects = append(objects, c.Image)
 	}
@@ -60,13 +60,13 @@ func (c *Card) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (c *Card) MinSize() fyne.Size {
+func (c *Card) MinSize() granio.Size {
 	c.ExtendBaseWidget(c)
 	return c.BaseWidget.MinSize()
 }
 
 // SetContent changes the body of this card to have the specified content.
-func (c *Card) SetContent(obj fyne.CanvasObject) {
+func (c *Card) SetContent(obj granio.CanvasObject) {
 	c.Content = obj
 
 	c.Refresh()
@@ -108,16 +108,16 @@ const (
 )
 
 // Layout the components of the card container.
-func (c *cardRenderer) Layout(size fyne.Size) {
+func (c *cardRenderer) Layout(size granio.Size) {
 	padding := c.card.Theme().Size(theme.SizeNamePadding)
-	pos := fyne.NewSquareOffsetPos(padding / 2)
-	size = size.Subtract(fyne.NewSquareSize(padding))
+	pos := granio.NewSquareOffsetPos(padding / 2)
+	size = size.Subtract(granio.NewSquareSize(padding))
 	c.background.Resize(size)
 	c.background.Move(pos)
 
 	if c.card.Image != nil {
 		c.card.Image.Move(pos)
-		c.card.Image.Resize(fyne.NewSize(size.Width, cardMediaHeight))
+		c.card.Image.Resize(granio.NewSize(size.Width, cardMediaHeight))
 		pos.Y += cardMediaHeight
 	}
 
@@ -130,14 +130,14 @@ func (c *cardRenderer) Layout(size fyne.Size) {
 		if c.card.Title != "" {
 			height := c.header.MinSize().Height
 			c.header.Move(pos)
-			c.header.Resize(fyne.NewSize(size.Width, height))
+			c.header.Resize(granio.NewSize(size.Width, height))
 			pos.Y += height + padding
 		}
 
 		if c.card.Subtitle != "" {
 			height := c.subHeader.MinSize().Height
 			c.subHeader.Move(pos)
-			c.subHeader.Resize(fyne.NewSize(size.Width, height))
+			c.subHeader.Resize(granio.NewSize(size.Width, height))
 			pos.Y += height + padding
 		}
 
@@ -154,14 +154,14 @@ func (c *cardRenderer) Layout(size fyne.Size) {
 			height += padding
 			pos.Y -= padding
 		}
-		c.card.Content.Move(pos.Add(fyne.NewPos(0, padding)))
-		c.card.Content.Resize(fyne.NewSize(size.Width, height))
+		c.card.Content.Move(pos.Add(granio.NewPos(0, padding)))
+		c.card.Content.Resize(granio.NewSize(size.Width, height))
 	}
 }
 
 // MinSize calculates the minimum size of a card.
 // This is based on the contained text, image and content.
-func (c *cardRenderer) MinSize() fyne.Size {
+func (c *cardRenderer) MinSize() granio.Size {
 	hasHeader := c.card.Title != ""
 	hasSubHeader := c.card.Subtitle != ""
 	hasImage := c.card.Image != nil
@@ -170,22 +170,22 @@ func (c *cardRenderer) MinSize() fyne.Size {
 	padding := c.card.Theme().Size(theme.SizeNamePadding)
 	if !hasHeader && !hasSubHeader && !hasContent { // just image, or nothing
 		if c.card.Image == nil {
-			return fyne.NewSize(padding, padding) // empty, just space for border
+			return granio.NewSize(padding, padding) // empty, just space for border
 		}
-		return fyne.NewSize(c.card.Image.MinSize().Width+padding, cardMediaHeight+padding)
+		return granio.NewSize(c.card.Image.MinSize().Width+padding, cardMediaHeight+padding)
 	}
 
-	minSize := fyne.NewSize(padding, padding)
+	minSize := granio.NewSize(padding, padding)
 	if hasImage {
-		minSize = fyne.NewSize(minSize.Width, minSize.Height+cardMediaHeight)
+		minSize = granio.NewSize(minSize.Width, minSize.Height+cardMediaHeight)
 	}
 
 	if hasHeader || hasSubHeader {
 		titlePad := padding * 2
-		minSize = minSize.Add(fyne.NewSize(0, titlePad*2))
+		minSize = minSize.Add(granio.NewSize(0, titlePad*2))
 		if hasHeader {
 			headerMin := c.header.MinSize()
-			minSize = fyne.NewSize(max(minSize.Width, headerMin.Width+titlePad*2+padding),
+			minSize = granio.NewSize(max(minSize.Width, headerMin.Width+titlePad*2+padding),
 				minSize.Height+headerMin.Height)
 			if hasSubHeader {
 				minSize.Height += padding
@@ -193,14 +193,14 @@ func (c *cardRenderer) MinSize() fyne.Size {
 		}
 		if hasSubHeader {
 			subHeaderMin := c.subHeader.MinSize()
-			minSize = fyne.NewSize(max(minSize.Width, subHeaderMin.Width+titlePad*2+padding),
+			minSize = granio.NewSize(max(minSize.Width, subHeaderMin.Width+titlePad*2+padding),
 				minSize.Height+subHeaderMin.Height)
 		}
 	}
 
 	if hasContent {
 		contentMin := c.card.Content.MinSize()
-		minSize = fyne.NewSize(max(minSize.Width, contentMin.Width+padding*3),
+		minSize = granio.NewSize(max(minSize.Width, contentMin.Width+padding*3),
 			minSize.Height+contentMin.Height+padding*2)
 	}
 
@@ -213,7 +213,7 @@ func (c *cardRenderer) Refresh() {
 	c.subHeader.Text = c.card.Subtitle
 	c.subHeader.Refresh()
 
-	objects := []fyne.CanvasObject{c.background, c.header, c.subHeader}
+	objects := []granio.CanvasObject{c.background, c.header, c.subHeader}
 	if c.card.Image != nil {
 		objects = append(objects, c.card.Image)
 	}
@@ -231,7 +231,7 @@ func (c *cardRenderer) Refresh() {
 // applyTheme updates this button to match the current theme
 func (c *cardRenderer) applyTheme() {
 	th := c.card.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if c.header != nil {
 		c.header.TextSize = th.Size(theme.SizeNameHeadingText)

@@ -1,0 +1,9 @@
+Host: f-test-bench
+Date: 2026-10-12 Europe/Moscow
+Linux 6.12.60-1-amd64 x86_64
+go version go1.27.1 linux/amd64
+DISPLAY and WAYLAND_DISPLAY are empty in the SSH session.
+pkg-config development metadata unavailable for gl, glesv2, egl and glfw3.
+No matching GL/GLESv2/EGL/glfw runtime libraries appeared in the ldconfig listing.
+Xvfb was not found in PATH.
+No native Linux benchmark was executed; no files or packages were installed on the server.

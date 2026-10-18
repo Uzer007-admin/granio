@@ -1,0 +1,82 @@
+{
+  "suites": {
+    "windows-suite.jsonl": {
+      "packages_pass": 47,
+      "tests_pass": 4941,
+      "failures": 0,
+      "skips": [
+        "TestOpenTable",
+        "TestTableRefByName",
+        "TestTableMarshal",
+        "TestClipboardExternalTransferChild",
+        "TestRealMicrosoftJapaneseIME",
+        "TestExternalWindowsDropSource"
+      ],
+      "external_stdout": [],
+      "unfinished_packages": []
+    },
+    "windows-headless.jsonl": {
+      "packages_pass": 47,
+      "tests_pass": 4753,
+      "failures": 0,
+      "skips": [
+        "TestOpenTable",
+        "TestTableRefByName",
+        "TestTableMarshal"
+      ],
+      "external_stdout": [],
+      "unfinished_packages": []
+    },
+    "linux-suite.jsonl": {
+      "packages_pass": 49,
+      "tests_pass": 5036,
+      "failures": 0,
+      "skips": [
+        "TestOpenTable",
+        "TestTableRefByName",
+        "TestTableMarshal",
+        "TestClipboardExternalTransferChild",
+        "TestIBusNativePasswordAndLifecycle"
+      ],
+      "external_stdout": [
+        "SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry"
+      ],
+      "unfinished_packages": []
+    }
+  },
+  "required_native_checks": {
+    "windows-suite.jsonl": [
+      "TestClipboardMIMENativeTransfer",
+      "TestExternalWindowsOLEDrop",
+      "TestNativeCanvasAndPopupMaterials",
+      "TestNativeDisplayResolutionMatrix",
+      "TestTSFNativeEditSession",
+      "TestTSFTextStoreNativeContract",
+      "TestWindowsAccessibilityOffscreenHierarchy",
+      "TestWindowsAccessibilityProviderLifetime"
+    ],
+    "linux-suite.jsonl": [
+      "TestATSPINativeClient",
+      "TestATSPINativeOffscreenHierarchyAndCache",
+      "TestClipboardMIMENativeTransfer",
+      "TestExternalX11DataDrop",
+      "TestNativeCanvasAndPopupMaterials",
+      "TestNativeDisplayResolutionMatrix"
+    ]
+  },
+  "matching_source_inputs": 3252,
+  "cleanup": {
+    "linux": "owned temporary directory removed",
+    "windows": "all owned temporary files and directory removed, including both NVDA proxy DLLs; verified 2026-10-13 after authorized Yandex Browser shutdown and Explorer shell restart",
+    "windows_language_profiles": "restored and compared to the saved original"
+  },
+  "real_input_acceptance": {
+    "linux_anthy": "commit 日本語, separate preedit, undo, cancellation; native race probe",
+    "linux_pinyin": "commits 你好 and 中国; native race probe",
+    "linux_ibus_privacy_lifetime": "password redacted and closed context released; native race test",
+    "orca": "43.1: actual CJK input field speech; external libatspi offscreen/selection/password client",
+    "nvda": "2026.2: actual Fyne/entry/protected speech, nonempty password redaction via external UIA Value/Text queries, silence synth; basic scenario only",
+    "windows_microsoft_japanese": "FAILED activation (stage 4, HRESULT 0x80004005); not accepted",
+    "wayland_drag": "independent wl_data_device source: Unicode, HTML, URI, 512 KiB binary; unsupported MIME rejected"
+  }
+}

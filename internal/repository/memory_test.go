@@ -4,8 +4,8 @@ import (
 	"io"
 	"testing"
 
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 
 	"github.com/stretchr/testify/assert"
 )

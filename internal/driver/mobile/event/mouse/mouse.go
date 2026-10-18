@@ -3,7 +3,7 @@
 // Mouse input is only reported when running a mobile application in the
 // simulator on a desktop machine (Linux, BSD or macOS), devices with a touch
 // panel only report touch events.
-package mouse // import "fyne.io/fyne/v2/internal/driver/mobile/event/mouse"
+package mouse // import "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse"
 
 // ScrollEvent is a mouse scroll event.
 type ScrollEvent struct {

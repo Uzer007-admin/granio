@@ -4,14 +4,14 @@ package storage
 import (
 	"errors"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // OpenFileFromURI loads a file read stream from a resource identifier.
 // This is mostly provided so that file references can be saved using their URI and loaded again later.
 //
 // Deprecated: this has been replaced by storage.Reader(URI)
-func OpenFileFromURI(uri fyne.URI) (fyne.URIReadCloser, error) {
+func OpenFileFromURI(uri granio.URI) (granio.URIReadCloser, error) {
 	return Reader(uri)
 }
 
@@ -19,7 +19,7 @@ func OpenFileFromURI(uri fyne.URI) (fyne.URIReadCloser, error) {
 // This is mostly provided so that file references can be saved using their URI and written to again later.
 //
 // Deprecated: this has been replaced by storage.Writer(URI)
-func SaveFileToURI(uri fyne.URI) (fyne.URIWriteCloser, error) {
+func SaveFileToURI(uri granio.URI) (granio.URIWriteCloser, error) {
 	return Writer(uri)
 }
 
@@ -27,7 +27,7 @@ func SaveFileToURI(uri fyne.URI) (fyne.URIWriteCloser, error) {
 // standard URI into a listable URI.
 //
 // Since: 1.4
-func ListerForURI(uri fyne.URI) (fyne.ListableURI, error) {
+func ListerForURI(uri granio.URI) (granio.ListableURI, error) {
 	listable, err := CanList(uri)
 	if err != nil {
 		return nil, err
@@ -40,9 +40,9 @@ func ListerForURI(uri fyne.URI) (fyne.ListableURI, error) {
 }
 
 type legacyListable struct {
-	fyne.URI
+	granio.URI
 }
 
-func (l *legacyListable) List() ([]fyne.URI, error) {
+func (l *legacyListable) List() ([]granio.URI, error) {
 	return List(l.URI)
 }

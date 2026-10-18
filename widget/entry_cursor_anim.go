@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var timeNow = time.Now // used in tests
@@ -23,8 +23,9 @@ const (
 
 type entryCursorAnimation struct {
 	cursor            *canvas.Rectangle
-	anim              *fyne.Animation
+	anim              *granio.Animation
 	lastInterruptTime time.Time
+	object            granio.CanvasObject
 }
 
 func newEntryCursorAnimation(cursor *canvas.Rectangle) *entryCursorAnimation {
@@ -32,7 +33,7 @@ func newEntryCursorAnimation(cursor *canvas.Rectangle) *entryCursorAnimation {
 }
 
 // creates fyne animation
-func (a *entryCursorAnimation) createAnim() *fyne.Animation {
+func (a *entryCursorAnimation) createAnim() *granio.Animation {
 	r, g, b, opaqueAlpha := col.ToNRGBA(theme.Color(theme.ColorNamePrimary))
 	opaqueColor := color.NRGBA{R: r, G: g, B: b, A: opaqueAlpha}
 	endColor := color.NRGBA{R: r, G: g, B: b, A: cursorFadeAlpha}
@@ -41,7 +42,12 @@ func (a *entryCursorAnimation) createAnim() *fyne.Animation {
 
 	deltaA := float32(int(endColor.A) - int(startColor.A))
 	interrupted := false
-	anim := fyne.NewAnimation(time.Second/2, func(f float32) {
+	anim := granio.NewAnimation(time.Second/2, func(f float32) {
+		if !animationsAllowed(theme.CurrentForWidget(a.object), granio.MotionHover) {
+			a.cursor.FillColor = opaqueColor
+			a.cursor.Refresh()
+			return
+		}
 		if timeNow().Sub(a.lastInterruptTime) < cursorInterruptDuration {
 			if !interrupted {
 				a.cursor.FillColor = opaqueColor
@@ -81,8 +87,14 @@ func (a *entryCursorAnimation) createAnim() *fyne.Animation {
 		a.cursor.Refresh()
 	})
 
-	anim.RepeatCount = fyne.AnimationRepeatForever
+	anim.RepeatCount = granio.AnimationRepeatForever
 	anim.AutoReverse = true
+	anim.Object = a.object
+	anim.OnFinished = func() {
+		a.cursor.FillColor = opaqueColor
+		a.cursor.Refresh()
+		a.anim = nil
+	}
 	return anim
 }
 

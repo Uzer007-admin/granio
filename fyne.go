@@ -7,9 +7,9 @@
 //
 //	package main
 //
-//	import "fyne.io/fyne/v2/app"
-//	import "fyne.io/fyne/v2/container"
-//	import "fyne.io/fyne/v2/widget"
+//	import "github.com/Uzer007-admin/granio/v2/app"
+//	import "github.com/Uzer007-admin/granio/v2/container"
+//	import "github.com/Uzer007-admin/granio/v2/widget"
 //
 //	func main() {
 //		a := app.New()
@@ -25,4 +25,4 @@
 //
 //		w.ShowAndRun()
 //	}
-package fyne // import "fyne.io/fyne/v2"
+package granio // import "github.com/Uzer007-admin/granio/v2"

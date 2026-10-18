@@ -1,0 +1,2 @@
+ok  	github.com/Uzer007-admin/granio/v2/widget	2.201s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	3.799s

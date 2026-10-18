@@ -1,0 +1,8 @@
+=== RUN   TestPainterTablesSurviveFailedGlobalReload
+--- PASS: TestPainterTablesSurviveFailedGlobalReload (0.39s)
+=== RUN   TestPainterTablesSurviveFailedGlobalReload
+--- PASS: TestPainterTablesSurviveFailedGlobalReload (0.39s)
+=== RUN   TestPainterTablesSurviveFailedGlobalReload
+--- PASS: TestPainterTablesSurviveFailedGlobalReload (0.39s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	2.398s

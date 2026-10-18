@@ -12,7 +12,7 @@ import (
 	ast2 "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/renderer"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // NewRichTextFromMarkdown configures a RichText widget by parsing the provided markdown content.
@@ -99,11 +99,11 @@ func renderNode(source []byte, n ast.Node, quotingDepth int, listDepth int) ([]R
 	case *ast.Link:
 		link, _ := url.Parse(string(t.Destination))
 		text := forceIntoText(source, n)
-		return []RichTextSegment{&HyperlinkSegment{Alignment: fyne.TextAlignLeading, Text: decodeText(text), URL: link, quotingLevel: quotingDepth}}, nil
+		return []RichTextSegment{&HyperlinkSegment{Alignment: granio.TextAlignLeading, Text: decodeText(text), URL: link, quotingLevel: quotingDepth}}, nil
 	case *ast.AutoLink:
 		link, _ := url.Parse(string(t.URL(source)))
 		text := string(t.Label(source))
-		return []RichTextSegment{&HyperlinkSegment{Alignment: fyne.TextAlignLeading, Text: decodeText(text), URL: link, quotingLevel: quotingDepth}}, nil
+		return []RichTextSegment{&HyperlinkSegment{Alignment: granio.TextAlignLeading, Text: decodeText(text), URL: link, quotingLevel: quotingDepth}}, nil
 	case *ast.CodeSpan:
 		text := forceIntoText(source, n)
 		return []RichTextSegment{&TextSegment{Style: RichTextStyleCodeInline, Text: text}}, nil
@@ -177,14 +177,14 @@ func renderCodeBlock(source []byte, n ast.Node, quotingDepth int) []RichTextSegm
 	return []RichTextSegment{&CodeBlockSegment{Text: string(data), quotingLevel: quotingDepth}}
 }
 
-func tableAlignment(a ast2.Alignment) fyne.TextAlign {
+func tableAlignment(a ast2.Alignment) granio.TextAlign {
 	switch a {
 	case ast2.AlignCenter:
-		return fyne.TextAlignCenter
+		return granio.TextAlignCenter
 	case ast2.AlignRight:
-		return fyne.TextAlignTrailing
+		return granio.TextAlignTrailing
 	default:
-		return fyne.TextAlignLeading
+		return granio.TextAlignLeading
 	}
 }
 
@@ -316,7 +316,7 @@ func parseMarkdown(content string) []RichTextSegment {
 	md := goldmark.New(goldmark.WithRenderer(&r), goldmark.WithExtensions(extension.Strikethrough, extension.TaskList, extension.Table))
 	err := md.Convert([]byte(content), nil)
 	if err != nil {
-		fyne.LogError("Failed to parse markdown", err)
+		granio.LogError("Failed to parse markdown", err)
 	}
 	return r
 }

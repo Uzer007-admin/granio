@@ -6,14 +6,14 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -21,8 +21,8 @@ import (
 func TestNewList(t *testing.T) {
 	list := createList(1000)
 
-	content := &fyne.Container{
-		Layout: layout.NewHBoxLayout(), Objects: []fyne.CanvasObject{
+	content := &granio.Container{
+		Layout: layout.NewHBoxLayout(), Objects: []granio.CanvasObject{
 			NewIcon(theme.DocumentIcon()),
 			NewLabel("Template Object"),
 		},
@@ -43,10 +43,10 @@ func TestNewListWithData(t *testing.T) {
 
 	list := NewListWithData(
 		data,
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("Template Object")
 		},
-		func(data binding.DataItem, item fyne.CanvasObject) {
+		func(data binding.DataItem, item granio.CanvasObject) {
 			item.(*Label).Bind(data.(binding.String))
 		},
 	)
@@ -61,28 +61,28 @@ func TestNewListWithData(t *testing.T) {
 
 func TestList_MinSize(t *testing.T) {
 	for name, tt := range map[string]struct {
-		cellSize        fyne.Size
-		expectedMinSize fyne.Size
+		cellSize        granio.Size
+		expectedMinSize granio.Size
 	}{
 		"small": {
-			fyne.NewSize(1, 1),
-			fyne.NewSize(float32(32), float32(32)),
+			granio.NewSize(1, 1),
+			granio.NewSize(float32(32), float32(32)),
 		},
 		"large": {
-			fyne.NewSize(100, 100),
-			fyne.NewSize(100, 100),
+			granio.NewSize(100, 100),
+			granio.NewSize(100, 100),
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			assert.Equal(t, tt.expectedMinSize, NewList(
 				func() int { return 5 },
-				func() fyne.CanvasObject {
+				func() granio.CanvasObject {
 					r := canvas.NewRectangle(color.Black)
 					r.SetMinSize(tt.cellSize)
 					r.Resize(tt.cellSize)
 					return r
 				},
-				func(ListItemID, fyne.CanvasObject) {},
+				func(ListItemID, granio.CanvasObject) {},
 			).MinSize())
 		})
 	}
@@ -94,7 +94,7 @@ func TestList_Resize(t *testing.T) {
 
 	assert.Equal(t, float32(0), list.offsetY)
 
-	w.Resize(fyne.NewSize(200, 600))
+	w.Resize(granio.NewSize(200, 600))
 
 	assert.Equal(t, float32(0), list.offsetY)
 	test.AssertRendersToMarkup(t, "list/resized.xml", w.Canvas())
@@ -104,10 +104,10 @@ func TestList_Resize(t *testing.T) {
 		func() int {
 			return 0
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewButton("", func() {})
 		},
-		func(ListItemID, fyne.CanvasObject) {
+		func(ListItemID, granio.CanvasObject) {
 		},
 	)
 	list.Resize(list.Size())
@@ -116,25 +116,25 @@ func TestList_Resize(t *testing.T) {
 func TestList_SetItemHeight(t *testing.T) {
 	list := NewList(
 		func() int { return 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			r := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 0, A: 0x33})
-			r.SetMinSize(fyne.NewSize(10, 10))
+			r.SetMinSize(granio.NewSize(10, 10))
 			return r
 		},
-		func(ListItemID, fyne.CanvasObject) {
+		func(ListItemID, granio.CanvasObject) {
 		},
 	)
 
 	lay := test.TempWidgetRenderer(t, list).(*listRenderer).layout
-	assert.Equal(t, fyne.NewSize(32, 32), list.MinSize())
-	assert.Equal(t, fyne.NewSize(10, 10*5+(4*theme.Padding())), lay.MinSize())
+	assert.Equal(t, granio.NewSize(32, 32), list.MinSize())
+	assert.Equal(t, granio.NewSize(10, 10*5+(4*theme.Padding())), lay.MinSize())
 
 	list.SetItemHeight(2, 50)
-	assert.Equal(t, fyne.NewSize(10, 10*5+(4*theme.Padding())+40), lay.MinSize())
+	assert.Equal(t, granio.NewSize(10, 10*5+(4*theme.Padding())+40), lay.MinSize())
 
 	list.Select(2)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 	test.AssertImageMatches(t, "list/list_item_height.png", w.Canvas().Capture())
 }
 
@@ -142,12 +142,12 @@ func TestList_SetItemHeight_InUpdate(t *testing.T) {
 	var list *List
 	list = NewList(
 		func() int { return 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			r := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 0, A: 0x33})
-			r.SetMinSize(fyne.NewSize(10, 10))
+			r.SetMinSize(granio.NewSize(10, 10))
 			return r
 		},
-		func(id ListItemID, _ fyne.CanvasObject) {
+		func(id ListItemID, _ granio.CanvasObject) {
 			list.SetItemHeight(id, 32)
 		},
 	)
@@ -169,12 +169,12 @@ func TestList_OffsetChange(t *testing.T) {
 
 	list := createList(1000)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(200, 400))
+	w.Resize(granio.NewSize(200, 400))
 
 	assert.Equal(t, float32(0), list.offsetY)
 
 	scroll := test.TempWidgetRenderer(t, list).(*listRenderer).scroller
-	scroll.Scrolled(&fyne.ScrollEvent{Scrolled: fyne.NewDelta(0, -280)})
+	scroll.Scrolled(&granio.ScrollEvent{Scrolled: granio.NewDelta(0, -280)})
 
 	assert.NotEqual(t, 0, list.offsetY)
 	test.AssertRendersToMarkup(t, "list/offset_changed.xml", w.Canvas())
@@ -182,7 +182,7 @@ func TestList_OffsetChange(t *testing.T) {
 
 func TestList_Hover(t *testing.T) {
 	list := createList(1000)
-	children := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	children := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 
 	for i := 0; i < 2; i++ {
 		assert.False(t, children[i].(*listItem).background.Visible())
@@ -254,7 +254,7 @@ func TestList_ScrollToTop(t *testing.T) {
 
 func TestList_ScrollOffset(t *testing.T) {
 	list := createList(10)
-	list.Resize(fyne.NewSize(20, 15))
+	list.Resize(granio.NewSize(20, 15))
 
 	offset := float32(25)
 	list.ScrollToOffset(25)
@@ -267,7 +267,7 @@ func TestList_ScrollOffset(t *testing.T) {
 	assert.LessOrEqual(t, list.GetScrollOffset(), float32(500) /* upper bound on content height */)
 
 	// list viewport is larger than content size
-	list.Resize(fyne.NewSize(100, 500))
+	list.Resize(granio.NewSize(100, 500))
 	list.ScrollToOffset(20)
 	assert.Equal(t, float32(0), list.GetScrollOffset()) // doesn't scroll
 }
@@ -278,7 +278,7 @@ func TestList_Highlight(t *testing.T) {
 	// override update item to keep track of greatest item rendered
 	oldUpdateFunc := list.UpdateItem
 	var greatest ListItemID = -1
-	list.UpdateItem = func(id ListItemID, item fyne.CanvasObject) {
+	list.UpdateItem = func(id ListItemID, item granio.CanvasObject) {
 		if id > greatest {
 			greatest = id
 		}
@@ -312,15 +312,15 @@ func TestList_Highlight(t *testing.T) {
 
 func TestList_Selection(t *testing.T) {
 	list := createList(1000)
-	children := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	children := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 
 	assert.False(t, children[0].(*listItem).background.Visible())
-	children[0].(*listItem).Tapped(&fyne.PointEvent{})
+	children[0].(*listItem).Tapped(&granio.PointEvent{})
 	assert.Equal(t, children[0].(*listItem).background.FillColor, theme.Color(theme.ColorNameSelection))
 	assert.True(t, children[0].(*listItem).background.Visible())
 	assert.Len(t, list.selected, 1)
 	assert.Equal(t, 0, list.selected[0])
-	children[1].(*listItem).Tapped(&fyne.PointEvent{})
+	children[1].(*listItem).Tapped(&granio.PointEvent{})
 	assert.Equal(t, children[1].(*listItem).background.FillColor, theme.Color(theme.ColorNameSelection))
 	assert.True(t, children[1].(*listItem).background.Visible())
 	assert.Len(t, list.selected, 1)
@@ -345,7 +345,7 @@ func TestList_Select(t *testing.T) {
 	assert.Equal(t, float32(0), list.offsetY)
 	list.Select(50)
 	assert.Equal(t, 988, int(list.offsetY))
-	lo := list.scroller.Content.(*fyne.Container).Layout.(*listLayout)
+	lo := list.scroller.Content.(*granio.Container).Layout.(*listLayout)
 	visible50, _ := lo.searchVisible(lo.visible, 50)
 	assert.Equal(t, visible50.background.FillColor, theme.Color(theme.ColorNameSelection))
 	assert.True(t, visible50.background.Visible())
@@ -373,12 +373,12 @@ func TestList_Unselect(t *testing.T) {
 	}
 
 	list.Select(10)
-	children := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	children := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	assert.Equal(t, children[10].(*listItem).background.FillColor, theme.Color(theme.ColorNameSelection))
 	assert.True(t, children[10].(*listItem).background.Visible())
 
 	list.Unselect(10)
-	children = list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	children = list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	assert.False(t, children[10].(*listItem).background.Visible())
 	assert.Nil(t, list.selected)
 	assert.Equal(t, 10, unselected)
@@ -398,13 +398,13 @@ func TestList_DataChange(t *testing.T) {
 	test.NewTempApp(t)
 
 	list, w := setupList(t)
-	children := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	children := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 
-	assert.Equal(t, "Test Item 0", children[0].(*listItem).child.(*fyne.Container).Objects[1].(*Label).Text)
+	assert.Equal(t, "Test Item 0", children[0].(*listItem).child.(*granio.Container).Objects[1].(*Label).Text)
 	changeData(list)
 	list.Refresh()
-	children = list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
-	assert.Equal(t, "a", children[0].(*listItem).child.(*fyne.Container).Objects[1].(*Label).Text)
+	children = list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
+	assert.Equal(t, "a", children[0].(*listItem).child.(*granio.Container).Objects[1].(*Label).Text)
 	test.AssertRendersToMarkup(t, "list/new_data.xml", w.Canvas())
 }
 
@@ -412,12 +412,12 @@ func TestList_ItemDataChange(t *testing.T) {
 	test.NewTempApp(t)
 
 	list, _ := setupList(t)
-	children := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
-	assert.Equal(t, "Test Item 0", children[0].(*listItem).child.(*fyne.Container).Objects[1].(*Label).Text)
+	children := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
+	assert.Equal(t, "Test Item 0", children[0].(*listItem).child.(*granio.Container).Objects[1].(*Label).Text)
 	changeData(list)
 	list.RefreshItem(0)
-	children = list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
-	assert.Equal(t, "a", children[0].(*listItem).child.(*fyne.Container).Objects[1].(*Label).Text)
+	children = list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
+	assert.Equal(t, "a", children[0].(*listItem).child.(*granio.Container).Objects[1].(*Label).Text)
 }
 
 func TestList_SmallList(t *testing.T) {
@@ -430,28 +430,28 @@ func TestList_SmallList(t *testing.T) {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
-			return &fyne.Container{
-				Layout: layout.NewHBoxLayout(), Objects: []fyne.CanvasObject{
+		func() granio.CanvasObject {
+			return &granio.Container{
+				Layout: layout.NewHBoxLayout(), Objects: []granio.CanvasObject{
 					NewIcon(theme.DocumentIcon()),
 					NewLabel("Template Object"),
 				},
 			}
 		},
-		func(id ListItemID, item fyne.CanvasObject) {
-			item.(*fyne.Container).Objects[1].(*Label).SetText(data[id])
+		func(id ListItemID, item granio.CanvasObject) {
+			item.(*granio.Container).Objects[1].(*Label).SetText(data[id])
 		},
 	)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(200, 400))
+	w.Resize(granio.NewSize(200, 400))
 
-	visibleCount := len(list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children)
+	visibleCount := len(list.scroller.Content.(*granio.Container).Layout.(*listLayout).children)
 	assert.Equal(t, 1, visibleCount)
 
 	data = append(data, "Test Item 1")
 	list.Refresh()
 
-	visibleCount = len(list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children)
+	visibleCount = len(list.scroller.Content.(*granio.Container).Layout.(*listLayout).children)
 	assert.Equal(t, 2, visibleCount)
 
 	test.AssertRendersToMarkup(t, "list/small.xml", w.Canvas())
@@ -467,7 +467,7 @@ func TestList_ClearList(t *testing.T) {
 	}
 	list.Refresh()
 
-	visibleCount := len(list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children)
+	visibleCount := len(list.scroller.Content.(*granio.Container).Layout.(*listLayout).children)
 
 	assert.Equal(t, 0, visibleCount)
 	test.AssertRendersToMarkup(t, "list/cleared.xml", w.Canvas())
@@ -482,28 +482,28 @@ func TestList_RemoveItem(t *testing.T) {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
-			return &fyne.Container{
-				Layout: layout.NewHBoxLayout(), Objects: []fyne.CanvasObject{
+		func() granio.CanvasObject {
+			return &granio.Container{
+				Layout: layout.NewHBoxLayout(), Objects: []granio.CanvasObject{
 					NewIcon(theme.DocumentIcon()),
 					NewLabel("Template Object"),
 				},
 			}
 		},
-		func(id ListItemID, item fyne.CanvasObject) {
-			item.(*fyne.Container).Objects[1].(*Label).SetText(data[id])
+		func(id ListItemID, item granio.CanvasObject) {
+			item.(*granio.Container).Objects[1].(*Label).SetText(data[id])
 		},
 	)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(200, 400))
+	w.Resize(granio.NewSize(200, 400))
 
-	visibleCount := len(list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children)
+	visibleCount := len(list.scroller.Content.(*granio.Container).Layout.(*listLayout).children)
 	assert.Equal(t, 3, visibleCount)
 
 	data = data[:len(data)-1]
 	list.Refresh()
 
-	visibleCount = len(list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children)
+	visibleCount = len(list.scroller.Content.(*granio.Container).Layout.(*listLayout).children)
 	assert.Equal(t, 2, visibleCount)
 	test.AssertRendersToMarkup(t, "list/item_removed.xml", w.Canvas())
 }
@@ -520,28 +520,28 @@ func TestList_ScrollThenShrink(t *testing.T) {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("TEMPLATE")
 		},
-		func(id ListItemID, item fyne.CanvasObject) {
+		func(id ListItemID, item granio.CanvasObject) {
 			item.(*Label).SetText(data[id])
 		},
 	)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(300, 300))
+	w.Resize(granio.NewSize(300, 300))
 
-	visibles := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	visibles := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	visibleCount := len(visibles)
 	assert.Equal(t, 9, visibleCount)
 
 	list.scroller.ScrollToBottom()
-	visibles = list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	visibles = list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	assert.Equal(t, "Data 19", visibles[len(visibles)-1].(*listItem).child.(*Label).Text)
 
 	data = data[:1]
 	assert.NotPanics(t, func() { list.Refresh() })
 
-	visibles = list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	visibles = list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	visibleCount = len(visibles)
 	assert.Equal(t, 1, visibleCount)
 	assert.Equal(t, "Data 0", visibles[0].(*listItem).child.(*Label).Text)
@@ -559,22 +559,22 @@ func TestList_ScrollThenResizeWindow(t *testing.T) {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("TEMPLATE")
 		},
-		func(id ListItemID, item fyne.CanvasObject) {
+		func(id ListItemID, item granio.CanvasObject) {
 			item.(*Label).SetText(data[id])
 		},
 	)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(300, 300))
+	w.Resize(granio.NewSize(300, 300))
 
 	list.scroller.ScrollToBottom()
 
 	// increase window size enough so that all elements are visible
-	w.Resize(fyne.NewSize(300, 1000))
+	w.Resize(granio.NewSize(300, 1000))
 
-	visibles := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	visibles := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	visibleCount := len(visibles)
 	assert.Equal(t, 20, visibleCount)
 	assert.Equal(t, "Data 0", visibles[0].(*listItem).child.(*Label).Text)
@@ -583,7 +583,7 @@ func TestList_ScrollThenResizeWindow(t *testing.T) {
 func TestList_NoFunctionsSet(t *testing.T) {
 	list := &List{}
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(200, 400))
+	w.Resize(granio.NewSize(200, 400))
 	list.Refresh()
 }
 
@@ -592,7 +592,7 @@ func TestList_Focus(t *testing.T) {
 	list := createList(10)
 	window := test.NewWindow(list)
 	defer window.Close()
-	window.Resize(list.MinSize().Max(fyne.NewSize(150, 200)))
+	window.Resize(list.MinSize().Max(granio.NewSize(150, 200)))
 
 	c := window.Canvas().(software.WindowlessCanvas)
 	assert.Nil(t, c.Focused())
@@ -601,22 +601,22 @@ func TestList_Focus(t *testing.T) {
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, 0, c.Focused().(*List).currentHighlight)
 
-	children := list.scroller.Content.(*fyne.Container).Layout.(*listLayout).children
+	children := list.scroller.Content.(*granio.Container).Layout.(*listLayout).children
 	assert.True(t, children[0].(*listItem).hovered)
 	assert.False(t, children[1].(*listItem).hovered)
 	assert.False(t, children[2].(*listItem).hovered)
 
-	list.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	list.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	assert.False(t, children[0].(*listItem).hovered)
 	assert.True(t, children[1].(*listItem).hovered)
 	assert.False(t, children[2].(*listItem).hovered)
 
-	list.TypedKey(&fyne.KeyEvent{Name: fyne.KeyUp})
+	list.TypedKey(&granio.KeyEvent{Name: granio.KeyUp})
 	assert.True(t, children[0].(*listItem).hovered)
 	assert.False(t, children[1].(*listItem).hovered)
 	assert.False(t, children[2].(*listItem).hovered)
 
-	c.Focused().TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	c.Focused().TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.True(t, children[0].(*listItem).selected)
 }
 
@@ -630,15 +630,15 @@ func createList(items int) *List {
 		func() int {
 			return len(data)
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			icon := NewIcon(theme.DocumentIcon())
-			return &fyne.Container{Layout: layout.NewBorderLayout(nil, nil, icon, nil), Objects: []fyne.CanvasObject{icon, NewLabel("Template Object")}}
+			return &granio.Container{Layout: layout.NewBorderLayout(nil, nil, icon, nil), Objects: []granio.CanvasObject{icon, NewLabel("Template Object")}}
 		},
-		func(id ListItemID, item fyne.CanvasObject) {
-			item.(*fyne.Container).Objects[1].(*Label).SetText(data[id])
+		func(id ListItemID, item granio.CanvasObject) {
+			item.(*granio.Container).Objects[1].(*Label).SetText(data[id])
 		},
 	)
-	list.Resize(fyne.NewSize(200, 1000))
+	list.Resize(granio.NewSize(200, 1000))
 	return list
 }
 
@@ -647,16 +647,16 @@ func changeData(list *List) {
 	list.Length = func() int {
 		return len(data)
 	}
-	list.UpdateItem = func(id ListItemID, item fyne.CanvasObject) {
-		item.(*fyne.Container).Objects[1].(*Label).SetText(data[id])
+	list.UpdateItem = func(id ListItemID, item granio.CanvasObject) {
+		item.(*granio.Container).Objects[1].(*Label).SetText(data[id])
 	}
 }
 
-func setupList(t *testing.T) (*List, fyne.Window) {
+func setupList(t *testing.T) (*List, granio.Window) {
 	test.NewApp()
 	list := createList(1000)
 	w := test.NewTempWindow(t, list)
-	w.Resize(fyne.NewSize(200, 400))
+	w.Resize(granio.NewSize(200, 400))
 	test.AssertRendersToMarkup(t, "list/initial.xml", w.Canvas())
 	return list, w
 }
@@ -670,10 +670,10 @@ func TestList_LimitUpdateItem(t *testing.T) {
 		func() int {
 			return 5
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("")
 		},
-		func(id ListItemID, _ fyne.CanvasObject) {
+		func(id ListItemID, _ granio.CanvasObject) {
 			printOut += fmt.Sprintf("%d.", id)
 		},
 	)
@@ -695,10 +695,10 @@ func TestList_RefreshUpdatesAllItems(t *testing.T) {
 		func() int {
 			return 1
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("Test")
 		},
-		func(id ListItemID, _ fyne.CanvasObject) {
+		func(id ListItemID, _ granio.CanvasObject) {
 			printOut += fmt.Sprintf("%d.", id)
 		},
 	)
@@ -715,10 +715,10 @@ func TestList_ScrollToLargeItem(t *testing.T) {
 		func() int {
 			return 10
 		},
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("Row")
 		},
-		func(ListItemID, fyne.CanvasObject) {
+		func(ListItemID, granio.CanvasObject) {
 		},
 	)
 	list.SetItemHeight(9, 50)
@@ -734,17 +734,17 @@ func BenchmarkContentMinSize(b *testing.B) {
 
 	l := NewList(
 		func() int { return 1000000 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("Test")
 		},
-		func(id ListItemID, item fyne.CanvasObject) {
+		func(id ListItemID, item granio.CanvasObject) {
 			item.(*Label).SetText(fmt.Sprintf("%d", id))
 		},
 	)
 	l.SetItemHeight(10, 55)
 	l.SetItemHeight(12345, 2)
 
-	minSize := fyne.Size{}
+	minSize := granio.Size{}
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		minSize = l.contentMinSize()

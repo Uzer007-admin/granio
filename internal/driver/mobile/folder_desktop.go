@@ -3,20 +3,20 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func canListURI(fyne.URI) bool {
+func canListURI(granio.URI) bool {
 	// no-op as we use the internal FileRepository
 	return false
 }
 
-func createListableURI(fyne.URI) error {
+func createListableURI(granio.URI) error {
 	// no-op as we use the internal FileRepository
 	return nil
 }
 
-func listURI(fyne.URI) ([]fyne.URI, error) {
+func listURI(granio.URI) ([]granio.URI, error) {
 	// no-op as we use the internal FileRepository
 	return nil, nil
 }

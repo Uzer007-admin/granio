@@ -5,11 +5,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Inline code (inline + monospace) renders its text on a background fill using
@@ -21,7 +21,7 @@ func TestTextSegment_InlineCodeVisualHasBackground(t *testing.T) {
 	seg := &TextSegment{Style: RichTextStyleCodeInline, Text: "code"}
 	vis := seg.Visual()
 
-	c, ok := vis.(*fyne.Container)
+	c, ok := vis.(*granio.Container)
 	if !ok {
 		t.Fatalf("inline code visual should be a container, got %T", vis)
 	}
@@ -71,7 +71,7 @@ func TestTextSegment_InlineCodeUpdate(t *testing.T) {
 	seg.Text = "y"
 	seg.Update(vis)
 
-	c := vis.(*fyne.Container)
+	c := vis.(*granio.Container)
 	assert.Equal(t, "y", c.Objects[1].(*canvas.Text).Text)
 	assert.Equal(t, theme.Color(theme.ColorNameInputBackground), c.Objects[0].(*canvas.Rectangle).FillColor)
 }
@@ -95,7 +95,7 @@ func TestTextSegment_EmphasisedInlineCodeHasBackground(t *testing.T) {
 	}
 	assert.True(t, seg.Style.TextStyle.Bold, "precondition: emphasis set Bold on the code segment")
 	assert.NotEqual(t, RichTextStyleCodeInline, seg.Style, "precondition: style differs from the var once Bold is set")
-	_, ok := seg.Visual().(*fyne.Container)
+	_, ok := seg.Visual().(*granio.Container)
 	assert.True(t, ok, "emphasised inline code should still get a background")
 }
 
@@ -115,12 +115,12 @@ func TestRichText_InlineCodeRenders(t *testing.T) {
 
 	r := NewRichTextFromMarkdown("a `code` b")
 	w := test.NewTempWindow(t, r)
-	w.Resize(fyne.NewSize(200, 100))
+	w.Resize(granio.NewSize(200, 100))
 
 	renderer := cache.Renderer(r).(*textRenderer)
 	found := false
 	for _, o := range renderer.Objects() {
-		c, ok := o.(*fyne.Container)
+		c, ok := o.(*granio.Container)
 		if !ok || len(c.Objects) != 2 {
 			continue
 		}

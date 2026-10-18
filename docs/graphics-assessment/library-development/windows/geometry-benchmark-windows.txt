@@ -1,0 +1,12 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/glfw/v3.5/glfw
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkLegacySurfaceGeometry-16    	  638738	      1782 ns/op	      24 B/op	       3 allocs/op
+BenchmarkLegacySurfaceGeometry-16    	  688526	      2156 ns/op	      24 B/op	       3 allocs/op
+BenchmarkLegacySurfaceGeometry-16    	  586920	      2433 ns/op	      24 B/op	       3 allocs/op
+BenchmarkSurfaceGeometry-16          	  566715	      2069 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSurfaceGeometry-16          	  503692	      2184 ns/op	       0 B/op	       0 allocs/op
+BenchmarkSurfaceGeometry-16          	  536718	      1948 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	8.649s

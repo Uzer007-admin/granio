@@ -3,9 +3,9 @@ package widget
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // All known values for ElevationLevel.
@@ -57,7 +57,7 @@ type Shadow struct {
 	typ   ShadowType
 }
 
-var _ fyne.Widget = (*Shadow)(nil)
+var _ granio.Widget = (*Shadow)(nil)
 
 // ShadowType specifies the type of the shadow.
 type ShadowType int
@@ -66,26 +66,26 @@ type ShadowType int
 // The Variant is always [canvas.DropShadow].
 func ApplyShadowForLevel(s *canvas.Shadow, level ElevationLevel, shadowColor color.Color) {
 	var blurRadius float32
-	var offset fyne.Position
+	var offset granio.Position
 
 	switch {
 	case level <= BaseLevel:
 		// no shadow
 	case level <= MenuBarLevel:
 		blurRadius = shadowBlurRadiusLevelMenuBar
-		offset = fyne.NewPos(0, shadowVerticalOffsetLevelMenuBar)
+		offset = granio.NewPos(0, shadowVerticalOffsetLevelMenuBar)
 	case level <= MenuLevel:
 		blurRadius = shadowBlurRadiusLevelMenu
-		offset = fyne.NewPos(0, shadowVerticalOffsetLevelMenu)
+		offset = granio.NewPos(0, shadowVerticalOffsetLevelMenu)
 	case level <= CardLevel: // equal to ButtonLevel
 		blurRadius = shadowBlurRadiusLevelCard
-		offset = fyne.NewPos(0, shadowVerticalOffsetLevelCard)
+		offset = granio.NewPos(0, shadowVerticalOffsetLevelCard)
 	case level <= PopUpLevel:
 		blurRadius = shadowBlurRadiusLevelPopUp
-		offset = fyne.NewPos(0, shadowVerticalOffsetLevelPopUp)
+		offset = granio.NewPos(0, shadowVerticalOffsetLevelPopUp)
 	default: // DialogLevel or more
 		blurRadius = shadowBlurRadiusLevelDialog
-		offset = fyne.NewPos(0, shadowVerticalOffsetLevelDialog)
+		offset = granio.NewPos(0, shadowVerticalOffsetLevelDialog)
 	}
 
 	s.Color = shadowColor
@@ -103,7 +103,7 @@ func NewShadow(typ ShadowType, level ElevationLevel) *Shadow {
 }
 
 // CreateRenderer returns a new renderer for the shadow.
-func (s *Shadow) CreateRenderer() fyne.WidgetRenderer {
+func (s *Shadow) CreateRenderer() granio.WidgetRenderer {
 	r := &shadowRenderer{s: s}
 	r.createShadows()
 	return r
@@ -113,11 +113,11 @@ type shadowRenderer struct {
 	BaseRenderer
 	b, l, r, t     *canvas.LinearGradient
 	bl, br, tl, tr *canvas.RadialGradient
-	minSize        fyne.Size
+	minSize        granio.Size
 	s              *Shadow
 }
 
-func (r *shadowRenderer) Layout(size fyne.Size) {
+func (r *shadowRenderer) Layout(size granio.Size) {
 	depth := float32(r.s.level)
 	horizontalOffset, verticalOffset := float32(0.0), float32(0.0)
 	if r.s.typ == ShadowAround {
@@ -126,40 +126,40 @@ func (r *shadowRenderer) Layout(size fyne.Size) {
 	}
 
 	if r.tl != nil {
-		r.tl.Resize(fyne.NewSize(depth, depth))
-		r.tl.Move(fyne.NewPos(-depth+horizontalOffset, -depth+verticalOffset))
+		r.tl.Resize(granio.NewSize(depth, depth))
+		r.tl.Move(granio.NewPos(-depth+horizontalOffset, -depth+verticalOffset))
 	}
 	if r.t != nil {
-		r.t.Resize(fyne.NewSize(size.Width-horizontalOffset*2, depth))
-		r.t.Move(fyne.NewPos(horizontalOffset, -depth+verticalOffset))
+		r.t.Resize(granio.NewSize(size.Width-horizontalOffset*2, depth))
+		r.t.Move(granio.NewPos(horizontalOffset, -depth+verticalOffset))
 	}
 	if r.tr != nil {
-		r.tr.Resize(fyne.NewSize(depth, depth))
-		r.tr.Move(fyne.NewPos(size.Width-horizontalOffset, -depth+verticalOffset))
+		r.tr.Resize(granio.NewSize(depth, depth))
+		r.tr.Move(granio.NewPos(size.Width-horizontalOffset, -depth+verticalOffset))
 	}
 	if r.r != nil {
-		r.r.Resize(fyne.NewSize(depth, size.Height-verticalOffset))
-		r.r.Move(fyne.NewPos(size.Width-horizontalOffset, verticalOffset))
+		r.r.Resize(granio.NewSize(depth, size.Height-verticalOffset))
+		r.r.Move(granio.NewPos(size.Width-horizontalOffset, verticalOffset))
 	}
 	if r.br != nil {
-		r.br.Resize(fyne.NewSize(depth, depth))
-		r.br.Move(fyne.NewPos(size.Width-horizontalOffset, size.Height))
+		r.br.Resize(granio.NewSize(depth, depth))
+		r.br.Move(granio.NewPos(size.Width-horizontalOffset, size.Height))
 	}
 	if r.b != nil {
-		r.b.Resize(fyne.NewSize(size.Width-horizontalOffset*2, depth))
-		r.b.Move(fyne.NewPos(horizontalOffset, size.Height))
+		r.b.Resize(granio.NewSize(size.Width-horizontalOffset*2, depth))
+		r.b.Move(granio.NewPos(horizontalOffset, size.Height))
 	}
 	if r.bl != nil {
-		r.bl.Resize(fyne.NewSize(depth, depth))
-		r.bl.Move(fyne.NewPos(-depth+horizontalOffset, size.Height))
+		r.bl.Resize(granio.NewSize(depth, depth))
+		r.bl.Move(granio.NewPos(-depth+horizontalOffset, size.Height))
 	}
 	if r.l != nil {
-		r.l.Resize(fyne.NewSize(depth, size.Height-verticalOffset))
-		r.l.Move(fyne.NewPos(-depth+horizontalOffset, verticalOffset))
+		r.l.Resize(granio.NewSize(depth, size.Height-verticalOffset))
+		r.l.Move(granio.NewPos(-depth+horizontalOffset, verticalOffset))
 	}
 }
 
-func (r *shadowRenderer) MinSize() fyne.Size {
+func (r *shadowRenderer) MinSize() granio.Size {
 	return r.minSize
 }
 
@@ -171,22 +171,22 @@ func (r *shadowRenderer) Refresh() {
 
 func (r *shadowRenderer) createShadows() {
 	th := theme.CurrentForWidget(r.s)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	fg := th.Color(theme.ColorNameShadow, v)
 
 	switch r.s.typ {
 	case ShadowLeft:
 		r.l = canvas.NewHorizontalGradient(color.Transparent, fg)
-		r.SetObjects([]fyne.CanvasObject{r.l})
+		r.SetObjects([]granio.CanvasObject{r.l})
 	case ShadowRight:
 		r.r = canvas.NewHorizontalGradient(fg, color.Transparent)
-		r.SetObjects([]fyne.CanvasObject{r.r})
+		r.SetObjects([]granio.CanvasObject{r.r})
 	case ShadowBottom:
 		r.b = canvas.NewVerticalGradient(fg, color.Transparent)
-		r.SetObjects([]fyne.CanvasObject{r.b})
+		r.SetObjects([]granio.CanvasObject{r.b})
 	case ShadowTop:
 		r.t = canvas.NewVerticalGradient(color.Transparent, fg)
-		r.SetObjects([]fyne.CanvasObject{r.t})
+		r.SetObjects([]granio.CanvasObject{r.t})
 	case ShadowAround:
 		r.tl = canvas.NewRadialGradient(fg, color.Transparent)
 		r.tl.CenterOffsetX = shadowRadialCenterOffset
@@ -204,13 +204,13 @@ func (r *shadowRenderer) createShadows() {
 		r.bl.CenterOffsetX = shadowRadialCenterOffset
 		r.bl.CenterOffsetY = -shadowRadialCenterOffset
 		r.l = canvas.NewHorizontalGradient(color.Transparent, fg)
-		r.SetObjects([]fyne.CanvasObject{r.tl, r.t, r.tr, r.r, r.br, r.b, r.bl, r.l})
+		r.SetObjects([]granio.CanvasObject{r.tl, r.t, r.tr, r.r, r.br, r.b, r.bl, r.l})
 	}
 }
 
 func (r *shadowRenderer) refreshShadows() {
 	th := theme.CurrentForWidget(r.s)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	fg := th.Color(theme.ColorNameShadow, v)
 
 	updateShadowEnd(r.l, fg)

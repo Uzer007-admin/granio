@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // DoAndWait is used to execute a specified function in the main Fyne runtime context.
 // This is required when a background process wishes to adjust graphical elements of a running app.

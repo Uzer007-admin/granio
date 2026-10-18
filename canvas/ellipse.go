@@ -3,11 +3,11 @@ package canvas
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Ellipse)(nil)
+var _ granio.CanvasObject = (*Ellipse)(nil)
 
 // Ellipse describes a colored ellipse primitive in a Fyne canvas
 // with radii being half the width and height of its size.
@@ -30,7 +30,7 @@ func (e *Ellipse) Hide() {
 }
 
 // Move the ellipse to a new position, relative to its parent / canvas
-func (e *Ellipse) Move(pos fyne.Position) {
+func (e *Ellipse) Move(pos granio.Position) {
 	if e.Position() == pos {
 		return
 	}
@@ -47,7 +47,7 @@ func (e *Ellipse) Refresh() {
 
 // Resize on a ellipse updates the new size of this object.
 // If it has a stroke width this will cause it to Refresh.
-func (e *Ellipse) Resize(s fyne.Size) {
+func (e *Ellipse) Resize(s granio.Size) {
 	if s == e.Size() {
 		return
 	}

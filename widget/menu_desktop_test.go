@@ -7,13 +7,13 @@ import (
 	"runtime"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	internalWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -27,60 +27,60 @@ func TestMenu_Layout(t *testing.T) {
 	w.SetPadded(false)
 	c := w.Canvas()
 
-	item1 := fyne.NewMenuItem("A", nil)
-	item2 := fyne.NewMenuItem("B (long)", nil)
-	sep := fyne.NewMenuItemSeparator()
-	item3 := fyne.NewMenuItem("C", nil)
-	subItem1 := fyne.NewMenuItem("subitem A", nil)
+	item1 := granio.NewMenuItem("A", nil)
+	item2 := granio.NewMenuItem("B (long)", nil)
+	sep := granio.NewMenuItemSeparator()
+	item3 := granio.NewMenuItem("C", nil)
+	subItem1 := granio.NewMenuItem("subitem A", nil)
 	subItem1.Checked = true
-	subItem2 := fyne.NewMenuItem("subitem B", nil)
+	subItem2 := granio.NewMenuItem("subitem B", nil)
 	subItem2.Checked = true
 	subItem2.Icon = theme.InfoIcon()
-	subItem3 := fyne.NewMenuItem("subitem C (long)", nil)
+	subItem3 := granio.NewMenuItem("subitem C (long)", nil)
 	subItem3.Icon = theme.MenuIcon()
-	subsubItem1 := fyne.NewMenuItem("subsubitem A (long)", nil)
+	subsubItem1 := granio.NewMenuItem("subsubitem A (long)", nil)
 	subsubItem1.Icon = theme.FileIcon()
-	subsubItem2 := fyne.NewMenuItem("subsubitem B", nil)
-	subItem3.ChildMenu = fyne.NewMenu("", subsubItem1, subsubItem2)
-	item3.ChildMenu = fyne.NewMenu("", subItem1, subItem2, subItem3)
-	item4 := fyne.NewMenuItem("D", nil)
-	subItem4a := fyne.NewMenuItem("a", nil)
-	subItem4a.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyA, Modifier: fyne.KeyModifierControl}
-	subItem4b := fyne.NewMenuItem("b", nil)
-	subItem4b.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyBackspace, Modifier: fyne.KeyModifierAlt}
-	subItem4c := fyne.NewMenuItem("c", nil)
-	subItem4c.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyDelete, Modifier: fyne.KeyModifierSuper}
-	subItem4d := fyne.NewMenuItem("d", nil)
-	subItem4d.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyDown, Modifier: fyne.KeyModifierShift}
-	subItem4e := fyne.NewMenuItem("e", nil)
-	subItem4e.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyEnd, Modifier: fyne.KeyModifierControl | fyne.KeyModifierAlt}
-	subItem4f := fyne.NewMenuItem("f", nil)
-	subItem4f.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyEnter, Modifier: fyne.KeyModifierControl | fyne.KeyModifierSuper}
-	subItem4g := fyne.NewMenuItem("g", nil)
-	subItem4g.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyEscape, Modifier: fyne.KeyModifierControl | fyne.KeyModifierShift}
-	subItem4h := fyne.NewMenuItem("h", nil)
-	subItem4h.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyHome, Modifier: fyne.KeyModifierAlt | fyne.KeyModifierSuper}
-	subItem4i := fyne.NewMenuItem("i", nil)
-	subItem4i.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyLeft, Modifier: fyne.KeyModifierAlt | fyne.KeyModifierShift}
-	subItem4j := fyne.NewMenuItem("j", nil)
-	subItem4j.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyPageDown, Modifier: fyne.KeyModifierSuper | fyne.KeyModifierShift}
-	subItem4k := fyne.NewMenuItem("k", nil)
-	subItem4k.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyPageUp, Modifier: fyne.KeyModifierControl | fyne.KeyModifierAlt | fyne.KeyModifierSuper}
-	subItem4l := fyne.NewMenuItem("l", nil)
-	subItem4l.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyReturn, Modifier: fyne.KeyModifierControl | fyne.KeyModifierAlt | fyne.KeyModifierShift}
-	subItem4m := fyne.NewMenuItem("m", nil)
-	subItem4m.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyRight, Modifier: fyne.KeyModifierControl | fyne.KeyModifierSuper | fyne.KeyModifierShift}
-	subItem4n := fyne.NewMenuItem("n", nil)
-	subItem4n.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeySpace, Modifier: fyne.KeyModifierControl | fyne.KeyModifierAlt | fyne.KeyModifierSuper | fyne.KeyModifierShift}
-	subItem4o := fyne.NewMenuItem("o", nil)
-	subItem4o.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyTab, Modifier: fyne.KeyModifierControl}
-	subItem4p := fyne.NewMenuItem("p", nil)
-	subItem4p.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyUp, Modifier: fyne.KeyModifierControl}
-	subItem4q := fyne.NewMenuItem("q", nil)
-	subItem4q.Shortcut = &desktop.CustomShortcut{KeyName: fyne.KeyF6}
-	item4.ChildMenu = fyne.NewMenu("", subItem4a, subItem4b, subItem4c, subItem4d, subItem4e, subItem4f, subItem4g, subItem4h, subItem4i, subItem4j, subItem4k, subItem4l, subItem4m, subItem4n, subItem4o, subItem4p, subItem4q)
+	subsubItem2 := granio.NewMenuItem("subsubitem B", nil)
+	subItem3.ChildMenu = granio.NewMenu("", subsubItem1, subsubItem2)
+	item3.ChildMenu = granio.NewMenu("", subItem1, subItem2, subItem3)
+	item4 := granio.NewMenuItem("D", nil)
+	subItem4a := granio.NewMenuItem("a", nil)
+	subItem4a.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyA, Modifier: granio.KeyModifierControl}
+	subItem4b := granio.NewMenuItem("b", nil)
+	subItem4b.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyBackspace, Modifier: granio.KeyModifierAlt}
+	subItem4c := granio.NewMenuItem("c", nil)
+	subItem4c.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyDelete, Modifier: granio.KeyModifierSuper}
+	subItem4d := granio.NewMenuItem("d", nil)
+	subItem4d.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyDown, Modifier: granio.KeyModifierShift}
+	subItem4e := granio.NewMenuItem("e", nil)
+	subItem4e.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyEnd, Modifier: granio.KeyModifierControl | granio.KeyModifierAlt}
+	subItem4f := granio.NewMenuItem("f", nil)
+	subItem4f.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyEnter, Modifier: granio.KeyModifierControl | granio.KeyModifierSuper}
+	subItem4g := granio.NewMenuItem("g", nil)
+	subItem4g.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyEscape, Modifier: granio.KeyModifierControl | granio.KeyModifierShift}
+	subItem4h := granio.NewMenuItem("h", nil)
+	subItem4h.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyHome, Modifier: granio.KeyModifierAlt | granio.KeyModifierSuper}
+	subItem4i := granio.NewMenuItem("i", nil)
+	subItem4i.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyLeft, Modifier: granio.KeyModifierAlt | granio.KeyModifierShift}
+	subItem4j := granio.NewMenuItem("j", nil)
+	subItem4j.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyPageDown, Modifier: granio.KeyModifierSuper | granio.KeyModifierShift}
+	subItem4k := granio.NewMenuItem("k", nil)
+	subItem4k.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyPageUp, Modifier: granio.KeyModifierControl | granio.KeyModifierAlt | granio.KeyModifierSuper}
+	subItem4l := granio.NewMenuItem("l", nil)
+	subItem4l.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyReturn, Modifier: granio.KeyModifierControl | granio.KeyModifierAlt | granio.KeyModifierShift}
+	subItem4m := granio.NewMenuItem("m", nil)
+	subItem4m.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyRight, Modifier: granio.KeyModifierControl | granio.KeyModifierSuper | granio.KeyModifierShift}
+	subItem4n := granio.NewMenuItem("n", nil)
+	subItem4n.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeySpace, Modifier: granio.KeyModifierControl | granio.KeyModifierAlt | granio.KeyModifierSuper | granio.KeyModifierShift}
+	subItem4o := granio.NewMenuItem("o", nil)
+	subItem4o.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyTab, Modifier: granio.KeyModifierControl}
+	subItem4p := granio.NewMenuItem("p", nil)
+	subItem4p.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyUp, Modifier: granio.KeyModifierControl}
+	subItem4q := granio.NewMenuItem("q", nil)
+	subItem4q.Shortcut = &desktop.CustomShortcut{KeyName: granio.KeyF6}
+	item4.ChildMenu = granio.NewMenu("", subItem4a, subItem4b, subItem4c, subItem4d, subItem4e, subItem4f, subItem4g, subItem4h, subItem4i, subItem4j, subItem4k, subItem4l, subItem4m, subItem4n, subItem4o, subItem4p, subItem4q)
 
-	menu := fyne.NewMenu("", item1, sep, item2, item3, sep, item4)
+	menu := granio.NewMenu("", item1, sep, item2, item3, sep, item4)
 
 	var shortcutsMasterPrefixPath string
 	if runtime.GOOS == "darwin" {
@@ -90,82 +90,82 @@ func TestMenu_Layout(t *testing.T) {
 	}
 
 	for name, tt := range map[string]struct {
-		windowSize         fyne.Size
-		menuPos            fyne.Position
-		mousePositions     []fyne.Position
+		windowSize         granio.Size
+		menuPos            granio.Position
+		mousePositions     []granio.Position
 		want               string
 		wantImage          string
 		wantTestThemeImage string
 	}{
 		"normal": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(10, 10),
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(10, 10),
 			want:       "menu/desktop/layout_normal.xml",
 		},
 		"normal with submenus": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(10, 10),
-			mousePositions: []fyne.Position{
-				fyne.NewPos(32, 103),
-				fyne.NewPos(102, 173),
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(10, 10),
+			mousePositions: []granio.Position{
+				granio.NewPos(32, 103),
+				granio.NewPos(102, 173),
 			},
 			want: "menu/desktop/layout_normal_with_submenus.xml",
 		},
 		"background of active submenu parents resets if sibling is focused": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(10, 10),
-			mousePositions: []fyne.Position{
-				fyne.NewPos(30, 100),  // open submenu
-				fyne.NewPos(100, 170), // open subsubmenu
-				fyne.NewPos(300, 170), // focus subsubmenu item
-				fyne.NewPos(30, 60),   // focus sibling of submenu parent
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(10, 10),
+			mousePositions: []granio.Position{
+				granio.NewPos(30, 100),  // open submenu
+				granio.NewPos(100, 170), // open subsubmenu
+				granio.NewPos(300, 170), // focus subsubmenu item
+				granio.NewPos(30, 60),   // focus sibling of submenu parent
 			},
 			want: "menu/desktop/layout_background_reset.xml",
 		},
 		"no space on right side for submenu": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(410, 10),
-			mousePositions: []fyne.Position{
-				fyne.NewPos(432, 103), // open submenu
-				fyne.NewPos(302, 173), // open subsubmenu
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(410, 10),
+			mousePositions: []granio.Position{
+				granio.NewPos(432, 103), // open submenu
+				granio.NewPos(302, 173), // open subsubmenu
 			},
 			want: "menu/desktop/layout_no_space_on_right.xml",
 		},
 		"no space on left & right side for submenu": {
-			windowSize: fyne.NewSize(200, 300),
-			menuPos:    fyne.NewPos(10, 10),
-			mousePositions: []fyne.Position{
-				fyne.NewPos(32, 103),  // open submenu
-				fyne.NewPos(102, 173), // open subsubmenu
+			windowSize: granio.NewSize(200, 300),
+			menuPos:    granio.NewPos(10, 10),
+			mousePositions: []granio.Position{
+				granio.NewPos(32, 103),  // open submenu
+				granio.NewPos(102, 173), // open subsubmenu
 			},
 			want: "menu/desktop/layout_no_space_on_both_sides.xml",
 		},
 		"window too short for submenu": {
-			windowSize: fyne.NewSize(500, 150),
-			menuPos:    fyne.NewPos(10, 10),
-			mousePositions: []fyne.Position{
-				fyne.NewPos(30, 100),  // open submenu
-				fyne.NewPos(100, 130), // open subsubmenu
+			windowSize: granio.NewSize(500, 150),
+			menuPos:    granio.NewPos(10, 10),
+			mousePositions: []granio.Position{
+				granio.NewPos(30, 100),  // open submenu
+				granio.NewPos(100, 130), // open subsubmenu
 			},
 			want: "menu/desktop/layout_window_too_short_for_submenu.xml",
 		},
 		"theme change": {
-			windowSize:         fyne.NewSize(500, 300),
-			menuPos:            fyne.NewPos(10, 10),
+			windowSize:         granio.NewSize(500, 300),
+			menuPos:            granio.NewPos(10, 10),
 			want:               "menu/desktop/layout_theme_changed.xml",
 			wantImage:          "menu/desktop/layout_normal.png",
 			wantTestThemeImage: "menu/desktop/layout_theme_changed.png",
 		},
 		"window too short for menu": {
-			windowSize: fyne.NewSize(100, 50),
-			menuPos:    fyne.NewPos(10, 10),
+			windowSize: granio.NewSize(100, 50),
+			menuPos:    granio.NewPos(10, 10),
 			want:       "menu/desktop/layout_window_too_short.xml",
 		},
 		"menu with shortcuts": {
-			windowSize: fyne.NewSize(450, 800),
-			menuPos:    fyne.NewPos(10, 10),
-			mousePositions: []fyne.Position{
-				fyne.NewPos(32, 143), // open submenu
+			windowSize: granio.NewSize(450, 800),
+			menuPos:    granio.NewPos(10, 10),
+			mousePositions: []granio.Position{
+				granio.NewPos(32, 143), // open submenu
 			},
 			want:               shortcutsMasterPrefixPath + ".xml",
 			wantImage:          shortcutsMasterPrefixPath + ".png",
@@ -207,61 +207,61 @@ func TestMenu_Scrolling(t *testing.T) {
 	w.SetPadded(false)
 	c := w.Canvas()
 
-	menu := fyne.NewMenu(
+	menu := granio.NewMenu(
 		"",
-		fyne.NewMenuItem("A", nil),
-		fyne.NewMenuItem("B", nil),
-		fyne.NewMenuItem("C", nil),
-		fyne.NewMenuItem("D", nil),
-		fyne.NewMenuItem("E", nil),
-		fyne.NewMenuItem("F", nil),
+		granio.NewMenuItem("A", nil),
+		granio.NewMenuItem("B", nil),
+		granio.NewMenuItem("C", nil),
+		granio.NewMenuItem("D", nil),
+		granio.NewMenuItem("E", nil),
+		granio.NewMenuItem("F", nil),
 	)
 
 	// 100x100
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 	m := widget.NewMenu(menu)
 	o := internalWidget.NewOverlayContainer(m, c, nil)
 	c.Overlays().Add(o)
 	defer c.Overlays().Remove(o)
-	m.Move(fyne.NewPos(10, 10))
+	m.Move(granio.NewPos(10, 10))
 	m.Resize(m.MinSize())
 	maxScrollDistance := m.MinSize().Height - 90
 	test.AssertRendersToMarkup(t, "menu/desktop/scroll_top.xml", w.Canvas())
 
-	test.Scroll(c, fyne.NewPos(20, 20), 0, -50)
+	test.Scroll(c, granio.NewPos(20, 20), 0, -50)
 	test.AssertRendersToMarkup(t, "menu/desktop/scroll_middle.xml", w.Canvas())
 
-	test.Scroll(c, fyne.NewPos(20, 20), 0, -maxScrollDistance)
+	test.Scroll(c, granio.NewPos(20, 20), 0, -maxScrollDistance)
 	test.AssertRendersToMarkup(t, "menu/desktop/scroll_bottom.xml", w.Canvas())
 
-	test.Scroll(c, fyne.NewPos(20, 20), 0, maxScrollDistance-50)
+	test.Scroll(c, granio.NewPos(20, 20), 0, maxScrollDistance-50)
 	test.AssertRendersToMarkup(t, "menu/desktop/scroll_middle.xml", w.Canvas())
 
-	test.Scroll(c, fyne.NewPos(20, 20), 0, 50)
+	test.Scroll(c, granio.NewPos(20, 20), 0, 50)
 	test.AssertRendersToMarkup(t, "menu/desktop/scroll_top.xml", w.Canvas())
 }
 
 func TestMenu_TraverseMenu(t *testing.T) {
 	test.NewTempApp(t)
 
-	w := fyne.CurrentApp().NewWindow("")
+	w := granio.CurrentApp().NewWindow("")
 	defer w.Close()
 	w.SetPadded(false)
 	c := w.Canvas()
 
-	itemWithChild := fyne.NewMenuItem("Bar", nil)
-	itemWithChild.ChildMenu = fyne.NewMenu(
+	itemWithChild := granio.NewMenuItem("Bar", nil)
+	itemWithChild.ChildMenu = granio.NewMenu(
 		"",
-		fyne.NewMenuItem("SubA", nil),
-		fyne.NewMenuItem("SubB", nil),
+		granio.NewMenuItem("SubA", nil),
+		granio.NewMenuItem("SubB", nil),
 	)
-	m := widget.NewMenu(fyne.NewMenu(
+	m := widget.NewMenu(granio.NewMenu(
 		"",
-		fyne.NewMenuItem("Foo", nil),
-		fyne.NewMenuItemSeparator(),
+		granio.NewMenuItem("Foo", nil),
+		granio.NewMenuItemSeparator(),
 		itemWithChild,
-		fyne.NewMenuItemSeparator(),
-		fyne.NewMenuItem("Baz", nil),
+		granio.NewMenuItemSeparator(),
+		granio.NewMenuItem("Baz", nil),
 	))
 	w.SetContent(internalWidget.NewOverlayContainer(m, c, nil))
 	// + 4,5 for canvas’ safe area
@@ -328,23 +328,23 @@ func TestMenu_TriggerTraversedMenu(t *testing.T) {
 	setupMenu := func() *widget.Menu {
 		triggered = ""
 		dismissed = false
-		itemWithChild := fyne.NewMenuItem("Bar", func() { triggered = "2nd" })
-		itemWithChild.ChildMenu = fyne.NewMenu(
+		itemWithChild := granio.NewMenuItem("Bar", func() { triggered = "2nd" })
+		itemWithChild.ChildMenu = granio.NewMenu(
 			"",
-			fyne.NewMenuItem("SubA", func() { triggered = "1st sub" }),
-			fyne.NewMenuItem("SubB", nil),
-			fyne.NewMenuItem("SubC", func() { triggered = "3rd sub" }),
+			granio.NewMenuItem("SubA", func() { triggered = "1st sub" }),
+			granio.NewMenuItem("SubB", nil),
+			granio.NewMenuItem("SubC", func() { triggered = "3rd sub" }),
 		)
-		m := widget.NewMenu(fyne.NewMenu(
+		m := widget.NewMenu(granio.NewMenu(
 			"",
-			fyne.NewMenuItem("Foo", func() { triggered = "1st" }),
-			fyne.NewMenuItemSeparator(),
+			granio.NewMenuItem("Foo", func() { triggered = "1st" }),
+			granio.NewMenuItemSeparator(),
 			itemWithChild,
-			fyne.NewMenuItemSeparator(),
-			fyne.NewMenuItem("Baz", func() { triggered = "3rd" }),
+			granio.NewMenuItemSeparator(),
+			granio.NewMenuItem("Baz", func() { triggered = "3rd" }),
 		))
 		m.OnDismiss = func() { dismissed = true }
-		w := fyne.CurrentApp().NewWindow("")
+		w := granio.CurrentApp().NewWindow("")
 		t.Cleanup(w.Close)
 		w.SetContent(internalWidget.NewOverlayContainer(m, w.Canvas(), nil))
 		return m

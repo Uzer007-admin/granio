@@ -1,11 +1,11 @@
 package common
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
 )
 
 // CanvasForObject returns the canvas for the specified object.
-func CanvasForObject(obj fyne.CanvasObject) fyne.Canvas {
+func CanvasForObject(obj granio.CanvasObject) granio.Canvas {
 	return cache.GetCanvasForObject(obj)
 }

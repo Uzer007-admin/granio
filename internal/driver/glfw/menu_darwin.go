@@ -10,11 +10,11 @@ import (
 	"strings"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/svg"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/svg"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 /*
@@ -64,39 +64,39 @@ type menuCallbacks struct {
 var (
 	callbacks   []*menuCallbacks
 	ecb         func(string)
-	specialKeys = map[fyne.KeyName]string{
-		fyne.KeyBackspace: "\x08",
-		fyne.KeyDelete:    "\x7f",
-		fyne.KeyDown:      "\uf701",
-		fyne.KeyEnd:       "\uf72b",
-		fyne.KeyEnter:     "\x03",
-		fyne.KeyEscape:    "\x1b",
-		fyne.KeyF10:       "\uf70d",
-		fyne.KeyF11:       "\uf70e",
-		fyne.KeyF12:       "\uf70f",
-		fyne.KeyF1:        "\uf704",
-		fyne.KeyF2:        "\uf705",
-		fyne.KeyF3:        "\uf706",
-		fyne.KeyF4:        "\uf707",
-		fyne.KeyF5:        "\uf708",
-		fyne.KeyF6:        "\uf709",
-		fyne.KeyF7:        "\uf70a",
-		fyne.KeyF8:        "\uf70b",
-		fyne.KeyF9:        "\uf70c",
-		fyne.KeyHome:      "\uf729",
-		fyne.KeyInsert:    "\uf727",
-		fyne.KeyLeft:      "\uf702",
-		fyne.KeyPageDown:  "\uf72d",
-		fyne.KeyPageUp:    "\uf72c",
-		fyne.KeyReturn:    "\n",
-		fyne.KeyRight:     "\uf703",
-		fyne.KeySpace:     " ",
-		fyne.KeyTab:       "\t",
-		fyne.KeyUp:        "\uf700",
+	specialKeys = map[granio.KeyName]string{
+		granio.KeyBackspace: "\x08",
+		granio.KeyDelete:    "\x7f",
+		granio.KeyDown:      "\uf701",
+		granio.KeyEnd:       "\uf72b",
+		granio.KeyEnter:     "\x03",
+		granio.KeyEscape:    "\x1b",
+		granio.KeyF10:       "\uf70d",
+		granio.KeyF11:       "\uf70e",
+		granio.KeyF12:       "\uf70f",
+		granio.KeyF1:        "\uf704",
+		granio.KeyF2:        "\uf705",
+		granio.KeyF3:        "\uf706",
+		granio.KeyF4:        "\uf707",
+		granio.KeyF5:        "\uf708",
+		granio.KeyF6:        "\uf709",
+		granio.KeyF7:        "\uf70a",
+		granio.KeyF8:        "\uf70b",
+		granio.KeyF9:        "\uf70c",
+		granio.KeyHome:      "\uf729",
+		granio.KeyInsert:    "\uf727",
+		granio.KeyLeft:      "\uf702",
+		granio.KeyPageDown:  "\uf72d",
+		granio.KeyPageUp:    "\uf72c",
+		granio.KeyReturn:    "\n",
+		granio.KeyRight:     "\uf703",
+		granio.KeySpace:     " ",
+		granio.KeyTab:       "\t",
+		granio.KeyUp:        "\uf700",
 	}
 )
 
-func addNativeMenu(w *window, menu *fyne.Menu, nextItemID int, prepend bool) int {
+func addNativeMenu(w *window, menu *granio.Menu, nextItemID int, prepend bool) int {
 	menu, nextItemID = handleSpecialItems(w, menu, nextItemID, true)
 
 	containsItems := false
@@ -115,7 +115,7 @@ func addNativeMenu(w *window, menu *fyne.Menu, nextItemID int, prepend bool) int
 	return nextItemID
 }
 
-func addNativeSubmenu(w *window, nsParentMenuItem unsafe.Pointer, menu *fyne.Menu, nextItemID int) int {
+func addNativeSubmenu(w *window, nsParentMenuItem unsafe.Pointer, menu *granio.Menu, nextItemID int) int {
 	nsMenu, nextItemID := createNativeMenu(w, menu, nextItemID)
 	C.assignDarwinSubmenu(nsParentMenuItem, nsMenu)
 	return nextItemID
@@ -125,7 +125,7 @@ func clearNativeMenu() {
 	C.resetDarwinMenu()
 }
 
-func createNativeMenu(w *window, menu *fyne.Menu, nextItemID int) (unsafe.Pointer, int) {
+func createNativeMenu(w *window, menu *granio.Menu, nextItemID int) (unsafe.Pointer, int) {
 	nsMenu := C.createDarwinMenu(C.CString(menu.Label))
 	for _, item := range menu.Items {
 		nsMenuItem := insertNativeMenuItem(nsMenu, item, nextItemID, -1)
@@ -146,16 +146,16 @@ func exceptionCallback(e *C.char) {
 	ecb(msg)
 }
 
-func handleSpecialItems(w *window, menu *fyne.Menu, nextItemID int, addSeparator bool) (*fyne.Menu, int) {
-	menu = fyne.NewMenu(menu.Label, menu.Items...) // copy so we can manipulate
+func handleSpecialItems(w *window, menu *granio.Menu, nextItemID int, addSeparator bool) (*granio.Menu, int) {
+	menu = granio.NewMenu(menu.Label, menu.Items...) // copy so we can manipulate
 	for i := 0; i < len(menu.Items); i++ {
 		item := menu.Items[i]
 		switch item.Label {
 		case "About", "Settings", "Settings…", "Preferences", "Preferences…":
-			items := make([]*fyne.MenuItem, 0, len(menu.Items)-1)
+			items := make([]*granio.MenuItem, 0, len(menu.Items)-1)
 			items = append(items, menu.Items[:i]...)
 			items = append(items, menu.Items[i+1:]...)
-			menu, nextItemID = handleSpecialItems(w, fyne.NewMenu(menu.Label, items...), nextItemID, false)
+			menu, nextItemID = handleSpecialItems(w, granio.NewMenu(menu.Label, items...), nextItemID, false)
 			i--
 
 			insertNativeMenuItem(C.darwinAppMenu(), item, nextItemID, 1)
@@ -179,7 +179,7 @@ func handleSpecialItems(w *window, menu *fyne.Menu, nextItemID int, addSeparator
 }
 
 // TODO: theme change support, see NSSystemColorsDidChangeNotification
-func insertNativeMenuItem(nsMenu unsafe.Pointer, item *fyne.MenuItem, nextItemID, index int) unsafe.Pointer {
+func insertNativeMenuItem(nsMenu unsafe.Pointer, item *granio.MenuItem, nextItemID, index int) unsafe.Pointer {
 	var imgData unsafe.Pointer
 	var imgDataLength uint
 	if item.Icon != nil {
@@ -190,9 +190,9 @@ func insertNativeMenuItem(nsMenu unsafe.Pointer, item *fyne.MenuItem, nextItemID
 				C.getTextColorRGBA(&r, &g, &b, &a)
 				content, err := svg.Colorize(rsc.Content(), color.NRGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)})
 				if err != nil {
-					fyne.LogError("", err)
+					granio.LogError("", err)
 				}
-				rsc = &fyne.StaticResource{
+				rsc = &granio.StaticResource{
 					StaticName:    rsc.Name(),
 					StaticContent: content,
 				}
@@ -201,7 +201,7 @@ func insertNativeMenuItem(nsMenu unsafe.Pointer, item *fyne.MenuItem, nextItemID
 			img := painter.PaintImage(&canvas.Image{Resource: rsc}, nil, size, size)
 			var buf bytes.Buffer
 			if err := png.Encode(&buf, img); err != nil {
-				fyne.LogError("failed to render menu icon", err)
+				granio.LogError("failed to render menu icon", err)
 			} else {
 				imgData = unsafe.Pointer(&buf.Bytes()[0])
 				imgDataLength = uint(buf.Len())
@@ -224,11 +224,11 @@ func insertNativeMenuItem(nsMenu unsafe.Pointer, item *fyne.MenuItem, nextItemID
 	)
 }
 
-func keyEquivalent(item *fyne.MenuItem) (key string) {
-	if s, ok := item.Shortcut.(fyne.KeyboardShortcut); ok {
+func keyEquivalent(item *granio.MenuItem) (key string) {
+	if s, ok := item.Shortcut.(granio.KeyboardShortcut); ok {
 		if key = specialKeys[s.Key()]; key == "" {
 			if len(s.Key()) > 1 {
-				fyne.LogError(fmt.Sprintf("unsupported key “%s” for menu shortcut", s.Key()), nil)
+				granio.LogError(fmt.Sprintf("unsupported key “%s” for menu shortcut", s.Key()), nil)
 			}
 			key = strings.ToLower(string(s.Key()))
 		}
@@ -236,25 +236,25 @@ func keyEquivalent(item *fyne.MenuItem) (key string) {
 	return key
 }
 
-func keyEquivalentModifierMask(item *fyne.MenuItem) (mask uint) {
-	if s, ok := item.Shortcut.(fyne.KeyboardShortcut); ok {
-		if (s.Mod() & fyne.KeyModifierShift) != 0 {
+func keyEquivalentModifierMask(item *granio.MenuItem) (mask uint) {
+	if s, ok := item.Shortcut.(granio.KeyboardShortcut); ok {
+		if (s.Mod() & granio.KeyModifierShift) != 0 {
 			mask |= 1 << NSEventModifierFlagShift
 		}
-		if (s.Mod() & fyne.KeyModifierAlt) != 0 {
+		if (s.Mod() & granio.KeyModifierAlt) != 0 {
 			mask |= 1 << NSEventModifierFlagOption
 		}
-		if (s.Mod() & fyne.KeyModifierControl) != 0 {
+		if (s.Mod() & granio.KeyModifierControl) != 0 {
 			mask |= 1 << NSEventModifierFlagControl
 		}
-		if (s.Mod() & fyne.KeyModifierSuper) != 0 {
+		if (s.Mod() & granio.KeyModifierSuper) != 0 {
 			mask |= 1 << NSEventModifierFlagCommand
 		}
 	}
 	return mask
 }
 
-func registerCallback(_ *window, item *fyne.MenuItem, nextItemID int) int {
+func registerCallback(_ *window, item *granio.MenuItem, nextItemID int) int {
 	if !item.IsSeparator {
 		callbacks = append(callbacks, &menuCallbacks{
 			action: func() {
@@ -293,7 +293,7 @@ func menuChecked(id int) bool {
 	return callbacks[id].checked()
 }
 
-func setupNativeMenu(w *window, main *fyne.MainMenu) {
+func setupNativeMenu(w *window, main *granio.MainMenu) {
 	clearNativeMenu()
 	if main == nil {
 		return
@@ -301,7 +301,7 @@ func setupNativeMenu(w *window, main *fyne.MainMenu) {
 
 	nextItemID := 0
 	callbacks = []*menuCallbacks{}
-	var helpMenu *fyne.Menu
+	var helpMenu *granio.Menu
 	for i := len(main.Items) - 1; i >= 0; i-- {
 		menu := main.Items[i]
 		if menu.Label == "Help" {

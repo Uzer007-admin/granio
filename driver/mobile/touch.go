@@ -1,10 +1,10 @@
 package mobile
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // TouchEvent contains data relating to mobile touch events
 type TouchEvent struct {
-	fyne.PointEvent
+	granio.PointEvent
 
 	// ID represents the current ID of this touch, used to differentiate multiple fingers during a gesture.
 	// The ID value may be re-used after that touch is released from the device (via TouchUp or TouchCancel).

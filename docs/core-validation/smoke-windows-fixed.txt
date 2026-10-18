@@ -1,0 +1,2 @@
+native capture: 167x123
+graceful shutdown: PASS

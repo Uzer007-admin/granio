@@ -4,13 +4,13 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestCustomShortcut_Shortcut(t *testing.T) {
 	type fields struct {
-		KeyName  fyne.KeyName
-		Modifier fyne.KeyModifier
+		KeyName  granio.KeyName
+		Modifier granio.KeyModifier
 	}
 	tests := []struct {
 		name   string
@@ -20,23 +20,23 @@ func TestCustomShortcut_Shortcut(t *testing.T) {
 		{
 			name: "Ctrl+C",
 			fields: fields{
-				KeyName:  fyne.KeyC,
-				Modifier: fyne.KeyModifierControl,
+				KeyName:  granio.KeyC,
+				Modifier: granio.KeyModifierControl,
 			},
 			want: "CustomDesktop:Control+C",
 		},
 		{
 			name: "Ctrl+Alt+Esc",
 			fields: fields{
-				KeyName:  fyne.KeyEscape,
-				Modifier: fyne.KeyModifierControl + fyne.KeyModifierAlt,
+				KeyName:  granio.KeyEscape,
+				Modifier: granio.KeyModifierControl + granio.KeyModifierAlt,
 			},
 			want: "CustomDesktop:Control+Alt+Escape",
 		},
 		{
 			name: "Esc",
 			fields: fields{
-				KeyName: fyne.KeyEscape,
+				KeyName: granio.KeyEscape,
 			},
 			want: "CustomDesktop:Escape",
 		},
@@ -57,7 +57,7 @@ func TestCustomShortcut_Shortcut(t *testing.T) {
 func Test_modifierToString(t *testing.T) {
 	tests := []struct {
 		name string
-		mods fyne.KeyModifier
+		mods granio.KeyModifier
 		want string
 	}{
 		{
@@ -67,12 +67,12 @@ func Test_modifierToString(t *testing.T) {
 		},
 		{
 			name: "Ctrl",
-			mods: fyne.KeyModifierControl,
+			mods: granio.KeyModifierControl,
 			want: "Control+",
 		},
 		{
 			name: "Shift+Ctrl",
-			mods: fyne.KeyModifierShift + fyne.KeyModifierControl,
+			mods: granio.KeyModifierShift + granio.KeyModifierControl,
 			want: "Shift+Control+",
 		},
 	}

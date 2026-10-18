@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -35,7 +35,7 @@ func TestCircle_Resize(t *testing.T) {
 	assert.True(t, start.Height == 0)
 	assert.True(t, start.Width == 0)
 
-	circle.Resize(fyne.NewSize(targetWidth, targetHeight))
+	circle.Resize(granio.NewSize(targetWidth, targetHeight))
 	target := circle.Size()
 	assert.True(t, target.Height == targetHeight)
 	assert.True(t, target.Width == targetWidth)
@@ -43,12 +43,12 @@ func TestCircle_Resize(t *testing.T) {
 
 func TestCircle_Move(t *testing.T) {
 	circle := canvas.NewCircle(color.White)
-	circle.Resize(fyne.NewSize(50, 50))
+	circle.Resize(granio.NewSize(50, 50))
 
-	start := fyne.Position{X: 0, Y: 0}
+	start := granio.Position{X: 0, Y: 0}
 	assert.Equal(t, circle.Position(), start)
 
-	target := fyne.Position{X: 10, Y: 75}
+	target := granio.Position{X: 10, Y: 75}
 	circle.Move(target)
 	assert.Equal(t, circle.Position(), target)
 }
@@ -60,20 +60,20 @@ func TestCircle_shadow(t *testing.T) {
 		StrokeWidth: 2.0,
 		Shadow: canvas.Shadow{
 			Color:      color.White,
-			Offset:     fyne.NewPos(8, 5),
+			Offset:     granio.NewPos(8, 5),
 			BlurRadius: 3,
 			Variant:    canvas.DropShadow,
 		},
 	}
 
-	circle.Resize(fyne.NewSize(50, 50))
+	circle.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "circle_shadow.xml", circle)
 
 	c := software.NewCanvas()
 	c.SetContent(circle)
-	c.Resize(fyne.NewSize(170, 170))
-	circle.Resize(fyne.NewSize(150, 150))
-	circle.Move(fyne.NewPos(6, 6))
+	c.Resize(granio.NewSize(170, 170))
+	circle.Resize(granio.NewSize(150, 150))
+	circle.Move(granio.NewPos(6, 6))
 	test.AssertRendersToImage(t, "circle_stroke_shadow.png", c)
 
 	circle.StrokeWidth = 0

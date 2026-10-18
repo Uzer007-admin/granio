@@ -3,11 +3,11 @@ package canvas
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Rectangle)(nil)
+var _ granio.CanvasObject = (*Rectangle)(nil)
 
 // Rectangle describes a colored rectangle primitive in a Fyne canvas
 type Rectangle struct {
@@ -65,7 +65,7 @@ func (r *Rectangle) Hide() {
 }
 
 // Move the rectangle to a new position, relative to its parent / canvas
-func (r *Rectangle) Move(pos fyne.Position) {
+func (r *Rectangle) Move(pos granio.Position) {
 	if r.Position() == pos {
 		return
 	}
@@ -83,7 +83,7 @@ func (r *Rectangle) Refresh() {
 // Resize on a rectangle updates the new size of this object.
 // If it has a stroke width this will cause it to Refresh.
 // If Aspect is non-zero it may cause the rectangle to be smaller than the requested size.
-func (r *Rectangle) Resize(s fyne.Size) {
+func (r *Rectangle) Resize(s granio.Size) {
 	if s == r.Size() {
 		return
 	}

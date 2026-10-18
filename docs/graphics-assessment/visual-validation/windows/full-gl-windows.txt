@@ -1,0 +1,20 @@
+Go: go1.27.1-X:cgocheck2 GLFW: 3.5.1 Win32 WGL Null EGL OSMesa MinGW-w64
+OpenGL: 4.6.0 NVIDIA 616.92 renderer: NVIDIA GeForce RTX 4080 SUPER/PCIe/SSE2
+First GL Init: 9.4364ms
+Init via GLFW: 10.4302ms lookups: 2848
+Repeated GL Init: 7357.0 us/op, 0.0 Go allocs/op
+Framebuffer: [0 255 0 255]
+Strs without terminators: "A" "B"
+sample GetError: 626.3 ns/op, 0.000 allocs/op
+sample GetError: 624.3 ns/op, 0.000 allocs/op
+sample GetError: 624.2 ns/op, 0.000 allocs/op
+sample ClearColor: 47.2 ns/op, 0.000 allocs/op
+sample ClearColor: 42.2 ns/op, 0.000 allocs/op
+sample ClearColor: 42.2 ns/op, 0.000 allocs/op
+sample SlicePtr(slice): 0.0 ns/op, 0.000 allocs/op
+sample SlicePtr(slice): 2.5 ns/op, 0.000 allocs/op
+sample SlicePtr(slice): 2.5 ns/op, 0.000 allocs/op
+sample Ptr(slice): 162.2 ns/op, 2.000 allocs/op
+sample Ptr(slice): 187.2 ns/op, 2.000 allocs/op
+sample Ptr(slice): 146.3 ns/op, 2.000 allocs/op
+Synchronous debug callback messages: 1

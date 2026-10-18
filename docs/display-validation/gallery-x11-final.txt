@@ -1,0 +1,6 @@
+dbus-daemon[2467086]: [session uid=0 pid=2467086] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=0 pid=2467087 comm="/tmp/fyne-display.sjARHDVs/fyne-gallery -fps 360 -")
+dbus-daemon[2467086]: [session uid=0 pid=2467086] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2467121]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2467087 comm="/tmp/fyne-display.sjARHDVs/fyne-gallery -fps 360 -")
+dbus-daemon[2467121]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+gallery capture=(0,0)-(1060,760) text=84 table=10000x3

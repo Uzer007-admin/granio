@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -35,12 +35,12 @@ func TestRectangle_Radius(t *testing.T) {
 		CornerRadius: 12,
 	}
 
-	rect.Resize(fyne.NewSize(50, 50))
+	rect.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "rounded_rect.xml", rect)
 
 	c := software.NewCanvas()
 	c.SetContent(rect)
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 	test.AssertRendersToImage(t, "rounded_rect_stroke.png", c)
 
 	rect.StrokeWidth = 0
@@ -62,12 +62,12 @@ func TestRectangle_PerCornerRadius(t *testing.T) {
 		BottomRightCornerRadius: 20,
 	}
 
-	rect.Resize(fyne.NewSize(50, 50))
+	rect.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "rounded_per_corner_rect.xml", rect)
 
 	c := software.NewCanvas()
 	c.SetContent(rect)
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 	test.AssertRendersToImage(t, "rounded_per_corner_rect_stroke.png", c)
 
 	rect.StrokeWidth = 0
@@ -88,12 +88,12 @@ func TestRectangle_RadiusMaximum(t *testing.T) {
 		CornerRadius: canvas.RadiusMaximum,
 	}
 
-	rect.Resize(fyne.NewSize(80, 50))
+	rect.Resize(granio.NewSize(80, 50))
 	test.AssertObjectRendersToMarkup(t, "maximum_rounded_rect.xml", rect)
 
 	c := software.NewCanvas()
 	c.SetContent(rect)
-	c.Resize(fyne.NewSize(90, 60))
+	c.Resize(granio.NewSize(90, 60))
 	test.AssertRendersToImage(t, "maximum_rounded_rect_stroke.png", c)
 
 	rect.StrokeWidth = 0
@@ -121,20 +121,20 @@ func TestRectangle_shadow(t *testing.T) {
 		CornerRadius: 12,
 		Shadow: canvas.Shadow{
 			Color:      color.White,
-			Offset:     fyne.NewPos(-10, -5),
+			Offset:     granio.NewPos(-10, -5),
 			BlurRadius: 3,
 			Variant:    canvas.BoxShadow,
 		},
 	}
 
-	rect.Resize(fyne.NewSize(50, 50))
+	rect.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "rounded_rect_shadow.xml", rect)
 
 	c := software.NewCanvas()
 	c.SetContent(rect)
-	c.Resize(fyne.NewSize(170, 170))
-	rect.Resize(fyne.NewSize(150, 150))
-	rect.Move(fyne.NewPos(16, 16))
+	c.Resize(granio.NewSize(170, 170))
+	rect.Resize(granio.NewSize(150, 150))
+	rect.Move(granio.NewPos(16, 16))
 	test.AssertRendersToImage(t, "rounded_rect_stroke_shadow.png", c)
 
 	rect.StrokeWidth = 0

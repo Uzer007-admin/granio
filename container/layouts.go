@@ -1,9 +1,9 @@
-package container // import "fyne.io/fyne/v2/container"
+package container // import "github.com/Uzer007-admin/granio/v2/container"
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/layout"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/layout"
 )
 
 // NewAdaptiveGrid creates a new container with the specified objects and using the grid layout.
@@ -11,7 +11,7 @@ import (
 // it will specify the rows. On mobile this will dynamically refresh when device is rotated.
 //
 // Since: 1.4
-func NewAdaptiveGrid(rowcols int, objects ...fyne.CanvasObject) *fyne.Container {
+func NewAdaptiveGrid(rowcols int, objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewAdaptiveGridLayout(rowcols), objects...)
 }
 
@@ -23,7 +23,7 @@ func NewAdaptiveGrid(rowcols int, objects ...fyne.CanvasObject) *fyne.Container 
 // Parameters 6 onwards will be stacked over the middle content in the specified order as a Stack container.
 //
 // Since: 1.4
-func NewBorder(top, bottom, left, right fyne.CanvasObject, objects ...fyne.CanvasObject) *fyne.Container {
+func NewBorder(top, bottom, left, right granio.CanvasObject, objects ...granio.CanvasObject) *granio.Container {
 	all := objects
 	if top != nil {
 		all = append(all, top)
@@ -48,7 +48,7 @@ func NewBorder(top, bottom, left, right fyne.CanvasObject, objects ...fyne.Canva
 // NewCenter creates a new container with the specified objects centered in the available space.
 //
 // Since: 1.4
-func NewCenter(objects ...fyne.CanvasObject) *fyne.Container {
+func NewCenter(objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewCenterLayout(), objects...)
 }
 
@@ -56,7 +56,7 @@ func NewCenter(objects ...fyne.CanvasObject) *fyne.Container {
 // a specified number of columns. The number of rows will depend on how many children are in the container.
 //
 // Since: 1.4
-func NewGridWithColumns(cols int, objects ...fyne.CanvasObject) *fyne.Container {
+func NewGridWithColumns(cols int, objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewGridLayoutWithColumns(cols), objects...)
 }
 
@@ -64,7 +64,7 @@ func NewGridWithColumns(cols int, objects ...fyne.CanvasObject) *fyne.Container 
 // a specified number of rows. The number of columns will depend on how many children are in the container.
 //
 // Since: 1.4
-func NewGridWithRows(rows int, objects ...fyne.CanvasObject) *fyne.Container {
+func NewGridWithRows(rows int, objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewGridLayoutWithRows(rows), objects...)
 }
 
@@ -73,7 +73,7 @@ func NewGridWithRows(rows int, objects ...fyne.CanvasObject) *fyne.Container {
 // new row if the elements don't fit.
 //
 // Since: 1.4
-func NewGridWrap(size fyne.Size, objects ...fyne.CanvasObject) *fyne.Container {
+func NewGridWrap(size granio.Size, objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewGridWrapLayout(size), objects...)
 }
 
@@ -83,7 +83,7 @@ func NewGridWrap(size fyne.Size, objects ...fyne.CanvasObject) *fyne.Container {
 // to be larger then their horizontal MinSize.
 //
 // Since: 1.4
-func NewHBox(objects ...fyne.CanvasObject) *fyne.Container {
+func NewHBox(objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewHBoxLayout(), objects...)
 }
 
@@ -92,14 +92,14 @@ func NewHBox(objects ...fyne.CanvasObject) *fyne.Container {
 // Since: 1.4
 //
 // Deprecated: Use container.NewStack() instead.
-func NewMax(objects ...fyne.CanvasObject) *fyne.Container {
+func NewMax(objects ...granio.CanvasObject) *granio.Container {
 	return NewStack(objects...)
 }
 
 // NewPadded creates a new container with the specified objects inset by standard padding size.
 //
 // Since: 1.4
-func NewPadded(objects ...fyne.CanvasObject) *fyne.Container {
+func NewPadded(objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewPaddedLayout(), objects...)
 }
 
@@ -109,7 +109,7 @@ func NewPadded(objects ...fyne.CanvasObject) *fyne.Container {
 // fill the available space even without a Stack.
 //
 // Since: 2.4
-func NewStack(objects ...fyne.CanvasObject) *fyne.Container {
+func NewStack(objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewStackLayout(), objects...)
 }
 
@@ -119,6 +119,6 @@ func NewStack(objects ...fyne.CanvasObject) *fyne.Container {
 // to be larger then their vertical MinSize.
 //
 // Since: 1.4
-func NewVBox(objects ...fyne.CanvasObject) *fyne.Container {
+func NewVBox(objects ...granio.CanvasObject) *granio.Container {
 	return New(layout.NewVBoxLayout(), objects...)
 }

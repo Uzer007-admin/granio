@@ -1,6 +1,6 @@
 package test
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 type clipboard struct {
 	content string
@@ -15,6 +15,6 @@ func (c *clipboard) SetContent(content string) {
 }
 
 // NewClipboard returns a single use in-memory clipboard used for testing
-func NewClipboard() fyne.Clipboard {
+func NewClipboard() granio.Clipboard {
 	return &clipboard{}
 }

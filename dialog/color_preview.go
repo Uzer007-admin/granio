@@ -3,11 +3,11 @@ package dialog
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
-	internalwidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	internalwidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // colorPreview displays a 2 part rectangle showing the current and previous selected colours
@@ -25,12 +25,12 @@ func newColorPreview(previousColor color.Color) *colorPreview {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer.
-func (p *colorPreview) CreateRenderer() fyne.WidgetRenderer {
+func (p *colorPreview) CreateRenderer() granio.WidgetRenderer {
 	oldC := canvas.NewRectangle(p.previous)
 	newC := canvas.NewRectangle(p.current)
 	background := newCheckeredBackground(false)
 	return &colorPreviewRenderer{
-		BaseRenderer: internalwidget.NewBaseRenderer([]fyne.CanvasObject{background, oldC, newC}),
+		BaseRenderer: internalwidget.NewBaseRenderer([]granio.CanvasObject{background, oldC, newC}),
 		preview:      p,
 		background:   background,
 		old:          oldC,
@@ -43,7 +43,7 @@ func (p *colorPreview) SetColor(c color.Color) {
 	p.Refresh()
 }
 
-func (p *colorPreview) MinSize() fyne.Size {
+func (p *colorPreview) MinSize() granio.Size {
 	p.ExtendBaseWidget(p)
 	return p.BaseWidget.MinSize()
 }
@@ -55,18 +55,18 @@ type colorPreviewRenderer struct {
 	old, new   *canvas.Rectangle
 }
 
-func (r *colorPreviewRenderer) Layout(size fyne.Size) {
-	s := fyne.NewSize(size.Width/2, size.Height)
+func (r *colorPreviewRenderer) Layout(size granio.Size) {
+	s := granio.NewSize(size.Width/2, size.Height)
 	r.background.Resize(size)
 	r.old.Resize(s)
 	r.new.Resize(s)
-	r.new.Move(fyne.NewPos(s.Width, 0))
+	r.new.Move(granio.NewPos(s.Width, 0))
 }
 
-func (r *colorPreviewRenderer) MinSize() fyne.Size {
+func (r *colorPreviewRenderer) MinSize() granio.Size {
 	s := r.old.MinSize()
 	s.Width *= 2
-	return internal.MaxSizes(s, fyne.NewSize(16, 8)) //revive:disable-line:add-constant
+	return internal.MaxSizes(s, granio.NewSize(16, 8)) //revive:disable-line:add-constant
 }
 
 func (r *colorPreviewRenderer) Refresh() {

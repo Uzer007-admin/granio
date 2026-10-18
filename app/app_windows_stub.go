@@ -5,10 +5,10 @@ package app
 import (
 	"log"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func NewWithID(_ string) fyne.App {
+func NewWithID(_ string) granio.App {
 	log.Fatal("Cannot launch the mobile simulator mode on Windows")
 	return nil
 }

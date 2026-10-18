@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestBindPreference_DataRace(t *testing.T) {
@@ -23,7 +23,7 @@ func TestBindPreference_DataRace(t *testing.T) {
 	for i := 0; i < n; i++ {
 		wg.Add(1)
 		index := i
-		fyne.Do(func() {
+		granio.Do(func() {
 			bind := BindPreferenceInt(key, p)
 			binds[index] = bind
 			wg.Done()

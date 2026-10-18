@@ -3,14 +3,14 @@ package widget
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/internal/svg"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/internal/svg"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // ButtonAlign represents the horizontal alignment of a button.
@@ -46,15 +46,15 @@ const (
 )
 
 var (
-	_ fyne.Focusable  = (*Button)(nil)
-	_ fyne.Accessible = (*Button)(nil)
+	_ granio.Focusable  = (*Button)(nil)
+	_ granio.Accessible = (*Button)(nil)
 )
 
 // Button widget has a text label and triggers an event func when clicked
 type Button struct {
 	DisableableWidget
 	Text string
-	Icon fyne.Resource
+	Icon granio.Resource
 	// Specify how prominent the button should be, High will highlight the button and Low will remove some decoration.
 	//
 	// Since: 1.4
@@ -62,11 +62,16 @@ type Button struct {
 	Alignment     ButtonAlign
 	IconPlacement ButtonIconPlacement
 
-	OnTapped func() `json:"-"`
+	OnTapped       func() `json:"-"`
+	AccessibleName string
 
 	hovered, focused bool
-	tapAnim          *fyne.Animation
+	tapAnim          *granio.Animation
 	isAnimating      bool
+	pressed          bool
+	stateAnimation   *granio.Animation
+	stateBackground  color.Color
+	stateTarget      color.Color
 }
 
 // NewButton creates a new button widget with the set label and tap handler
@@ -81,7 +86,7 @@ func NewButton(label string, tapped func()) *Button {
 }
 
 // NewButtonWithIcon creates a new button widget with the specified label, themed icon and tap handler
-func NewButtonWithIcon(label string, icon fyne.Resource, tapped func()) *Button {
+func NewButtonWithIcon(label string, icon granio.Resource, tapped func()) *Button {
 	button := &Button{
 		Text:     label,
 		Icon:     icon,
@@ -96,37 +101,43 @@ func NewButtonWithIcon(label string, icon fyne.Resource, tapped func()) *Button 
 //
 // Since: 2.8
 func (b *Button) AccessibilityLabel() string {
+	if b.AccessibleName != "" {
+		return b.AccessibleName
+	}
 	if b.Text != "" {
 		return b.Text
 	}
 
-	return b.Icon.Name()
+	if b.Icon != nil {
+		return b.Icon.Name()
+	}
+	return ""
 }
 
-// AccessibilityRole for a button is fyne.AccessibleRoleButton.
+// AccessibilityRole for a button is granio.AccessibleRoleButton.
 //
 // Since: 2.8
-func (*Button) AccessibilityRole() fyne.AccessibleRole {
-	return fyne.AccessibleRoleButton
+func (*Button) AccessibilityRole() granio.AccessibleRole {
+	return granio.AccessibleRoleButton
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (b *Button) CreateRenderer() fyne.WidgetRenderer {
+func (b *Button) CreateRenderer() granio.WidgetRenderer {
 	b.ExtendBaseWidget(b)
 	th := b.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	seg := &TextSegment{Text: b.Text, Style: RichTextStyleStrong}
-	seg.Style.Alignment = fyne.TextAlignCenter
+	seg.Style.Alignment = granio.TextAlignCenter
 	text := NewRichText(seg)
-	text.inset = fyne.NewSquareSize(th.Size(theme.SizeNameInnerPadding))
+	text.inset = granio.NewSquareSize(th.Size(theme.SizeNameInnerPadding))
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameButton, v))
 	background.CornerRadius = th.Size(theme.SizeNameButtonRadius)
 	tapBG := canvas.NewRectangle(color.Transparent)
 	b.tapAnim = newButtonTapAnimation(tapBG, b, th)
-	b.tapAnim.Curve = fyne.AnimationEaseOut
-	objects := []fyne.CanvasObject{
+	b.tapAnim.Curve = granio.AnimationEaseOut
+	objects := []granio.CanvasObject{
 		background,
 		tapBG,
 		text,
@@ -162,7 +173,7 @@ func (b *Button) FocusLost() {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (b *Button) MinSize() fyne.Size {
+func (b *Button) MinSize() granio.Size {
 	b.ExtendBaseWidget(b)
 	return b.BaseWidget.MinSize()
 }
@@ -180,11 +191,25 @@ func (*Button) MouseMoved(*desktop.MouseEvent) {
 // MouseOut is called when a desktop pointer exits the widget
 func (b *Button) MouseOut() {
 	b.hovered = false
+	b.pressed = false
 	b.Refresh()
 }
 
+func (b *Button) MouseDown(event *desktop.MouseEvent) {
+	if event.Button == desktop.MouseButtonPrimary && !b.Disabled() {
+		b.pressed = true
+		b.Refresh()
+	}
+}
+func (b *Button) MouseUp(event *desktop.MouseEvent) {
+	if event.Button == desktop.MouseButtonPrimary {
+		b.pressed = false
+		b.Refresh()
+	}
+}
+
 // SetIcon updates the icon on a label - pass nil to hide an icon
-func (b *Button) SetIcon(icon fyne.Resource) {
+func (b *Button) SetIcon(icon granio.Resource) {
 	b.Icon = icon
 
 	b.Refresh()
@@ -198,9 +223,9 @@ func (b *Button) SetText(text string) {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any tap handler
-func (b *Button) Tapped(*fyne.PointEvent) {
+func (b *Button) Tapped(*granio.PointEvent) {
 	impl := b.super()
-	if c := fyne.CurrentApp().Driver().CanvasForObject(impl); c != nil {
+	if c := granio.CurrentApp().Driver().CanvasForObject(impl); c != nil {
 		c.Focus(nil) // the focus manager won't get this Tap and we are not focusable
 	}
 
@@ -220,8 +245,8 @@ func (*Button) TypedRune(rune) {
 }
 
 // TypedKey is a hook called by the input handling logic on key events if this object is focused.
-func (b *Button) TypedKey(ev *fyne.KeyEvent) {
-	if ev.Name == fyne.KeySpace {
+func (b *Button) TypedKey(ev *granio.KeyEvent) {
+	if ev.Name == granio.KeySpace {
 		b.Tapped(nil)
 	}
 }
@@ -233,7 +258,7 @@ func (b *Button) tapAnimation() {
 	b.tapAnim.Stop()
 	b.isAnimating = false
 
-	if fyne.CurrentApp().Settings().ShowAnimations() {
+	if granio.CurrentApp().Settings().ShowAnimations() {
 		b.isAnimating = true
 		b.tapAnim.Start()
 	}
@@ -247,11 +272,11 @@ type buttonRenderer struct {
 	background *canvas.Rectangle
 	tapBG      *canvas.Rectangle
 	button     *Button
-	layout     fyne.Layout
+	layout     granio.Layout
 }
 
 // Layout the components of the button widget
-func (r *buttonRenderer) Layout(size fyne.Size) {
+func (r *buttonRenderer) Layout(size granio.Size) {
 	r.background.Resize(size)
 	if !r.button.isAnimating {
 		// if we are animating let the animation control the tapBG size
@@ -266,13 +291,13 @@ func (r *buttonRenderer) Layout(size fyne.Size) {
 		// Nothing to layout
 		return
 	}
-	iconSize := fyne.NewSquareSize(th.Size(theme.SizeNameInlineIcon))
+	iconSize := granio.NewSquareSize(th.Size(theme.SizeNameInlineIcon))
 	labelSize := r.label.MinSize()
 
 	if hasLabel {
 		if hasIcon {
 			// Both
-			var objects []fyne.CanvasObject
+			var objects []granio.CanvasObject
 			if r.button.IconPlacement == ButtonIconLeadingText {
 				objects = append(objects, r.icon, r.label)
 			} else {
@@ -300,11 +325,11 @@ func (r *buttonRenderer) Layout(size fyne.Size) {
 // MinSize calculates the minimum size of a button.
 // This is based on the contained text, any icon that is set and a standard
 // amount of padding added.
-func (r *buttonRenderer) MinSize() (size fyne.Size) {
+func (r *buttonRenderer) MinSize() (size granio.Size) {
 	th := r.button.Theme()
 	hasIcon := r.icon != nil
 	hasLabel := r.label.Segments[0].(*TextSegment).Text != ""
-	iconSize := fyne.NewSquareSize(th.Size(theme.SizeNameInlineIcon))
+	iconSize := granio.NewSquareSize(th.Size(theme.SizeNameInlineIcon))
 	labelSize := r.label.MinSize()
 	if hasLabel {
 		size.Width = labelSize.Width
@@ -317,12 +342,13 @@ func (r *buttonRenderer) MinSize() (size fyne.Size) {
 	}
 	size.Height = max(labelSize.Height, iconSize.Height)
 	size = size.Add(r.padding(th))
+	size = minimumComponentHeight(size, th, granio.ComponentButton)
 	return size
 }
 
 func (r *buttonRenderer) Refresh() {
 	th := r.button.Theme()
-	r.label.inset = fyne.NewSquareSize(th.Size(theme.SizeNameInnerPadding))
+	r.label.inset = granio.NewSquareSize(th.Size(theme.SizeNameInnerPadding))
 
 	r.label.Segments[0].(*TextSegment).Text = r.button.Text
 	r.updateIconAndText()
@@ -338,8 +364,9 @@ func (r *buttonRenderer) Refresh() {
 func (r *buttonRenderer) applyTheme() {
 	th := r.button.Theme()
 	fgColorName, bgColorName, bgBlendName := r.buttonColorNames()
+	_, systemColors := activeSystemColors(th)
 	if bg := r.background; bg != nil {
-		v := fyne.CurrentApp().Settings().ThemeVariant()
+		v := granio.CurrentApp().Settings().ThemeVariant()
 		bgColor := color.Color(color.Transparent)
 		if bgColorName != "" {
 			bgColor = th.Color(bgColorName, v)
@@ -347,17 +374,48 @@ func (r *buttonRenderer) applyTheme() {
 		if bgBlendName != "" {
 			bgColor = blendColor(bgColor, th.Color(bgBlendName, v))
 		}
-		bg.FillColor = bgColor
+		r.updateStateBackground(bgColor, th)
+		if colors, ok := activeSystemColors(th); ok {
+			bg.StrokeColor, bg.StrokeWidth = colors.WindowText, 1
+			if r.button.focused && !r.button.Disabled() {
+				bg.StrokeColor, bg.StrokeWidth = colors.Highlight, 2
+			}
+		} else {
+			bg.StrokeColor, bg.StrokeWidth = nil, 0
+		}
+		state := granio.VisualState(0)
+		if r.button.focused {
+			state |= granio.VisualFocused
+		}
+		if r.button.hovered {
+			state |= granio.VisualHovered
+		}
+		if r.button.pressed {
+			state |= granio.VisualPressed
+		}
+		if r.button.Disabled() {
+			state |= granio.VisualDisabled
+		}
+		if style, modern := componentStyle(th, granio.ComponentButton, state); modern {
+			bg.StrokeColor, bg.StrokeWidth = style.Border, style.BorderWidth
+			if style.FocusWidth > 0 {
+				bg.StrokeColor, bg.StrokeWidth = style.Focus, style.FocusWidth
+			}
+		}
 		bg.CornerRadius = th.Size(theme.SizeNameButtonRadius)
 		bg.Refresh()
 	}
 
 	r.label.Segments[0].(*TextSegment).Style.ColorName = fgColorName
+	if systemColors && fgColorName == theme.ColorNameForeground && bgColorName == theme.ColorNameButton {
+		r.label.Segments[0].(*TextSegment).Style.ColorName = theme.ColorNameForegroundOnButton
+		fgColorName = theme.ColorNameForegroundOnButton
+	}
 	r.label.Refresh()
 	if r.icon != nil && r.icon.Resource != nil {
 		icon := r.icon.Resource
 		if r.button.Importance != MediumImportance && r.button.Importance != LowImportance {
-			if thRes, ok := icon.(fyne.ThemedResource); ok {
+			if thRes, ok := icon.(granio.ThemedResource); ok {
 				if thRes.ThemeColorName() != fgColorName {
 					icon = theme.NewColoredResource(icon, fgColorName)
 				}
@@ -368,7 +426,7 @@ func (r *buttonRenderer) applyTheme() {
 	}
 }
 
-func (r *buttonRenderer) buttonColorNames() (foreground, background, backgroundBlend fyne.ThemeColorName) {
+func (r *buttonRenderer) buttonColorNames() (foreground, background, backgroundBlend granio.ThemeColorName) {
 	foreground = theme.ColorNameForeground
 	b := r.button
 	if b.Disabled() {
@@ -377,9 +435,14 @@ func (r *buttonRenderer) buttonColorNames() (foreground, background, backgroundB
 			background = theme.ColorNameDisabledButton
 		}
 	} else if b.focused {
-		backgroundBlend = theme.ColorNameFocus
+		if _, modern := b.Theme().(granio.ComponentTheme); !modern {
+			backgroundBlend = theme.ColorNameFocus
+		}
 	} else if b.hovered {
 		backgroundBlend = theme.ColorNameHover
+	}
+	if b.pressed && !b.Disabled() {
+		backgroundBlend = theme.ColorNamePressed
 	}
 	if background == "" {
 		switch b.Importance {
@@ -406,8 +469,8 @@ func (r *buttonRenderer) buttonColorNames() (foreground, background, backgroundB
 	return foreground, background, backgroundBlend
 }
 
-func (*buttonRenderer) padding(th fyne.Theme) fyne.Size {
-	return fyne.NewSquareSize(th.Size(theme.SizeNameInnerPadding) * 2)
+func (*buttonRenderer) padding(th granio.Theme) granio.Size {
+	return granio.NewSquareSize(th.Size(theme.SizeNameInnerPadding) * 2)
 }
 
 // must be called with r.button.propertyLock RLocked
@@ -417,7 +480,7 @@ func (r *buttonRenderer) updateIconAndText() {
 		if r.icon == nil {
 			r.icon = canvas.NewImageFromResource(icon)
 			r.icon.FillMode = canvas.ImageFillContain
-			r.SetObjects([]fyne.CanvasObject{r.background, r.tapBG, r.label, r.icon})
+			r.SetObjects([]granio.CanvasObject{r.background, r.tapBG, r.label, r.icon})
 		}
 		// TODO support disabling bitmap resource not just SVG
 		if r.button.Disabled() && svg.IsResourceSVG(icon) {
@@ -437,7 +500,7 @@ func (r *buttonRenderer) updateIconAndText() {
 	r.label.Refresh()
 }
 
-func alignedPosition(align ButtonAlign, padding, objectSize, layoutSize fyne.Size) (pos fyne.Position) {
+func alignedPosition(align ButtonAlign, padding, objectSize, layoutSize granio.Size) (pos granio.Position) {
 	pos.Y = (layoutSize.Height - objectSize.Height) / 2
 	switch align {
 	case ButtonAlignCenter:
@@ -466,13 +529,17 @@ func blendColor(under, over color.Color) color.Color {
 	}
 }
 
-func newButtonTapAnimation(bg *canvas.Rectangle, w fyne.Widget, th fyne.Theme) *fyne.Animation {
-	v := fyne.CurrentApp().Settings().ThemeVariant()
-	return fyne.NewAnimation(canvas.DurationStandard, func(done float32) {
+func newButtonTapAnimation(bg *canvas.Rectangle, w granio.Widget, th granio.Theme) *granio.Animation {
+	v := granio.CurrentApp().Settings().ThemeVariant()
+	duration := canvas.DurationStandard
+	if _, modern := th.(granio.MotionTheme); modern {
+		duration = theme.Motion(th, granio.MotionPressed).Duration
+	}
+	animation := granio.NewAnimation(duration, func(done float32) {
 		mid := w.Size().Width / 2
 		size := mid * done
-		bg.Resize(fyne.NewSize(size*2, w.Size().Height))
-		bg.Move(fyne.NewPos(mid-size, 0))
+		bg.Resize(granio.NewSize(size*2, w.Size().Height))
+		bg.Move(granio.NewPos(mid-size, 0))
 
 		r, g, b, a := col.ToNRGBA(th.Color(theme.ColorNamePressed, v))
 		fade := a - uint8(float32(a)*done)
@@ -488,4 +555,8 @@ func newButtonTapAnimation(bg *canvas.Rectangle, w fyne.Widget, th fyne.Theme) *
 			}
 		}
 	})
+	if _, modern := th.(granio.MotionTheme); modern {
+		animation.Object = w
+	}
+	return animation
 }

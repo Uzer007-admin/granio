@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 import "io"
 

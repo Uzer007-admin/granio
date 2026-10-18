@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestDummyApp(*testing.T) {
@@ -18,7 +18,7 @@ func TestDummyApp(*testing.T) {
 func TestCurrentApp(t *testing.T) {
 	app := NewWithID("io.fyne.test")
 
-	assert.Equal(t, app, fyne.CurrentApp())
+	assert.Equal(t, app, granio.CurrentApp())
 }
 
 func TestFyneApp_UniqueID(t *testing.T) {
@@ -36,14 +36,14 @@ func TestFyneApp_UniqueID(t *testing.T) {
 func TestFyneApp_SetIcon(t *testing.T) {
 	app := NewWithID("io.fyne.test")
 
-	metaIcon := &fyne.StaticResource{StaticName: "Metadata", StaticContent: []byte("?PNG...")}
-	SetMetadata(fyne.AppMetadata{
+	metaIcon := &granio.StaticResource{StaticName: "Metadata", StaticContent: []byte("?PNG...")}
+	SetMetadata(granio.AppMetadata{
 		Icon: metaIcon,
 	})
 
 	assert.Equal(t, metaIcon, app.Icon())
 
-	setIcon := &fyne.StaticResource{StaticName: "Test"}
+	setIcon := &granio.StaticResource{StaticName: "Test"}
 	app.SetIcon(setIcon)
 
 	assert.Equal(t, setIcon, app.Icon())

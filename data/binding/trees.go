@@ -2,9 +2,10 @@ package binding
 
 import (
 	"bytes"
+	"slices"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 // DataTreeRootID const is the value used as ID for the root of any tree binding.
@@ -252,29 +253,29 @@ func BindUntypedTree(ids *map[string][]string, v *map[string]any) ExternalTree[a
 	return BindTree(ids, v, func(a1, a2 any) bool { return a1 == a2 })
 }
 
-// URITree supports binding a tree of fyne.URI values.
+// URITree supports binding a tree of granio.URI values.
 //
 // Since: 2.4
-type URITree = Tree[fyne.URI]
+type URITree = Tree[granio.URI]
 
-// ExternalURITree supports binding a tree of fyne.URI values from an external variable.
+// ExternalURITree supports binding a tree of granio.URI values from an external variable.
 //
 // Since: 2.4
-type ExternalURITree = ExternalTree[fyne.URI]
+type ExternalURITree = ExternalTree[granio.URI]
 
-// NewURITree returns a bindable tree of fyne.URI values.
+// NewURITree returns a bindable tree of granio.URI values.
 //
 // Since: 2.4
-func NewURITree() Tree[fyne.URI] {
+func NewURITree() Tree[granio.URI] {
 	return NewTree(storage.EqualURI)
 }
 
-// BindURITree returns a bound tree of fyne.URI values, based on the contents of the passed values.
+// BindURITree returns a bound tree of granio.URI values, based on the contents of the passed values.
 // The ids map specifies how each item relates to its parent (with id ""), with the values being in the v map.
 // If your code changes the content of the maps this refers to you should call Reload() to inform the bindings.
 //
 // Since: 2.4
-func BindURITree(ids *map[string][]string, v *map[string]fyne.URI) ExternalTree[fyne.URI] {
+func BindURITree(ids *map[string][]string, v *map[string]granio.URI) ExternalTree[granio.URI] {
 	return BindTree(ids, v, storage.EqualURI)
 }
 
@@ -479,13 +480,14 @@ func (t *boundTree[T]) Reload() error {
 
 func (t *boundTree[T]) Set(ids map[string][]string, v map[string]T) error {
 	t.lock.Lock()
+	changed := !treeChildrenEqual(t.ids, ids)
 	t.ids = ids
 	*t.val = v
 
 	trigger, err := t.doReload()
 	t.lock.Unlock()
 
-	if trigger {
+	if trigger || changed {
 		t.trigger()
 	}
 
@@ -493,31 +495,48 @@ func (t *boundTree[T]) Set(ids map[string][]string, v map[string]T) error {
 }
 
 func (t *boundTree[T]) doReload() (fire bool, retErr error) {
-	updated := []string{}
+	parents := make(map[string]string, len(*t.val))
+	for parent, children := range t.ids {
+		for _, child := range children {
+			parents[child] = parent
+		}
+	}
 	for id := range *t.val {
 		if _, ok := t.items[id]; ok {
-			updated = append(updated, id)
 			continue
 		}
 
 		// append new
-		t.appendItem(bindTreeItem(t.val, id, t.updateExternal, t.comparator), id, parentIDFor(id, t.ids))
-		updated = append(updated, id)
+		if id == DataTreeRootID {
+			// The root can carry a value, but is not its own child. Registering it
+			// through appendItem adds a cycle to the hierarchy supplied to Set.
+			t.items[id] = bindTreeItem(t.val, id, t.updateExternal, t.comparator)
+		} else {
+			t.items[id] = bindTreeItem(t.val, id, t.updateExternal, t.comparator)
+			if _, present := parents[id]; !present {
+				t.ids[DataTreeRootID] = append(t.ids[DataTreeRootID], id)
+			}
+		}
 		fire = true
 	}
 
+	removed := make(map[string]bool)
 	for id := range t.items {
-		remove := true
-		for _, done := range updated {
-			if done == id {
-				remove = false
-				break
-			}
-		}
-
-		if remove { // remove item no longer present
+		if _, present := (*t.val)[id]; !present {
 			fire = true
-			t.deleteItem(id, parentIDFor(id, t.ids))
+			delete(t.items, id)
+			removed[id] = true
+		}
+	}
+	if len(removed) > 0 {
+		for parent, children := range t.ids {
+			filtered := make([]string, 0, len(children))
+			for _, child := range children {
+				if !removed[child] {
+					filtered = append(filtered, child)
+				}
+			}
+			t.ids[parent] = filtered
 		}
 	}
 
@@ -533,6 +552,19 @@ func (t *boundTree[T]) doReload() (fire bool, retErr error) {
 		}
 	}
 	return fire, retErr
+}
+
+func treeChildrenEqual(a, b map[string][]string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for parent, children := range a {
+		other, exists := b[parent]
+		if !exists || !slices.Equal(children, other) {
+			return false
+		}
+	}
+	return true
 }
 
 func (t *boundTree[T]) SetValue(id string, v T) error {

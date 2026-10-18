@@ -1,21 +1,31 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
 )
 
 // Base provides a helper that handles basic widget behaviours.
 type Base struct {
-	hidden   bool
-	position fyne.Position
-	size     fyne.Size
-	impl     fyne.Widget
+	hidden          bool
+	position        granio.Position
+	size            granio.Size
+	impl            granio.Widget
+	rendererCreated bool
+}
+
+// RestoreRendererLayout restores geometry when the renderer cache recreates a
+// renderer. Initial creation keeps the layout performed by CreateRenderer.
+func (w *Base) RestoreRendererLayout(renderer granio.WidgetRenderer) {
+	if w.rendererCreated {
+		renderer.Layout(w.Size())
+	}
+	w.rendererCreated = true
 }
 
 // ExtendBaseWidget is used by an extending widget to make use of BaseWidget functionality.
-func (w *Base) ExtendBaseWidget(wid fyne.Widget) {
+func (w *Base) ExtendBaseWidget(wid granio.Widget) {
 	impl := w.super()
 	if impl != nil {
 		return
@@ -25,13 +35,13 @@ func (w *Base) ExtendBaseWidget(wid fyne.Widget) {
 }
 
 // Size gets the current size of this widget.
-func (w *Base) Size() fyne.Size {
+func (w *Base) Size() granio.Size {
 	return w.size
 }
 
 // Resize sets a new size for a widget.
 // Note this should not be used if the widget is being managed by a Layout within a Container.
-func (w *Base) Resize(size fyne.Size) {
+func (w *Base) Resize(size granio.Size) {
 	if size == w.Size() {
 		return
 	}
@@ -46,13 +56,13 @@ func (w *Base) Resize(size fyne.Size) {
 }
 
 // Position gets the current position of this widget, relative to its parent.
-func (w *Base) Position() fyne.Position {
+func (w *Base) Position() granio.Position {
 	return w.position
 }
 
 // Move the widget to a new position, relative to its parent.
 // Note this should not be used if the widget is being managed by a Layout within a Container.
-func (w *Base) Move(pos fyne.Position) {
+func (w *Base) Move(pos granio.Position) {
 	if w.Position() == pos {
 		return
 	}
@@ -63,12 +73,12 @@ func (w *Base) Move(pos fyne.Position) {
 }
 
 // MinSize for the widget - it should never be resized below this value.
-func (w *Base) MinSize() fyne.Size {
+func (w *Base) MinSize() granio.Size {
 	impl := w.super()
 
 	r := cache.Renderer(impl)
 	if r == nil {
-		return fyne.NewSize(0, 0)
+		return granio.NewSize(0, 0)
 	}
 
 	return r.MinSize()
@@ -122,14 +132,14 @@ func (w *Base) Refresh() {
 
 // super will return the actual object that this represents.
 // If extended then this is the extending widget, otherwise it is nil.
-func (w *Base) super() fyne.Widget {
+func (w *Base) super() granio.Widget {
 	return w.impl
 }
 
 // Repaint instructs the containing canvas to redraw, even if nothing changed.
 // This method is a duplicate of what is in `canvas/canvas.go` to avoid a dependency loop or public API.
-func Repaint(obj fyne.CanvasObject) {
-	app := fyne.CurrentApp()
+func Repaint(obj granio.CanvasObject) {
+	app := granio.CurrentApp()
 	if app == nil || app.Driver() == nil {
 		return
 	}

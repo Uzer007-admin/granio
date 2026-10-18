@@ -4,15 +4,15 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/test"
 
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestRender(t *testing.T) {
@@ -51,7 +51,7 @@ func TestRenderCanvas(t *testing.T) {
 	c := software.NewCanvas()
 	c.SetContent(obj)
 
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		test.AssertImageMatches(t, "canvas_mobile.png", software.RenderCanvas(c, test.Theme()))
 	} else {
 		test.AssertImageMatches(t, "canvas.png", software.RenderCanvas(c, test.Theme()))

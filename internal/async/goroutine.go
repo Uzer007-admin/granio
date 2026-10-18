@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
 )
 
 var (
@@ -35,7 +35,7 @@ func EnsureNotMain(fn func()) {
 	}
 	PrintFyneDoWarning()
 
-	log.Println("*** Error in Fyne call thread, fyne.Do[AndWait] called from main goroutine ***")
+	log.Println("*** Error in Fyne call thread, granio.Do[AndWait] called from main goroutine ***")
 	log.Println("*** This error needs to be addressed as it will become a deadlock soon ***")
 	log.Println("*** The next major Fyne release will disable this safety by default! ***")
 
@@ -55,12 +55,12 @@ func EnsureMain(fn func()) {
 	}
 	PrintFyneDoWarning()
 
-	log.Println("*** Error in Fyne call thread, this should have been called in fyne.Do[AndWait] ***")
+	log.Println("*** Error in Fyne call thread, this should have been called in granio.Do[AndWait] ***")
 	log.Println("*** This error needs to be addressed as it could cause concurrent errors soon ***")
 	log.Println("*** The next major Fyne release will disable this safety by default! ***")
 
 	logStackTop(1)
-	fyne.DoAndWait(fn)
+	granio.DoAndWait(fn)
 }
 
 func logStackTop(skip int) {
@@ -102,7 +102,7 @@ func PrintFyneDoWarning() {
 	}
 
 	warnedNotMigrated = true
-	log.Println("*** This application has not been migrated to the fyne.Do threading model ***")
+	log.Println("*** This application has not been migrated to the granio.Do threading model ***")
 	log.Println("*** The next major Fyne release will remove this safety! ***")
 	log.Println("*** Read more at https://docs.fyne.io/started/goroutines ***")
 }

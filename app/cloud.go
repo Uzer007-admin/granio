@@ -1,8 +1,8 @@
 package app
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func (a *fyneApp) SetCloudProvider(p fyne.CloudProvider) {
+func (a *fyneApp) SetCloudProvider(p granio.CloudProvider) {
 	if p == nil {
 		a.cloud = nil
 		return
@@ -11,25 +11,25 @@ func (a *fyneApp) SetCloudProvider(p fyne.CloudProvider) {
 	a.transitionCloud(p)
 }
 
-func (a *fyneApp) transitionCloud(p fyne.CloudProvider) {
+func (a *fyneApp) transitionCloud(p granio.CloudProvider) {
 	if a.cloud != nil {
 		a.cloud.Cleanup(a)
 	}
 
 	err := p.Setup(a)
 	if err != nil {
-		fyne.LogError("Failed to set up cloud provider "+p.ProviderName(), err)
+		granio.LogError("Failed to set up cloud provider "+p.ProviderName(), err)
 		return
 	}
 	a.cloud = p
 
 	listeners := a.prefs.ChangeListeners()
-	if pp, ok := p.(fyne.CloudProviderPreferences); ok {
+	if pp, ok := p.(granio.CloudProviderPreferences); ok {
 		a.prefs = pp.CloudPreferences(a)
 	} else {
 		a.prefs = a.newDefaultPreferences()
 	}
-	if cloud, ok := p.(fyne.CloudProviderStorage); ok {
+	if cloud, ok := p.(granio.CloudProviderStorage); ok {
 		a.storage = cloud.CloudStorage(a)
 	} else {
 		store := &store{a: a}

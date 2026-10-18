@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,12 +28,12 @@ func TestSquare_Radius(t *testing.T) {
 		CornerRadius: 12,
 	}
 
-	rect.Resize(fyne.NewSize(50, 50))
+	rect.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "rounded_square.xml", rect)
 
 	c := software.NewCanvas()
 	c.SetContent(rect)
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 	test.AssertRendersToImage(t, "rounded_rect_stroke.png", c)
 
 	rect.StrokeWidth = 0
@@ -51,7 +51,7 @@ func TestSquare_RadiusMaximum(t *testing.T) {
 
 	c := software.NewCanvas()
 	c.SetContent(rect)
-	c.Resize(fyne.NewSize(90, 60))
+	c.Resize(granio.NewSize(90, 60))
 	test.AssertRendersToImage(t, "maximum_rounded_square_stroke.png", c)
 
 	rect.StrokeWidth = 0

@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/godbus/dbus/v5"
+	"github.com/Uzer007-admin/dbus/v5"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 var inhibitCookie uint32
@@ -18,7 +18,7 @@ var inhibitCookie uint32
 func setDisableScreenBlank(disable bool) {
 	conn, err := dbus.SessionBus() // shared connection, don't close
 	if err != nil {
-		fyne.LogError("Unable to connect to session D-Bus", err)
+		granio.LogError("Unable to connect to session D-Bus", err)
 		return
 	}
 
@@ -27,7 +27,7 @@ func setDisableScreenBlank(disable bool) {
 			obj := conn.Object("org.freedesktop.ScreenSaver", "/org/freedesktop/ScreenSaver")
 			call := obj.Call("org.freedesktop.ScreenSaver.UnInhibit", 0, inhibitCookie)
 			if call.Err != nil {
-				fyne.LogError("Failed to send message to bus", call.Err)
+				granio.LogError("Failed to send message to bus", call.Err)
 			}
 			inhibitCookie = 0
 		}
@@ -39,16 +39,16 @@ func setDisableScreenBlank(disable bool) {
 	}
 
 	obj := conn.Object("org.freedesktop.ScreenSaver", "/org/freedesktop/ScreenSaver")
-	call := obj.Call("org.freedesktop.ScreenSaver.Inhibit", 0, fyne.CurrentApp().Metadata().ID,
+	call := obj.Call("org.freedesktop.ScreenSaver.Inhibit", 0, granio.CurrentApp().Metadata().ID,
 		"App disabled screensaver")
 	if call.Err == nil {
 		var ok bool
 		callResult := call.Body[0]
 		if inhibitCookie, ok = callResult.(uint32); !ok {
-			fyne.LogError(fmt.Sprintf("Unexpected D-Bus call result: %#v", callResult), nil)
+			granio.LogError(fmt.Sprintf("Unexpected D-Bus call result: %#v", callResult), nil)
 		}
 	} else {
-		fyne.LogError("Failed to send message to bus", call.Err)
+		granio.LogError("Failed to send message to bus", call.Err)
 	}
 }
 

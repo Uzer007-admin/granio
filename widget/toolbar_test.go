@@ -3,9 +3,9 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -62,15 +62,15 @@ func TestToolbar_ItemPositioning(t *testing.T) {
 	}
 	toolbar.ExtendBaseWidget(toolbar)
 	toolbar.Refresh()
-	var items []fyne.CanvasObject
+	var items []granio.CanvasObject
 	for _, o := range test.LaidOutObjects(toolbar) {
 		if b, ok := o.(*Button); ok {
 			items = append(items, b)
 		}
 	}
 	if assert.Len(t, items, 2) {
-		assert.Equal(t, fyne.NewPos(0, 0), items[0].Position())
-		assert.Equal(t, fyne.NewPos(40, 0), items[1].Position())
+		assert.Equal(t, granio.NewPos(0, 0), items[0].Position())
+		assert.Equal(t, granio.NewPos(40, 0), items[1].Position())
 	}
 }
 
@@ -87,7 +87,7 @@ type toolbarLabel struct {
 	*Label
 }
 
-func (t *toolbarLabel) ToolbarObject() fyne.CanvasObject {
+func (t *toolbarLabel) ToolbarObject() granio.CanvasObject {
 	return t.Label
 }
 

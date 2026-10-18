@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Validatable is an interface for specifying if a widget is validatable.
 //

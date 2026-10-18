@@ -10,28 +10,28 @@ import (
 	"runtime"
 	"syscall"
 
-	"fyne.io/systray"
-	"github.com/go-gl/glfw/v3.4/glfw"
+	"github.com/Uzer007-admin/glfw/v3.5/glfw"
+	"github.com/Uzer007-admin/granio-systray"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/svg"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/svg"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const systrayIconSize = 64
 
 var (
-	systrayIcon    fyne.Resource
+	systrayIcon    granio.Resource
 	systrayRunning bool
 )
 
-func (d *gLDriver) CreateWindow(title string) (win fyne.Window) {
+func (d *gLDriver) CreateWindow(title string) (win granio.Window) {
 	async.EnsureMain(func() {
 		win = d.newWindow(title, true)
 	})
@@ -55,7 +55,7 @@ func (*gLDriver) HasSecondaryDisplay() bool {
 	return false // all the monitors had same origin, thus mirroring
 }
 
-func (d *gLDriver) SetSystemTrayMenu(m *fyne.Menu) {
+func (d *gLDriver) SetSystemTrayMenu(m *granio.Menu) {
 	if !systrayRunning {
 		systrayRunning = true
 		d.runSystray(m)
@@ -64,19 +64,19 @@ func (d *gLDriver) SetSystemTrayMenu(m *fyne.Menu) {
 	d.refreshSystray(m)
 }
 
-func (d *gLDriver) runSystray(m *fyne.Menu) {
+func (d *gLDriver) runSystray(m *granio.Menu) {
 	d.trayStart, d.trayStop = systray.RunWithExternalLoop(func() {
 		if systrayIcon != nil {
 			d.SetSystemTrayIcon(systrayIcon)
-		} else if fyne.CurrentApp().Icon() != nil {
-			d.SetSystemTrayIcon(fyne.CurrentApp().Icon())
+		} else if granio.CurrentApp().Icon() != nil {
+			d.SetSystemTrayIcon(granio.CurrentApp().Icon())
 		} else {
 			d.SetSystemTrayIcon(theme.BrokenImageIcon())
 		}
 
 		// Some XDG systray crash without a title (See #3678)
 		if runtime.GOOS == goos.Linux || goos.IsBSD(runtime.GOOS) {
-			app := fyne.CurrentApp()
+			app := granio.CurrentApp()
 			title := app.Metadata().Name
 			if title == "" {
 				title = app.UniqueID()
@@ -103,36 +103,36 @@ func (d *gLDriver) runSystray(m *fyne.Menu) {
 
 // systrayShortcutKeys maps the few key names that Fyne spells differently to the
 // platform neutral names that the systray package understands.
-var systrayShortcutKeys = map[fyne.KeyName]string{
-	fyne.KeyEnter:    "Enter",
-	fyne.KeyPageDown: "PageDown",
-	fyne.KeyPageUp:   "PageUp",
+var systrayShortcutKeys = map[granio.KeyName]string{
+	granio.KeyEnter:    "Enter",
+	granio.KeyPageDown: "PageDown",
+	granio.KeyPageUp:   "PageUp",
 }
 
-func systrayShortcutKey(key fyne.KeyName) string {
+func systrayShortcutKey(key granio.KeyName) string {
 	if name, ok := systrayShortcutKeys[key]; ok {
 		return name
 	}
 	return string(key)
 }
 
-func systrayModifiers(mod fyne.KeyModifier) (mods systray.KeyModifier) {
-	if mod&fyne.KeyModifierShift != 0 {
+func systrayModifiers(mod granio.KeyModifier) (mods systray.KeyModifier) {
+	if mod&granio.KeyModifierShift != 0 {
 		mods |= systray.KeyModifierShift
 	}
-	if mod&fyne.KeyModifierControl != 0 {
+	if mod&granio.KeyModifierControl != 0 {
 		mods |= systray.KeyModifierControl
 	}
-	if mod&fyne.KeyModifierAlt != 0 {
+	if mod&granio.KeyModifierAlt != 0 {
 		mods |= systray.KeyModifierAlt
 	}
-	if mod&fyne.KeyModifierSuper != 0 {
+	if mod&granio.KeyModifierSuper != 0 {
 		mods |= systray.KeyModifierSuper
 	}
 	return mods
 }
 
-func itemForMenuItem(i *fyne.MenuItem, parent *systray.MenuItem) *systray.MenuItem {
+func itemForMenuItem(i *granio.MenuItem, parent *systray.MenuItem) *systray.MenuItem {
 	if i.IsSeparator {
 		if parent != nil {
 			parent.AddSeparator()
@@ -159,7 +159,7 @@ func itemForMenuItem(i *fyne.MenuItem, parent *systray.MenuItem) *systray.MenuIt
 	if i.Disabled {
 		item.Disable()
 	}
-	if s, ok := i.Shortcut.(fyne.KeyboardShortcut); ok {
+	if s, ok := i.Shortcut.(granio.KeyboardShortcut); ok {
 		item.SetShortcut(systrayModifiers(s.Mod()), systrayShortcutKey(s.Key()))
 	}
 	if i.Icon != nil {
@@ -173,7 +173,7 @@ func itemForMenuItem(i *fyne.MenuItem, parent *systray.MenuItem) *systray.MenuIt
 			img := painter.PaintImage(canvas.NewImageFromResource(res), nil, systrayIconSize, systrayIconSize)
 			err := png.Encode(b, img)
 			if err != nil {
-				fyne.LogError("Failed to encode SVG icon for menu", err)
+				granio.LogError("Failed to encode SVG icon for menu", err)
 			} else {
 				data = b.Bytes()
 			}
@@ -181,7 +181,7 @@ func itemForMenuItem(i *fyne.MenuItem, parent *systray.MenuItem) *systray.MenuIt
 
 		img, err := toOSIcon(data)
 		if err != nil {
-			fyne.LogError("Failed to convert systray icon", err)
+			granio.LogError("Failed to convert systray icon", err)
 		} else {
 			if _, ok := i.Icon.(*theme.ThemedResource); ok {
 				item.SetTemplateIcon(img, img)
@@ -193,7 +193,7 @@ func itemForMenuItem(i *fyne.MenuItem, parent *systray.MenuItem) *systray.MenuIt
 	return item
 }
 
-func (d *gLDriver) refreshSystray(m *fyne.Menu) {
+func (d *gLDriver) refreshSystray(m *granio.Menu) {
 	d.systrayMenu = m
 
 	systray.ResetMenu()
@@ -202,7 +202,7 @@ func (d *gLDriver) refreshSystray(m *fyne.Menu) {
 	addMissingQuitForMenu(m, d)
 }
 
-func (d *gLDriver) refreshSystrayMenu(m *fyne.Menu, parent *systray.MenuItem) {
+func (d *gLDriver) refreshSystrayMenu(m *granio.Menu, parent *systray.MenuItem) {
 	if m == nil {
 		return
 	}
@@ -227,7 +227,7 @@ func (d *gLDriver) refreshSystrayMenu(m *fyne.Menu, parent *systray.MenuItem) {
 	}
 }
 
-func (*gLDriver) SetSystemTrayIcon(resource fyne.Resource) {
+func (*gLDriver) SetSystemTrayIcon(resource granio.Resource) {
 	systrayIcon = resource // in case we need it later
 
 	// only macOS supports SVG system tray
@@ -236,20 +236,20 @@ func (*gLDriver) SetSystemTrayIcon(resource fyne.Resource) {
 		c := software.NewTransparentCanvas()
 		c.SetContent(img)
 		c.SetPadded(false)
-		c.Resize(fyne.NewSquareSize(systrayIconSize))
+		c.Resize(granio.NewSquareSize(systrayIconSize))
 
 		buf := &bytes.Buffer{}
 		err := png.Encode(buf, c.Capture())
 		if err != nil {
-			fyne.LogError("Failed to encode SVG icon for system tray icon", err)
+			granio.LogError("Failed to encode SVG icon for system tray icon", err)
 			return
 		}
-		resource = fyne.NewStaticResource(resource.Name()+".png", buf.Bytes())
+		resource = granio.NewStaticResource(resource.Name()+".png", buf.Bytes())
 	}
 
 	img, err := toOSIcon(resource.Content())
 	if err != nil {
-		fyne.LogError("Failed to convert systray icon", err)
+		granio.LogError("Failed to convert systray icon", err)
 		return
 	}
 
@@ -260,7 +260,7 @@ func (*gLDriver) SetSystemTrayIcon(resource fyne.Resource) {
 	}
 }
 
-func (d *gLDriver) SetSystemTrayWindow(w fyne.Window) {
+func (d *gLDriver) SetSystemTrayWindow(w granio.Window) {
 	if !systrayRunning {
 		systrayRunning = true
 		d.runSystray(nil)
@@ -269,17 +269,17 @@ func (d *gLDriver) SetSystemTrayWindow(w fyne.Window) {
 	w.SetCloseIntercept(w.Hide)
 	glw, _ := w.(*window)
 	if glw.decorate {
-		systray.SetOnTapped(func() { fyne.Do(glw.Show) })
+		systray.SetOnTapped(func() { granio.Do(glw.Show) })
 	} else {
-		systray.SetOnTapped(func() { fyne.Do(glw.toggleVisible) })
+		systray.SetOnTapped(func() { granio.Do(glw.toggleVisible) })
 	}
 }
 
-func (d *gLDriver) SystemTrayMenu() *fyne.Menu {
+func (d *gLDriver) SystemTrayMenu() *granio.Menu {
 	return d.systrayMenu
 }
 
-func (d *gLDriver) CurrentKeyModifiers() fyne.KeyModifier {
+func (d *gLDriver) CurrentKeyModifiers() granio.KeyModifier {
 	return d.currentKeyModifiers
 }
 
@@ -287,14 +287,17 @@ func (d *gLDriver) CurrentKeyModifiers() fyne.KeyModifier {
 func (d *gLDriver) catchTerm() {
 	terminateSignal := make(chan os.Signal, 1)
 	signal.Notify(terminateSignal, syscall.SIGINT, syscall.SIGTERM)
-
-	<-terminateSignal
-	fyne.Do(d.Quit)
+	defer signal.Stop(terminateSignal)
+	select {
+	case <-terminateSignal:
+		granio.Do(d.Quit)
+	case <-d.done:
+	}
 }
 
-func addMissingQuitForMenu(menu *fyne.Menu, d *gLDriver) {
+func addMissingQuitForMenu(menu *granio.Menu, d *gLDriver) {
 	localQuit := lang.L("Quit")
-	var lastItem *fyne.MenuItem
+	var lastItem *granio.MenuItem
 	if len(menu.Items) > 0 {
 		lastItem = menu.Items[len(menu.Items)-1]
 		if lastItem.Label == localQuit {
@@ -302,9 +305,9 @@ func addMissingQuitForMenu(menu *fyne.Menu, d *gLDriver) {
 		}
 	}
 	if lastItem == nil || !lastItem.IsQuit { // make sure the menu always has a quit option
-		quitItem := fyne.NewMenuItem(localQuit, nil)
+		quitItem := granio.NewMenuItem(localQuit, nil)
 		quitItem.IsQuit = true
-		menu.Items = append(menu.Items, fyne.NewMenuItemSeparator(), quitItem)
+		menu.Items = append(menu.Items, granio.NewMenuItemSeparator(), quitItem)
 	}
 	for _, item := range menu.Items {
 		if item.IsQuit && item.Action == nil {

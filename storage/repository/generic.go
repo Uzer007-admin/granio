@@ -6,7 +6,7 @@ import (
 	"path"
 	"strings"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func getUserHost(authority string) (*url.Userinfo, string) {
@@ -38,7 +38,7 @@ func getUserHost(authority string) (*url.Userinfo, string) {
 // the Repository interface - using this for unknown URIs may break.
 //
 // Since: 2.0
-func GenericParent(u fyne.URI) (fyne.URI, error) {
+func GenericParent(u granio.URI) (granio.URI, error) {
 	p := strings.TrimSuffix(u.Path(), "/")
 	if p == "" {
 		return nil, ErrURIRoot
@@ -71,7 +71,7 @@ func GenericParent(u fyne.URI) (fyne.URI, error) {
 // the Repository interface - using this for unknown URIs may break.
 //
 // Since: 2.0
-func GenericChild(u fyne.URI, component string) (fyne.URI, error) {
+func GenericChild(u granio.URI, component string) (granio.URI, error) {
 	user, host := getUserHost(u.Authority())
 	newURI := uri{url.URL{
 		Scheme:   u.Scheme(),
@@ -101,7 +101,7 @@ func GenericChild(u fyne.URI, component string) (fyne.URI, error) {
 // the Repository interface - using this for unknown URIs may break.
 //
 // Since: 2.0
-func GenericCopy(source fyne.URI, destination fyne.URI) error {
+func GenericCopy(source granio.URI, destination granio.URI) error {
 	// Look up repositories for the source and destination.
 	srcrepo, err := ForURI(source)
 	if err != nil {
@@ -158,7 +158,7 @@ func GenericCopy(source fyne.URI, destination fyne.URI) error {
 // the Repository interface - using this for unknown URIs may break.
 //
 // Since: 2.7
-func GenericDeleteAll(u fyne.URI) error {
+func GenericDeleteAll(u granio.URI) error {
 	repo, err := ForURI(u)
 	if err != nil {
 		return err
@@ -188,8 +188,8 @@ func GenericDeleteAll(u fyne.URI) error {
 		return wrepo.Delete(u)
 	}
 
-	var folders []fyne.URI
-	var files []fyne.URI
+	var folders []granio.URI
+	var files []granio.URI
 	for i := 0; i < len(children); i++ {
 		listable, err = lrepo.CanList(children[i])
 		if err != nil {
@@ -237,7 +237,7 @@ func GenericDeleteAll(u fyne.URI) error {
 // the Repository interface - using this for unknown URIs may break.
 //
 // Since: 2.0
-func GenericMove(source fyne.URI, destination fyne.URI) error {
+func GenericMove(source granio.URI, destination granio.URI) error {
 	// This looks a lot like GenericCopy(), but I duplicated the code
 	// to avoid having to look up the repositories more than once.
 
@@ -298,7 +298,7 @@ func GenericMove(source fyne.URI, destination fyne.URI) error {
 	return srcwrepo.Delete(source)
 }
 
-func genericCopyMoveListable(source, destination fyne.URI, repo Repository, deleteSource bool) error {
+func genericCopyMoveListable(source, destination granio.URI, repo Repository, deleteSource bool) error {
 	lister, ok1 := repo.(ListableRepository)
 	mover, ok2 := repo.(MovableRepository)
 	copier, ok3 := repo.(CopyableRepository)

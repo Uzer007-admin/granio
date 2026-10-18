@@ -3,9 +3,9 @@ package container
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -14,7 +14,7 @@ func TestDocTabs_tabButtonRenderer_SetText(t *testing.T) {
 	item := &TabItem{Text: "Test", Content: widget.NewLabel("Content")}
 	tabs := NewDocTabs(item)
 	tabRenderer := cache.Renderer(tabs).(*docTabsRenderer)
-	buttons := tabRenderer.bar.Objects[0].(*Scroll).Content.(*fyne.Container).Objects
+	buttons := tabRenderer.bar.Objects[0].(*Scroll).Content.(*granio.Container).Objects
 	button := buttons[0].(*tabButton)
 	renderer := cache.Renderer(button).(*tabButtonRenderer)
 
@@ -38,7 +38,7 @@ func TestDocTabs_tabButtonRenderer_Remove(t *testing.T) {
 		{Text: "3", Content: widget.NewLabel("Content3")},
 	}
 	tabs := NewDocTabs(items...)
-	tabs.Resize(fyne.NewSize(160, 160))
+	tabs.Resize(granio.NewSize(160, 160))
 	tabRenderer := cache.Renderer(tabs).(*docTabsRenderer)
 
 	tabs.SelectIndex(1)

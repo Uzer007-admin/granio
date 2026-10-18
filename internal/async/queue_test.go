@@ -4,9 +4,9 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
 func TestQueue(t *testing.T) {
@@ -39,7 +39,7 @@ func TestQueue(t *testing.T) {
 	t.Run("in-out", func(t *testing.T) {
 		q := async.NewCanvasObjectQueue()
 
-		want := []fyne.CanvasObject{
+		want := []granio.CanvasObject{
 			canvas.NewRectangle(color.Black),
 			canvas.NewRectangle(color.Black),
 			canvas.NewRectangle(color.Black),
@@ -49,7 +49,7 @@ func TestQueue(t *testing.T) {
 			q.In(want[i])
 		}
 
-		var x []fyne.CanvasObject
+		var x []granio.CanvasObject
 		for {
 			e := q.Out()
 			if e == nil {

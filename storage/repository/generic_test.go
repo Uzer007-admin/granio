@@ -3,7 +3,7 @@ package repository
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -61,10 +61,10 @@ func TestGenericChild(t *testing.T) {
 	}
 }
 
-var benchURI fyne.URI
+var benchURI granio.URI
 
 func BenchmarkGenericParent(b *testing.B) {
-	var uri fyne.URI
+	var uri granio.URI
 	input, _ := ParseURI("foo://example.com:8042/over/there?name=ferret#nose")
 
 	b.ReportAllocs()
@@ -77,7 +77,7 @@ func BenchmarkGenericParent(b *testing.B) {
 }
 
 func BenchmarkGenericChild(b *testing.B) {
-	var uri fyne.URI
+	var uri granio.URI
 	input, _ := ParseURI("foo://example.com:8042/over/there?name=ferret#nose")
 
 	b.ReportAllocs()

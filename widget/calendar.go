@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Declare conformity with Layout interface
-var _ fyne.Layout = (*calendarLayout)(nil)
+var _ granio.Layout = (*calendarLayout)(nil)
 
 const (
 	daysPerWeek      = 7
@@ -33,7 +33,7 @@ type Calendar struct {
 	monthNext     *Button
 	monthLabel    *Label
 
-	dates *fyne.Container
+	dates *granio.Container
 
 	OnChanged func(time.Time) `json:"-"`
 }
@@ -53,7 +53,7 @@ func NewCalendar(cT time.Time, changed func(time.Time)) *Calendar {
 
 // CreateRenderer returns a new WidgetRenderer for this widget.
 // This should not be called by regular code, it is used internally to render a widget.
-func (c *Calendar) CreateRenderer() fyne.WidgetRenderer {
+func (c *Calendar) CreateRenderer() granio.WidgetRenderer {
 	c.monthPrevious = NewButtonWithIcon("", theme.NavigateBackIcon(), func() {
 		c.currentTime = c.currentTime.AddDate(0, -1, 0)
 		// Dates are 'normalised', forcing date to start from the start of the month ensures move from March to February
@@ -72,25 +72,25 @@ func (c *Calendar) CreateRenderer() fyne.WidgetRenderer {
 
 	c.monthLabel = NewLabel(c.monthYear())
 
-	nav := &fyne.Container{
+	nav := &granio.Container{
 		Layout: layout.NewBorderLayout(nil, nil, c.monthPrevious, c.monthNext),
-		Objects: []fyne.CanvasObject{
+		Objects: []granio.CanvasObject{
 			c.monthPrevious, c.monthNext,
-			&fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{c.monthLabel}},
+			&granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{c.monthLabel}},
 		},
 	}
 
-	c.dates = &fyne.Container{Layout: newCalendarLayout(), Objects: c.calendarObjects()}
+	c.dates = &granio.Container{Layout: newCalendarLayout(), Objects: c.calendarObjects()}
 
-	dateContainer := &fyne.Container{
+	dateContainer := &granio.Container{
 		Layout:  layout.NewBorderLayout(nav, nil, nil, nil),
-		Objects: []fyne.CanvasObject{nav, c.dates},
+		Objects: []granio.CanvasObject{nav, c.dates},
 	}
 
 	return NewSimpleRenderer(dateContainer)
 }
 
-func (c *Calendar) calendarObjects() []fyne.CanvasObject {
+func (c *Calendar) calendarObjects() []granio.CanvasObject {
 	offset := 0
 	switch getLocaleWeekStart() {
 	case saturday:
@@ -100,10 +100,10 @@ func (c *Calendar) calendarObjects() []fyne.CanvasObject {
 		offset = 1
 	}
 
-	var columnHeadings []fyne.CanvasObject
+	var columnHeadings []granio.CanvasObject
 	for i := 0; i < daysPerWeek; i++ {
 		t := NewLabel(shortDayName(time.Weekday((i + offset) % daysPerWeek).String()))
-		t.Alignment = fyne.TextAlignCenter
+		t.Alignment = granio.TextAlignCenter
 		columnHeadings = append(columnHeadings, t)
 	}
 	return append(columnHeadings, c.daysOfMonth()...)
@@ -114,9 +114,9 @@ func (c *Calendar) dateForButton(dayNum int) time.Time {
 	return time.Date(c.currentTime.Year(), c.currentTime.Month(), dayNum, c.currentTime.Hour(), c.currentTime.Minute(), 0, 0, time.FixedZone(oldName, off)).In(c.currentTime.Location())
 }
 
-func (c *Calendar) daysOfMonth() []fyne.CanvasObject {
+func (c *Calendar) daysOfMonth() []granio.CanvasObject {
 	start := time.Date(c.currentTime.Year(), c.currentTime.Month(), 1, 0, 0, 0, 0, c.currentTime.Location())
-	var buttons []fyne.CanvasObject
+	var buttons []granio.CanvasObject
 
 	dayIndex := int(start.Weekday())
 	// account for Go time pkg starting on sunday at index 0
@@ -162,16 +162,16 @@ func (c *Calendar) monthYear() string {
 }
 
 type calendarLayout struct {
-	cellSize fyne.Size
+	cellSize granio.Size
 }
 
-func newCalendarLayout() fyne.Layout {
+func newCalendarLayout() granio.Layout {
 	return &calendarLayout{}
 }
 
 // Layout is called to pack all child objects into a specified size.
 // For a calendar grid this will pack objects into a table format.
-func (g *calendarLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
+func (g *calendarLayout) Layout(objects []granio.CanvasObject, size granio.Size) {
 	weeks := 1
 	day := 0
 	for i, child := range objects {
@@ -185,7 +185,7 @@ func (g *calendarLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 		day++
 	}
 
-	g.cellSize = fyne.NewSize(size.Width/float32(daysPerWeek),
+	g.cellSize = granio.NewSize(size.Width/float32(daysPerWeek),
 		size.Height/float32(weeks))
 	row, col := 0, 0
 	i := 0
@@ -197,7 +197,7 @@ func (g *calendarLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 		lead := g.getLeading(row, col)
 		trail := g.getTrailing(row, col)
 		child.Move(lead)
-		child.Resize(fyne.NewSize(trail.X, trail.Y).Subtract(lead))
+		child.Resize(granio.NewSize(trail.X, trail.Y).Subtract(lead))
 
 		if (i+1)%daysPerWeek == 0 {
 			row++
@@ -210,25 +210,25 @@ func (g *calendarLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 }
 
 // MinSize sets the minimum size for the calendar
-func (*calendarLayout) MinSize(_ []fyne.CanvasObject) fyne.Size {
+func (*calendarLayout) MinSize(_ []granio.CanvasObject) granio.Size {
 	pad := theme.Padding()
 	largestMin := minCellContent.MinSize()
-	return fyne.NewSize(largestMin.Width*daysPerWeek+pad*(daysPerWeek-1),
+	return granio.NewSize(largestMin.Width*daysPerWeek+pad*(daysPerWeek-1),
 		largestMin.Height*maxWeeksPerMonth+pad*(maxWeeksPerMonth-1))
 }
 
 // Get the leading edge position of a grid cell.
 // The row and col specify where the cell is in the calendar.
-func (g *calendarLayout) getLeading(row, col int) fyne.Position {
+func (g *calendarLayout) getLeading(row, col int) granio.Position {
 	x := g.cellSize.Width * float32(col)
 	y := g.cellSize.Height * float32(row)
 
-	return fyne.NewPos(float32(math.Round(float64(x))), float32(math.Round(float64(y))))
+	return granio.NewPos(float32(math.Round(float64(x))), float32(math.Round(float64(y))))
 }
 
 // Get the trailing edge position of a grid cell.
 // The row and col specify where the cell is in the calendar.
-func (g *calendarLayout) getTrailing(row, col int) fyne.Position {
+func (g *calendarLayout) getTrailing(row, col int) granio.Position {
 	return g.getLeading(row+1, col+1)
 }
 

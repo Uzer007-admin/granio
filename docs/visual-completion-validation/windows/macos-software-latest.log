@@ -1,0 +1,36 @@
+X:\fyne\.build-tz-completion-20261014-c83f\gallery-latest-macos-software: go1.27.1-X:cgocheck2
+	path	fyne.io/fyne/v2/cmd/fyne_gallery
+	mod	fyne.io/fyne/v2	v2.8.2-0.20261011113957-7f99a87b0e19+dirty	
+	dep	github.com/BurntSushi/toml	v1.6.0	h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
+	dep	github.com/FyshOS/fancyfs	v0.0.1	h1:kgvm7VvwOMLkYTqSflplp62SlMVWQ2uAoHw9CXwXHYg=
+	dep	github.com/anthonynsimon/bild	v0.17.1	h1:CVcoR+jxUx++UBXpVJHTjt7RmfEbsnhtlqPR5utSfiU=
+	dep	github.com/clipperhouse/uax29/v2	v2.7.0	h1:+gs4oBZ2gPfVrKPthwbMzWZDaAFPGYK72F0NJv2v7Vk=
+	dep	github.com/fsnotify/fsnotify	v1.10.1	h1:b0/UzAf9yR5rhf3RPm9gf3ehBPpf0oZKIjtpKrx59Ho=
+	dep	github.com/fyne-io/oksvg	v0.2.1-0.20260918172519-a9af55fa95d9	h1:owsdpq6a2KhaAA/hoHGQmFM7kOgKo3srXZVGnbEUzr0=
+	dep	github.com/go-text/render	v0.2.1	h1:qwHhxqGUjjg4L0XyJWj7M7bpY75NZM+kBpv2Yfw5mcg=
+	dep	github.com/go-text/typesetting	v0.3.5	h1:XZPUooClHY0Vf/rFyUyuPRNEkawARaFzLMQcXLSEyPk=
+	dep	github.com/jeandeaual/go-locale	v0.0.0-20250612000132-0ef82f21eade	h1:FmusiCI1wHw+XQbvL9M+1r/C3SPqKrmBaIOYwVfQoDE=
+	dep	github.com/mattn/go-runewidth	v0.0.31	h1:1oCV4ReTlosDBc6rYRw5cL8S/4y8iv5oRl4SJ5IBgwo=
+	dep	github.com/nfnt/resize	v0.0.0-20180221191011-83c6a9932646	h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
+	dep	github.com/nicksnyder/go-i18n/v2	v2.6.1	h1:JDEJraFsQE17Dut9HFDHzCoAWGEQJom5s0TRd17NIEQ=
+	dep	github.com/srwiley/oksvg	v0.0.0-20221011165216-be6e8873101c	h1:km8GpoQut05eY3GiYWEedbTT0qnSxrCjsVbb7yKY1KE=
+	dep	github.com/srwiley/rasterx	v0.0.0-20220730225603-2ab79fcdd4ef	h1:Ch6Q+AZUxDBCVqdkI8FSpFyZDtCVBc2VmejdNrm5rRQ=
+	dep	github.com/stretchr/testify	v1.12.1	h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
+	dep	github.com/yuin/goldmark	v1.8.6	h1:d0VcaP1sx9GkFVkoW+KtggpGi2KZ965i14b0+bDQST4=
+	dep	go.yaml.in/yaml/v3	v3.0.5	h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
+	dep	golang.org/x/image	v0.47.0	h1:za/8gVz++PPZqmZJBNSISICN5Rrj5zixP/8K++fgmqo=
+	dep	golang.org/x/net	v0.61.0	h1:RR+6j/BTBCrggOLugxa+66R8FvoN6MHlzDlZIbN9YFw=
+	dep	golang.org/x/sys	v0.49.0	h1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=
+	dep	golang.org/x/text	v0.43.0	h1:1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	-tags=migrated_fynedo,ci
+	build	CGO_ENABLED=0
+	build	GOARCH=arm64
+	build	GOEXPERIMENT=cgocheck2
+	build	GOOS=darwin
+	build	GOARM64=v8.0
+	build	vcs=git
+	build	vcs.revision=7f99a87b0e1903ebc17f3c8c8f478b840a6eabe5
+	build	vcs.time=2026-10-11T11:39:57Z
+	build	vcs.modified=true

@@ -1,13 +1,13 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 type window struct {
@@ -18,8 +18,8 @@ type window struct {
 	isChild            bool
 
 	canvas *canvas
-	icon   fyne.Resource
-	menu   *fyne.MainMenu
+	icon   granio.Resource
+	menu   *granio.MainMenu
 	handle uintptr // the window handle - currently just Android
 }
 
@@ -39,7 +39,7 @@ func (*window) SetFullScreen(bool) {
 	// no-op
 }
 
-func (w *window) Resize(size fyne.Size) {
+func (w *window) Resize(size granio.Size) {
 	w.Canvas().(*canvas).Resize(size)
 }
 
@@ -67,15 +67,15 @@ func (w *window) SetPadded(padded bool) {
 	w.canvas.padded = padded
 }
 
-func (w *window) Icon() fyne.Resource {
+func (w *window) Icon() granio.Resource {
 	if w.icon == nil {
-		return fyne.CurrentApp().Icon()
+		return granio.CurrentApp().Icon()
 	}
 
 	return w.icon
 }
 
-func (w *window) SetIcon(icon fyne.Resource) {
+func (w *window) SetIcon(icon granio.Resource) {
 	w.icon = icon
 }
 
@@ -83,11 +83,11 @@ func (*window) SetMaster() {
 	// no-op on mobile
 }
 
-func (w *window) MainMenu() *fyne.MainMenu {
+func (w *window) MainMenu() *granio.MainMenu {
 	return w.menu
 }
 
-func (w *window) SetMainMenu(menu *fyne.MainMenu) {
+func (w *window) SetMainMenu(menu *granio.MainMenu) {
 	w.menu = menu
 }
 
@@ -99,12 +99,12 @@ func (w *window) SetCloseIntercept(callback func()) {
 	w.onCloseIntercepted = callback
 }
 
-func (*window) SetOnDropped(func(fyne.Position, []fyne.URI)) {
+func (*window) SetOnDropped(func(granio.Position, []granio.URI)) {
 	// not implemented yet
 }
 
 func (w *window) Show() {
-	menu := fyne.CurrentApp().Driver().(*driver).findMenu(w)
+	menu := granio.CurrentApp().Driver().(*driver).findMenu(w)
 	menuButton := w.newMenuButton(menu)
 	if menu == nil {
 		menuButton.Hide()
@@ -115,7 +115,7 @@ func (w *window) Show() {
 			w.tryClose()
 		})
 		title := widget.NewLabel(w.title)
-		title.Alignment = fyne.TextAlignCenter
+		title.Alignment = granio.TextAlignCenter
 		w.canvas.setWindowHead(container.NewHBox(menuButton,
 			layout.NewSpacer(), title, layout.NewSpacer(), exit))
 		w.canvas.Resize(w.canvas.size)
@@ -149,7 +149,7 @@ func (w *window) tryClose() {
 }
 
 func (w *window) Close() {
-	d, _ := fyne.CurrentApp().Driver().(*driver)
+	d, _ := granio.CurrentApp().Driver().(*driver)
 	pos := -1
 	for i, win := range d.windows {
 		if win == w {
@@ -162,8 +162,8 @@ func (w *window) Close() {
 
 	cache.RangeTexturesFor(w.canvas, w.canvas.Painter().Free)
 
-	w.canvas.WalkTrees(nil, func(node *common.RenderCacheNode, _ fyne.Position) {
-		if wid, ok := node.Obj().(fyne.Widget); ok {
+	w.canvas.WalkTrees(nil, func(node *common.RenderCacheNode, _ granio.Position) {
+		if wid, ok := node.Obj().(granio.Widget); ok {
 			cache.DestroyRenderer(wid)
 		}
 	})
@@ -177,22 +177,22 @@ func (w *window) Close() {
 
 func (w *window) ShowAndRun() {
 	w.Show()
-	fyne.CurrentApp().Run()
+	granio.CurrentApp().Run()
 }
 
-func (w *window) Content() fyne.CanvasObject {
+func (w *window) Content() granio.CanvasObject {
 	return w.canvas.Content()
 }
 
-func (w *window) SetContent(content fyne.CanvasObject) {
+func (w *window) SetContent(content granio.CanvasObject) {
 	w.canvas.SetContent(content)
 }
 
-func (w *window) Canvas() fyne.Canvas {
+func (w *window) Canvas() granio.Canvas {
 	return w.canvas
 }
 
-func (*window) Clipboard() fyne.Clipboard {
+func (*window) Clipboard() granio.Clipboard {
 	return NewClipboard()
 }
 
@@ -207,5 +207,5 @@ func (*window) RescaleContext() {
 }
 
 func (*window) Context() any {
-	return fyne.CurrentApp().Driver().(*driver).glctx
+	return granio.CurrentApp().Driver().(*driver).glctx
 }

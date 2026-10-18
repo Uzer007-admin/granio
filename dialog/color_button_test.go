@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func Test_colorButton_Layout(t *testing.T) {
@@ -33,7 +33,7 @@ func Test_colorButton_Layout(t *testing.T) {
 			}
 
 			window := test.NewTempWindow(t, container.NewCenter(color))
-			window.Resize(color.MinSize().Max(fyne.NewSize(50, 50)))
+			window.Resize(color.MinSize().Max(granio.NewSize(50, 50)))
 
 			test.AssertRendersToImage(t, "color/button_layout_"+name+".png", window.Canvas())
 		})

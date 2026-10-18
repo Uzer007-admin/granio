@@ -7,8 +7,8 @@ import "C"
 import (
 	"unsafe"
 
-	"fyne.io/fyne/v2/driver"
-	"fyne.io/fyne/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
 )
 
 // assert we are implementing driver.NativeWindow

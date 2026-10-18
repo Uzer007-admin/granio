@@ -3,13 +3,13 @@
 package glfw
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 )
 
 func (*window) setDarkMode() {
 }
 
-func (w *window) computeCanvasSize(width, height int) fyne.Size {
-	return fyne.NewSize(scale.ToFyneCoordinate(w.canvas, width), scale.ToFyneCoordinate(w.canvas, height))
+func (w *window) computeCanvasSize(width, height int) granio.Size {
+	return granio.NewSize(scale.ToFyneCoordinate(w.canvas, width), scale.ToFyneCoordinate(w.canvas, height))
 }

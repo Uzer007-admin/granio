@@ -1,0 +1,5 @@
+2026/10/12 10:21:20 error parsing version: invalid version string: 2
+exit status 1
+2026/10/12 10:23:48 generated package in X:\fyne\.build-graphics-validation-0797aa93d6e346e091161f3c903a8d6c\generated-gl
+2026/10/12 10:23:50 generated package in X:\fyne\.build-graphics-validation-0797aa93d6e346e091161f3c903a8d6c\generated-gles31
+2026/10/12 10:23:51 generated package in X:\fyne\.build-graphics-validation-0797aa93d6e346e091161f3c903a8d6c\generated-gles20

@@ -3,8 +3,8 @@
 package app
 
 import (
-	"fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
 )
 
 func screenOrientation(width, height int) size.Orientation {

@@ -3,7 +3,7 @@ package canvas
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,7 +18,7 @@ func TestBase_MinSize(t *testing.T) {
 
 func TestBase_Move(t *testing.T) {
 	base := &baseObject{}
-	base.Move(fyne.NewPos(10, 10))
+	base.Move(granio.NewPos(10, 10))
 	pos := base.Position()
 
 	assert.Equal(t, float32(10), pos.X)
@@ -27,7 +27,7 @@ func TestBase_Move(t *testing.T) {
 
 func TestBase_Resize(t *testing.T) {
 	base := &baseObject{}
-	base.Resize(fyne.NewSize(10, 10))
+	base.Resize(granio.NewSize(10, 10))
 	size := base.Size()
 
 	assert.Equal(t, float32(10), size.Width)

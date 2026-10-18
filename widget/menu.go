@@ -1,24 +1,24 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Widget   = (*Menu)(nil)
-	_ fyne.Tappable = (*Menu)(nil)
+	_ granio.Widget   = (*Menu)(nil)
+	_ granio.Tappable = (*Menu)(nil)
 )
 
-// Menu is a widget for displaying a fyne.Menu.
+// Menu is a widget for displaying a granio.Menu.
 type Menu struct {
 	BaseWidget
-	alignment     fyne.TextAlign
-	Items         []fyne.CanvasObject
+	alignment     granio.TextAlign
+	Items         []granio.CanvasObject
 	OnDismiss     func() `json:"-"`
 	activeItem    *menuItem
 	customSized   bool
@@ -27,7 +27,7 @@ type Menu struct {
 }
 
 // NewMenu creates a new Menu.
-func NewMenu(menu *fyne.Menu) *Menu {
+func NewMenu(menu *granio.Menu) *Menu {
 	m := &Menu{}
 	m.ExtendBaseWidget(m)
 	m.setMenu(menu)
@@ -99,10 +99,10 @@ func (m *Menu) ActivatePrevious() {
 }
 
 // CreateRenderer returns a new renderer for the menu.
-func (m *Menu) CreateRenderer() fyne.WidgetRenderer {
+func (m *Menu) CreateRenderer() granio.WidgetRenderer {
 	m.ExtendBaseWidget(m)
 	th := m.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	box := newMenuBox(m.Items)
 	scroll := widget.NewVScroll(box)
@@ -110,7 +110,7 @@ func (m *Menu) CreateRenderer() fyne.WidgetRenderer {
 	background := canvas.NewRectangle(th.Color(theme.ColorNameMenuBackground, v))
 	background.CornerRadius = th.Size(theme.SizeNameMenuRadius)
 	widget.ApplyShadowForLevel(&background.Shadow, widget.MenuLevel, th.Color(theme.ColorNameShadow, v))
-	objects := []fyne.CanvasObject{background, scroll}
+	objects := []granio.CanvasObject{background, scroll}
 	for _, i := range m.Items {
 		if item, ok := i.(*menuItem); ok && item.Child() != nil {
 			objects = append(objects, item.Child())
@@ -149,7 +149,7 @@ func (m *Menu) DeactivateLastSubmenu() bool {
 }
 
 // MinSize returns the minimal size of the menu.
-func (m *Menu) MinSize() fyne.Size {
+func (m *Menu) MinSize() granio.Size {
 	m.ExtendBaseWidget(m)
 	return m.BaseWidget.MinSize()
 }
@@ -172,7 +172,7 @@ func (m *Menu) getContainsCheck() bool {
 }
 
 // Tapped catches taps on separators and the menu background. It doesn't perform any action.
-func (*Menu) Tapped(*fyne.PointEvent) {
+func (*Menu) Tapped(*granio.PointEvent) {
 	// Hit a separator or padding -> do nothing.
 }
 
@@ -214,8 +214,8 @@ func (m *Menu) activateItem(item *menuItem) {
 	}
 }
 
-func (m *Menu) setMenu(menu *fyne.Menu) {
-	m.Items = make([]fyne.CanvasObject, len(menu.Items))
+func (m *Menu) setMenu(menu *granio.Menu) {
+	m.Items = make([]granio.CanvasObject, len(menu.Items))
 	for i, item := range menu.Items {
 		if item.IsSeparator {
 			m.Items[i] = NewSeparator()
@@ -234,9 +234,9 @@ type menuRenderer struct {
 	b      *canvas.Rectangle
 }
 
-func (r *menuRenderer) Layout(s fyne.Size) {
+func (r *menuRenderer) Layout(s granio.Size) {
 	minSize := r.MinSize()
-	var boxSize fyne.Size
+	var boxSize granio.Size
 	if r.m.customSized {
 		boxSize = internal.MaxSizes(minSize, s)
 	} else {
@@ -248,7 +248,7 @@ func (r *menuRenderer) Layout(s fyne.Size) {
 		scrollSize.Height = s.Height
 	}
 
-	driver := fyne.CurrentApp().Driver()
+	driver := granio.CurrentApp().Driver()
 	if c := driver.CanvasForObject(r.m.super()); c != nil {
 		ap := driver.AbsolutePositionForObject(r.m.super())
 		_, areaSize := c.InteractiveArea()
@@ -267,14 +267,14 @@ func (r *menuRenderer) Layout(s fyne.Size) {
 	r.layoutActiveChild()
 }
 
-func (r *menuRenderer) MinSize() fyne.Size {
+func (r *menuRenderer) MinSize() granio.Size {
 	return r.box.MinSize()
 }
 
 func (r *menuRenderer) Refresh() {
 	r.layoutActiveChild()
 	th := r.m.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	r.b.FillColor = th.Color(theme.ColorNameMenuBackground, v)
 	r.b.Shadow.Color = th.Color(theme.ColorNameShadow, v)
 	r.b.CornerRadius = th.Size(theme.SizeNameMenuRadius)
@@ -298,8 +298,8 @@ func (r *menuRenderer) layoutActiveChild() {
 	child := item.Child()
 	childSize := child.MinSize()
 	itemSize := item.Size()
-	cp := fyne.NewPos(itemSize.Width, item.Position().Y)
-	d := fyne.CurrentApp().Driver()
+	cp := granio.NewPos(itemSize.Width, item.Position().Y)
+	d := granio.CurrentApp().Driver()
 	c := d.CanvasForObject(item)
 	if c != nil {
 		absPos := d.AbsolutePositionForObject(item)
@@ -323,21 +323,21 @@ func (r *menuRenderer) layoutActiveChild() {
 
 type menuBox struct {
 	BaseWidget
-	items []fyne.CanvasObject
+	items []granio.CanvasObject
 }
 
-var _ fyne.Widget = (*menuBox)(nil)
+var _ granio.Widget = (*menuBox)(nil)
 
-func newMenuBox(items []fyne.CanvasObject) *menuBox {
+func newMenuBox(items []granio.CanvasObject) *menuBox {
 	b := &menuBox{items: items}
 	b.ExtendBaseWidget(b)
 	return b
 }
 
-func (b *menuBox) CreateRenderer() fyne.WidgetRenderer {
-	cont := &fyne.Container{Layout: layout.NewVBoxLayout(), Objects: b.items}
+func (b *menuBox) CreateRenderer() granio.WidgetRenderer {
+	cont := &granio.Container{Layout: layout.NewVBoxLayout(), Objects: b.items}
 	return &menuBoxRenderer{
-		BaseRenderer: widget.NewBaseRenderer([]fyne.CanvasObject{cont}),
+		BaseRenderer: widget.NewBaseRenderer([]granio.CanvasObject{cont}),
 		b:            b,
 		cont:         cont,
 	}
@@ -346,16 +346,16 @@ func (b *menuBox) CreateRenderer() fyne.WidgetRenderer {
 type menuBoxRenderer struct {
 	widget.BaseRenderer
 	b    *menuBox
-	cont *fyne.Container
+	cont *granio.Container
 }
 
-var _ fyne.WidgetRenderer = (*menuBoxRenderer)(nil)
+var _ granio.WidgetRenderer = (*menuBoxRenderer)(nil)
 
-func (r *menuBoxRenderer) Layout(size fyne.Size) {
+func (r *menuBoxRenderer) Layout(size granio.Size) {
 	r.cont.Resize(size)
 }
 
-func (r *menuBoxRenderer) MinSize() fyne.Size {
+func (r *menuBoxRenderer) MinSize() granio.Size {
 	return r.cont.MinSize()
 }
 

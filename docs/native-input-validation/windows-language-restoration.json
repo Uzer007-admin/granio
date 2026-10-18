@@ -1,0 +1,39 @@
+{
+  "restored": true,
+  "before": [
+    {
+      "LanguageTag": "ru",
+      "InputMethodTips": [
+        "0419:00000419"
+      ],
+      "Spellchecking": true,
+      "Handwriting": false
+    },
+    {
+      "LanguageTag": "en-US",
+      "InputMethodTips": [
+        "0409:00000409"
+      ],
+      "Spellchecking": true,
+      "Handwriting": false
+    }
+  ],
+  "after": [
+    {
+      "LanguageTag": "ru",
+      "InputMethodTips": [
+        "0419:00000419"
+      ],
+      "Spellchecking": true,
+      "Handwriting": false
+    },
+    {
+      "LanguageTag": "en-US",
+      "InputMethodTips": [
+        "0409:00000409"
+      ],
+      "Spellchecking": true,
+      "Handwriting": false
+    }
+  ]
+}

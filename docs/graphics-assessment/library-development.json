@@ -1,0 +1,596 @@
+{
+  "date": "2026-10-12",
+  "go": "1.27.1",
+  "experiment": "cgocheck2",
+  "windows_geometry": {
+    "BenchmarkLegacySurfaceGeometry": {
+      "samples": [
+        {
+          "ns": 1782.0,
+          "bytes": 24,
+          "allocations": 3
+        },
+        {
+          "ns": 2156.0,
+          "bytes": 24,
+          "allocations": 3
+        },
+        {
+          "ns": 2433.0,
+          "bytes": 24,
+          "allocations": 3
+        }
+      ],
+      "median_ns": 2156.0
+    },
+    "BenchmarkSurfaceGeometry": {
+      "samples": [
+        {
+          "ns": 2069.0,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 2184.0,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 1948.0,
+          "bytes": 0,
+          "allocations": 0
+        }
+      ],
+      "median_ns": 2069.0
+    }
+  },
+  "linux_geometry": {
+    "BenchmarkLegacySurfaceGeometry": {
+      "samples": [
+        {
+          "ns": 49593.0,
+          "bytes": 24,
+          "allocations": 3
+        },
+        {
+          "ns": 50322.0,
+          "bytes": 24,
+          "allocations": 3
+        },
+        {
+          "ns": 47569.0,
+          "bytes": 24,
+          "allocations": 3
+        }
+      ],
+      "median_ns": 49593.0
+    },
+    "BenchmarkSurfaceGeometry": {
+      "samples": [
+        {
+          "ns": 44867.0,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 48770.0,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 43172.0,
+          "bytes": 0,
+          "allocations": 0
+        }
+      ],
+      "median_ns": 44867.0
+    }
+  },
+  "windows_signal": {
+    "BenchmarkBoundedSignalDelivery": {
+      "samples": [
+        {
+          "ns": 86.74,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 85.49,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 85.14,
+          "bytes": 0,
+          "allocations": 0
+        }
+      ],
+      "median_ns": 85.49
+    }
+  },
+  "linux_signal": {
+    "BenchmarkBoundedSignalDelivery": {
+      "samples": [
+        {
+          "ns": 107.7,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 107.5,
+          "bytes": 0,
+          "allocations": 0
+        },
+        {
+          "ns": 106.7,
+          "bytes": 0,
+          "allocations": 0
+        }
+      ],
+      "median_ns": 107.5
+    }
+  },
+  "windows_material": {
+    "Version": "4.6.0 NVIDIA 616.92",
+    "Renderer": "NVIDIA GeForce RTX 4080 SUPER/PCIe/SSE2",
+    "API": 0,
+    "Major": 4,
+    "Minor": 6,
+    "Extensions": 405,
+    "Lookups": 78,
+    "Path": 1,
+    "Geometry": {
+      "Width": 120,
+      "Height": 64,
+      "FramebufferWidth": 120,
+      "FramebufferHeight": 64,
+      "ContentScaleX": 1,
+      "ContentScaleY": 1
+    },
+    "Pixels": {
+      "EXT": [
+        [
+          0,
+          64,
+          0,
+          64
+        ],
+        [
+          64,
+          48,
+          0,
+          112
+        ],
+        [
+          127,
+          32,
+          0,
+          159
+        ],
+        [
+          191,
+          16,
+          0,
+          207
+        ],
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ],
+      "selected": [
+        [
+          0,
+          64,
+          0,
+          64
+        ],
+        [
+          64,
+          48,
+          0,
+          112
+        ],
+        [
+          127,
+          32,
+          0,
+          159
+        ],
+        [
+          191,
+          16,
+          0,
+          207
+        ],
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ]
+    }
+  },
+  "linux_material_x11": {
+    "Version": "4.5 (Compatibility Profile) Mesa 25.0.5-1",
+    "Renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "API": 0,
+    "Major": 4,
+    "Minor": 5,
+    "Extensions": 310,
+    "Lookups": 78,
+    "Path": 1,
+    "Geometry": {
+      "Width": 64,
+      "Height": 64,
+      "FramebufferWidth": 64,
+      "FramebufferHeight": 64,
+      "ContentScaleX": 1,
+      "ContentScaleY": 1
+    },
+    "Pixels": {
+      "EXT": [
+        [
+          0,
+          64,
+          0,
+          64
+        ],
+        [
+          64,
+          48,
+          0,
+          112
+        ],
+        [
+          128,
+          32,
+          0,
+          160
+        ],
+        [
+          191,
+          16,
+          0,
+          207
+        ],
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ],
+      "selected": [
+        [
+          0,
+          64,
+          0,
+          64
+        ],
+        [
+          64,
+          48,
+          0,
+          112
+        ],
+        [
+          128,
+          32,
+          0,
+          160
+        ],
+        [
+          191,
+          16,
+          0,
+          207
+        ],
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ]
+    }
+  },
+  "linux_material_wayland": {
+    "Version": "4.5 (Compatibility Profile) Mesa 25.0.5-1",
+    "Renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "API": 0,
+    "Major": 4,
+    "Minor": 5,
+    "Extensions": 310,
+    "Lookups": 78,
+    "Path": 1,
+    "Geometry": {
+      "Width": 64,
+      "Height": 64,
+      "FramebufferWidth": 64,
+      "FramebufferHeight": 64,
+      "ContentScaleX": 1,
+      "ContentScaleY": 1
+    },
+    "Pixels": {
+      "EXT": [
+        [
+          0,
+          64,
+          0,
+          64
+        ],
+        [
+          64,
+          48,
+          0,
+          112
+        ],
+        [
+          128,
+          32,
+          0,
+          160
+        ],
+        [
+          191,
+          16,
+          0,
+          207
+        ],
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ],
+      "selected": [
+        [
+          0,
+          64,
+          0,
+          64
+        ],
+        [
+          64,
+          48,
+          0,
+          112
+        ],
+        [
+          128,
+          32,
+          0,
+          160
+        ],
+        [
+          191,
+          16,
+          0,
+          207
+        ],
+        [
+          255,
+          0,
+          0,
+          255
+        ]
+      ]
+    }
+  },
+  "linux_visible_wayland_surfaces": {
+    "Go": "go1.27.1-X:cgocheck2",
+    "OS": "linux",
+    "Backend": "wayland",
+    "Renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "Platform": 393219,
+    "Alpha": {
+      "Width": 192,
+      "Height": 128,
+      "FramebufferWidth": 384,
+      "FramebufferHeight": 256,
+      "ContentScaleX": 2,
+      "ContentScaleY": 2,
+      "Focused": false,
+      "Iconified": false,
+      "Visible": true,
+      "Maximized": false,
+      "TransparentFramebuffer": true
+    },
+    "Opaque": {
+      "Width": 224,
+      "Height": 160,
+      "FramebufferWidth": 448,
+      "FramebufferHeight": 320,
+      "ContentScaleX": 2,
+      "ContentScaleY": 2,
+      "Focused": false,
+      "Iconified": false,
+      "Visible": true,
+      "Maximized": false,
+      "TransparentFramebuffer": false
+    },
+    "AlphaPixel": [
+      64,
+      0,
+      0,
+      128
+    ]
+  },
+  "verified_sources": {
+    "deps/gl/capabilities/context.go": "71756108778c4c91d4faffda57a6bf6afe106e9806972862a4f11fe8af5506b8",
+    "deps/gl/capabilities/native/query.go": "0fcbd68da12dcbb21e960b56ddba276642d8a84d5bec41726dfb6d536cd22e7f",
+    "deps/gl/v2.1/material/package.go": "816f1cb1ea744c55dc98df715f8bff5a9b9d2461bd5c19fd03021cd0419827ef",
+    "deps/glow/manifest.go": "10c807e59a87a4fa5432f2fcab6af42c08726aac522d932b7abeed2764e9790c",
+    "deps/glow/write_file.go": "b4d26661ff87b84a14f3c3bc2b53a3f94cfb6e2f9fc4f6a670ec53825a263306",
+    "deps/glfw/v3.5/glfw/geometry.go": "dc173a64438ddd0623c43db1e80441484c2509089984346b7e284276b24fce66",
+    "deps/glfw/v3.5/glfw/native_array.c": "2fbc04e7a12fb143e6258c983a161266e1ec5dd90b0134d794caa5c8c773cbdc",
+    "deps/dbus/conn.go": "b7b4de41a0947ca4ddf0726c67d2859fa002469951ab7bd9d037a911cecb3303",
+    "deps/dbus/signal_subscription.go": "0058da579b8112da13015fac243d0bb65b25e9d8fd4a12ec7691f91fbba56cc0",
+    "deps/dbus/portal/watch.go": "d11f0bb1463a4273fdb7f0ed7ce1f98cb7b40fbc36eba8c01858643f66cf4661",
+    "deps/dbus/portal/watch_integration_test.go": "3ec1dea7822e35daaf56a27716212e1e1d6c7bfd521aba27edff3e37ccd00365"
+  },
+  "profiles": {
+    "deps/gl/all-core/gl": {
+      "functions": 1663,
+      "required": 0,
+      "enums": 2707,
+      "sha256": "1813b72bb296c7a4f43a20d83cf739807b9475c08ff7922e0bfe67e5309a650b"
+    },
+    "deps/gl/egl1.5/egl": {
+      "functions": 158,
+      "required": 44,
+      "enums": 596,
+      "sha256": "64e1f7cc359c3199a08fa1a07e4969bd05392944540deff9ecb3a07dc99ee599"
+    },
+    "deps/gl/v2.0/gles2": {
+      "functions": 142,
+      "required": 142,
+      "enums": 301,
+      "sha256": "197c4cef9123d2d5ccc65947e35eae42ff123bb86117be10f61509ea763708b9"
+    },
+    "deps/gl/v2.1/fyne": {
+      "functions": 50,
+      "required": 50,
+      "enums": 40,
+      "sha256": "e564c509d110cbea5ae095db5d5f6317beeb7ea11d9715f5d4dce1d854f91130"
+    },
+    "deps/gl/v2.1/gl": {
+      "functions": 2848,
+      "required": 551,
+      "enums": 4877,
+      "sha256": "011fc4f5b8d447da6e06d8cc3cd4d2be3933448722ed81b044ca8e8850278417"
+    },
+    "deps/gl/v2.1/material": {
+      "functions": 78,
+      "required": 53,
+      "enums": 68,
+      "sha256": "8247fe5f84bb28ba4c473b62b8fc6e001aa3d810514acff620a5250804830fa7"
+    },
+    "deps/gl/v3.0/gles2": {
+      "functions": 812,
+      "required": 246,
+      "enums": 2155,
+      "sha256": "8d60b3d621a7b41a097c7d08424d17bed80b2151f62e10e5b148be24e334597b"
+    },
+    "deps/gl/v3.1/gles2": {
+      "functions": 880,
+      "required": 314,
+      "enums": 2327,
+      "sha256": "9acccfc4f2f767675181c48ed7ba389a56aac3e6d6731e5e885634d8aa89ccd8"
+    },
+    "deps/gl/v3.2/gles2": {
+      "functions": 908,
+      "required": 358,
+      "enums": 2483,
+      "sha256": "1ab10b5a796bc7e5997ab4d11c48dbed8db42e84e7639f98933b0c7f961db122"
+    },
+    "deps/gl/v3.2-compatibility/gl": {
+      "functions": 2991,
+      "required": 666,
+      "enums": 5107,
+      "sha256": "2e37ee8097bc622440f760d6726da4796ee7583a919df87672a25da0f269e9d9"
+    },
+    "deps/gl/v3.2-core/gl": {
+      "functions": 1302,
+      "required": 316,
+      "enums": 2237,
+      "sha256": "7d2d6bffe5ac40358d39112330638b10169f914fa10b6768a2925985da4559dd"
+    },
+    "deps/gl/v3.3-compatibility/gl": {
+      "functions": 2992,
+      "required": 724,
+      "enums": 5108,
+      "sha256": "868f180120ccb5174181f1de87777e9183ff58a1bac641ad46069c6638405c40"
+    },
+    "deps/gl/v3.3-core/gl": {
+      "functions": 1303,
+      "required": 344,
+      "enums": 2238,
+      "sha256": "8700ee2ca6043255f501a8c4ea549d3b6561bce8cb3189cc003a0be8ea90b569"
+    },
+    "deps/gl/v4.1-compatibility/gl": {
+      "functions": 2997,
+      "required": 858,
+      "enums": 5117,
+      "sha256": "9c2cd0ead752a3bf4e5ee8644da0250812138b379bb1cb1011b716e7fe4d7fa9"
+    },
+    "deps/gl/v4.1-core/gl": {
+      "functions": 1308,
+      "required": 478,
+      "enums": 2247,
+      "sha256": "a1795222e198f541e16bcd3963efe27bb463bb5772f78d64f7f72418f5fd3edd"
+    },
+    "deps/gl/v4.2-compatibility/gl": {
+      "functions": 2997,
+      "required": 870,
+      "enums": 5125,
+      "sha256": "b1e07ec14d2635e74ffefe53d58ec48347dfff464d608dce448d07a5e8486df7"
+    },
+    "deps/gl/v4.2-core/gl": {
+      "functions": 1308,
+      "required": 490,
+      "enums": 2255,
+      "sha256": "e5e1abe4c7dd572d9600b1d74cf4d18cba94373b38b41a878d9ec401efd30c8f"
+    },
+    "deps/gl/v4.3-compatibility/gl": {
+      "functions": 2997,
+      "required": 913,
+      "enums": 5128,
+      "sha256": "ea6bc4c16e34694a8a4e5bb1e5e7b8a51d5f441298fb80aad64a419e7f45ad1f"
+    },
+    "deps/gl/v4.3-core/gl": {
+      "functions": 1308,
+      "required": 534,
+      "enums": 2258,
+      "sha256": "9c0018b7f9da4f2052d49ddf0cd0f7574f591c95d0c0d155e5c1b9637620489e"
+    },
+    "deps/gl/v4.4-compatibility/gl": {
+      "functions": 2997,
+      "required": 922,
+      "enums": 5131,
+      "sha256": "b5e70a9bc5b881187a0b18b338eeceddbaa14f248391d98534b43b3515912441"
+    },
+    "deps/gl/v4.4-core/gl": {
+      "functions": 1308,
+      "required": 543,
+      "enums": 2261,
+      "sha256": "13f18cabd35de1106b06b2e864aa4e8201d93500a3681425d424341021414bdf"
+    },
+    "deps/gl/v4.5-compatibility/gl": {
+      "functions": 3012,
+      "required": 1044,
+      "enums": 5132,
+      "sha256": "346c0312c30f44dd4ff9f9f0723b60a9ae14c05d33070dd506a48e74483e76d9"
+    },
+    "deps/gl/v4.5-core/gl": {
+      "functions": 1311,
+      "required": 653,
+      "enums": 2262,
+      "sha256": "12f003f57004781f03c13d84df3e92525e00f2b0f3c62241171a5bb0599bda55"
+    },
+    "deps/gl/v4.6-compatibility/gl": {
+      "functions": 3015,
+      "required": 1048,
+      "enums": 5149,
+      "sha256": "df5038cb952be5201bf22200527ab0f0edca143d1e37f46675cb8bc0e828ecec"
+    },
+    "deps/gl/v4.6-core/gl": {
+      "functions": 1314,
+      "required": 657,
+      "enums": 2279,
+      "sha256": "7fa9a32a38df568241c9f9e9ca54a8731adb02f7a3292d9881cd8891b536ffba"
+    }
+  },
+  "limits": [
+    "Three sequential samples per variant; no frame latency/FPS inference.",
+    "Signal benchmark measures a pre-existing Signal delivered to one full queue, excluding decoding and IPC.",
+    "Hidden material windows have not entered an output; their scale need not equal the compositor's output scale.",
+    "Pure capability package WASM compile is not browser rendering validation.",
+    "Native Windows/macOS backdrop materials and Fyne's full material graph are not implemented by these primitives."
+  ]
+}

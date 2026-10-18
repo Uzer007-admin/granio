@@ -4,14 +4,14 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/painter/software"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -68,7 +68,7 @@ func TestLabel_MinSize(t *testing.T) {
 func TestLabel_Resize(t *testing.T) {
 	label := NewLabel("Test")
 	label.CreateRenderer()
-	size := fyne.NewSize(100, 20)
+	size := granio.NewSize(100, 20)
 	label.Resize(size)
 
 	assert.Equal(t, size, label.Size())
@@ -110,20 +110,20 @@ func TestLabel_SetText(t *testing.T) {
 }
 
 func TestLabel_Alignment(t *testing.T) {
-	label := &Label{Text: "Test", Alignment: fyne.TextAlignTrailing}
+	label := &Label{Text: "Test", Alignment: granio.TextAlignTrailing}
 	label.Refresh()
 
-	assert.Equal(t, fyne.TextAlignTrailing, labelTextRenderTexts(label)[0].Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, labelTextRenderTexts(label)[0].Alignment)
 }
 
 func TestLabel_Alignment_Later(t *testing.T) {
 	label := &Label{Text: "Test"}
 	label.Refresh()
-	assert.Equal(t, fyne.TextAlignLeading, labelTextRenderTexts(label)[0].Alignment)
+	assert.Equal(t, granio.TextAlignLeading, labelTextRenderTexts(label)[0].Alignment)
 
-	label.Alignment = fyne.TextAlignTrailing
+	label.Alignment = granio.TextAlignTrailing
 	label.Refresh()
-	assert.Equal(t, fyne.TextAlignTrailing, labelTextRenderTexts(label)[0].Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, labelTextRenderTexts(label)[0].Alignment)
 }
 
 func TestText_MinSize_MultiLine(t *testing.T) {
@@ -172,7 +172,7 @@ func TestLabel_CreateRendererDoesNotAffectSize(t *testing.T) {
 	text := NewLabel("Hello")
 	text.Resize(text.MinSize())
 	size := text.Size()
-	assert.NotEqual(t, fyne.NewSize(0, 0), size)
+	assert.NotEqual(t, granio.NewSize(0, 0), size)
 	assert.Equal(t, size, text.MinSize())
 
 	r := text.CreateRenderer()
@@ -194,9 +194,9 @@ func TestLabel_ChangeTruncate(t *testing.T) {
 	c.Resize(text.MinSize())
 	test.AssertRendersToMarkup(t, "label/default.xml", c)
 
-	truncSize := text.MinSize().Subtract(fyne.NewSize(10, 0))
+	truncSize := text.MinSize().Subtract(granio.NewSize(10, 0))
 	text.Resize(truncSize)
-	text.Truncation = fyne.TextTruncateClip
+	text.Truncation = granio.TextTruncateClip
 	text.Refresh()
 	test.AssertRendersToMarkup(t, "label/truncate.xml", c)
 }
@@ -211,21 +211,21 @@ func TestLabel_Select(t *testing.T) {
 	sel := test.WidgetRenderer(l).Objects()[0].(*focusSelectable)
 	sel.MouseDown(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(15, 10)},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(15, 10)},
 	})
-	sel.Dragged(&fyne.DragEvent{
-		Dragged:    fyne.Delta{DX: 15, DY: 0},
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(30, 10)},
+	sel.Dragged(&granio.DragEvent{
+		Dragged:    granio.Delta{DX: 15, DY: 0},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(30, 10)},
 	})
 	sel.DragEnd()
 	sel.MouseUp(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(30, 10)},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(30, 10)},
 	})
 	assert.Equal(t, "el", l.SelectedText())
 
-	sel.TypedShortcut(&fyne.ShortcutCopy{})
-	assert.Equal(t, "el", fyne.CurrentApp().Clipboard().Content())
+	sel.TypedShortcut(&granio.ShortcutCopy{})
+	assert.Equal(t, "el", granio.CurrentApp().Clipboard().Content())
 
 	l.SetText("World")
 	assert.Equal(t, "", l.SelectedText())
@@ -243,16 +243,16 @@ func TestLabel_ClearSelection(t *testing.T) {
 	sel := test.WidgetRenderer(l).Objects()[0].(*focusSelectable)
 	sel.MouseDown(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(15, 10)},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(15, 10)},
 	})
-	sel.Dragged(&fyne.DragEvent{
-		Dragged:    fyne.Delta{DX: 15, DY: 0},
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(30, 10)},
+	sel.Dragged(&granio.DragEvent{
+		Dragged:    granio.Delta{DX: 15, DY: 0},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(30, 10)},
 	})
 	sel.DragEnd()
 	sel.MouseUp(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(30, 10)},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(30, 10)},
 	})
 	assert.Equal(t, "el", l.SelectedText())
 
@@ -271,7 +271,7 @@ func TestLabel_SelectWord(t *testing.T) {
 	assert.Empty(t, l.SelectedText())
 
 	sel := test.WidgetRenderer(l).Objects()[0].(*focusSelectable)
-	sel.DoubleTapped(&fyne.PointEvent{Position: fyne.NewPos(15, 10)})
+	sel.DoubleTapped(&granio.PointEvent{Position: granio.NewPos(15, 10)})
 	assert.Equal(t, "Hello", l.SelectedText())
 }
 
@@ -282,7 +282,7 @@ func TestLabel_SelectLine(t *testing.T) {
 	assert.Empty(t, l.SelectedText())
 
 	sel := test.WidgetRenderer(l).Objects()[0].(*focusSelectable)
-	pointEvent := fyne.PointEvent{Position: fyne.NewPos(15, 10)}
+	pointEvent := granio.PointEvent{Position: granio.NewPos(15, 10)}
 	tapEvent := &desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
 		PointEvent: pointEvent,
@@ -351,16 +351,16 @@ func TestLabelSizeNameWithSelection(t *testing.T) {
 	sel := test.WidgetRenderer(l).Objects()[0].(*focusSelectable)
 	sel.MouseDown(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(15, 10)},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(15, 10)},
 	})
-	sel.Dragged(&fyne.DragEvent{
-		Dragged:    fyne.Delta{DX: 15, DY: 0},
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(30, 10)},
+	sel.Dragged(&granio.DragEvent{
+		Dragged:    granio.Delta{DX: 15, DY: 0},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(30, 10)},
 	})
 	sel.DragEnd()
 	sel.MouseUp(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: fyne.NewPos(30, 10)},
+		PointEvent: granio.PointEvent{Position: granio.NewPos(30, 10)},
 	})
 	assert.Equal(t, "el", l.SelectedText())
 
@@ -373,25 +373,25 @@ func TestLabelSizeNameWithSelection(t *testing.T) {
 	test.AssertRendersToImage(t, "label/label_selection_headersize.png", w.Canvas())
 }
 
-func labelTextRenderTexts(p fyne.Widget) []*canvas.Text {
+func labelTextRenderTexts(p granio.Widget) []*canvas.Text {
 	rich := cache.Renderer(p).Objects()[0].(*RichText)
 	return richTextRenderTexts(rich)
 }
 
 func TestLabel_SelectAligned(t *testing.T) {
-	for name, align := range map[string]fyne.TextAlign{
-		"leading":  fyne.TextAlignLeading,
-		"center":   fyne.TextAlignCenter,
-		"trailing": fyne.TextAlignTrailing,
+	for name, align := range map[string]granio.TextAlign{
+		"leading":  granio.TextAlignLeading,
+		"center":   granio.TextAlignCenter,
+		"trailing": granio.TextAlignTrailing,
 	} {
 		t.Run(name, func(t *testing.T) {
-			l := NewLabelWithStyle("Hello World", align, fyne.TextStyle{})
-			testLabelSelectAligned(t, l, fyne.NewSize(300, 50))
+			l := NewLabelWithStyle("Hello World", align, granio.TextStyle{})
+			testLabelSelectAligned(t, l, granio.NewSize(300, 50))
 		})
 		t.Run(name+"_ellipsis", func(t *testing.T) {
-			l := NewLabelWithStyle("Hello World, this text is too long to fit", align, fyne.TextStyle{})
-			l.Truncation = fyne.TextTruncateEllipsis
-			testLabelSelectAligned(t, l, fyne.NewSize(120, 50))
+			l := NewLabelWithStyle("Hello World, this text is too long to fit", align, granio.TextStyle{})
+			l.Truncation = granio.TextTruncateEllipsis
+			testLabelSelectAligned(t, l, granio.NewSize(120, 50))
 
 			texts := richTextRenderTexts(l.provider)
 			require.Len(t, texts, 1)
@@ -400,7 +400,7 @@ func TestLabel_SelectAligned(t *testing.T) {
 	}
 }
 
-func testLabelSelectAligned(t *testing.T, l *Label, size fyne.Size) {
+func testLabelSelectAligned(t *testing.T, l *Label, size granio.Size) {
 	l.Selectable = true
 	w := test.NewTempWindow(t, l)
 	w.Resize(size)
@@ -409,19 +409,19 @@ func testLabelSelectAligned(t *testing.T, l *Label, size fyne.Size) {
 	texts := richTextRenderTexts(l.provider)
 	require.Len(t, texts, 1)
 	text := texts[0]
-	textWidth := fyne.MeasureText(text.Text, text.TextSize, text.TextStyle).Width
+	textWidth := granio.MeasureText(text.Text, text.TextSize, text.TextStyle).Width
 	textX := text.Position().X
 	switch l.Alignment {
-	case fyne.TextAlignTrailing:
+	case granio.TextAlignTrailing:
 		textX += text.Size().Width - textWidth
-	case fyne.TextAlignCenter:
+	case granio.TextAlignCenter:
 		textX += (text.Size().Width - textWidth) / 2
 	}
-	helloWidth := fyne.MeasureText("Hello", text.TextSize, text.TextStyle).Width
+	helloWidth := granio.MeasureText("Hello", text.TextSize, text.TextStyle).Width
 
 	sel := test.WidgetRenderer(l).Objects()[0].(*focusSelectable)
 	// double tap in the middle of the "Hello" glyphs as they are drawn
-	sel.DoubleTapped(&fyne.PointEvent{Position: fyne.NewPos(textX+helloWidth/2, 10)})
+	sel.DoubleTapped(&granio.PointEvent{Position: granio.NewPos(textX+helloWidth/2, 10)})
 	assert.Equal(t, "Hello", l.SelectedText())
 
 	rects := test.WidgetRenderer(sel).Objects()

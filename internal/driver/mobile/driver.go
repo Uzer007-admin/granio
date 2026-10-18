@@ -6,31 +6,31 @@ import (
 	"strconv"
 	"time"
 
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/animation"
-	intapp "fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/internal/cache"
-	intdriver "fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/key"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/mouse"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/paint"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/size"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/touch"
-	"fyne.io/fyne/v2/internal/driver/mobile/gl"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/internal/painter"
-	pgl "fyne.io/fyne/v2/internal/painter/gl"
-	"fyne.io/fyne/v2/internal/scale"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/animation"
+	intapp "github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	pgl "github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const (
@@ -43,7 +43,7 @@ const (
 
 // Configuration is the system information about the current device
 type Configuration struct {
-	SystemTheme fyne.ThemeVariant
+	SystemTheme granio.ThemeVariant
 }
 
 // ConfiguredDriver is a simple type that allows packages to hook into configuration changes of this driver.
@@ -55,12 +55,12 @@ type driver struct {
 	app   app.App
 	glctx gl.Context
 
-	windows     []fyne.Window
+	windows     []granio.Window
 	device      device
 	animation   animation.Runner
 	currentSize size.Event
 
-	theme           fyne.ThemeVariant
+	theme           granio.ThemeVariant
 	onConfigChanged func(*Configuration)
 	painting        bool
 	running         bool
@@ -69,7 +69,7 @@ type driver struct {
 
 // Declare conformity with Driver
 var (
-	_ fyne.Driver      = (*driver)(nil)
+	_ granio.Driver    = (*driver)(nil)
 	_ ConfiguredDriver = (*driver)(nil)
 )
 
@@ -108,8 +108,8 @@ func (d *driver) DoFromGoroutine(fn func(), wait bool) {
 	}
 }
 
-func (d *driver) CreateWindow(title string) fyne.Window {
-	c, _ := newCanvas(fyne.CurrentDevice()).(*canvas)
+func (d *driver) CreateWindow(title string) granio.Window {
+	c, _ := newCanvas(granio.CurrentDevice()).(*canvas)
 	ret := &window{title: title, canvas: c, isChild: len(d.windows) > 0}
 	c.applyContent(&fynecanvas.Rectangle{FillColor: theme.Color(theme.ColorNameBackground)})
 	c.SetPainter(pgl.NewPainter(c, ret))
@@ -117,7 +117,7 @@ func (d *driver) CreateWindow(title string) fyne.Window {
 	return ret
 }
 
-func (d *driver) AllWindows() []fyne.Window {
+func (d *driver) AllWindows() []granio.Window {
 	return d.windows
 }
 
@@ -138,15 +138,15 @@ func (d *driver) currentWindow() *window {
 	return last
 }
 
-func (*driver) Clipboard() fyne.Clipboard {
+func (*driver) Clipboard() granio.Clipboard {
 	return NewClipboard()
 }
 
-func (*driver) RenderedTextSize(text string, textSize float32, style fyne.TextStyle, source fyne.Resource) (fyne.Size, float32) {
+func (*driver) RenderedTextSize(text string, textSize float32, style granio.TextStyle, source granio.Resource) (granio.Size, float32) {
 	return painter.RenderedTextSize(text, textSize, style, source)
 }
 
-func (d *driver) CanvasForObject(fyne.CanvasObject) fyne.Canvas {
+func (d *driver) CanvasForObject(granio.CanvasObject) granio.Canvas {
 	if len(d.windows) == 0 {
 		return nil
 	}
@@ -155,10 +155,10 @@ func (d *driver) CanvasForObject(fyne.CanvasObject) fyne.Canvas {
 	return d.currentWindow().Canvas()
 }
 
-func (d *driver) AbsolutePositionForObject(co fyne.CanvasObject) fyne.Position {
+func (d *driver) AbsolutePositionForObject(co granio.CanvasObject) granio.Position {
 	c := d.CanvasForObject(co)
 	if c == nil {
-		return fyne.NewPos(0, 0)
+		return granio.NewPos(0, 0)
 	}
 
 	mc, _ := c.(*canvas)
@@ -186,10 +186,10 @@ func (d *driver) Run() {
 		d.app = a
 		d.queuedFuncs = async.NewUnboundedChan[func()]()
 
-		fyne.CurrentApp().Settings().AddListener(func(s fyne.Settings) {
+		granio.CurrentApp().Settings().AddListener(func(s granio.Settings) {
 			painter.ClearFontCache()
 			cache.ResetThemeCaches()
-			intapp.ApplySettingsWithCallback(s, fyne.CurrentApp(), func(w fyne.Window) {
+			intapp.ApplySettingsWithCallback(s, granio.CurrentApp(), func(w granio.Window) {
 				c, ok := w.Canvas().(*canvas)
 				if !ok {
 					return
@@ -200,7 +200,7 @@ func (d *driver) Run() {
 
 		draw := time.NewTicker(time.Second / 60)
 		defer func() {
-			l, _ := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle)
+			l, _ := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle)
 
 			// exhaust the event queue
 			go func() {
@@ -249,7 +249,7 @@ func (d *driver) Run() {
 					dev.safeLeft = e.InsetLeftPx
 					dev.safeBottom = e.InsetBottomPx
 					dev.safeRight = e.InsetRightPx
-					c.scale = fyne.CurrentDevice().SystemScaleForWindow(nil)
+					c.scale = granio.CurrentDevice().SystemScaleForWindow(nil)
 					c.Painter().SetFrameBufferScale(1.0)
 
 					if insetChange {
@@ -311,7 +311,7 @@ func (d *driver) handleLifecycle(e lifecycle.Event, w *window) {
 	}
 	switch e.Crosses(lifecycle.StageFocused) {
 	case lifecycle.CrossOn: // foregrounding
-		if f := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnEnteredForeground(); f != nil {
+		if f := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnEnteredForeground(); f != nil {
 			f()
 		}
 	case lifecycle.CrossOff: // will enter background
@@ -320,12 +320,12 @@ func (d *driver) handleLifecycle(e lifecycle.Event, w *window) {
 				return
 			}
 
-			s := fyne.NewSize(float32(d.currentSize.WidthPx)/c.scale, float32(d.currentSize.HeightPx)/c.scale)
+			s := granio.NewSize(float32(d.currentSize.WidthPx)/c.scale, float32(d.currentSize.HeightPx)/c.scale)
 			app.BeginPaint()
 			d.paintWindow(w, s)
 			d.app.Publish()
 		}
-		if f := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnExitedForeground(); f != nil {
+		if f := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnExitedForeground(); f != nil {
 			f()
 		}
 	}
@@ -357,7 +357,7 @@ func (d *driver) handlePaint(e paint.Event, w *window) {
 		c.Painter().Init() // we cannot init until the context is set above
 	}
 
-	newSize := fyne.NewSize(float32(d.currentSize.WidthPx)/c.scale, float32(d.currentSize.HeightPx)/c.scale)
+	newSize := granio.NewSize(float32(d.currentSize.WidthPx)/c.scale, float32(d.currentSize.HeightPx)/c.scale)
 	if c.EnsureMinSize() {
 		c.sizeContent(newSize) // force resize of content
 	} else { // if screen changed
@@ -371,19 +371,19 @@ func (d *driver) handlePaint(e paint.Event, w *window) {
 }
 
 func (*driver) onStart() {
-	if f := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnStarted(); f != nil {
+	if f := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle).OnStarted(); f != nil {
 		f()
 	}
 }
 
 func (*driver) onStop() {
-	l, _ := fyne.CurrentApp().Lifecycle().(*intapp.Lifecycle)
+	l, _ := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle)
 	if f := l.OnStopped(); f != nil {
 		l.QueueEvent(f)
 	}
 }
 
-func (d *driver) paintWindow(window fyne.Window, s fyne.Size) {
+func (d *driver) paintWindow(window granio.Window, s granio.Size) {
 	clips := &internal.ClipStack{}
 	c, _ := window.Canvas().(*canvas)
 
@@ -394,7 +394,7 @@ func (d *driver) paintWindow(window fyne.Window, s fyne.Size) {
 	d.glctx.ClearColor(float32(r)/max16bit, float32(g)/max16bit, float32(b)/max16bit, float32(a)/max16bit)
 	d.glctx.Clear(gl.ColorBufferBit)
 
-	draw := func(node *common.RenderCacheNode, pos fyne.Position) {
+	draw := func(node *common.RenderCacheNode, pos granio.Position) {
 		obj := node.Obj()
 		if intdriver.IsClip(obj) {
 			inner := clips.Push(pos, obj.Size())
@@ -406,7 +406,7 @@ func (d *driver) paintWindow(window fyne.Window, s fyne.Size) {
 		}
 		c.Painter().Paint(obj, pos, s, clips.Top())
 	}
-	afterDraw := func(node *common.RenderCacheNode, pos fyne.Position) {
+	afterDraw := func(node *common.RenderCacheNode, pos granio.Position) {
 		if intdriver.IsClip(node.Obj()) {
 			c.Painter().StopClipping()
 			clips.Pop()
@@ -415,7 +415,7 @@ func (d *driver) paintWindow(window fyne.Window, s fyne.Size) {
 			}
 		}
 
-		if build.Mode == fyne.BuildDebug {
+		if build.Mode == granio.BuildDebug {
 			c.DrawDebugOverlay(node.Obj(), pos, s, clips.Top())
 		}
 	}
@@ -437,7 +437,7 @@ func (d *driver) sendPaintEvent() {
 }
 
 func (d *driver) setTheme(dark bool) {
-	var mode fyne.ThemeVariant
+	var mode granio.ThemeVariant
 	if dark {
 		mode = theme.VariantDark
 	} else {
@@ -453,7 +453,7 @@ func (d *driver) setTheme(dark bool) {
 func (*driver) tapDownCanvas(w *window, x, y float32, tapID touch.Sequence) {
 	tapX := scale.ToFyneCoordinate(w.canvas, int(x))
 	tapY := scale.ToFyneCoordinate(w.canvas, int(y))
-	pos := fyne.NewPos(tapX, tapY+tapYOffset)
+	pos := granio.NewPos(tapX, tapY+tapYOffset)
 
 	w.canvas.tapDown(pos, int(tapID))
 }
@@ -461,9 +461,9 @@ func (*driver) tapDownCanvas(w *window, x, y float32, tapID touch.Sequence) {
 func (*driver) tapMoveCanvas(w *window, x, y float32, tapID touch.Sequence) {
 	tapX := scale.ToFyneCoordinate(w.canvas, int(x))
 	tapY := scale.ToFyneCoordinate(w.canvas, int(y))
-	pos := fyne.NewPos(tapX, tapY+tapYOffset)
+	pos := granio.NewPos(tapX, tapY+tapYOffset)
 
-	co, posMovable, _ := w.canvas.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
+	co, posMovable, _ := w.canvas.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
 		if _, ok := object.(mobile.Movable); ok {
 			return true
 		}
@@ -472,7 +472,7 @@ func (*driver) tapMoveCanvas(w *window, x, y float32, tapID touch.Sequence) {
 
 	if co != nil {
 		co.(mobile.Movable).TouchMoved(&mobile.TouchEvent{
-			PointEvent: fyne.PointEvent{
+			PointEvent: granio.PointEvent{
 				Position: posMovable,
 			},
 			ID: int(tapID),
@@ -480,7 +480,7 @@ func (*driver) tapMoveCanvas(w *window, x, y float32, tapID touch.Sequence) {
 	}
 
 	if tapID == 0 {
-		w.canvas.tapMove(pos, int(tapID), func(wid fyne.Draggable, ev *fyne.DragEvent) {
+		w.canvas.tapMove(pos, int(tapID), func(wid granio.Draggable, ev *granio.DragEvent) {
 			wid.Dragged(ev)
 		})
 	}
@@ -489,15 +489,15 @@ func (*driver) tapMoveCanvas(w *window, x, y float32, tapID touch.Sequence) {
 func (d *driver) tapUpCanvas(w *window, x, y float32, tapID touch.Sequence) {
 	tapX := scale.ToFyneCoordinate(w.canvas, int(x))
 	tapY := scale.ToFyneCoordinate(w.canvas, int(y))
-	pos := fyne.NewPos(tapX, tapY+tapYOffset)
+	pos := granio.NewPos(tapX, tapY+tapYOffset)
 
-	w.canvas.tapUp(pos, int(tapID), func(wid fyne.Tappable, ev *fyne.PointEvent) {
+	w.canvas.tapUp(pos, int(tapID), func(wid granio.Tappable, ev *granio.PointEvent) {
 		wid.Tapped(ev)
-	}, func(wid fyne.SecondaryTappable, ev *fyne.PointEvent) {
+	}, func(wid granio.SecondaryTappable, ev *granio.PointEvent) {
 		wid.TappedSecondary(ev)
-	}, func(wid fyne.DoubleTappable, ev *fyne.PointEvent) {
+	}, func(wid granio.DoubleTappable, ev *granio.PointEvent) {
 		wid.DoubleTapped(ev)
-	}, func(wid fyne.Draggable, ev *fyne.DragEvent) {
+	}, func(wid granio.Draggable, ev *granio.DragEvent) {
 		if math.Abs(float64(ev.Dragged.DX)) <= tapMoveEndThreshold && math.Abs(float64(ev.Dragged.DY)) <= tapMoveEndThreshold {
 			wid.DragEnd()
 			return
@@ -527,124 +527,124 @@ func (d *driver) tapUpCanvas(w *window, x, y float32, tapID touch.Sequence) {
 // scrollable object under the mouse, if there is one at that position. It
 // uses the shared scroll speed, without the desktop driver's acceleration.
 func (*driver) scrollCanvas(w *window, e mouse.ScrollEvent) {
-	pos := fyne.NewPos(scale.ToFyneCoordinate(w.canvas, int(e.X)),
+	pos := granio.NewPos(scale.ToFyneCoordinate(w.canvas, int(e.X)),
 		scale.ToFyneCoordinate(w.canvas, int(e.Y))+tapYOffset)
 
-	co, objPos, _ := w.canvas.findObjectAtPositionMatching(pos, func(object fyne.CanvasObject) bool {
-		_, ok := object.(fyne.Scrollable)
+	co, objPos, _ := w.canvas.findObjectAtPositionMatching(pos, func(object granio.CanvasObject) bool {
+		_, ok := object.(granio.Scrollable)
 		return ok
 	})
 
-	wid, ok := co.(fyne.Scrollable)
+	wid, ok := co.(granio.Scrollable)
 	if !ok {
 		return
 	}
 
-	wid.Scrolled(&fyne.ScrollEvent{
-		PointEvent: fyne.PointEvent{
+	wid.Scrolled(&granio.ScrollEvent{
+		PointEvent: granio.PointEvent{
 			Position:         objPos,
 			AbsolutePosition: pos,
 		},
-		Scrolled: fyne.NewDelta(0, e.ScrollY*common.ScrollSpeed),
+		Scrolled: granio.NewDelta(0, e.ScrollY*common.ScrollSpeed),
 	})
 }
 
-var keyCodeMap = map[key.Code]fyne.KeyName{
+var keyCodeMap = map[key.Code]granio.KeyName{
 	// non-printable
-	key.CodeEscape:          fyne.KeyEscape,
-	key.CodeReturnEnter:     fyne.KeyReturn,
-	key.CodeTab:             fyne.KeyTab,
-	key.CodeDeleteBackspace: fyne.KeyBackspace,
-	key.CodeDeleteForward:   fyne.KeyDelete,
-	key.CodeInsert:          fyne.KeyInsert,
-	key.CodePageUp:          fyne.KeyPageUp,
-	key.CodePageDown:        fyne.KeyPageDown,
-	key.CodeHome:            fyne.KeyHome,
-	key.CodeEnd:             fyne.KeyEnd,
+	key.CodeEscape:          granio.KeyEscape,
+	key.CodeReturnEnter:     granio.KeyReturn,
+	key.CodeTab:             granio.KeyTab,
+	key.CodeDeleteBackspace: granio.KeyBackspace,
+	key.CodeDeleteForward:   granio.KeyDelete,
+	key.CodeInsert:          granio.KeyInsert,
+	key.CodePageUp:          granio.KeyPageUp,
+	key.CodePageDown:        granio.KeyPageDown,
+	key.CodeHome:            granio.KeyHome,
+	key.CodeEnd:             granio.KeyEnd,
 
-	key.CodeLeftArrow:  fyne.KeyLeft,
-	key.CodeRightArrow: fyne.KeyRight,
-	key.CodeUpArrow:    fyne.KeyUp,
-	key.CodeDownArrow:  fyne.KeyDown,
+	key.CodeLeftArrow:  granio.KeyLeft,
+	key.CodeRightArrow: granio.KeyRight,
+	key.CodeUpArrow:    granio.KeyUp,
+	key.CodeDownArrow:  granio.KeyDown,
 
-	key.CodeF1:  fyne.KeyF1,
-	key.CodeF2:  fyne.KeyF2,
-	key.CodeF3:  fyne.KeyF3,
-	key.CodeF4:  fyne.KeyF4,
-	key.CodeF5:  fyne.KeyF5,
-	key.CodeF6:  fyne.KeyF6,
-	key.CodeF7:  fyne.KeyF7,
-	key.CodeF8:  fyne.KeyF8,
-	key.CodeF9:  fyne.KeyF9,
-	key.CodeF10: fyne.KeyF10,
-	key.CodeF11: fyne.KeyF11,
-	key.CodeF12: fyne.KeyF12,
+	key.CodeF1:  granio.KeyF1,
+	key.CodeF2:  granio.KeyF2,
+	key.CodeF3:  granio.KeyF3,
+	key.CodeF4:  granio.KeyF4,
+	key.CodeF5:  granio.KeyF5,
+	key.CodeF6:  granio.KeyF6,
+	key.CodeF7:  granio.KeyF7,
+	key.CodeF8:  granio.KeyF8,
+	key.CodeF9:  granio.KeyF9,
+	key.CodeF10: granio.KeyF10,
+	key.CodeF11: granio.KeyF11,
+	key.CodeF12: granio.KeyF12,
 
-	key.CodeKeypadEnter: fyne.KeyEnter,
+	key.CodeKeypadEnter: granio.KeyEnter,
 
 	// printable
-	key.CodeA:       fyne.KeyA,
-	key.CodeB:       fyne.KeyB,
-	key.CodeC:       fyne.KeyC,
-	key.CodeD:       fyne.KeyD,
-	key.CodeE:       fyne.KeyE,
-	key.CodeF:       fyne.KeyF,
-	key.CodeG:       fyne.KeyG,
-	key.CodeH:       fyne.KeyH,
-	key.CodeI:       fyne.KeyI,
-	key.CodeJ:       fyne.KeyJ,
-	key.CodeK:       fyne.KeyK,
-	key.CodeL:       fyne.KeyL,
-	key.CodeM:       fyne.KeyM,
-	key.CodeN:       fyne.KeyN,
-	key.CodeO:       fyne.KeyO,
-	key.CodeP:       fyne.KeyP,
-	key.CodeQ:       fyne.KeyQ,
-	key.CodeR:       fyne.KeyR,
-	key.CodeS:       fyne.KeyS,
-	key.CodeT:       fyne.KeyT,
-	key.CodeU:       fyne.KeyU,
-	key.CodeV:       fyne.KeyV,
-	key.CodeW:       fyne.KeyW,
-	key.CodeX:       fyne.KeyX,
-	key.CodeY:       fyne.KeyY,
-	key.CodeZ:       fyne.KeyZ,
-	key.Code0:       fyne.Key0,
-	key.CodeKeypad0: fyne.Key0,
-	key.Code1:       fyne.Key1,
-	key.CodeKeypad1: fyne.Key1,
-	key.Code2:       fyne.Key2,
-	key.CodeKeypad2: fyne.Key2,
-	key.Code3:       fyne.Key3,
-	key.CodeKeypad3: fyne.Key3,
-	key.Code4:       fyne.Key4,
-	key.CodeKeypad4: fyne.Key4,
-	key.Code5:       fyne.Key5,
-	key.CodeKeypad5: fyne.Key5,
-	key.Code6:       fyne.Key6,
-	key.CodeKeypad6: fyne.Key6,
-	key.Code7:       fyne.Key7,
-	key.CodeKeypad7: fyne.Key7,
-	key.Code8:       fyne.Key8,
-	key.CodeKeypad8: fyne.Key8,
-	key.Code9:       fyne.Key9,
-	key.CodeKeypad9: fyne.Key9,
+	key.CodeA:       granio.KeyA,
+	key.CodeB:       granio.KeyB,
+	key.CodeC:       granio.KeyC,
+	key.CodeD:       granio.KeyD,
+	key.CodeE:       granio.KeyE,
+	key.CodeF:       granio.KeyF,
+	key.CodeG:       granio.KeyG,
+	key.CodeH:       granio.KeyH,
+	key.CodeI:       granio.KeyI,
+	key.CodeJ:       granio.KeyJ,
+	key.CodeK:       granio.KeyK,
+	key.CodeL:       granio.KeyL,
+	key.CodeM:       granio.KeyM,
+	key.CodeN:       granio.KeyN,
+	key.CodeO:       granio.KeyO,
+	key.CodeP:       granio.KeyP,
+	key.CodeQ:       granio.KeyQ,
+	key.CodeR:       granio.KeyR,
+	key.CodeS:       granio.KeyS,
+	key.CodeT:       granio.KeyT,
+	key.CodeU:       granio.KeyU,
+	key.CodeV:       granio.KeyV,
+	key.CodeW:       granio.KeyW,
+	key.CodeX:       granio.KeyX,
+	key.CodeY:       granio.KeyY,
+	key.CodeZ:       granio.KeyZ,
+	key.Code0:       granio.Key0,
+	key.CodeKeypad0: granio.Key0,
+	key.Code1:       granio.Key1,
+	key.CodeKeypad1: granio.Key1,
+	key.Code2:       granio.Key2,
+	key.CodeKeypad2: granio.Key2,
+	key.Code3:       granio.Key3,
+	key.CodeKeypad3: granio.Key3,
+	key.Code4:       granio.Key4,
+	key.CodeKeypad4: granio.Key4,
+	key.Code5:       granio.Key5,
+	key.CodeKeypad5: granio.Key5,
+	key.Code6:       granio.Key6,
+	key.CodeKeypad6: granio.Key6,
+	key.Code7:       granio.Key7,
+	key.CodeKeypad7: granio.Key7,
+	key.Code8:       granio.Key8,
+	key.CodeKeypad8: granio.Key8,
+	key.Code9:       granio.Key9,
+	key.CodeKeypad9: granio.Key9,
 
-	key.CodeSemicolon: fyne.KeySemicolon,
-	key.CodeEqualSign: fyne.KeyEqual,
+	key.CodeSemicolon: granio.KeySemicolon,
+	key.CodeEqualSign: granio.KeyEqual,
 
-	key.CodeSpacebar:           fyne.KeySpace,
-	key.CodeApostrophe:         fyne.KeyApostrophe,
-	key.CodeComma:              fyne.KeyComma,
-	key.CodeHyphenMinus:        fyne.KeyMinus,
-	key.CodeKeypadHyphenMinus:  fyne.KeyMinus,
-	key.CodeFullStop:           fyne.KeyPeriod,
-	key.CodeKeypadFullStop:     fyne.KeyPeriod,
-	key.CodeSlash:              fyne.KeySlash,
-	key.CodeLeftSquareBracket:  fyne.KeyLeftBracket,
-	key.CodeBackslash:          fyne.KeyBackslash,
-	key.CodeRightSquareBracket: fyne.KeyRightBracket,
-	key.CodeGraveAccent:        fyne.KeyBackTick,
+	key.CodeSpacebar:           granio.KeySpace,
+	key.CodeApostrophe:         granio.KeyApostrophe,
+	key.CodeComma:              granio.KeyComma,
+	key.CodeHyphenMinus:        granio.KeyMinus,
+	key.CodeKeypadHyphenMinus:  granio.KeyMinus,
+	key.CodeFullStop:           granio.KeyPeriod,
+	key.CodeKeypadFullStop:     granio.KeyPeriod,
+	key.CodeSlash:              granio.KeySlash,
+	key.CodeLeftSquareBracket:  granio.KeyLeftBracket,
+	key.CodeBackslash:          granio.KeyBackslash,
+	key.CodeRightSquareBracket: granio.KeyRightBracket,
+	key.CodeGraveAccent:        granio.KeyBackTick,
 
 	key.CodeBackButton: mobile.KeyBack,
 
@@ -658,7 +658,7 @@ var keyCodeMap = map[key.Code]fyne.KeyName{
 	key.CodeRightGUI:     desktop.KeySuperRight,
 }
 
-func keyToName(code key.Code) fyne.KeyName {
+func keyToName(code key.Code) granio.KeyName {
 	ret, ok := keyCodeMap[code]
 	if !ok {
 		return ""
@@ -667,25 +667,25 @@ func keyToName(code key.Code) fyne.KeyName {
 	return ret
 }
 
-func keyModifiers(mod key.Modifiers) fyne.KeyModifier {
-	var ret fyne.KeyModifier
+func keyModifiers(mod key.Modifiers) granio.KeyModifier {
+	var ret granio.KeyModifier
 	if mod&key.ModShift != 0 {
-		ret |= fyne.KeyModifierShift
+		ret |= granio.KeyModifierShift
 	}
 	if mod&key.ModControl != 0 {
-		ret |= fyne.KeyModifierControl
+		ret |= granio.KeyModifierControl
 	}
 	if mod&key.ModAlt != 0 {
-		ret |= fyne.KeyModifierAlt
+		ret |= granio.KeyModifierAlt
 	}
 	if mod&key.ModMeta != 0 {
-		ret |= fyne.KeyModifierSuper
+		ret |= granio.KeyModifierSuper
 	}
 
 	return ret
 }
 
-func isKeyModifier(keyName fyne.KeyName) bool {
+func isKeyModifier(keyName granio.KeyName) bool {
 	return keyName == desktop.KeyShiftLeft || keyName == desktop.KeyShiftRight ||
 		keyName == desktop.KeyControlLeft || keyName == desktop.KeyControlRight ||
 		keyName == desktop.KeyAltLeft || keyName == desktop.KeyAltRight ||
@@ -695,52 +695,52 @@ func isKeyModifier(keyName fyne.KeyName) bool {
 // shortcutForKey mirrors the built-in shortcut detection of the desktop driver.
 // All other combinations of a modifier and a key become a desktop.CustomShortcut,
 // which widgets such as Entry use for behaviours like word selection or deletion.
-func shortcutForKey(keyName fyne.KeyName, modifier fyne.KeyModifier) fyne.Shortcut {
-	var shortcut fyne.Shortcut
-	if modifier == fyne.KeyModifierShortcutDefault {
+func shortcutForKey(keyName granio.KeyName, modifier granio.KeyModifier) granio.Shortcut {
+	var shortcut granio.Shortcut
+	if modifier == granio.KeyModifierShortcutDefault {
 		switch keyName {
-		case fyne.KeyZ: // detect undo shortcut
-			shortcut = &fyne.ShortcutUndo{}
-		case fyne.KeyY: // detect redo shortcut
-			shortcut = &fyne.ShortcutRedo{}
-		case fyne.KeyV: // detect paste shortcut
-			shortcut = &fyne.ShortcutPaste{
+		case granio.KeyZ: // detect undo shortcut
+			shortcut = &granio.ShortcutUndo{}
+		case granio.KeyY: // detect redo shortcut
+			shortcut = &granio.ShortcutRedo{}
+		case granio.KeyV: // detect paste shortcut
+			shortcut = &granio.ShortcutPaste{
 				Clipboard: NewClipboard(),
 			}
-		case fyne.KeyC: // detect copy shortcut
-			shortcut = &fyne.ShortcutCopy{
+		case granio.KeyC: // detect copy shortcut
+			shortcut = &granio.ShortcutCopy{
 				Clipboard: NewClipboard(),
 			}
-		case fyne.KeyInsert: // detect copy shortcut (alternative)
-			shortcut = &fyne.ShortcutCopy{
+		case granio.KeyInsert: // detect copy shortcut (alternative)
+			shortcut = &granio.ShortcutCopy{
 				Clipboard: NewClipboard(),
 				Secondary: true,
 			}
-		case fyne.KeyX: // detect cut shortcut
-			shortcut = &fyne.ShortcutCut{
+		case granio.KeyX: // detect cut shortcut
+			shortcut = &granio.ShortcutCut{
 				Clipboard: NewClipboard(),
 			}
-		case fyne.KeyA: // detect selectAll shortcut
-			shortcut = &fyne.ShortcutSelectAll{}
+		case granio.KeyA: // detect selectAll shortcut
+			shortcut = &granio.ShortcutSelectAll{}
 		}
 	}
 
-	if modifier == fyne.KeyModifierShift {
+	if modifier == granio.KeyModifierShift {
 		switch keyName {
-		case fyne.KeyInsert: // detect paste shortcut (alternative)
-			shortcut = &fyne.ShortcutPaste{
+		case granio.KeyInsert: // detect paste shortcut (alternative)
+			shortcut = &granio.ShortcutPaste{
 				Clipboard: NewClipboard(),
 				Secondary: true,
 			}
-		case fyne.KeyDelete: // detect cut shortcut (alternative)
-			shortcut = &fyne.ShortcutCut{
+		case granio.KeyDelete: // detect cut shortcut (alternative)
+			shortcut = &granio.ShortcutCut{
 				Clipboard: NewClipboard(),
 				Secondary: true,
 			}
 		}
 	}
 
-	if shortcut == nil && modifier != 0 && !isKeyModifier(keyName) && modifier != fyne.KeyModifierShift {
+	if shortcut == nil && modifier != 0 && !isKeyModifier(keyName) && modifier != granio.KeyModifierShift {
 		shortcut = &desktop.CustomShortcut{
 			KeyName:  keyName,
 			Modifier: modifier,
@@ -760,9 +760,9 @@ func runeToPrintable(r rune) rune {
 
 func (d *driver) typeDownCanvas(canvas *canvas, r rune, code key.Code, mod key.Modifiers) {
 	keyName := keyToName(code)
-	if keyName == fyne.KeyTab {
+	if keyName == granio.KeyTab {
 		capture := false
-		if ent, ok := canvas.Focused().(fyne.Tabbable); ok {
+		if ent, ok := canvas.Focused().(granio.Tabbable); ok {
 			capture = ent.AcceptsTab()
 		}
 		if !capture {
@@ -779,7 +779,7 @@ func (d *driver) typeDownCanvas(canvas *canvas, r rune, code key.Code, mod key.M
 
 	modifier := keyModifiers(mod)
 	r = runeToPrintable(r)
-	keyEvent := &fyne.KeyEvent{Name: keyName}
+	keyEvent := &granio.KeyEvent{Name: keyName}
 
 	if canvas.Focused() != nil {
 		if keyable, ok := canvas.Focused().(desktop.Keyable); ok {
@@ -787,7 +787,7 @@ func (d *driver) typeDownCanvas(canvas *canvas, r rune, code key.Code, mod key.M
 		}
 
 		if shortcut := shortcutForKey(keyName, modifier); shortcut != nil {
-			if focusable, ok := canvas.Focused().(fyne.Shortcutable); ok {
+			if focusable, ok := canvas.Focused().(granio.Shortcutable); ok {
 				focusable.TypedShortcut(shortcut)
 				return
 			}
@@ -818,13 +818,13 @@ func (*driver) typeUpCanvas(canvas *canvas, _ rune, code key.Code, _ key.Modifie
 		return
 	}
 
-	keyEvent := &fyne.KeyEvent{Name: keyToName(code)}
+	keyEvent := &granio.KeyEvent{Name: keyToName(code)}
 	if keyable, ok := canvas.Focused().(desktop.Keyable); ok {
 		keyable.KeyUp(keyEvent)
 	}
 }
 
-func (d *driver) Device() fyne.Device {
+func (d *driver) Device() granio.Device {
 	return &d.device
 }
 
@@ -838,9 +838,9 @@ func (*driver) DoubleTapDelay() time.Duration {
 
 // NewGoMobileDriver sets up a new Driver instance implemented using the Go
 // Mobile extension and OpenGL bindings.
-func NewGoMobileDriver() fyne.Driver {
+func NewGoMobileDriver() granio.Driver {
 	d := &driver{
-		theme: fyne.ThemeVariant(2), // unspecified
+		theme: granio.ThemeVariant(2), // unspecified
 	}
 
 	registerRepository(d)

@@ -2,27 +2,27 @@
 
 package async
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 const defaultQueueCapacity = 64
 
 // CanvasObjectQueue represents a single-threaded queue for managing canvas objects using a ring buffer.
 type CanvasObjectQueue struct {
-	buffer []fyne.CanvasObject
+	buffer []granio.CanvasObject
 	head   int
 	size   int
 }
 
 // NewCanvasObjectQueue returns a queue for caching values with an initial capacity.
 func NewCanvasObjectQueue() *CanvasObjectQueue {
-	return &CanvasObjectQueue{buffer: make([]fyne.CanvasObject, defaultQueueCapacity)}
+	return &CanvasObjectQueue{buffer: make([]granio.CanvasObject, defaultQueueCapacity)}
 }
 
 // In adds the given value to the tail of the queue.
 // If the queue is full, it grows the buffer dynamically.
-func (q *CanvasObjectQueue) In(v fyne.CanvasObject) {
+func (q *CanvasObjectQueue) In(v granio.CanvasObject) {
 	if q.size == len(q.buffer) {
-		buffer := make([]fyne.CanvasObject, len(q.buffer)*2)
+		buffer := make([]granio.CanvasObject, len(q.buffer)*2)
 		copy(buffer, q.buffer[q.head:])
 		copy(buffer[len(q.buffer)-q.head:], q.buffer[:q.head])
 		q.buffer = buffer
@@ -36,7 +36,7 @@ func (q *CanvasObjectQueue) In(v fyne.CanvasObject) {
 
 // Out removes and returns the value at the head of the queue.
 // It returns nil if the queue is empty.
-func (q *CanvasObjectQueue) Out() fyne.CanvasObject {
+func (q *CanvasObjectQueue) Out() granio.CanvasObject {
 	if q.size == 0 {
 		return nil
 	}
@@ -47,7 +47,7 @@ func (q *CanvasObjectQueue) Out() fyne.CanvasObject {
 	q.size--
 
 	if q.size == 0 && len(q.buffer) > 4*defaultQueueCapacity {
-		q.buffer = make([]fyne.CanvasObject, defaultQueueCapacity)
+		q.buffer = make([]granio.CanvasObject, defaultQueueCapacity)
 		q.head = 0
 	}
 

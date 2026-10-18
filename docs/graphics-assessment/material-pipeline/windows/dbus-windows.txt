@@ -1,0 +1,7 @@
+ok  	github.com/Uzer007-admin/dbus/v5	1.338s
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.215s [no tests to run]
+ok  	github.com/Uzer007-admin/dbus/v5/portal	(cached)
+ok  	github.com/Uzer007-admin/dbus/v5	1.306s
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.171s [no tests to run]
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.262s
+PASS: Windows daemon-independent units, normal and godbus_no_tcp; native daemon interoperability not claimed

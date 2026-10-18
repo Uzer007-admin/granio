@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -17,20 +17,20 @@ func TestTable_Hovered(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 2, 2 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			c.(*Label).SetText(fmt.Sprintf("Cell %d, %d", id.Row, id.Col))
 		},
 	)
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 
-	test.MoveMouse(w.Canvas(), fyne.NewPos(35, 50))
-	test.MoveMouse(w.Canvas(), fyne.NewPos(35, 100))
+	test.MoveMouse(w.Canvas(), granio.NewPos(35, 50))
+	test.MoveMouse(w.Canvas(), granio.NewPos(35, 100))
 
 	assert.Nil(t, table.hoveredCell)
 
@@ -40,8 +40,8 @@ func TestTable_Hovered(t *testing.T) {
 	table.Refresh()
 
 	w.SetContent(table)
-	w.Resize(fyne.NewSize(180, 180))
-	test.MoveMouse(w.Canvas(), fyne.NewPos(35, 58))
+	w.Resize(granio.NewSize(180, 180))
+	test.MoveMouse(w.Canvas(), granio.NewPos(35, 58))
 
 	assert.Equal(t, 0, table.hoveredCell.Col)
 	assert.Equal(t, 1, table.hoveredCell.Row)

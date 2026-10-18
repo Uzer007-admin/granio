@@ -1,0 +1,6 @@
+=== RUN   TestReferenceExporterIconsWithAppSettings
+--- PASS: TestReferenceExporterIconsWithAppSettings (2.92s)
+=== RUN   TestReferenceSceneIconsFollowVariant
+--- PASS: TestReferenceSceneIconsFollowVariant (2.97s)
+PASS
+ok  	fyne.io/fyne/v2/cmd/fyne_gallery	8.919s

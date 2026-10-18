@@ -17,11 +17,11 @@ import (
 	"github.com/go-text/typesetting/shaping"
 	"golang.org/x/image/math/fixed"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const (
@@ -89,7 +89,7 @@ func lookupRuneFont(r rune, family string, aspect font.Aspect) *font.Face {
 	return fm.ResolveFace(r)
 }
 
-func lookupFaces(t, fallback fyne.Resource, additional []fyne.Resource, family string, style fyne.TextStyle) (faces *dynamicFontMap) {
+func lookupFaces(t, fallback granio.Resource, additional []granio.Resource, family string, style granio.TextStyle) (faces *dynamicFontMap) {
 	f1 := loadMeasureFont(t)
 	if t == fallback {
 		faces = &dynamicFontMap{family: family, faces: []*font.Face{f1}}
@@ -119,7 +119,7 @@ func lookupFaces(t, fallback fyne.Resource, additional []fyne.Resource, family s
 }
 
 // CachedFontFace returns a Font face held in memory. These are loaded from the current theme.
-func CachedFontFace(style fyne.TextStyle, source fyne.Resource, o fyne.CanvasObject) *FontCacheItem {
+func CachedFontFace(style granio.TextStyle, source granio.Resource, o granio.CanvasObject) *FontCacheItem {
 	if source != nil {
 		val, ok := fontCustomCache.Load(source)
 		if !ok {
@@ -149,7 +149,7 @@ func CachedFontFace(style fyne.TextStyle, source fyne.Resource, o fyne.CanvasObj
 
 		// Skip any nil fallback fonts — they can be nil when built with
 		// -tags no_emoji, and the lookupFaces loop expects non-nil entries.
-		var fallbacks []fyne.Resource
+		var fallbacks []granio.Resource
 		if emoji := theme.DefaultEmojiFont(); emoji != nil { // TODO only one emoji - maybe others too
 			fallbacks = append(fallbacks, emoji)
 		}
@@ -199,12 +199,12 @@ func ClearFontCache() {
 }
 
 // DrawString draws a string into an image.
-func DrawString(dst draw.Image, s string, c color.Color, f shaping.Fontmap, fontSize, scale float32, style fyne.TextStyle) {
+func DrawString(dst draw.Image, s string, c color.Color, f shaping.Fontmap, fontSize, scale float32, style granio.TextStyle) {
 	DrawStringOffset(dst, s, c, f, fontSize, scale, style, 0)
 }
 
 // DrawStringOffset draws a string shifted left by the specified pixel offset.
-func DrawStringOffset(dst draw.Image, s string, c color.Color, f shaping.Fontmap, fontSize, scale float32, style fyne.TextStyle, offset int) {
+func DrawStringOffset(dst draw.Image, s string, c color.Color, f shaping.Fontmap, fontSize, scale float32, style granio.TextStyle, offset int) {
 	r := render.Renderer{
 		FontSize: fontSize,
 		PixScale: scale,
@@ -242,7 +242,7 @@ type PlacedGlyph struct {
 // from another face for those, which this deliberately does not do: a caller that
 // cannot draw a notdef should fall back to DrawString for the whole string rather
 // than have this grow a second shaping path.
-func WalkGlyphs(f shaping.Fontmap, s string, fontSize, scale float32, style fyne.TextStyle, cb func(PlacedGlyph)) {
+func WalkGlyphs(f shaping.Fontmap, s string, fontSize, scale float32, style granio.TextStyle, cb func(PlacedGlyph)) {
 	advance := float32(0)
 	walkString(f, s, float32ToFixed266(fontSize), style, &advance, scale, func(run shaping.Output, x, y float32) {
 		// The truncation of x and the ceiling of y mirror DrawStringOffset and
@@ -279,13 +279,13 @@ func RasteriseGlyph(dst draw.Image, g PlacedGlyph, c color.Color, fontSize, scal
 // loadMeasureFont returns a new face for the font, which callers may use
 // without locking. Faces are not safe for concurrent use, but the parsed Font
 // they share is, so the parse is reused.
-func loadMeasureFont(data fyne.Resource) *font.Face {
+func loadMeasureFont(data granio.Resource) *font.Face {
 	if ft, ok := parsedFonts.Load(data); ok {
 		return font.NewFace(ft)
 	}
 	loaded, err := font.ParseTTF(bytes.NewReader(data.Content()))
 	if err != nil {
-		fyne.LogError("font load error", err)
+		granio.LogError("font load error", err)
 		return nil
 	}
 	parsedFonts.Store(data, loaded.Font)
@@ -294,7 +294,7 @@ func loadMeasureFont(data fyne.Resource) *font.Face {
 
 // MeasureString returns how far dot would advance by drawing s with f.
 // Tabs are translated into a dot location change.
-func MeasureString(f shaping.Fontmap, s string, textSize float32, style fyne.TextStyle) (size fyne.Size, advance float32) {
+func MeasureString(f shaping.Fontmap, s string, textSize float32, style granio.TextStyle) (size granio.Size, advance float32) {
 	// we do not support newlines in string primitive yet, but the go-text now cuts the run
 	s = strings.ReplaceAll(s, "\n", string([]rune{replacementChar}))
 	return walkString(f, s, float32ToFixed266(textSize), style, &advance, 1, func(shaping.Output, float32, float32) {})
@@ -302,7 +302,7 @@ func MeasureString(f shaping.Fontmap, s string, textSize float32, style fyne.Tex
 
 // RenderedTextSize looks up how big a string would be if drawn on screen.
 // It also returns the distance from top to the text baseline.
-func RenderedTextSize(text string, fontSize float32, style fyne.TextStyle, source fyne.Resource) (size fyne.Size, baseline float32) {
+func RenderedTextSize(text string, fontSize float32, style granio.TextStyle, source granio.Resource) (size granio.Size, baseline float32) {
 	size, base := cache.GetFontMetrics(text, fontSize, style, source)
 	if base != 0 {
 		return size, base
@@ -321,7 +321,7 @@ func float32ToFixed266(f float32) fixed.Int26_6 {
 	return fixed.Int26_6(float64(f) * (1 << 6))
 }
 
-func measureText(text string, fontSize float32, style fyne.TextStyle, source fyne.Resource) (fyne.Size, float32) {
+func measureText(text string, fontSize float32, style granio.TextStyle, source granio.Resource) (granio.Size, float32) {
 	face := CachedFontFace(style, source, nil)
 	return MeasureString(face.Fonts, text, fontSize, style)
 }
@@ -381,9 +381,9 @@ var (
 // All runs share a single ascent (the max ascent of any run in the string), so that
 // runs shaped in different fallback fonts (e.g. mixed-script or emoji + text)
 // still align on a common baseline
-func walkString(faces shaping.Fontmap, s string, textSize fixed.Int26_6, style fyne.TextStyle, advance *float32, scale float32,
+func walkString(faces shaping.Fontmap, s string, textSize fixed.Int26_6, style granio.TextStyle, advance *float32, scale float32,
 	cb func(run shaping.Output, x, y float32),
-) (size fyne.Size, base float32) {
+) (size granio.Size, base float32) {
 	s = strings.ReplaceAll(s, "\r", "")
 
 	runBufferMut.Lock()
@@ -419,7 +419,7 @@ func walkString(faces shaping.Fontmap, s string, textSize fixed.Int26_6, style f
 	runBuffer = runBuffer[:0]
 
 	*advance = x
-	return fyne.NewSize(*advance, fixed266ToFloat32(shaped.space.LineBounds.LineThickness())),
+	return granio.NewSize(*advance, fixed266ToFloat32(shaped.space.LineBounds.LineThickness())),
 		fixed266ToFloat32(shaped.space.LineBounds.Ascent)
 }
 
@@ -626,18 +626,18 @@ type FontCacheItem struct {
 }
 
 type cacheID struct {
-	style fyne.TextStyle
+	style granio.TextStyle
 	scope string
 }
 
 var (
 	fontCache       async.Map[cacheID, *FontCacheItem]
-	fontCustomCache async.Map[fyne.Resource, *FontCacheItem] // for custom resources
+	fontCustomCache async.Map[granio.Resource, *FontCacheItem] // for custom resources
 
 	// parsedFonts holds each font resource parsed once. Every style's face list
 	// includes the fallback and emoji fonts, and parsing the emoji font alone
 	// takes several MB, so parsing per style multiplied that.
-	parsedFonts async.Map[fyne.Resource, *font.Font]
+	parsedFonts async.Map[granio.Resource, *font.Font]
 )
 
 type noopLogger struct{}

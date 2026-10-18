@@ -1,10 +1,10 @@
 package test
 
 import (
-	"fyne.io/fyne/v2"
-	fynedriver "fyne.io/fyne/v2/driver"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2"
+	fynedriver "github.com/Uzer007-admin/granio/v2/driver"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
 )
 
 // WindowlessCanvas provides functionality for a canvas to operate without a window
@@ -15,7 +15,7 @@ type WindowlessCanvas = software.WindowlessCanvas
 var dummyCanvas software.WindowlessCanvas
 
 // Canvas returns a reusable in-memory canvas used for testing
-func Canvas() fyne.Canvas {
+func Canvas() granio.Canvas {
 	if dummyCanvas == nil {
 		dummyCanvas = NewCanvas()
 	}

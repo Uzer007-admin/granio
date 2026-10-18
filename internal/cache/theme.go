@@ -4,17 +4,17 @@ import (
 	"strconv"
 	"sync/atomic"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
 var (
-	overrides     async.Map[fyne.CanvasObject, *overrideScope]
+	overrides     async.Map[granio.CanvasObject, *overrideScope]
 	overrideCount atomic.Uint32
 )
 
 type overrideScope struct {
-	th      fyne.Theme
+	th      granio.Theme
 	cacheID string
 }
 
@@ -23,13 +23,13 @@ type overrideScope struct {
 // If the object is a container it will theme the children, if it is a canvas primitive it will do nothing.
 //
 // Since: 2.5
-func OverrideTheme(o fyne.CanvasObject, th fyne.Theme) {
+func OverrideTheme(o granio.CanvasObject, th granio.Theme) {
 	id := overrideCount.Add(1)
 	s := &overrideScope{th: th, cacheID: strconv.Itoa(int(id))}
 	overrideThemeWithScope(o, s)
 }
 
-func OverrideThemeMatchingScope(o, parent fyne.CanvasObject) bool {
+func OverrideThemeMatchingScope(o, parent granio.CanvasObject) bool {
 	scope, ok := overrides.Load(parent)
 	if !ok { // not overridden in parent
 		return false
@@ -39,7 +39,7 @@ func OverrideThemeMatchingScope(o, parent fyne.CanvasObject) bool {
 	return true
 }
 
-func WidgetScopeID(o fyne.CanvasObject) string {
+func WidgetScopeID(o granio.CanvasObject) string {
 	scope, ok := overrides.Load(o)
 	if !ok {
 		return ""
@@ -48,7 +48,7 @@ func WidgetScopeID(o fyne.CanvasObject) string {
 	return scope.cacheID
 }
 
-func WidgetTheme(o fyne.CanvasObject) fyne.Theme {
+func WidgetTheme(o granio.CanvasObject) granio.Theme {
 	scope, ok := overrides.Load(o)
 	if !ok {
 		return nil
@@ -57,28 +57,28 @@ func WidgetTheme(o fyne.CanvasObject) fyne.Theme {
 	return scope.th
 }
 
-func overrideContainer(c *fyne.Container, s *overrideScope) {
+func overrideContainer(c *granio.Container, s *overrideScope) {
 	for _, o := range c.Objects {
 		overrideThemeWithScope(o, s)
 	}
 }
 
-func overrideThemeWithScope(o fyne.CanvasObject, s *overrideScope) {
+func overrideThemeWithScope(o granio.CanvasObject, s *overrideScope) {
 	if _, ok := o.(interface{ SetDeviceIsMobile(bool) }); ok { // ThemeOverride without the import loop
 		return // do not apply this theme over a new scope
 	}
 
 	switch c := o.(type) {
-	case fyne.Widget:
+	case granio.Widget:
 		overrideWidget(c, s)
-	case *fyne.Container:
+	case *granio.Container:
 		overrideContainer(c, s)
 	default:
 		overrides.Store(c, s)
 	}
 }
 
-func overrideWidget(w fyne.Widget, s *overrideScope) {
+func overrideWidget(w granio.Widget, s *overrideScope) {
 	ResetThemeCaches()
 	overrides.Store(w, s)
 

@@ -1,0 +1,220 @@
+{
+  "at_capture": {
+    "DesktopTheme": {
+      "Value": {
+        "Name": "",
+        "WidgetStyle": "",
+        "Font": "",
+        "IconTheme": ""
+      },
+      "Available": false
+    },
+    "Generation": 1,
+    "Available": false,
+    "ColorScheme": {
+      "Value": 0,
+      "Available": false
+    },
+    "HighContrast": {
+      "Value": false,
+      "Available": false
+    },
+    "ReducedMotion": {
+      "Value": false,
+      "Available": false
+    },
+    "Accent": {
+      "Value": {
+        "R": 0,
+        "G": 0,
+        "B": 0,
+        "A": 0
+      },
+      "Available": false
+    },
+    "TextScale": {
+      "Value": 0,
+      "Available": false
+    },
+    "Transparency": {
+      "Value": false,
+      "Available": false
+    },
+    "Colors": {
+      "Value": {
+        "Window": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "WindowText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "ButtonFace": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "ButtonText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "Highlight": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "HighlightText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "GrayText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "Hotlight": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        }
+      },
+      "Available": false
+    },
+    "UnavailableReason": "portal: settings service unavailable\nCould not get owner of name 'org.freedesktop.portal.Desktop': no such name"
+  },
+  "before_driver_loop": {
+    "DesktopTheme": {
+      "Value": {
+        "Name": "",
+        "WidgetStyle": "",
+        "Font": "",
+        "IconTheme": ""
+      },
+      "Available": false
+    },
+    "Generation": 1,
+    "Available": false,
+    "ColorScheme": {
+      "Value": 0,
+      "Available": false
+    },
+    "HighContrast": {
+      "Value": false,
+      "Available": false
+    },
+    "ReducedMotion": {
+      "Value": false,
+      "Available": false
+    },
+    "Accent": {
+      "Value": {
+        "R": 0,
+        "G": 0,
+        "B": 0,
+        "A": 0
+      },
+      "Available": false
+    },
+    "TextScale": {
+      "Value": 0,
+      "Available": false
+    },
+    "Transparency": {
+      "Value": false,
+      "Available": false
+    },
+    "Colors": {
+      "Value": {
+        "Window": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "WindowText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "ButtonFace": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "ButtonText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "Highlight": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "HighlightText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "GrayText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        },
+        "Hotlight": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 0
+        }
+      },
+      "Available": false
+    },
+    "UnavailableReason": "portal: settings service unavailable\nCould not get owner of name 'org.freedesktop.portal.Desktop': no such name"
+  },
+  "display": {
+    "Backend": "wayland",
+    "Requested": "wayland",
+    "SessionType": "tty"
+  },
+  "theme_icon_size": 20,
+  "theme_primary": {
+    "R": 20,
+    "G": 87,
+    "B": 183,
+    "A": 255
+  },
+  "theme_text_size": 14,
+  "visuals": {
+    "RequestID": 1,
+    "Phase": 1,
+    "Requested": 0,
+    "Selected": 0,
+    "Backend": 4,
+    "SurfaceReady": true,
+    "NativeAccepted": false,
+    "Reason": 0,
+    "NativeCode": 0,
+    "PreparedFrames": 6,
+    "FirstFrameBeforeShow": true
+  }
+}

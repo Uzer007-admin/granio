@@ -1,0 +1,23 @@
+ok  	github.com/Uzer007-admin/dbus/v5	5.912s
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/account	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/background	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/filechooser	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/internal/apis	[no test files]
+ok  	github.com/Uzer007-admin/dbus/v5/desktopportal/internal/convert	1.009s
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/internal/request	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/internal/session	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/memorymonitor	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/networkmonitor	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/notification	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/openuri	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/powerprofilemonitor	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/proxyresolver	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/screenshot	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/settings	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/settings/appearance	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/trash	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/desktopportal/wallpaper	[no test files]
+?   	github.com/Uzer007-admin/dbus/v5/introspect	[no test files]
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.105s
+ok  	github.com/Uzer007-admin/dbus/v5/prop	1.020s

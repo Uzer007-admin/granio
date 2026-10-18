@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/data/validation"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/data/validation"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -52,7 +52,7 @@ func TestForm_Append_Items(t *testing.T) {
 	assert.Len(t, form.Items, 2)
 
 	form.Refresh()
-	c := renderer.Objects()[0].(*fyne.Container).Objects[0].(*fyne.Container)
+	c := renderer.Objects()[0].(*granio.Container).Objects[0].(*granio.Container)
 	assert.Equal(t, "test2", c.Objects[2].(*RichText).String())
 }
 
@@ -134,7 +134,7 @@ func TestForm_ChangeText(t *testing.T) {
 	form := NewForm(item)
 
 	renderer := test.TempWidgetRenderer(t, form)
-	c := renderer.Objects()[0].(*fyne.Container).Objects[0].(*fyne.Container)
+	c := renderer.Objects()[0].(*granio.Container).Objects[0].(*granio.Container)
 	assert.Equal(t, "Test", c.Objects[0].(*RichText).String())
 
 	item.Text = "Changed"
@@ -169,7 +169,7 @@ func TestForm_ChangeItemWidget_ResetsValidation(t *testing.T) {
 	assert.Error(t, item.validationError)
 	assert.True(t, form.submitButton.Disabled())
 
-	item.Widget = NewLabel("static") // not fyne.Validatable
+	item.Widget = NewLabel("static") // not granio.Validatable
 	form.Refresh()
 
 	assert.False(t, item.invalid)
@@ -248,7 +248,7 @@ func TestForm_ChangeTheme(t *testing.T) {
 
 	test.WithTestTheme(t, func() {
 		form.Refresh()
-		w.Resize(form.MinSize().Add(fyne.NewSize(theme.InnerPadding(), theme.InnerPadding())))
+		w.Resize(form.MinSize().Add(granio.NewSize(theme.InnerPadding(), theme.InnerPadding())))
 		test.AssertImageMatches(t, "form/theme_changed.png", w.Canvas().Capture())
 	})
 }
@@ -287,15 +287,15 @@ func TestForm_Hints(t *testing.T) {
 	w := test.NewWindow(form)
 	defer w.Close()
 
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/hint_initial.png", w.Canvas().Capture())
 
 	test.Type(entry2, "n")
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/hint_invalid.png", w.Canvas().Capture())
 
 	test.Type(entry2, "ot-")
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/hint_valid.png", w.Canvas().Capture())
 }
 
@@ -498,21 +498,21 @@ func TestForm_Disable_Validation(t *testing.T) {
 	w := test.NewWindow(form)
 	defer w.Close()
 
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/disable_validation_initial.png", w.Canvas().Capture())
 
 	form.Disable()
 
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/disable_validation_disabled_invalid.png", w.Canvas().Capture())
 
 	form.Enable()
 
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/disable_validation_enabled_invalid.png", w.Canvas().Capture())
 
 	entry.SetText("15-true")
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/disable_validation_enabled_valid.png", w.Canvas().Capture())
 
 	// ensure we don't re-enable the form when entering something valid
@@ -520,7 +520,7 @@ func TestForm_Disable_Validation(t *testing.T) {
 	form.Disable()
 	entry.SetText("15-true")
 
-	w.Resize(form.MinSize().Add(fyne.NewSquareSize(theme.Padding() * 2)))
+	w.Resize(form.MinSize().Add(granio.NewSquareSize(theme.Padding() * 2)))
 	test.AssertImageMatches(t, "form/disable_validation_disabled_valid.png", w.Canvas().Capture())
 }
 

@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
 )
 
 // LinearGradient defines a Gradient travelling straight at a given angle.
@@ -68,7 +68,7 @@ func (g *LinearGradient) Hide() {
 }
 
 // Move the gradient to a new position, relative to its parent / canvas
-func (g *LinearGradient) Move(pos fyne.Position) {
+func (g *LinearGradient) Move(pos granio.Position) {
 	if g.Position() == pos {
 		return
 	}
@@ -79,7 +79,7 @@ func (g *LinearGradient) Move(pos fyne.Position) {
 }
 
 // Resize resizes the gradient to a new size.
-func (g *LinearGradient) Resize(size fyne.Size) {
+func (g *LinearGradient) Resize(size granio.Size) {
 	if size == g.Size() {
 		return
 	}
@@ -146,14 +146,14 @@ func (g *RadialGradient) Hide() {
 }
 
 // Move the gradient to a new position, relative to its parent / canvas
-func (g *RadialGradient) Move(pos fyne.Position) {
+func (g *RadialGradient) Move(pos granio.Position) {
 	g.baseObject.Move(pos)
 
 	repaint(g)
 }
 
 // Resize resizes the gradient to a new size.
-func (g *RadialGradient) Resize(size fyne.Size) {
+func (g *RadialGradient) Resize(size granio.Size) {
 	if size == g.Size() {
 		return
 	}

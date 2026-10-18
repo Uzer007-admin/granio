@@ -3,17 +3,17 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var globalRadioRenderer fyne.WidgetRenderer
+var globalRadioRenderer granio.WidgetRenderer
 
 func BenchmarkRadioCreateRenderer(b *testing.B) {
-	var renderer fyne.WidgetRenderer
+	var renderer granio.WidgetRenderer
 	widget := &radioItem{}
 	b.ReportAllocs()
 
@@ -28,9 +28,9 @@ func BenchmarkRadioCreateRenderer(b *testing.B) {
 func TestRadioItem_FocusIndicator_Centered_Vertically(t *testing.T) {
 	item := newRadioItem("Hello", nil)
 	render := test.TempWidgetRenderer(t, item).(*radioItemRenderer)
-	render.Layout(fyne.NewSize(200, 100))
+	render.Layout(granio.NewSize(200, 100))
 
 	focusIndicatorSize := theme.IconInlineSize() + 2*theme.Padding()
 	heightCenterOffset := (100 - focusIndicatorSize) / 2
-	assert.Equal(t, fyne.NewPos(theme.Padding()/2, heightCenterOffset), render.focusIndicator.Position1)
+	assert.Equal(t, granio.NewPos(theme.Padding()/2, heightCenterOffset), render.focusIndicator.Position1)
 }

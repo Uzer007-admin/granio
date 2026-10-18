@@ -3,9 +3,9 @@ package app
 import (
 	"os"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 type store struct {
@@ -13,9 +13,9 @@ type store struct {
 	a *fyneApp
 }
 
-func (s *store) RootURI() fyne.URI {
+func (s *store) RootURI() granio.URI {
 	if s.a.missingID {
-		fyne.LogError("Storage API requires a unique ID, use app.NewWithID()", nil)
+		granio.LogError("Storage API requires a unique ID, use app.NewWithID()", nil)
 		return storage.NewFileURI(os.TempDir())
 	}
 
@@ -26,6 +26,6 @@ func (s *store) RootURI() fyne.URI {
 	return storage.NewFileURI(s.a.storageRoot())
 }
 
-func (s *store) docRootURI() (fyne.URI, error) {
+func (s *store) docRootURI() (granio.URI, error) {
 	return storage.Child(s.RootURI(), "Documents")
 }

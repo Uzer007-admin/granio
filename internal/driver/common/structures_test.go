@@ -3,11 +3,11 @@ package common
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,13 +16,13 @@ func TestDeduplicatedObjectQueue(t *testing.T) {
 	assert.Zero(t, queue.Len())
 	assert.Nil(t, queue.Out())
 
-	obj1 := &fyne.Container{Layout: layout.NewCenterLayout()}
+	obj1 := &granio.Container{Layout: layout.NewCenterLayout()}
 	queue.In(obj1)
 	assert.Equal(t, uint64(1), queue.Len())
 	queue.In(obj1)
 	assert.Equal(t, uint64(1), queue.Len())
 
-	obj2 := &fyne.Container{Layout: layout.NewFormLayout()}
+	obj2 := &granio.Container{Layout: layout.NewFormLayout()}
 	queue.In(obj2)
 	assert.Equal(t, uint64(2), queue.Len())
 
@@ -41,12 +41,12 @@ func TestOverlayStack(t *testing.T) {
 	stack := overlayStack{}
 	stack.Canvas = test.NewTempWindow(t, widget.NewLabel("Empty")).Canvas()
 
-	obj1 := &fyne.Container{Layout: layout.NewCenterLayout()}
+	obj1 := &granio.Container{Layout: layout.NewCenterLayout()}
 	stack.Add(obj1)
 	assert.Equal(t, 1, len(stack.List()))
 	assert.Equal(t, 1, len(stack.renderCaches))
 
-	obj2 := &fyne.Container{Layout: layout.NewFormLayout()}
+	obj2 := &granio.Container{Layout: layout.NewFormLayout()}
 	stack.Add(obj2)
 	assert.Equal(t, 2, len(stack.List()))
 	assert.Equal(t, 2, len(stack.renderCaches))

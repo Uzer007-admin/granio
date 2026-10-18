@@ -1,6 +1,6 @@
 //go:build !darwin
 
-package fyne
+package granio
 
 // KeyModifierShortcutDefault is the default key modifier for shortcuts (Control or Command).
 //

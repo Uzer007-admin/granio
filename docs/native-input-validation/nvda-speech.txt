@@ -1,0 +1,3 @@
+Speaking [LangChangeCommand ('en'), 'Fyne native input acceptance', 'window', CancellableSpeech (still valid)]
+Speaking [LangChangeCommand ('en'), 'CJK input', 'edit', CancellableSpeech (still valid), 'blank']
+Speaking [LangChangeCommand ('en'), 'Private input', 'edit', 'protected', CancellableSpeech (still valid)]

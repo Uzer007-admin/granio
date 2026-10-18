@@ -1,0 +1,31 @@
+{
+  "recorded_from": "first Windows probe tool output in this assessment",
+  "go": "go1.27.1",
+  "GLFW": "3.4.0",
+  "renderer": "NVIDIA GeForce RTX 4080 SUPER",
+  "resolver_lookups": 2848,
+  "resolver_init_ms": 8.4433,
+  "GetError_ns": [
+    577.2,
+    572.6,
+    590.1
+  ],
+  "ClearColor_ns": [
+    42.2,
+    39.8,
+    39.9
+  ],
+  "Ptr_slice_ns": [
+    87.2,
+    15.0,
+    32.4
+  ],
+  "Ptr_slice_allocs_per_op": 1,
+  "framebuffer": [
+    0,
+    255,
+    0,
+    255
+  ],
+  "debug_callback_count": 1
+}

@@ -1,0 +1,75 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/internal/driver/glfw
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkFrameEnsureMinSize-16    	    4696	    109150 ns/op	     144 B/op	       2 allocs/op
+BenchmarkFrameEnsureMinSize-16    	    5218	    119307 ns/op	     144 B/op	       2 allocs/op
+BenchmarkFrameEnsureMinSize-16    	    5235	    114896 ns/op	     144 B/op	       2 allocs/op
+BenchmarkFrameWalkTrees-16        	   25536	     22872 ns/op	     144 B/op	       2 allocs/op
+--- BENCH: BenchmarkFrameWalkTrees-16
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+BenchmarkFrameWalkTrees-16        	   25832	     24052 ns/op	     144 B/op	       2 allocs/op
+--- BENCH: BenchmarkFrameWalkTrees-16
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+BenchmarkFrameWalkTrees-16        	   24858	     25162 ns/op	     144 B/op	       2 allocs/op
+--- BENCH: BenchmarkFrameWalkTrees-16
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+    frame_bench_test.go:59: visited 730 nodes per pass
+BenchmarkRunOnMain-16             	   68631	      8838 ns/op	      18 B/op	       0 allocs/op
+BenchmarkRunOnMain-16             	   69658	      8845 ns/op	      18 B/op	       0 allocs/op
+BenchmarkRunOnMain-16             	   69517	      8633 ns/op	      18 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	9.139s
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/internal/cache
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkGetFontMetrics-16    	   36350	     16525 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetFontMetrics-16    	   36246	     16615 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetFontMetrics-16    	   36330	     16654 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/cache	2.578s
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/widget
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkContentMinSize-16                  	477334183	         1.252 ns/op	       0 B/op	       0 allocs/op
+BenchmarkContentMinSize-16                  	482272080	         1.248 ns/op	       0 B/op	       0 allocs/op
+BenchmarkContentMinSize-16                  	480036098	         1.248 ns/op	       0 B/op	       0 allocs/op
+BenchmarkText_splitLines-16                 	   49882	     13157 ns/op	   30224 B/op	      28 allocs/op
+BenchmarkText_splitLines-16                 	   42710	     13688 ns/op	   30224 B/op	      28 allocs/op
+BenchmarkText_splitLines-16                 	   59132	     12231 ns/op	   30224 B/op	      28 allocs/op
+BenchmarkText_lineBounds_WrapWord-16        	     428	   1373842 ns/op	 1696388 B/op	   13948 allocs/op
+BenchmarkText_lineBounds_WrapWord-16        	     440	   1341579 ns/op	 1696389 B/op	   13948 allocs/op
+BenchmarkText_lineBounds_WrapWord-16        	     450	   1370780 ns/op	 1696388 B/op	   13948 allocs/op
+BenchmarkText_howManyRunesFit_latin-16      	  494852	      1155 ns/op	    2400 B/op	       3 allocs/op
+BenchmarkText_howManyRunesFit_latin-16      	  543109	      1199 ns/op	    2400 B/op	       3 allocs/op
+BenchmarkText_howManyRunesFit_latin-16      	  493533	      1159 ns/op	    2400 B/op	       3 allocs/op
+BenchmarkText_howManyRunesFit_chinese-16    	  341026	      1611 ns/op	     928 B/op	       4 allocs/op
+BenchmarkText_howManyRunesFit_chinese-16    	  388874	      1596 ns/op	     928 B/op	       4 allocs/op
+BenchmarkText_howManyRunesFit_chinese-16    	  376474	      1598 ns/op	     928 B/op	       4 allocs/op
+BenchmarkTextGrid_Refresh-16                	   26632	     22652 ns/op	    4064 B/op	    1001 allocs/op
+BenchmarkTextGrid_Refresh-16                	   26919	     22830 ns/op	    4064 B/op	    1001 allocs/op
+BenchmarkTextGrid_Refresh-16                	   26342	     27446 ns/op	    4064 B/op	    1001 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/widget	18.738s
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/internal/painter/software
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkDrawRectangle_Opaque_1280x800-16     	     907	    650998 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDrawRectangle_Opaque_1280x800-16     	     916	    655603 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDrawRectangle_Opaque_1280x800-16     	     855	    655479 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDrawRectangle_Generic_1280x800-16    	      56	  10641420 ns/op	       2 B/op	       0 allocs/op
+BenchmarkDrawRectangle_Generic_1280x800-16    	      55	  10608976 ns/op	       0 B/op	       0 allocs/op
+BenchmarkDrawRectangle_Generic_1280x800-16    	      56	  10663532 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/software	4.117s

@@ -1,0 +1,8 @@
+=== RUN   TestNativeWindowVisualsDWMComposition
+    window_visuals_native_windows_test.go:273: DWM mode=1 red=[243 243 243] blue=[240 243 249] background_delta=3.00 alpha_error=1.00
+    window_visuals_native_windows_test.go:273: DWM mode=2 red=[213 219 228] blue=[213 219 228] background_delta=0.00 alpha_error=1.00
+    window_visuals_native_windows_test.go:273: DWM mode=3 red=[242 138 132] blue=[139 153 244] background_delta=76.67 alpha_error=0.75
+    window_visuals_native_windows_test.go:303: checker contrast stddev: acrylic=0.449 raw-alpha=119.000
+--- PASS: TestNativeWindowVisualsDWMComposition (4.66s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	10.242s

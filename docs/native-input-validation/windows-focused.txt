@@ -1,0 +1,20 @@
+=== RUN   TestWindowsAccessibilityProviderLifetime
+--- PASS: TestWindowsAccessibilityProviderLifetime (0.01s)
+=== RUN   TestWindowsAccessibilityOffscreenHierarchy
+--- PASS: TestWindowsAccessibilityOffscreenHierarchy (0.32s)
+=== RUN   TestWindowsAccessibilityRecycledSelection
+--- PASS: TestWindowsAccessibilityRecycledSelection (0.08s)
+=== RUN   TestWindowsAccessibilityTextRangeABI
+--- PASS: TestWindowsAccessibilityTextRangeABI (0.02s)
+=== RUN   TestWindowsAccessibilityEventABI
+--- PASS: TestWindowsAccessibilityEventABI (0.01s)
+=== RUN   TestWindowsAccessibilityScrollPreservesSelection
+--- PASS: TestWindowsAccessibilityScrollPreservesSelection (0.10s)
+=== RUN   TestTSFTextStoreNativeContract
+--- PASS: TestTSFTextStoreNativeContract (0.02s)
+=== RUN   TestTSFNativeEditSession
+--- PASS: TestTSFNativeEditSession (0.27s)
+=== RUN   TestNativeCanvasAndPopupMaterials
+--- PASS: TestNativeCanvasAndPopupMaterials (0.16s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	2.632s

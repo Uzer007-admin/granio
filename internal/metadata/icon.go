@@ -7,13 +7,13 @@ import (
 
 	"github.com/nfnt/resize"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func ScaleIcon(data fyne.Resource, size int) fyne.Resource {
+func ScaleIcon(data granio.Resource, size int) granio.Resource {
 	img, err := png.Decode(bytes.NewReader(data.Content()))
 	if err != nil {
-		fyne.LogError("Failed to decode app icon", err)
+		granio.LogError("Failed to decode app icon", err)
 		return data
 	}
 
@@ -25,7 +25,7 @@ func ScaleIcon(data fyne.Resource, size int) fyne.Resource {
 	smallData := &bytes.Buffer{}
 	err = png.Encode(smallData, sized)
 	if err != nil {
-		fyne.LogError("Failed to encode smaller app icon", err)
+		granio.LogError("Failed to encode smaller app icon", err)
 		return data
 	}
 
@@ -37,5 +37,5 @@ func ScaleIcon(data fyne.Resource, size int) fyne.Resource {
 	} else {
 		name = name[:nameLen-4] + suffix
 	}
-	return fyne.NewStaticResource(name, smallData.Bytes())
+	return granio.NewStaticResource(name, smallData.Bytes())
 }

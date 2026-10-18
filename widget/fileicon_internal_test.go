@@ -9,13 +9,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Simulate being rendered by calling CreateRenderer() to update icon
-func newRenderedFileIcon(uri fyne.URI) *FileIcon {
+func newRenderedFileIcon(uri granio.URI) *FileIcon {
 	f := NewFileIcon(uri)
 	f.CreateRenderer()
 	return f
@@ -46,7 +46,7 @@ func TestFileIcon_NewFileIcon(t *testing.T) {
 func TestFileIcon_NewFileIcon_NoExtension(t *testing.T) {
 	workingDir, err := os.Getwd()
 	if err != nil {
-		fyne.LogError("Could not get current working directory", err)
+		granio.LogError("Could not get current working directory", err)
 		t.FailNow()
 	}
 	binFileWithNoExt := filepath.Join(workingDir, "testdata/bin")
@@ -64,7 +64,7 @@ func TestFileIcon_NewFileIcon_NoExtension(t *testing.T) {
 func TestFileIcon_NewURI_WithFolder(t *testing.T) {
 	workingDir, err := os.Getwd()
 	if err != nil {
-		fyne.LogError("Could not get current working directory", err)
+		granio.LogError("Could not get current working directory", err)
 		t.FailNow()
 	}
 
@@ -103,7 +103,7 @@ func TestFileIcon_SetURI(t *testing.T) {
 func TestFileIcon_SetURI_WithFolder(t *testing.T) {
 	workingDir, err := os.Getwd()
 	if err != nil {
-		fyne.LogError("Could not get current working directory", err)
+		granio.LogError("Could not get current working directory", err)
 		t.FailNow()
 	}
 	dir := filepath.Join(workingDir, "testdata")
@@ -123,7 +123,7 @@ func TestFileIcon_SetURI_WithFolder(t *testing.T) {
 func TestFileIcon_DirURIUpdated(t *testing.T) {
 	workingDir, err := os.Getwd()
 	if err != nil {
-		fyne.LogError("Could not get current working directory", err)
+		granio.LogError("Could not get current working directory", err)
 		t.FailNow()
 	}
 	testDir := filepath.Join(workingDir, "testdata", "notCreatedYet")

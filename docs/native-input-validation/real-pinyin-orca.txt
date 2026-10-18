@@ -1,0 +1,28 @@
+dbus-daemon[2889064]: [session uid=0 pid=2889064] Activating service name='org.a11y.Bus' requested by ':1.2' (uid=0 pid=2889084 comm="/usr/bin/python3 /usr/bin/orca --user-prefs /tmp/f")
+dbus-daemon[2889064]: [session uid=0 pid=2889064] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2889095]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2889084 comm="/usr/bin/python3 /usr/bin/orca --user-prefs /tmp/f")
+dbus-daemon[2889095]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+01:01:04.558517 - SPEECH: Shutting down
+01:01:04.593007 - SPEECH: Initializing
+01:01:04.952381 - SPEECH: Using speech server factory: speechdispatcherfactory
+01:01:04.952419 - SPEECH: Initialized
+01:01:04.965570 - SPEECH: Checking speech setting.
+01:01:04.965576 - SPEECH: Initializing
+01:01:04.965581 - SPEECH: Already initialized
+01:01:05.011291 - SPEECH OUTPUT: 'Screen reader on.'{'established': False}
+01:01:05.013055 - ERROR: Unable to find active window from []
+01:01:06.776334 - SPEECH: Checking speech setting.
+01:01:06.776339 - SPEECH: Initializing
+01:01:06.776343 - SPEECH: Already initialized
+01:01:06.834347 - SPEECH: Last spoke 1.8231 seconds ago
+01:01:06.834388 - SPEECH OUTPUT: 'CJK input entry.'{'established': False}
+{"event":"ready"}
+{"composition":false,"end":0,"event":"state","start":0,"text":""}
+{"event":"commit","text":"你好"}
+{"composition":false,"end":2,"event":"state","start":2,"text":"你好"}
+{"event":"commit","text":"你好中国"}
+{"composition":false,"end":4,"event":"state","start":4,"text":"你好中国"}
+{"event":"commit","text":"你好中国 "}
+{"composition":false,"end":5,"event":"state","start":5,"text":"你好中国 "}
+real Fcitx Pinyin commits, Orca field speech and external AT-SPI offscreen/password checks: PASS

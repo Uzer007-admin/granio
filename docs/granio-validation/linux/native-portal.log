@@ -1,0 +1,4 @@
+=== RUN   TestNativeXDGAppearanceProviderLifecycle
+--- PASS: TestNativeXDGAppearanceProviderLifecycle (0.01s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/app	1.036s

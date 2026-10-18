@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestActivity_Animation(t *testing.T) {
@@ -55,7 +55,7 @@ func TestActivity_StaticEllipsisLayout(t *testing.T) {
 	defer w.Close()
 	w.SetPadded(false)
 
-	size := fyne.NewSize(40, 12)
+	size := granio.NewSize(40, 12)
 	w.Resize(size)
 
 	render := test.TempWidgetRenderer(t, a).(*activityRenderer)

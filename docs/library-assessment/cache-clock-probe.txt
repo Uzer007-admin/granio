@@ -1,0 +1,6 @@
+=== RUN   TestAssessmentNewFontMetricAfterClockGap
+    assessment_6c36517f_test.go:31: new metric was removed by the first Clean after a clock gap: got {0 0}, want {25 11}
+--- FAIL: TestAssessmentNewFontMetricAfterClockGap (0.00s)
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/cache	0.256s
+FAIL

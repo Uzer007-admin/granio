@@ -7,11 +7,11 @@ import (
 	"os/exec"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
-func getFavoriteLocation(homeURI fyne.URI, name string) (fyne.URI, error) {
+func getFavoriteLocation(homeURI granio.URI, name string) (granio.URI, error) {
 	const cmdName = "xdg-user-dir"
 	if _, err := exec.LookPath(cmdName); err != nil {
 		return storage.Child(homeURI, name) // no lookup possible

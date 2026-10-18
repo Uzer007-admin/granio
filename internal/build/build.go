@@ -4,7 +4,7 @@ package build
 import (
 	"sync"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 var (
@@ -19,7 +19,7 @@ func MigratedToFyneDo() bool {
 	}
 
 	migrateCheck.Do(func() {
-		v, ok := fyne.CurrentApp().Metadata().Migrations["fyneDo"]
+		v, ok := granio.CurrentApp().Metadata().Migrations["fyneDo"]
 		if ok {
 			migratedFyneDo = v
 		}

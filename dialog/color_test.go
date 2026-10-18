@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	fynecolor "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	fynecolor "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,15 +16,15 @@ func TestColorDialog_Resize(t *testing.T) {
 	test.NewTempApp(t)
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(1000, 800))
+	w.Resize(granio.NewSize(1000, 800))
 
 	d := NewColorPicker("Color Picker", "Pick a Color", nil, w)
-	d.Resize(fyne.NewSize(800, 600))
+	d.Resize(granio.NewSize(800, 600))
 	d.Show()
 
 	size := d.content.Size()
 
-	d.Resize(fyne.NewSize(900, 600))
+	d.Resize(granio.NewSize(900, 600))
 	newSize := d.content.Size()
 
 	assert.Equal(t, float32(100), newSize.Width-size.Width)
@@ -34,7 +34,7 @@ func TestColorDialog_Theme(t *testing.T) {
 	test.NewTempApp(t)
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(1000, 800))
+	w.Resize(granio.NewSize(1000, 800))
 
 	d := NewColorPicker("Color Picker", "Pick a Color", nil, w)
 	d.Advanced = true
@@ -64,7 +64,7 @@ func TestColorDialog_Recents(t *testing.T) {
 	a.Preferences().SetString("color_recents", "#2196f3,#4caf50,#f44336")
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(800, 600))
+	w.Resize(granio.NewSize(800, 600))
 
 	d := NewColorPicker("Color Picker", "Pick a Color", nil, w)
 	d.Advanced = true
@@ -79,7 +79,7 @@ func TestColorDialog_Recents(t *testing.T) {
 
 func TestColorDialog_SetColor(t *testing.T) {
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(800, 600))
+	w.Resize(granio.NewSize(800, 600))
 
 	col := color.RGBA{R: 70, G: 210, B: 200, A: 255}
 
@@ -116,7 +116,7 @@ func TestColorDialogSimple_Theme(t *testing.T) {
 	test.NewTempApp(t)
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(600, 400))
+	w.Resize(granio.NewSize(600, 400))
 
 	d := NewColorPicker("Color Picker", "Pick a Color", nil, w)
 	d.Show()
@@ -134,7 +134,7 @@ func TestColorDialogSimple_Recents(t *testing.T) {
 	a.Preferences().SetString("color_recents", "#2196f3,#4caf50,#f44336")
 
 	w := test.NewTempWindow(t, canvas.NewRectangle(color.Transparent))
-	w.Resize(fyne.NewSize(600, 400))
+	w.Resize(granio.NewSize(600, 400))
 
 	d := NewColorPicker("Color Picker", "Pick a Color", nil, w)
 	d.Show()

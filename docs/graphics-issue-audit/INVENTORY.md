@@ -1,0 +1,71 @@
+# Открытые issues GL / GLFW / Glow
+
+Снимок GitHub API: 2026-10-12T06:47:59.407693+00:00. Все открытые issues трёх репозиториев; PR исключены. Полные тела и все комментарии сохранены в [open-issues.json](open-issues.json).
+
+Приоритет относится к развитию нашего стека. Статус отделяет локальное воспроизведение, чтение кода и неподтверждённые сообщения пользователей. Закрытые issues и отдельный трекер нативной C GLFW в этот реестр не входят.
+
+**Статус после исправлений:** Strs/NUL, typed SlicePtr/SliceBytes, missing KHR dummy/vendor imports, offset overloads, GUID всех платформ, lifecycle, BSD tags, GLES 2.0 и EGL generator исправлены. [Матрица результатов](../NATIVE_STACK_IMPLEMENTATION.md). Таблица ниже сохраняет результаты исходной оценки; upstream issues не закрывались.
+
+## go-gl/gl: 20
+
+| Issue | Приоритет | Проверка | Решение / следующее действие |
+| --- | --- | --- | --- |
+| [#174](https://github.com/go-gl/gl/issues/174) Inquiry CGo noescape nocallback. | P1 | Оптимизация | Нужен прототип с whitelist noescape; nocallback требует отдельного режима без Go debug callbacks. Автоматическая разметка всего API небезопасна. |
+| [#172](https://github.com/go-gl/gl/issues/172) Missed a dummy.go file for version v3.0 | P1 | Подтверждено по дереву | В v3.0/gles2/KHR действительно нет dummy.go. Добавить проверку сохранения заголовков в vendor/пакетном архиве. |
+| [#169](https://github.com/go-gl/gl/issues/169) Jerky refresh with high update rate | P2 | Не воспроизведено | Жалоба на frame pacing Linux/GNOME; примеры upstream работают. Нужны C/Go comparator, latency percentiles, swap interval и upload-stall measurements. |
+| [#168](https://github.com/go-gl/gl/issues/168) Problem with getting v2.1 gl | P2 | Окружение/не воспроизведено | Пакет v2.1/gl существует и собирается на этой Windows-машине; без cgo он исключается. Нужна понятная диагностика toolchain/CGO. |
+| [#167](https://github.com/go-gl/gl/issues/167) Cannot obtain OpenGL version and compile shaders in Ubuntu/CentOS with OSMesa | P1 | Кандидат загрузчика | OSMesa-контекст должен использовать свой resolver через InitWithProcAddrFunc. По умолчанию POSIX использует GLX; контейнеры автора не запускались. |
+| [#155](https://github.com/go-gl/gl/issues/155) Cannot cross-compile from Linux to Windows | P2 | Сборка/не воспроизведено | Обсуждение смешивает отсутствующий cross C compiler и runtime Init. Нужны отдельные cross-build и реальный Windows smoke; clang/mingw и контекст фиксировать явно. |
+| [#154](https://github.com/go-gl/gl/issues/154) could not import C (cgo preprocessing failed) (compile) when running staticcheck | P2 | Окружение/не воспроизведено | Staticcheck зависит от cgo headers/compiler. Само сообщение не доказывает дефект GL; добавить воспроизводимую матрицу анализа. |
+| [#152](https://github.com/go-gl/gl/issues/152) Init doesnt load glActiveTexture | P1 | Диагностика | Отсутствующая glActiveTexture связана с resolver/current context/driver. Проверять контекст и capabilities; данная NVIDIA-конфигурация проходит Init. |
+| [#151](https://github.com/go-gl/gl/issues/151) gl.BufferSubData()  crashed | P1 | Не воспроизведено | Краш BufferSubData на Windows AMD требует того же GPU и минимального воспроизведения; нельзя объявлять размер/профиль доказанной причиной. |
+| [#150](https://github.com/go-gl/gl/issues/150) bad access: nil dereference GenBuffers() | P1 | Диагностика | Инициализировать каждый импортированный профиль после MakeContextCurrent на закреплённом OS thread. Защита от вызова незагруженной функции нужна в debug API. |
+| [#148](https://github.com/go-gl/gl/issues/148) Which version of GLES is supported? | P1 | Несоответствие профилей | gles2 — имя API Khronos, а v3.0/3.1/3.2 — версии GLES. Генерация настоящего GLES 2.0 успешно проверена; текущий Fyne запрашивает 2.0, импортируя 3.1. |
+| [#145](https://github.com/go-gl/gl/issues/145) build report error in ubuntu20.04 | P3 | Ограничение окружения | Статическая линковка требует static GL stack. Наличие динамической libGL не гарантирует -static; документировать поддерживаемые варианты. |
+| [#132](https://github.com/go-gl/gl/issues/132) unsafe usage of reflect.SliceHeader | P2 | Частично устарело | Указанного reflect.SliceHeader уже нет в проверенном conversions.go. Str использует указатель на настоящий StringHeader; переход на unsafe.StringData/SliceData остаётся полезен. |
+| [#128](https://github.com/go-gl/gl/issues/128) A dangerous function | P1 | Типизация API | uint имеет платформенную ширину и не заменяет uint32 индексов GL. Добавить helpers для []uint16/[]uint32 и проверки размера/типа; raw API сохранить. |
+| [#116](https://github.com/go-gl/gl/issues/116) Question: do really debug functions work? | P2 | Работает в проверенном сценарии | Синхронный debug callback на NVIDIA действительно вызван. C trampoline игнорирует переданный Go callback pointer; глобальный callback остаётся ограничением нескольких контекстов. |
+| [#109](https://github.com/go-gl/gl/issues/109) remove dependency on cgo | P2 | Архитектурное расширение | Путь без cgo отсутствует. Генерировать второй backend, сравнивать ABI/callbacks/performance; отдельное решение также требуется для GLFW. |
+| [#104](https://github.com/go-gl/gl/issues/104) Error while calling functions from all-core | P1 | Диагностика | Профили имеют отдельные глобальные таблицы функций. all-core с lenientInit не гарантирует поддержку каждой функции; debug guards и capabilities предпочтительнее запрета нескольких профилей. |
+| [#102](https://github.com/go-gl/gl/issues/102) Semantic versioning tag for go modules | P2 | Релизный процесс | GL закрепляется pseudo-version. Собственные semver tags, changelog и generation manifest нужны после выбора публичного module path. |
+| [#80](https://github.com/go-gl/gl/issues/80) PtrOffset causes &quot;cgo argument has Go pointer to Go pointer&quot; runtime error | P1 | Частично закрыто API | PtrOffset deprecated; некоторые WithOffset уже есть. Остаются недостающие overloads. Отключение cgocheck не является исправлением. |
+| [#77](https://github.com/go-gl/gl/issues/77) Null terminate strings automatically in Strs() | P1 | Воспроизведено | Strs(&quot;A&quot;, &quot;B&quot;) выделяет два байта AB без NUL. Контракт с документацией расходится; Fyne уже добавляет терминатор вручную. |
+
+## go-gl/glfw: 19
+
+| Issue | Приоритет | Проверка | Решение / следующее действие |
+| --- | --- | --- | --- |
+| [#426](https://github.com/go-gl/glfw/issues/426) Possible stack buffer overflow: openJoystickDevice prints signed device-name bytes with %02x into char guid[33] | P1 | Фрагмент воспроизведён | На Linux signed char формат даёт 44 символа/45 байт при guid[33]. Маскирование даёт 32. Тот же код есть в C GLFW 3.3 и 3.4; реальное устройство и эксплуатация не проверялись. |
+| [#425](https://github.com/go-gl/glfw/issues/425) Wayland build issue on OpenBSD and FreeBSD | P1 | Подтверждён конфликт условий | OpenBSD/Wayland native access включается тегом, тогда как C backend OpenBSD остаётся X11. FreeBSD требует отдельной проверки. BSD runtime не запускался. |
+| [#413](https://github.com/go-gl/glfw/issues/413) v3.3/glfw: `glfw.GetKeyName()` crashes on unknown key+scancode on Wayland | P1 | Не воспроизведено | Внешний unknown scancode превращается в panic через panicError. Нужны safe query и тесты fn/media keys на Wayland; соответствующего desktop здесь нет. |
+| [#410](https://github.com/go-gl/glfw/issues/410) v3.3/glfw: Make it possible to run with memory sanitizer | P2 | Инфраструктура | ASan/MSan матрица для C/Go boundary; сообщения из неинструментированных X11/dbus/libdecor нельзя автоматически считать ошибкой GLFW. |
+| [#407](https://github.com/go-gl/glfw/issues/407) v3.3/glfw: Annotate functions with #cgo noescape/nocallback where possible | P1 | Оптимизация | Go 1.27.1 снимает барьер минимальной версии. Nocallback учитывать для error callback и событий из native setters; сначала измерить выбранные функции. |
+| [#405](https://github.com/go-gl/glfw/issues/405) v3.2/glfw: PlatformError: Cocoa: Failed to retrieve display name | P3 | Старый профиль/не воспроизведено | Отчёт относится к GLFW 3.2 и macOS. Проверить актуальный Cocoa backend; эта Windows/Linux-проверка его не охватывает. |
+| [#402](https://github.com/go-gl/glfw/issues/402) v3.3/glfw: Wayland compile on OpenSUSE fails | P1 | Сборочная переносимость | Wayland include paths должны приходить из pkg-config, а не зависеть от расположения headers в дистрибутиве. OpenSUSE отдельно не проверялась. |
+| [#377](https://github.com/go-gl/glfw/issues/377) v3.3/glfw: can not build on macos 13.3.1 | P2 | Окружение/не воспроизведено | Требуется macOS SDK/Xcode comparator. Предложение из комментария собирать GLES на macOS не является проверенным исправлением. |
+| [#376](https://github.com/go-gl/glfw/issues/376) v3.3/glfw: converting to execution character set: Illegal byte sequence | P2 | Окружение/не воспроизведено | Проверить GCC execution charset и Unicode-путь checkout на Windows. Текущий X:/fyne + GCC 13.2 работает. |
+| [#370](https://github.com/go-gl/glfw/issues/370) IME support | P1 | Функциональное расширение | IME требует composition/preedit, selection/candidate rectangle и платформенных callbacks, а не одного CharCallback. Патч только Go-обёрток недостаточен. |
+| [#359](https://github.com/go-gl/glfw/issues/359) v3.3/glfw: Warnings when building using -tags wayland | P2 | Нативный upstream | Warning _GNU_SOURCE и прежние missing declarations — разные состояния. Исправление должно переживать обновление C snapshot; смена mkostemp на mkstemp меняет семантику. |
+| [#357](https://github.com/go-gl/glfw/issues/357) v3.3/glfw: axis not recognized with Street Fighter &quot;Mad Catz&quot; Fightpad | P2 | Не воспроизведено | Gamepad mapping/axis complaint требует устройства автора или записанного backend fixture. Не считать общим дефектом всех контроллеров. |
+| [#353](https://github.com/go-gl/glfw/issues/353) v3.3/glfw: port `GLFW_CONTEXT_NO_ERROR` | P2 | Есть в GLFW 3.4 | ContextNoError уже экспортирован в v3.4/window.go; старый v3.3 требует отдельного backport. Это не отсутствующая возможность рабочего 3.4 API. |
+| [#345](https://github.com/go-gl/glfw/issues/345) v3.3/glfw: X-POST from Fyne NSGL failed to find suitable pixel format | P2 | Не воспроизведено | NSGL pixel format может зависеть от виртуальной машины/драйвера/context hints. Проверять реальную macOS и параметры выбора контекста. |
+| [#296](https://github.com/go-gl/glfw/issues/296) v3.3/glfw: get caps lock state | P2 | Функциональное расширение | LockKeyMods сообщает modifier события, а не произвольный текущий toggle state. Нужен отдельный контракт CapsLock/NumLock query по платформам. |
+| [#292](https://github.com/go-gl/glfw/issues/292) v3.3/glfw: uncaught error when connecting Bluetooth controllers | P1 | Не воспроизведено | Bluetooth gamepad mapping errors способны перейти в panic при Init. Отделить ошибки внешнего устройства от programmer errors; тесты через fixtures. |
+| [#288](https://github.com/go-gl/glfw/issues/288) Can go-gl/glfw support other UNIX systems like NetBSD? | P2 | Теги частично/уже добавлены | В текущих 3.3 и 3.4 есть NetBSD build tags. Это не доказательство успешного NetBSD runtime; дополнить BSD CI. |
+| [#274](https://github.com/go-gl/glfw/issues/274) v3.3/glfw: error with HORIPAD mini4 | P1 | Связано с #292 | HORIPAD/8BitDo mapping и глобальный error channel; нужен comparator C vs Go и безопасная обработка внешних устройств. |
+| [#188](https://github.com/go-gl/glfw/issues/188) consider adding release tags | P2 | Частично выполнено upstream | Для v3.4/glfw есть v0.1.0-pre.2. Стабильный релиз и собственная версия wrapper должны быть отделены от версии C GLFW. |
+
+## go-gl/glow: 9
+
+| Issue | Приоритет | Проверка | Решение / следующее действие |
+| --- | --- | --- | --- |
+| [#127](https://github.com/go-gl/glow/issues/127) Add DrawElementsInstancedWithOffset function | P1 | Недостающие overloads | DrawElementsInstanced/ReadPixels PBO требуют offset variants. Вносить в XML overrides и проверять checkptr, zero offset и pointer-width. |
+| [#86](https://github.com/go-gl/glow/issues/86) Make constants typed | P2 | API расширение | Один GLConst int32 не подходит uint64 TIMEOUT_IGNORED и смешанным enum/integer параметрам. Добавить domain-aware names/string helpers без замены raw constants. |
+| [#63](https://github.com/go-gl/glow/issues/63) Code that uses unsafe.Pointer to convert an integer-typed value held in memory into a pointer is illegal and must be rewritten | P1 | Частично выполнено | WithOffset уже решает некоторые вызовы. Дополнить полный перечень, убрать uintptr-to-pointer из безопасного API; legacy raw API не менять молча. |
+| [#51](https://github.com/go-gl/glow/issues/51) Is it viable to use glow to generate an interface with multiple backends? | P2 | Архитектура | Разделить registry/IR и cgo/FFI templates, генерировать static typed dispatch. WebGL/Metal/Vulkan не становятся GL-поддержкой от смены loader. |
+| [#32](https://github.com/go-gl/glow/issues/32) automagic debug binding | P2 | Диагностика | Generate debug/trace build variant с call counters и source labels, выключаемый из release. Сравнить overhead; использовать внешние GPU captures. |
+| [#31](https://github.com/go-gl/glow/issues/31) Add sanitized prebuilt packages | P1 | API расширение | Генерировать typed slices, lengths и offset overloads рядом с raw bindings. XML len metadata требует overrides и тестов retained-pointer функций. |
+| [#23](https://github.com/go-gl/glow/issues/23) slim down glow | P1 | Оптимизация генерации | Restrict уже есть. Затем исследовать общие C bridges по ABI signature, object-file splitting, size и cold build time; не обещать исторические проценты экономии. |
+| [#16](https://github.com/go-gl/glow/issues/16) EGL: C syntax | P1 | Воспроизведено на Linux | EGL 1.5 генерируется, но Cgo не определяет AHardwareBuffer/EGLClientPixmapHI/wl_display/wl_resource. Нужна корректная обработка struct prefix и native type overrides. |
+| [#2](https://github.com/go-gl/glow/issues/2) Non-GL-API packages may not work out of the box | P2 | Частично проверено | EGL compile failure подтверждён; GLX/WGL generation/native usage требует отдельных fixtures. Наличие ненулевого proc address не доказывает поддержку extension. |
+

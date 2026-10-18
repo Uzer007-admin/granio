@@ -5,11 +5,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestCheck_Binding(t *testing.T) {
@@ -71,8 +71,8 @@ func TestCheck_Layout(t *testing.T) {
 				check.Disable()
 			}
 
-			window := test.NewTempWindow(t, &fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{check}})
-			window.Resize(check.MinSize().Max(fyne.NewSize(150, 200)))
+			window := test.NewTempWindow(t, &granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{check}})
+			window.Resize(check.MinSize().Max(granio.NewSize(150, 200)))
 
 			test.AssertRendersToMarkup(t, "check/layout_"+name+".xml", window.Canvas())
 		})
@@ -122,15 +122,15 @@ func TestCheck_Tapped(t *testing.T) {
 
 func TestCheck_Resize(t *testing.T) {
 	check := &widget.Check{Text: "test"}
-	check.Resize(fyne.NewSize(300, 200))
+	check.Resize(granio.NewSize(300, 200))
 	minSize := check.MinSize() // set up min cache
 	assert.Less(t, minSize.Height, check.Size().Height)
 
-	test.TapAt(check, fyne.NewPos(10, 100))
+	test.TapAt(check, granio.NewPos(10, 100))
 	assert.True(t, check.Checked)
-	test.TapAt(check, fyne.NewPos(10, 100))
+	test.TapAt(check, granio.NewPos(10, 100))
 	assert.False(t, check.Checked)
 
-	test.TapAt(check, fyne.NewPos(10, 10))
+	test.TapAt(check, granio.NewPos(10, 10))
 	assert.False(t, check.Checked)
 }

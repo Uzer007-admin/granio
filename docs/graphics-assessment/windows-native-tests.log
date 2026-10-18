@@ -1,0 +1,467 @@
+Applications installed in X:\fyne\bin
+# fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres
+# [fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres]
+cmd\fyne\internal\mobile\binres\pool.go:162:80: fmt.Errorf format %q has arg data of wrong type []uint16
+ok  	fyne.io/fyne/v2	1.921s
+ok  	fyne.io/fyne/v2/app	30.914s
+ok  	fyne.io/fyne/v2/canvas	9.741s
+?   	fyne.io/fyne/v2/cmd/fyne	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/commands	3.151s
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/commands	5.080s
+?   	fyne.io/fyne/v2/cmd/fyne/internal/mobile	[no test files]
+FAIL	fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres [build failed]
+?   	fyne.io/fyne/v2/cmd/fyne/internal/templates	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/util	3.075s
+ok  	fyne.io/fyne/v2/cmd/fyne_demo	3.323s
+?   	fyne.io/fyne/v2/cmd/fyne_demo/data	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_demo/tutorials	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings/data	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne_settings/settings	9.081s
+?   	fyne.io/fyne/v2/cmd/hello	[no test files]
+ok  	fyne.io/fyne/v2/container	8.828s
+ok  	fyne.io/fyne/v2/data/binding	3.186s
+ok  	fyne.io/fyne/v2/data/validation	3.045s
+--- FAIL: TestConfirm_Importance (0.42s)
+    util_helper.go:63: 
+        	Error Trace:	X:/fyne/internal/test/util_helper.go:63
+        	            				X:/fyne/test/test_helper.go:79
+        	            				X:/fyne/test/test_helper.go:90
+        	            				X:/fyne/dialog/confirm_test.go:134
+        	Error:      	Images not equal.
+        	Test:       	TestConfirm_Importance
+        	Messages:   	Image did not match master. Actual image written to file://X:\fyne\dialog\testdata\failed\dialog-confirm-importance.png.
+--- FAIL: TestConfirm_Importance_Blur (0.68s)
+    util_helper.go:63: 
+        	Error Trace:	X:/fyne/internal/test/util_helper.go:63
+        	            				X:/fyne/test/test_helper.go:79
+        	            				X:/fyne/test/test_helper.go:90
+        	            				X:/fyne/dialog/confirm_test.go:150
+        	Error:      	Images not equal.
+        	Test:       	TestConfirm_Importance_Blur
+        	Messages:   	Image did not match master. Actual image written to file://X:\fyne\dialog\testdata\failed\dialog-confirm-blur.png.
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+X:
+fyne
+dialog
+testdata
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Getting favorite locations
+2026/10/12 10:22:36   Cause: uri is not listable
+2026/10/12 10:22:36   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:36 Fyne error:  Error getting file attributes
+2026/10/12 10:22:36   Cause: The process cannot access the file because it is being used by another process.
+2026/10/12 10:22:36   At: X:/fyne/dialog/file_windows.go:76
+2026/10/12 10:22:36 Fyne error:  Error getting file attributes
+2026/10/12 10:22:36   Cause: The process cannot access the file because it is being used by another process.
+2026/10/12 10:22:36   At: X:/fyne/dialog/file_windows.go:76
+2026/10/12 10:22:36 Fyne error:  Error getting file attributes
+2026/10/12 10:22:36   Cause: The process cannot access the file because it is being used by another process.
+2026/10/12 10:22:36   At: X:/fyne/dialog/file_windows.go:76
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:37 Fyne error:  Getting favorite locations
+2026/10/12 10:22:37   Cause: uri is not listable
+2026/10/12 10:22:37   At: X:/fyne/dialog/file.go:409
+2026/10/12 10:22:38 Fyne error:  Getting favorite locations
+2026/10/12 10:22:38   Cause: uri is not listable
+2026/10/12 10:22:38   At: X:/fyne/dialog/file.go:409
+FAIL
+FAIL	fyne.io/fyne/v2/dialog	38.136s
+ok  	fyne.io/fyne/v2/driver	3.070s
+ok  	fyne.io/fyne/v2/driver/desktop	3.072s
+?   	fyne.io/fyne/v2/driver/embedded	[no test files]
+?   	fyne.io/fyne/v2/driver/mobile	[no test files]
+ok  	fyne.io/fyne/v2/driver/software	5.198s
+ok  	fyne.io/fyne/v2/internal	8.746s
+ok  	fyne.io/fyne/v2/internal/animation	3.911s
+--- FAIL: TestFocusManager_FocusNext (0.00s)
+panic: runtime error: invalid memory address or nil pointer dereference [recovered, repanicked]
+[signal 0xc0000005 code=0x0 addr=0x40 pc=0x140606d3b]
+
+goroutine 15 [running]:
+testing.tRunner.func1.2({0x14168c790, 0x1410a0c60})
+	C:/Program Files/Go/src/testing/testing.go:2123 +0x3f7
+testing.tRunner.func1()
+	C:/Program Files/Go/src/testing/testing.go:2126 +0x65f
+panic({0x14168c790?, 0x1410a0c60?})
+	C:/Program Files/Go/src/runtime/panic.go:859 +0x125
+fyne.io/fyne/v2/internal/widget.(*SimpleRenderer).Layout(0xc000009440, {0x3d47b0?, 0xc0?})
+	X:/fyne/internal/widget/simple_renderer.go:33 +0x5b
+fyne.io/fyne/v2/internal/cache.Renderer({0x4788bd18, 0xc0003ec8a0})
+	X:/fyne/internal/cache/widget.go:26 +0x222
+fyne.io/fyne/v2/internal/driver.walkObjectTree({0x1417106b0, 0xc0003ec8a0}, 0x0, {0x141710650, 0xc0003deac0}, {0x3e9ca0?, 0xc0?}, {0x0?, 0x0?}, {0x401a12a9?, ...}, ...)
+	X:/fyne/internal/driver/util.go:165 +0x852
+fyne.io/fyne/v2/internal/driver.walkObjectTree.func1(...)
+	X:/fyne/internal/driver/util.go:183
+fyne.io/fyne/v2/internal/driver.walkObjectTree({0x141710650, 0xc0003deac0}, 0x0, {0x0, 0x0}, {0x0?, 0x0?}, {0x40096209?, 0x1?}, {0x3e9e08?, ...}, ...)
+	X:/fyne/internal/driver/util.go:197 +0x4a5
+fyne.io/fyne/v2/internal/driver.WalkVisibleObjectTree({0x141710650, 0xc0003deac0}, 0xc0003e9de0, 0x0)
+	X:/fyne/internal/driver/util.go:134 +0x78
+fyne.io/fyne/v2/internal/app.(*FocusManager).nextWithWalker(...)
+	X:/fyne/internal/app/focus_manager.go:99
+fyne.io/fyne/v2/internal/app.(*FocusManager).nextInChain(...)
+	X:/fyne/internal/app/focus_manager.go:93
+fyne.io/fyne/v2/internal/app.(*FocusManager).FocusNext(0xc0003ee000)
+	X:/fyne/internal/app/focus_manager.go:83 +0x105
+fyne.io/fyne/v2/internal/app_test.TestFocusManager_FocusNext(0xc000003a00)
+	X:/fyne/internal/app/focus_manager_test.go:106 +0x65
+testing.tRunner(0xc000003a00, 0x141711ca0)
+	C:/Program Files/Go/src/testing/testing.go:2193 +0x1cb
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:2258 +0xb2b
+FAIL	fyne.io/fyne/v2/internal/app	1.061s
+ok  	fyne.io/fyne/v2/internal/async	6.477s
+?   	fyne.io/fyne/v2/internal/build	[no test files]
+ok  	fyne.io/fyne/v2/internal/cache	1.875s
+ok  	fyne.io/fyne/v2/internal/color	1.859s
+ok  	fyne.io/fyne/v2/internal/driver	3.061s
+ok  	fyne.io/fyne/v2/internal/driver/common	3.123s
+ok  	fyne.io/fyne/v2/internal/driver/embedded	2.195s
+ok  	fyne.io/fyne/v2/internal/driver/glfw	32.721s
+ok  	fyne.io/fyne/v2/internal/driver/mobile	6.891s
+?   	fyne.io/fyne/v2/internal/driver/mobile/app	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/key	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/paint	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/size	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/touch	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/gl	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/mobileinit	[no test files]
+?   	fyne.io/fyne/v2/internal/goos	[no test files]
+ok  	fyne.io/fyne/v2/internal/metadata	2.128s
+ok  	fyne.io/fyne/v2/internal/painter	11.264s
+?   	fyne.io/fyne/v2/internal/painter/geom	[no test files]
+ok  	fyne.io/fyne/v2/internal/painter/gl	2.167s
+ok  	fyne.io/fyne/v2/internal/painter/software	12.085s
+ok  	fyne.io/fyne/v2/internal/repository	35.172s
+ok  	fyne.io/fyne/v2/internal/repository/mime	1.631s
+?   	fyne.io/fyne/v2/internal/scale	[no test files]
+ok  	fyne.io/fyne/v2/internal/scheduler	3.999s
+ok  	fyne.io/fyne/v2/internal/svg	2.557s
+ok  	fyne.io/fyne/v2/internal/test	3.682s
+ok  	fyne.io/fyne/v2/internal/theme	1.889s
+ok  	fyne.io/fyne/v2/internal/widget	3.630s
+ok  	fyne.io/fyne/v2/lang	4.309s
+ok  	fyne.io/fyne/v2/layout	6.159s
+ok  	fyne.io/fyne/v2/storage	4.349s
+ok  	fyne.io/fyne/v2/storage/repository	2.630s
+ok  	fyne.io/fyne/v2/test	4.451s
+ok  	fyne.io/fyne/v2/theme	2.122s
+ok  	fyne.io/fyne/v2/tools/playground	2.023s
+--- FAIL: TestForm_Validation (0.31s)
+    util_helper.go:63: 
+        	Error Trace:	X:/fyne/internal/test/util_helper.go:63
+        	            				X:/fyne/test/test_helper.go:79
+        	            				X:/fyne/widget/form_test.go:352
+        	Error:      	Images not equal.
+        	Test:       	TestForm_Validation
+        	Messages:   	Image did not match master. Actual image written to file://X:\fyne\widget\testdata\failed\form\validation_initial.png.
+2026/10/12 10:22:28 Fyne error:  Missing UpdateItem callback required for List
+2026/10/12 10:22:28   At: X:/fyne/widget/list.go:814
+2026/10/12 10:22:28 Fyne error:  Missing UpdateItem callback required for List
+2026/10/12 10:22:28   At: X:/fyne/widget/list.go:814
+2026/10/12 10:22:28 Fyne error:  Missing UpdateItem callback required for List
+2026/10/12 10:22:28   At: X:/fyne/widget/list.go:814
+2026/10/12 10:22:28 Fyne error:  Missing UpdateItem callback required for List
+2026/10/12 10:22:28   At: X:/fyne/widget/list.go:814
+2026/10/12 10:22:28 Fyne error:  Missing UpdateItem callback required for List
+2026/10/12 10:22:28   At: X:/fyne/widget/list.go:814
+2026/10/12 10:22:28 Fyne error:  Missing UpdateItem callback required for List
+2026/10/12 10:22:28   At: X:/fyne/widget/list.go:814
+--- FAIL: TestTable_Hovered (0.05s)
+    test_helper.go:127: 
+        	Error Trace:	X:/fyne/test/test_helper.go:127
+        	            				X:/fyne/widget/table_desktop_test.go:37
+        	Error:      	Not equal: 
+        	            	expected: "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"191x172\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"154x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"154x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	actual  : "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x172\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x172\">\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"191x172\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"154x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"154x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -4,3 +4,3 @@
+        	            	 			<widget size="172x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x1">
+        	            	 				</container>
+        	            	@@ -8,3 +8,3 @@
+        	            	 			<widget size="0x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x172">
+        	            	 				</container>
+        	            	@@ -12,3 +12,3 @@
+        	            	 			<widget size="0x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x1">
+        	            	 				</container>
+        	            	@@ -16,3 +16,3 @@
+        	            	 			<widget size="172x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x172">
+        	            	 					<widget pos="95,0" size="1x172" type="*widget.Separator">
+        	Test:       	TestTable_Hovered
+        	Messages:   	Markup did not match master. Actual markup written to file://X:\fyne\widget\testdata\failed\table\desktop\hovered_out.xml.
+    test_helper.go:127: 
+        	Error Trace:	X:/fyne/test/test_helper.go:127
+        	            				X:/fyne/widget/table_desktop_test.go:49
+        	Error:      	Not equal: 
+        	            	expected: "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"hover\" pos=\"0,39\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,75\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"191x172\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"154x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"154x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	actual  : "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x172\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x172\">\n\t\t\t\t\t<rectangle fillColor=\"hover\" pos=\"0,39\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,75\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"191x172\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"154x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"154x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -4,3 +4,3 @@
+        	            	 			<widget size="172x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x1">
+        	            	 				</container>
+        	            	@@ -8,3 +8,3 @@
+        	            	 			<widget size="0x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x172">
+        	            	 				</container>
+        	            	@@ -12,3 +12,3 @@
+        	            	 			<widget size="0x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x1">
+        	            	 				</container>
+        	            	@@ -16,3 +16,3 @@
+        	            	 			<widget size="172x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x172">
+        	            	 					<rectangle fillColor="hover" pos="0,39" radius="4" size="93x35"/>
+        	Test:       	TestTable_Hovered
+        	Messages:   	Markup did not match master. Actual markup written to file://X:\fyne\widget\testdata\failed\table\desktop\hovered.xml.
+2026/10/12 10:22:38 Fyne error:  Missing CreateCell callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:865
+2026/10/12 10:22:38 Fyne error:  Missing Length callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1276
+2026/10/12 10:22:38 Fyne error:  Missing UpdateCell callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1455
+2026/10/12 10:22:38 Fyne error:  Missing Length callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1276
+2026/10/12 10:22:38 Fyne error:  Missing UpdateCell callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1455
+2026/10/12 10:22:38 Fyne error:  Missing Length callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1276
+2026/10/12 10:22:38 Fyne error:  Missing Length callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1276
+2026/10/12 10:22:38 Fyne error:  Missing UpdateCell callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1455
+2026/10/12 10:22:38 Fyne error:  Missing UpdateCell callback required for Table
+2026/10/12 10:22:38   At: X:/fyne/widget/table.go:1455
+--- FAIL: TestTable_JustHeaders (0.05s)
+    test_helper.go:127: 
+        	Error Trace:	X:/fyne/test/test_helper.go:127
+        	            				X:/fyne/widget/table_internal_test.go:193
+        	Error:      	Not equal: 
+        	            	expected: "<canvas padded size=\"120x120\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"112x112\" type=\"*widget.Table\">\n\t\t\t<widget pos=\"32,0\" size=\"79x35\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"112x35\"/>\n\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text alignment=\"center\" bold pos=\"15,8\" size=\"9x19\">A</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"45,0\" size=\"41x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text alignment=\"center\" bold pos=\"15,8\" size=\"9x19\">B</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"90,0\" size=\"41x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text alignment=\"center\" bold pos=\"16,8\" size=\"8x19\">C</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget pos=\"0,35\" size=\"32x76\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"32x112\"/>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"32x35\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"32x35\"/>\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"32x35\"/>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"112x112\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<widget pos=\"74,0\" size=\"1x112\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x112\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"119,0\" size=\"1x112\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x112\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget pos=\"32,35\" size=\"79x76\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"402x76\" type=\"*widget.tableCells\">\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"79,0\" size=\"0x76\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x76\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,70\" size=\"79x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"16x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"16x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	actual  : "<canvas padded size=\"120x120\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"112x112\" type=\"*widget.Table\">\n\t\t\t<widget pos=\"32,0\" size=\"79x35\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"79x35\">\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"112x35\"/>\n\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text alignment=\"center\" bold pos=\"15,8\" size=\"9x19\">A</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"45,0\" size=\"41x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text alignment=\"center\" bold pos=\"15,8\" size=\"9x19\">B</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"90,0\" size=\"41x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"41x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text alignment=\"center\" bold pos=\"16,8\" size=\"8x19\">C</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget pos=\"0,35\" size=\"32x76\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"32x76\">\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"32x112\"/>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"32x35\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"32x35\">\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"32x35\"/>\n\t\t\t\t\t<rectangle fillColor=\"headerBackground\" size=\"32x35\"/>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"112x112\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"112x112\">\n\t\t\t\t\t<widget pos=\"74,0\" size=\"1x112\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x112\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"119,0\" size=\"1x112\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x112\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget pos=\"32,35\" size=\"79x76\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"402x76\" type=\"*widget.tableCells\">\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"79,0\" size=\"0x76\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x76\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,70\" size=\"79x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"16x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"16x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -4,3 +4,3 @@
+        	            	 			<widget pos="32,0" size="79x35" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="79x35">
+        	            	 					<rectangle fillColor="headerBackground" size="112x35"/>
+        	            	@@ -24,3 +24,3 @@
+        	            	 			<widget pos="0,35" size="32x76" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="32x76">
+        	            	 					<rectangle fillColor="headerBackground" size="32x112"/>
+        	            	@@ -29,3 +29,3 @@
+        	            	 			<widget size="32x35" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="32x35">
+        	            	 					<rectangle fillColor="headerBackground" size="32x35"/>
+        	            	@@ -35,3 +35,3 @@
+        	            	 			<widget size="112x112" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="112x112">
+        	            	 					<widget pos="74,0" size="1x112" type="*widget.Separator">
+        	Test:       	TestTable_JustHeaders
+        	Messages:   	Markup did not match master. Actual markup written to file://X:\fyne\widget\testdata\failed\table\just_headers.xml.
+--- FAIL: TestTable_Selection (0.05s)
+    test_helper.go:127: 
+        	Error Trace:	X:/fyne/test/test_helper.go:127
+        	            				X:/fyne/widget/table_internal_test.go:714
+        	Error:      	Not equal: 
+        	            	expected: "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"selection\" pos=\"0,39\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,75\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,114\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,153\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"484x191\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,172\" size=\"172x0\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient endColor=\"shadow\" pos=\"0,-8\" size=\"172x8\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"166,0\" size=\"6x172\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"3,0\" size=\"3x154\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"3x154\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"61x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"61x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	actual  : "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x172\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x172\">\n\t\t\t\t\t<rectangle fillColor=\"selection\" pos=\"0,39\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,75\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,114\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,153\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"484x191\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,172\" size=\"172x0\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient endColor=\"shadow\" pos=\"0,-8\" size=\"172x8\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"166,0\" size=\"6x172\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"3,0\" size=\"3x154\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"3x154\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"61x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"61x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -4,3 +4,3 @@
+        	            	 			<widget size="172x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x1">
+        	            	 				</container>
+        	            	@@ -8,3 +8,3 @@
+        	            	 			<widget size="0x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x172">
+        	            	 				</container>
+        	            	@@ -12,3 +12,3 @@
+        	            	 			<widget size="0x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x1">
+        	            	 				</container>
+        	            	@@ -16,3 +16,3 @@
+        	            	 			<widget size="172x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x172">
+        	            	 					<rectangle fillColor="selection" pos="0,39" radius="4" size="93x35"/>
+        	Test:       	TestTable_Selection
+        	Messages:   	Markup did not match master. Actual markup written to file://X:\fyne\widget\testdata\failed\table\selected.xml.
+--- FAIL: TestTable_Select (0.04s)
+    test_helper.go:127: 
+        	Error Trace:	X:/fyne/test/test_helper.go:127
+        	            				X:/fyne/widget/table_internal_test.go:785
+        	Error:      	Not equal: 
+        	            	expected: "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"selection\" pos=\"0,39\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,75\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,114\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,153\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"484x191\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,172\" size=\"172x0\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient endColor=\"shadow\" pos=\"0,-8\" size=\"172x8\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"166,0\" size=\"6x172\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"3,0\" size=\"3x154\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"3x154\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"61x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"61x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	actual  : "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x172\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x172\">\n\t\t\t\t\t<rectangle fillColor=\"selection\" pos=\"0,39\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"95,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,36\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,75\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,114\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,153\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget size=\"484x191\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 0</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"97,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 1</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,172\" size=\"172x0\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient endColor=\"shadow\" pos=\"0,-8\" size=\"172x8\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"166,0\" size=\"6x172\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"3,0\" size=\"3x154\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"3x154\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"0,3\" size=\"61x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"61x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -4,3 +4,3 @@
+        	            	 			<widget size="172x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x1">
+        	            	 				</container>
+        	            	@@ -8,3 +8,3 @@
+        	            	 			<widget size="0x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x172">
+        	            	 				</container>
+        	            	@@ -12,3 +12,3 @@
+        	            	 			<widget size="0x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x1">
+        	            	 				</container>
+        	            	@@ -16,3 +16,3 @@
+        	            	 			<widget size="172x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x172">
+        	            	 					<rectangle fillColor="selection" pos="0,39" radius="4" size="93x35"/>
+        	Test:       	TestTable_Select
+        	Messages:   	Markup did not match master. Actual markup written to file://X:\fyne\widget\testdata\failed\table\selected.xml.
+    test_helper.go:127: 
+        	Error Trace:	X:/fyne/test/test_helper.go:127
+        	            				X:/fyne/widget/table_internal_test.go:792
+        	Error:      	Not equal: 
+        	            	expected: "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"0x0\">\n\t\t\t\t\t<rectangle fillColor=\"selection\" pos=\"78,136\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"75,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,17\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,56\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,95\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,134\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget pos=\"-214,-19\" size=\"484x191\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget pos=\"195,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget size=\"172x0\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient size=\"172x8\" startColor=\"shadow\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" size=\"8x172\" startColor=\"shadow\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"166,0\" size=\"6x172\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"3,17\" size=\"3x154\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"3x154\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"76,3\" size=\"61x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"61x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	actual  : "<canvas padded size=\"180x180\">\n\t<content>\n\t\t<widget pos=\"4,4\" size=\"172x172\" type=\"*widget.Table\">\n\t\t\t<widget size=\"172x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x172\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"0x0\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"1x1\">\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.clip\">\n\t\t\t\t<container size=\"172x172\">\n\t\t\t\t\t<rectangle fillColor=\"selection\" pos=\"78,136\" radius=\"4\" size=\"93x35\"/>\n\t\t\t\t\t<widget pos=\"75,0\" size=\"1x172\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"1x172\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,17\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,56\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,95\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"0,134\" size=\"172x1\" type=\"*widget.Separator\">\n\t\t\t\t\t\t<rectangle fillColor=\"separator\" size=\"172x1\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</container>\n\t\t\t</widget>\n\t\t\t<widget size=\"172x172\" type=\"*widget.Scroll\">\n\t\t\t\t<widget pos=\"-214,-19\" size=\"484x191\" type=\"*widget.tableCells\">\n\t\t\t\t\t<widget pos=\"195,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,0\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 0, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,39\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 1, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,78\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 2, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,117\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 3, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"195,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 2</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t\t<widget pos=\"293,156\" size=\"93x35\" type=\"*widget.Label\">\n\t\t\t\t\t\t<widget size=\"93x35\" type=\"*widget.RichText\">\n\t\t\t\t\t\t\t<text pos=\"8,8\" size=\"51x19\">Cell 4, 3</text>\n\t\t\t\t\t\t</widget>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget size=\"172x0\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient size=\"172x8\" startColor=\"shadow\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" size=\"8x172\" startColor=\"shadow\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"172,0\" size=\"0x172\" type=\"*widget.Shadow\">\n\t\t\t\t\t<linearGradient angle=\"270\" endColor=\"shadow\" pos=\"-8,0\" size=\"8x172\"/>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"166,0\" size=\"6x172\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"3,17\" size=\"3x154\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"3x154\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t\t<widget pos=\"0,166\" size=\"172x6\" type=\"*widget.scrollBarArea\">\n\t\t\t\t\t<widget pos=\"76,3\" size=\"61x3\" type=\"*widget.scrollBar\">\n\t\t\t\t\t\t<rectangle fillColor=\"scrollbar\" radius=\"3\" size=\"61x3\"/>\n\t\t\t\t\t</widget>\n\t\t\t\t</widget>\n\t\t\t</widget>\n\t\t</widget>\n\t</content>\n</canvas>\n"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -4,3 +4,3 @@
+        	            	 			<widget size="172x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x1">
+        	            	 				</container>
+        	            	@@ -8,3 +8,3 @@
+        	            	 			<widget size="0x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x172">
+        	            	 				</container>
+        	            	@@ -12,3 +12,3 @@
+        	            	 			<widget size="0x0" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="1x1">
+        	            	 				</container>
+        	            	@@ -16,3 +16,3 @@
+        	            	 			<widget size="172x172" type="*widget.clip">
+        	            	-				<container size="0x0">
+        	            	+				<container size="172x172">
+        	            	 					<rectangle fillColor="selection" pos="78,136" radius="4" size="93x35"/>
+        	Test:       	TestTable_Select
+        	Messages:   	Markup did not match master. Actual markup written to file://X:\fyne\widget\testdata\failed\table\selected_scrolled.xml.
+2026/10/12 10:22:44 Fyne error:  Entry cannot wrap single line
+2026/10/12 10:22:44   At: X:/fyne/widget/entry.go:1397
+2026/10/12 10:22:44 Fyne error:  Entry cannot wrap single line
+2026/10/12 10:22:44   At: X:/fyne/widget/entry.go:1397
+2026/10/12 10:22:45 Fyne error:  Entry cannot wrap single line
+2026/10/12 10:22:45   At: X:/fyne/widget/entry.go:1397
+FAIL
+FAIL	fyne.io/fyne/v2/widget	36.370s
+ok  	fyne.io/apps	3.388s
+FAIL

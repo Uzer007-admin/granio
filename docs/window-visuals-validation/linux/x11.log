@@ -1,0 +1,11 @@
+=== RUN   TestNativeWindowVisualsLifecycleAndAlpha
+    window_visuals_native_test.go:161: first show: status={RequestID:1 Phase:Fallback Requested:Mica Selected:Opaque Backend:1 SurfaceReady:true NativeAccepted:false Reason:UnsupportedOS NativeCode:0 PreparedFrames:4 FirstFrameBeforeShow:true} capabilities={OSBackdrops:1 RendererBackdrops:15 OSKnown:true RendererKnown:true SurfaceKnown:true TransparentSurface:false AlphaBits:8 CanChangeWithoutRecreate:false Generation:1 OSBuild:0 Backend:1}
+--- PASS: TestNativeWindowVisualsLifecycleAndAlpha (0.55s)
+=== RUN   TestNativeWindowVisualsFormatReservationAndPendingClose
+--- PASS: TestNativeWindowVisualsFormatReservationAndPendingClose (0.23s)
+=== RUN   TestNativeWindowVisualsRendererFailureStaysHidden
+--- PASS: TestNativeWindowVisualsRendererFailureStaysHidden (0.09s)
+=== RUN   TestNativeWindowVisualsMaterialSurfaceCache
+--- PASS: TestNativeWindowVisualsMaterialSurfaceCache (0.15s)
+PASS
+ok  	fyne.io/fyne/v2/internal/driver/glfw	2.271s

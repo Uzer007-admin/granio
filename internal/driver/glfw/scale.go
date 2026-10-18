@@ -5,7 +5,8 @@ import (
 	"os"
 	"strconv"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
 )
 
 const (
@@ -31,6 +32,14 @@ func calculateDetectedScale(widthMm, widthPx int) float32 {
 }
 
 func calculateScale(user, system, detected float32) float32 {
+	return calculateScaleWithPolicy(desktop.ScaleLegacyRounded, user, system, detected)
+}
+
+func validScale(value float32) bool {
+	return value > 0 && !math.IsNaN(float64(value)) && !math.IsInf(float64(value), 0)
+}
+
+func calculateScaleWithPolicy(policy desktop.ScalePolicy, user, system, detected float32) float32 {
 	if user < 0 {
 		user = 1.0
 	}
@@ -38,9 +47,24 @@ func calculateScale(user, system, detected float32) float32 {
 	if system == scaleAuto {
 		system = detected
 	}
+	if !validScale(user) {
+		user = 1
+	}
+	if !validScale(system) {
+		system = 1
+	}
 
 	raw := system * user
-	return float32(math.Round(float64(raw*10.0))) / 10.0 //revive:disable-line:add-constant
+	if !validScale(raw) {
+		return 1
+	}
+	if policy == desktop.ScaleExact {
+		return raw
+	}
+	// A tiny positive preference must not become a zero divisor in pixel/DIP
+	// conversions. Multiply in float64 so valid float32 scales cannot overflow.
+	rounded := float32(math.Round(float64(raw)*10.0) / 10.0)
+	return max(0.1, rounded)
 }
 
 func userScale() float32 {
@@ -51,11 +75,11 @@ func userScale() float32 {
 		if err == nil && scale != 0 {
 			return float32(scale)
 		}
-		fyne.LogError("Error reading scale", err)
+		granio.LogError("Error reading scale", err)
 	}
 
 	if env != "auto" {
-		if setting := fyne.CurrentApp().Settings().Scale(); setting > 0 {
+		if setting := granio.CurrentApp().Settings().Scale(); setting > 0 {
 			return setting
 		}
 	}

@@ -5,19 +5,19 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTable_Empty(t *testing.T) {
 	table := &Table{}
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 
 	table.CreateRenderer()
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
@@ -28,17 +28,17 @@ func TestTable_Cache(t *testing.T) {
 	c := test.NewCanvas()
 	table := NewTable(
 		func() (int, int) { return 3, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
 	)
 	c.SetContent(table)
 	c.SetPadded(false)
-	c.Resize(fyne.NewSize(120, 148))
+	c.Resize(granio.NewSize(120, 148))
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
 	cellRenderer.Refresh()
@@ -46,7 +46,7 @@ func TestTable_Cache(t *testing.T) {
 	assert.Equal(t, "Cell 0, 0", cellRenderer.Objects()[0].(*Label).Text)
 	objRef := cellRenderer.Objects()[0].(*Label)
 
-	test.Scroll(c, fyne.NewPos(10, 10), -150, -150)
+	test.Scroll(c, granio.NewPos(10, 10), -150, -150)
 	assert.Equal(t, float32(0), table.content.Offset.Y) // we didn't scroll as data shorter
 	assert.Equal(t, float32(150), table.content.Offset.X)
 	assert.Len(t, cellRenderer.(*tableCellsRenderer).visible, 6)
@@ -59,22 +59,22 @@ func TestTable_ChangeTheme(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 3, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
 	)
 	table.CreateRenderer()
 
-	table.Resize(fyne.NewSize(50, 30))
+	table.Resize(granio.NewSize(50, 30))
 	content := test.TempWidgetRenderer(t, table.content.Content.(*tableCells)).(*tableCellsRenderer)
 	w := test.NewWindow(table)
 	w.SetPadded(false)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 	test.AssertImageMatches(t, "table/theme_initial.png", w.Canvas().Capture())
 	assert.Equal(t, "Cell 0, 0", content.Objects()[0].(*Label).Text)
 	assert.Equal(t, NewLabel("placeholder").MinSize(), content.Objects()[0].(*Label).Size())
@@ -92,18 +92,18 @@ func TestTable_Filled(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			r := canvas.NewRectangle(color.Black)
-			r.SetMinSize(fyne.NewSize(30, 20))
-			r.Resize(fyne.NewSize(30, 20))
+			r.SetMinSize(granio.NewSize(30, 20))
+			r.Resize(granio.NewSize(30, 20))
 			return r
 		},
-		func(TableCellID, fyne.CanvasObject) {},
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 	w.Content().Refresh()
 	test.AssertImageMatches(t, "table/filled.png", w.Canvas().Capture())
 }
@@ -113,18 +113,18 @@ func TestTable_Focus(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			r := canvas.NewRectangle(color.Black)
-			r.SetMinSize(fyne.NewSize(30, 20))
-			r.Resize(fyne.NewSize(30, 20))
+			r.SetMinSize(granio.NewSize(30, 20))
+			r.Resize(granio.NewSize(30, 20))
 			return r
 		},
-		func(TableCellID, fyne.CanvasObject) {},
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	window := test.NewWindow(table)
 	defer window.Close()
-	window.Resize(table.MinSize().Max(fyne.NewSize(300, 200)))
+	window.Resize(table.MinSize().Max(granio.NewSize(300, 200)))
 
 	c := window.Canvas().(software.WindowlessCanvas)
 	assert.Nil(t, c.Focused())
@@ -134,19 +134,19 @@ func TestTable_Focus(t *testing.T) {
 	assert.Equal(t, table, c.Focused())
 	assert.Equal(t, TableCellID{0, 0}, table.currentHighlight)
 
-	table.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	table.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	assert.Equal(t, TableCellID{1, 0}, table.currentHighlight)
 
-	table.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	table.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, TableCellID{1, 1}, table.currentHighlight)
 
-	table.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	table.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.Equal(t, TableCellID{1, 0}, table.currentHighlight)
 
-	table.TypedKey(&fyne.KeyEvent{Name: fyne.KeyUp})
+	table.TypedKey(&granio.KeyEvent{Name: granio.KeyUp})
 	assert.Equal(t, TableCellID{0, 0}, table.currentHighlight)
 
-	c.Focused().TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	c.Focused().TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.Equal(t, &TableCellID{0, 0}, table.selectedCell)
 
 	table.Select(TableCellID{Row: 1, Col: 1})
@@ -157,21 +157,21 @@ func TestTable_Focus(t *testing.T) {
 func TestTable_Headers(t *testing.T) {
 	table := NewTableWithHeaders(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("text")
 		},
-		func(_ TableCellID, _ fyne.CanvasObject) {
+		func(_ TableCellID, _ granio.CanvasObject) {
 		},
 	)
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
 	assert.Equal(t, "text", cellRenderer.(*tableCellsRenderer).Objects()[2].(*Label).Text)
 	assert.Equal(t, "text", cellRenderer.(*tableCellsRenderer).Objects()[5].(*Label).Text)
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "A"))
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "B"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "1"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "2"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "A"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "B"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "1"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "2"))
 }
 
 func TestTable_JustHeaders(t *testing.T) {
@@ -179,16 +179,16 @@ func TestTable_JustHeaders(t *testing.T) {
 
 	table := NewTableWithHeaders(
 		func() (int, int) { return 0, 9 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("text")
 		},
-		func(_ TableCellID, _ fyne.CanvasObject) {
+		func(_ TableCellID, _ granio.CanvasObject) {
 		},
 	)
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(120, 120))
+	w.Resize(granio.NewSize(120, 120))
 
 	test.AssertRendersToMarkup(t, "table/just_headers.xml", w.Canvas())
 }
@@ -196,32 +196,32 @@ func TestTable_JustHeaders(t *testing.T) {
 func TestTable_Sticky(t *testing.T) {
 	table := NewTableWithHeaders(
 		func() (int, int) { return 25, 25 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("text")
 		},
-		func(i TableCellID, o fyne.CanvasObject) {
+		func(i TableCellID, o granio.CanvasObject) {
 			o.(*Label).SetText(fmt.Sprintf("text %d,%d", i.Row, i.Col))
 		},
 	)
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells)).(*tableCellsRenderer)
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 0,0"))
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 1,0"))
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 2,1"))
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "A"))
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "B"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "1"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "2"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "A"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "B"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "1"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "2"))
 
 	table.ScrollTo(TableCellID{Row: 7, Col: 2})
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 6,1"))
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 6,2"))
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 9,3"))
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "C"))
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "D"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "7"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "8"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "C"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "D"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "7"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "8"))
 
 	table.StickyRowCount = 1
 	table.StickyColumnCount = 1
@@ -230,61 +230,61 @@ func TestTable_Sticky(t *testing.T) {
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 7,4"))
 	assert.True(t, areaContainsLabel(cellRenderer.Objects(), "text 9,3"))
 	// stuck cells
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "text 0,3"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "text 7,0"))
-	assert.True(t, areaContainsLabel(table.top.Content.(*fyne.Container).Objects, "C"))
-	assert.True(t, areaContainsLabel(table.left.Content.(*fyne.Container).Objects, "8"))
-	assert.True(t, areaContainsLabel(table.corner.Content.(*fyne.Container).Objects, "A"))
-	assert.True(t, areaContainsLabel(table.corner.Content.(*fyne.Container).Objects, "1"))
-	assert.True(t, areaContainsLabel(table.corner.Content.(*fyne.Container).Objects, "text 0,0"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "text 0,3"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "text 7,0"))
+	assert.True(t, areaContainsLabel(table.top.Content.(*granio.Container).Objects, "C"))
+	assert.True(t, areaContainsLabel(table.left.Content.(*granio.Container).Objects, "8"))
+	assert.True(t, areaContainsLabel(table.corner.Content.(*granio.Container).Objects, "A"))
+	assert.True(t, areaContainsLabel(table.corner.Content.(*granio.Container).Objects, "1"))
+	assert.True(t, areaContainsLabel(table.corner.Content.(*granio.Container).Objects, "text 0,0"))
 }
 
 func TestTable_MinSize(t *testing.T) {
 	for name, tt := range map[string]struct {
-		cellSize             fyne.Size
-		expectedMinSize      fyne.Size
+		cellSize             granio.Size
+		expectedMinSize      granio.Size
 		headRow, headCol     bool
 		stickRows, stickCols int
 	}{
 		"small": {
-			fyne.NewSize(1, 1),
-			fyne.NewSize(float32(32), float32(32)),
+			granio.NewSize(1, 1),
+			granio.NewSize(float32(32), float32(32)),
 			false, false,
 			0, 0,
 		},
 		"large": {
-			fyne.NewSize(100, 100),
-			fyne.NewSize(100, 100),
+			granio.NewSize(100, 100),
+			granio.NewSize(100, 100),
 			false, false,
 			0, 0,
 		},
 		"sticky": {
-			fyne.NewSize(40, 40),
-			fyne.NewSize(84, 84),
+			granio.NewSize(40, 40),
+			granio.NewSize(84, 84),
 			false, false,
 			1, 1,
 		},
 		"headerrow": {
-			fyne.NewSize(1, 1),
-			fyne.NewSize(float32(32), float32(46)),
+			granio.NewSize(1, 1),
+			granio.NewSize(float32(32), float32(46)),
 			true, false,
 			0, 0,
 		},
 		"headercol": {
-			fyne.NewSize(1, 1),
-			fyne.NewSize(float32(46), float32(32)),
+			granio.NewSize(1, 1),
+			granio.NewSize(float32(46), float32(32)),
 			false, true,
 			0, 0,
 		},
 		"headers": {
-			fyne.NewSize(1, 1),
-			fyne.NewSize(float32(46), float32(46)),
+			granio.NewSize(1, 1),
+			granio.NewSize(float32(46), float32(46)),
 			true, true,
 			0, 0,
 		},
 		"stickyandheaders": {
-			fyne.NewSize(40, 40),
-			fyne.NewSize(98, 98),
+			granio.NewSize(40, 40),
+			granio.NewSize(98, 98),
 			true, true,
 			1, 1,
 		},
@@ -292,20 +292,20 @@ func TestTable_MinSize(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			table := NewTable(
 				func() (int, int) { return 5, 5 },
-				func() fyne.CanvasObject {
+				func() granio.CanvasObject {
 					r := canvas.NewRectangle(color.Black)
 					r.SetMinSize(tt.cellSize)
 					r.Resize(tt.cellSize)
 					return r
 				},
-				func(TableCellID, fyne.CanvasObject) {},
+				func(TableCellID, granio.CanvasObject) {},
 			)
 			table.ShowHeaderRow = tt.headRow
 			table.ShowHeaderColumn = tt.headCol
-			table.CreateHeader = func() fyne.CanvasObject {
+			table.CreateHeader = func() granio.CanvasObject {
 				r := canvas.NewRectangle(color.White)
-				r.SetMinSize(fyne.NewSize(10, 10))
-				r.Resize(fyne.NewSize(10, 10))
+				r.SetMinSize(granio.NewSize(10, 10))
+				r.Resize(granio.NewSize(10, 10))
 				return r
 			}
 			table.StickyRowCount = tt.stickRows
@@ -319,14 +319,14 @@ func TestTable_MinSize(t *testing.T) {
 func TestTable_Resize(t *testing.T) {
 	table := NewTable(
 		func() (int, int) { return 2, 2 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("abc")
 		},
-		func(TableCellID, fyne.CanvasObject) {},
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewTempWindow(t, table)
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 	test.AssertImageMatches(t, "table/resize.png", w.Canvas().Capture())
 }
 
@@ -335,10 +335,10 @@ func TestTable_Unselect(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 3, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
@@ -352,7 +352,7 @@ func TestTable_Unselect(t *testing.T) {
 	w := test.NewWindow(table)
 	w.SetPadded(false)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 
 	table.Unselect(*table.selectedCell)
 	assert.Equal(t, 1, unselectedRow)
@@ -374,14 +374,14 @@ func TestTable_Refresh(t *testing.T) {
 	displayText := "placeholder"
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("template")
 		},
-		func(_ TableCellID, obj fyne.CanvasObject) {
+		func(_ TableCellID, obj granio.CanvasObject) {
 			obj.(*Label).SetText(displayText)
 		},
 	)
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
 	assert.Equal(t, "placeholder", cellRenderer.(*tableCellsRenderer).Objects()[7].(*Label).Text)
@@ -411,12 +411,12 @@ func TestTable_Highlight(t *testing.T) {
 	)
 
 	templ := canvas.NewRectangle(color.Gray16{})
-	templ.SetMinSize(fyne.Size{Width: width, Height: height})
+	templ.SetMinSize(granio.Size{Width: width, Height: height})
 
 	table := NewTable(
 		func() (int, int) { return maxRows, maxCols },
-		func() fyne.CanvasObject { return templ },
-		func(TableCellID, fyne.CanvasObject) {},
+		func() granio.CanvasObject { return templ },
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewWindow(table)
@@ -448,12 +448,12 @@ func TestTable_ScrollTo(t *testing.T) {
 	)
 
 	templ := canvas.NewRectangle(color.Gray16{})
-	templ.SetMinSize(fyne.Size{Width: width, Height: height})
+	templ.SetMinSize(granio.Size{Width: width, Height: height})
 
 	table := NewTable(
 		func() (int, int) { return maxRows, maxCols },
-		func() fyne.CanvasObject { return templ },
-		func(TableCellID, fyne.CanvasObject) {},
+		func() granio.CanvasObject { return templ },
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewWindow(table)
@@ -461,8 +461,8 @@ func TestTable_ScrollTo(t *testing.T) {
 
 	// these position expectations have a built-in assumption that the window
 	// is smaller than or equal to the size of a single table cell.
-	expectedOffset := func(row, col float32) fyne.Position {
-		return fyne.Position{
+	expectedOffset := func(row, col float32) granio.Position {
+		return granio.Position{
 			X: col * width,
 			Y: row * height,
 		}
@@ -471,7 +471,7 @@ func TestTable_ScrollTo(t *testing.T) {
 	tt := []struct {
 		name string
 		in   TableCellID
-		want fyne.Position
+		want granio.Position
 	}{
 		{
 			"row 0, col 0",
@@ -542,18 +542,18 @@ func TestTable_ScrollToBottom(t *testing.T) {
 	)
 
 	templ := canvas.NewRectangle(color.Gray16{})
-	templ.SetMinSize(fyne.NewSize(width, height))
+	templ.SetMinSize(granio.NewSize(width, height))
 
 	table := NewTable(
 		func() (int, int) { return maxRows, maxCols },
-		func() fyne.CanvasObject { return templ },
-		func(TableCellID, fyne.CanvasObject) {},
+		func() granio.CanvasObject { return templ },
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewWindow(table)
 	defer w.Close()
 
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 
 	table.ScrollTo(TableCellID{19, 2})
 	want := table.offset
@@ -570,10 +570,10 @@ func TestTable_ScrollToLeading(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 3, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
@@ -586,7 +586,7 @@ func TestTable_ScrollToLeading(t *testing.T) {
 	prev := table.offset
 	table.ScrollToLeading()
 
-	want := fyne.Position{X: 0, Y: prev.Y}
+	want := granio.Position{X: 0, Y: prev.Y}
 	assert.Equal(t, want, table.offset)
 	assert.Equal(t, want, table.content.Offset)
 }
@@ -602,18 +602,18 @@ func TestTable_ScrollToOffset(t *testing.T) {
 	)
 
 	templ := canvas.NewRectangle(color.Gray16{})
-	templ.SetMinSize(fyne.Size{Width: width, Height: height})
+	templ.SetMinSize(granio.Size{Width: width, Height: height})
 
 	table := NewTable(
 		func() (int, int) { return maxRows, maxCols },
-		func() fyne.CanvasObject { return templ },
-		func(TableCellID, fyne.CanvasObject) {},
+		func() granio.CanvasObject { return templ },
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewWindow(table)
 	defer w.Close()
 
-	want := fyne.NewPos(48, 25)
+	want := granio.NewPos(48, 25)
 	table.ScrollToOffset(want)
 	assert.Equal(t, want, table.offset)
 	assert.Equal(t, want, table.content.Offset)
@@ -630,12 +630,12 @@ func TestTable_ScrollToTop(t *testing.T) {
 	)
 
 	templ := canvas.NewRectangle(color.Gray16{})
-	templ.SetMinSize(fyne.Size{Width: width, Height: height})
+	templ.SetMinSize(granio.Size{Width: width, Height: height})
 
 	table := NewTable(
 		func() (int, int) { return maxRows, maxCols },
-		func() fyne.CanvasObject { return templ },
-		func(TableCellID, fyne.CanvasObject) {},
+		func() granio.CanvasObject { return templ },
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	w := test.NewWindow(table)
@@ -646,7 +646,7 @@ func TestTable_ScrollToTop(t *testing.T) {
 
 	table.ScrollToTop()
 
-	want := fyne.Position{X: prev.X, Y: 0}
+	want := granio.Position{X: prev.X, Y: 0}
 	assert.Equal(t, want, table.offset)
 	assert.Equal(t, want, table.content.Offset)
 }
@@ -656,10 +656,10 @@ func TestTable_ScrollToTrailing(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 24, 24 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
@@ -668,7 +668,7 @@ func TestTable_ScrollToTrailing(t *testing.T) {
 	w := test.NewWindow(table)
 	defer w.Close()
 
-	w.Resize(fyne.NewSize(200, 200))
+	w.Resize(granio.NewSize(200, 200))
 
 	table.ScrollTo(TableCellID{Row: 7, Col: 23})
 	want := table.offset
@@ -685,10 +685,10 @@ func TestTable_Selection(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
@@ -697,14 +697,14 @@ func TestTable_Selection(t *testing.T) {
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 
 	selectedCol, selectedRow := 0, 0
 	table.OnSelected = func(id TableCellID) {
 		selectedCol = id.Col
 		selectedRow = id.Row
 	}
-	test.TapCanvas(w.Canvas(), fyne.NewPos(35, 58))
+	test.TapCanvas(w.Canvas(), granio.NewPos(35, 58))
 	w.Canvas().Unfocus() // don't include table focus in test
 	assert.Equal(t, 0, table.selectedCell.Col)
 	assert.Equal(t, 1, table.selectedCell.Row)
@@ -714,13 +714,13 @@ func TestTable_Selection(t *testing.T) {
 	test.AssertRendersToMarkup(t, "table/selected.xml", w.Canvas())
 
 	// check out of bounds col
-	w.Resize(fyne.NewSize(680, 180))
-	test.TapCanvas(w.Canvas(), fyne.NewPos(575, 58))
+	w.Resize(granio.NewSize(680, 180))
+	test.TapCanvas(w.Canvas(), granio.NewPos(575, 58))
 	assert.Equal(t, 0, selectedCol)
 
 	// check out of bounds row
-	w.Resize(fyne.NewSize(180, 480))
-	test.TapCanvas(w.Canvas(), fyne.NewPos(35, 428))
+	w.Resize(granio.NewSize(180, 480))
+	test.TapCanvas(w.Canvas(), granio.NewPos(35, 428))
 	assert.Equal(t, 1, selectedRow)
 }
 
@@ -729,10 +729,10 @@ func TestTable_Selection_OnHeader(t *testing.T) {
 
 	table := NewTableWithHeaders(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
@@ -741,16 +741,16 @@ func TestTable_Selection_OnHeader(t *testing.T) {
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 
 	selected := false
 	table.OnSelected = func(TableCellID) {
 		selected = true
 	}
-	test.TapCanvas(w.Canvas(), fyne.NewPos(35, 5))
+	test.TapCanvas(w.Canvas(), granio.NewPos(35, 5))
 	assert.False(t, selected)
 
-	test.TapCanvas(w.Canvas(), fyne.NewPos(5, 58))
+	test.TapCanvas(w.Canvas(), granio.NewPos(5, 58))
 	assert.False(t, selected)
 }
 
@@ -759,10 +759,10 @@ func TestTable_Select(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, c fyne.CanvasObject) {
+		func(id TableCellID, c granio.CanvasObject) {
 			text := fmt.Sprintf("Cell %d, %d", id.Row, id.Col)
 			c.(*Label).SetText(text)
 		},
@@ -770,7 +770,7 @@ func TestTable_Select(t *testing.T) {
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(180, 180))
+	w.Resize(granio.NewSize(180, 180))
 
 	selectedCol, selectedRow := 0, 0
 	table.OnSelected = func(id TableCellID) {
@@ -810,10 +810,10 @@ func TestTable_SetColumnWidth(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(id TableCellID, obj fyne.CanvasObject) {
+		func(id TableCellID, obj granio.CanvasObject) {
 			if id.Col == 0 {
 				obj.(*Label).Text = "p"
 			} else {
@@ -823,7 +823,7 @@ func TestTable_SetColumnWidth(t *testing.T) {
 		},
 	)
 	table.SetColumnWidth(0, 32)
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 	table.Select(TableCellID{1, 0})
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
@@ -839,7 +839,7 @@ func TestTable_SetColumnWidth(t *testing.T) {
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(120+(2*theme.Padding()), 120+(2*theme.Padding())))
+	w.Resize(granio.NewSize(120+(2*theme.Padding()), 120+(2*theme.Padding())))
 	test.AssertImageMatches(t, "table/col_size.png", w.Canvas().Capture())
 }
 
@@ -848,10 +848,10 @@ func TestTable_SetColumnWidth_Dragged(t *testing.T) {
 
 	table := NewTableWithHeaders(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("")
 		},
-		func(TableCellID, fyne.CanvasObject) {
+		func(TableCellID, granio.CanvasObject) {
 		},
 	)
 	table.ShowHeaderColumn = false
@@ -861,21 +861,21 @@ func TestTable_SetColumnWidth_Dragged(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(table)
-	c.Resize(fyne.NewSize(120, 120))
+	c.Resize(granio.NewSize(120, 120))
 
-	dragPos := fyne.NewPos(table.cellSize.Width*2+theme.Padding()+2, 2) // gap between col 1 and 2
-	table.MouseMoved(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
-	table.MouseDown(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
+	dragPos := granio.NewPos(table.cellSize.Width*2+theme.Padding()+2, 2) // gap between col 1 and 2
+	table.MouseMoved(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
+	table.MouseDown(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
 	test.Drag(c, dragPos.AddXY(5, 0), 5, 0) // expanded column 5.0
 
 	assert.Equal(t, table.cellSize.Width+5, table.columnWidths[1])
 
 	dragPos = dragPos.AddXY(5, 0)
-	table.MouseMoved(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
-	table.MouseDown(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
-	table.Dragged(&fyne.DragEvent{ // reduce less than min width
-		PointEvent: fyne.PointEvent{Position: dragPos.SubtractXY(25, 0)},
-		Dragged:    fyne.Delta{DX: -25, DY: 0},
+	table.MouseMoved(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
+	table.MouseDown(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
+	table.Dragged(&granio.DragEvent{ // reduce less than min width
+		PointEvent: granio.PointEvent{Position: dragPos.SubtractXY(25, 0)},
+		Dragged:    granio.Delta{DX: -25, DY: 0},
 	})
 
 	assert.Equal(t, table.cellSize.Width, table.columnWidths[1])
@@ -892,10 +892,10 @@ func TestTable_SetRowHeight(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("place\nholder")
 		},
-		func(id TableCellID, obj fyne.CanvasObject) {
+		func(id TableCellID, obj granio.CanvasObject) {
 			if id.Row == 0 {
 				obj.(*Label).Text = "p"
 			} else {
@@ -905,7 +905,7 @@ func TestTable_SetRowHeight(t *testing.T) {
 		},
 	)
 	table.SetRowHeight(0, 48)
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 	table.Select(TableCellID{0, 1})
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
@@ -921,7 +921,7 @@ func TestTable_SetRowHeight(t *testing.T) {
 
 	w := test.NewWindow(table)
 	defer w.Close()
-	w.Resize(fyne.NewSize(120+(2*theme.Padding()), 120+(2*theme.Padding())))
+	w.Resize(granio.NewSize(120+(2*theme.Padding()), 120+(2*theme.Padding())))
 	test.AssertImageMatches(t, "table/row_size.png", w.Canvas().Capture())
 }
 
@@ -930,10 +930,10 @@ func TestTable_SetRowHeight_Dragged(t *testing.T) {
 
 	table := NewTableWithHeaders(
 		func() (int, int) { return 5, 5 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("")
 		},
-		func(TableCellID, fyne.CanvasObject) {
+		func(TableCellID, granio.CanvasObject) {
 		},
 	)
 	table.ShowHeaderRow = false
@@ -943,21 +943,21 @@ func TestTable_SetRowHeight_Dragged(t *testing.T) {
 	c := test.NewCanvas()
 	c.SetPadded(false)
 	c.SetContent(table)
-	c.Resize(fyne.NewSize(120, 150))
+	c.Resize(granio.NewSize(120, 150))
 
-	dragPos := fyne.NewPos(2, table.cellSize.Height*3+theme.Padding()*2+1) // gap between row 2 and 3
-	table.MouseMoved(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
-	table.MouseDown(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
+	dragPos := granio.NewPos(2, table.cellSize.Height*3+theme.Padding()*2+1) // gap between row 2 and 3
+	table.MouseMoved(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
+	table.MouseDown(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
 	test.Drag(c, dragPos.AddXY(0, 5), 0, 5) // expanded row 5.0
 
 	assert.Equal(t, table.cellSize.Height+5, table.rowHeights[2])
 
 	dragPos = dragPos.AddXY(0, 5)
-	table.MouseMoved(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
-	table.MouseDown(&desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: dragPos}})
-	table.Dragged(&fyne.DragEvent{ // reduce less than min height
-		PointEvent: fyne.PointEvent{Position: dragPos.SubtractXY(0, 25)},
-		Dragged:    fyne.Delta{DX: 0, DY: -25},
+	table.MouseMoved(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
+	table.MouseDown(&desktop.MouseEvent{PointEvent: granio.PointEvent{Position: dragPos}})
+	table.Dragged(&granio.DragEvent{ // reduce less than min height
+		PointEvent: granio.PointEvent{Position: dragPos.SubtractXY(0, 25)},
+		Dragged:    granio.Delta{DX: 0, DY: -25},
 	})
 
 	assert.Equal(t, table.cellSize.Height, table.rowHeights[2])
@@ -971,12 +971,12 @@ func TestTable_SetRowHeight_Dragged(t *testing.T) {
 func TestTable_ShowVisible(t *testing.T) {
 	table := NewTable(
 		func() (int, int) { return 50, 50 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(TableCellID, fyne.CanvasObject) {},
+		func(TableCellID, granio.CanvasObject) {},
 	)
-	table.Resize(fyne.NewSize(120, 120))
+	table.Resize(granio.NewSize(120, 120))
 
 	cellRenderer := test.TempWidgetRenderer(t, table.content.Content.(*tableCells))
 	cellRenderer.Refresh()
@@ -985,8 +985,8 @@ func TestTable_ShowVisible(t *testing.T) {
 
 func TestTable_DividersBeforeResize(t *testing.T) {
 	length := func() (int, int) { return 1000, 1000 }
-	create := func() fyne.CanvasObject { return NewLabel("text") }
-	update := func(TableCellID, fyne.CanvasObject) {}
+	create := func() granio.CanvasObject { return NewLabel("text") }
+	update := func(TableCellID, granio.CanvasObject) {}
 
 	headers := NewTableWithHeaders(length, create, update)
 	stickyRows := NewTable(length, create, update)
@@ -997,7 +997,7 @@ func TestTable_DividersBeforeResize(t *testing.T) {
 	for name, table := range map[string]*Table{"headers": headers, "sticky rows": stickyRows, "sticky columns": stickyCols} {
 		t.Run(name, func(t *testing.T) {
 			w := test.NewTempWindow(t, table)
-			w.Resize(fyne.NewSize(120, 120))
+			w.Resize(granio.NewSize(120, 120))
 
 			// the renderer is created at 0x0, which must not allocate a divider per row and column
 			cellRenderer := test.TempWidgetRenderer(t, table.cells).(*tableCellsRenderer)
@@ -1013,29 +1013,29 @@ func TestTable_SeparatorThicknessZero_NotPanics(t *testing.T) {
 
 	table := NewTable(
 		func() (int, int) { return 500, 150 },
-		func() fyne.CanvasObject {
+		func() granio.CanvasObject {
 			return NewLabel("placeholder")
 		},
-		func(TableCellID, fyne.CanvasObject) {},
+		func(TableCellID, granio.CanvasObject) {},
 	)
 
 	assert.NotPanics(t, func() {
-		table.Resize(fyne.NewSize(400, 644))
+		table.Resize(granio.NewSize(400, 644))
 	})
 }
 
 type paddingZeroTheme struct {
-	fyne.Theme
+	granio.Theme
 }
 
-func (t *paddingZeroTheme) Size(n fyne.ThemeSizeName) float32 {
+func (t *paddingZeroTheme) Size(n granio.ThemeSizeName) float32 {
 	if n == theme.SizeNamePadding {
 		return 0
 	}
 	return t.Theme.Size(n)
 }
 
-func areaContainsLabel(list []fyne.CanvasObject, text string) bool {
+func areaContainsLabel(list []granio.CanvasObject, text string) bool {
 	for _, o := range list {
 		l, ok := o.(*Label)
 		if !ok {

@@ -1,0 +1,485 @@
+{
+  "fetched_at": "2026-10-12T06:47:59.407693+00:00",
+  "records": [
+    {
+      "repository": "go-gl/gl",
+      "number": 174,
+      "title": "Inquiry CGo noescape nocallback.",
+      "url": "https://github.com/go-gl/gl/issues/174",
+      "priority": "P1",
+      "status": "Оптимизация",
+      "note": "Нужен прототип с whitelist noescape; nocallback требует отдельного режима без Go debug callbacks. Автоматическая разметка всего API небезопасна.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 172,
+      "title": "Missed a dummy.go file for version v3.0",
+      "url": "https://github.com/go-gl/gl/issues/172",
+      "priority": "P1",
+      "status": "Подтверждено по дереву",
+      "note": "В v3.0/gles2/KHR действительно нет dummy.go. Добавить проверку сохранения заголовков в vendor/пакетном архиве.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 169,
+      "title": "Jerky refresh with high update rate",
+      "url": "https://github.com/go-gl/gl/issues/169",
+      "priority": "P2",
+      "status": "Не воспроизведено",
+      "note": "Жалоба на frame pacing Linux/GNOME; примеры upstream работают. Нужны C/Go comparator, latency percentiles, swap interval и upload-stall measurements.",
+      "comments_saved": 2
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 168,
+      "title": "Problem with getting v2.1 gl",
+      "url": "https://github.com/go-gl/gl/issues/168",
+      "priority": "P2",
+      "status": "Окружение/не воспроизведено",
+      "note": "Пакет v2.1/gl существует и собирается на этой Windows-машине; без cgo он исключается. Нужна понятная диагностика toolchain/CGO.",
+      "comments_saved": 2
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 167,
+      "title": "Cannot obtain OpenGL version and compile shaders in Ubuntu/CentOS with OSMesa",
+      "url": "https://github.com/go-gl/gl/issues/167",
+      "priority": "P1",
+      "status": "Кандидат загрузчика",
+      "note": "OSMesa-контекст должен использовать свой resolver через InitWithProcAddrFunc. По умолчанию POSIX использует GLX; контейнеры автора не запускались.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 155,
+      "title": "Cannot cross-compile from Linux to Windows",
+      "url": "https://github.com/go-gl/gl/issues/155",
+      "priority": "P2",
+      "status": "Сборка/не воспроизведено",
+      "note": "Обсуждение смешивает отсутствующий cross C compiler и runtime Init. Нужны отдельные cross-build и реальный Windows smoke; clang/mingw и контекст фиксировать явно.",
+      "comments_saved": 3
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 154,
+      "title": "could not import C (cgo preprocessing failed) (compile) when running staticcheck",
+      "url": "https://github.com/go-gl/gl/issues/154",
+      "priority": "P2",
+      "status": "Окружение/не воспроизведено",
+      "note": "Staticcheck зависит от cgo headers/compiler. Само сообщение не доказывает дефект GL; добавить воспроизводимую матрицу анализа.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 152,
+      "title": "Init doesnt load glActiveTexture",
+      "url": "https://github.com/go-gl/gl/issues/152",
+      "priority": "P1",
+      "status": "Диагностика",
+      "note": "Отсутствующая glActiveTexture связана с resolver/current context/driver. Проверять контекст и capabilities; данная NVIDIA-конфигурация проходит Init.",
+      "comments_saved": 2
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 151,
+      "title": "gl.BufferSubData()  crashed",
+      "url": "https://github.com/go-gl/gl/issues/151",
+      "priority": "P1",
+      "status": "Не воспроизведено",
+      "note": "Краш BufferSubData на Windows AMD требует того же GPU и минимального воспроизведения; нельзя объявлять размер/профиль доказанной причиной.",
+      "comments_saved": 1
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 150,
+      "title": "bad access: nil dereference GenBuffers()",
+      "url": "https://github.com/go-gl/gl/issues/150",
+      "priority": "P1",
+      "status": "Диагностика",
+      "note": "Инициализировать каждый импортированный профиль после MakeContextCurrent на закреплённом OS thread. Защита от вызова незагруженной функции нужна в debug API.",
+      "comments_saved": 3
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 148,
+      "title": "Which version of GLES is supported?",
+      "url": "https://github.com/go-gl/gl/issues/148",
+      "priority": "P1",
+      "status": "Несоответствие профилей",
+      "note": "gles2 — имя API Khronos, а v3.0/3.1/3.2 — версии GLES. Генерация настоящего GLES 2.0 успешно проверена; текущий Fyne запрашивает 2.0, импортируя 3.1.",
+      "comments_saved": 2
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 145,
+      "title": "build report error in ubuntu20.04",
+      "url": "https://github.com/go-gl/gl/issues/145",
+      "priority": "P3",
+      "status": "Ограничение окружения",
+      "note": "Статическая линковка требует static GL stack. Наличие динамической libGL не гарантирует -static; документировать поддерживаемые варианты.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 132,
+      "title": "unsafe usage of reflect.SliceHeader",
+      "url": "https://github.com/go-gl/gl/issues/132",
+      "priority": "P2",
+      "status": "Частично устарело",
+      "note": "Указанного reflect.SliceHeader уже нет в проверенном conversions.go. Str использует указатель на настоящий StringHeader; переход на unsafe.StringData/SliceData остаётся полезен.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 128,
+      "title": "A dangerous function",
+      "url": "https://github.com/go-gl/gl/issues/128",
+      "priority": "P1",
+      "status": "Типизация API",
+      "note": "uint имеет платформенную ширину и не заменяет uint32 индексов GL. Добавить helpers для []uint16/[]uint32 и проверки размера/типа; raw API сохранить.",
+      "comments_saved": 1
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 116,
+      "title": "Question: do really debug functions work?",
+      "url": "https://github.com/go-gl/gl/issues/116",
+      "priority": "P2",
+      "status": "Работает в проверенном сценарии",
+      "note": "Синхронный debug callback на NVIDIA действительно вызван. C trampoline игнорирует переданный Go callback pointer; глобальный callback остаётся ограничением нескольких контекстов.",
+      "comments_saved": 3
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 109,
+      "title": "remove dependency on cgo",
+      "url": "https://github.com/go-gl/gl/issues/109",
+      "priority": "P2",
+      "status": "Архитектурное расширение",
+      "note": "Путь без cgo отсутствует. Генерировать второй backend, сравнивать ABI/callbacks/performance; отдельное решение также требуется для GLFW.",
+      "comments_saved": 30
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 104,
+      "title": "Error while calling functions from all-core",
+      "url": "https://github.com/go-gl/gl/issues/104",
+      "priority": "P1",
+      "status": "Диагностика",
+      "note": "Профили имеют отдельные глобальные таблицы функций. all-core с lenientInit не гарантирует поддержку каждой функции; debug guards и capabilities предпочтительнее запрета нескольких профилей.",
+      "comments_saved": 6
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 102,
+      "title": "Semantic versioning tag for go modules",
+      "url": "https://github.com/go-gl/gl/issues/102",
+      "priority": "P2",
+      "status": "Релизный процесс",
+      "note": "GL закрепляется pseudo-version. Собственные semver tags, changelog и generation manifest нужны после выбора публичного module path.",
+      "comments_saved": 3
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 80,
+      "title": "PtrOffset causes \"cgo argument has Go pointer to Go pointer\" runtime error",
+      "url": "https://github.com/go-gl/gl/issues/80",
+      "priority": "P1",
+      "status": "Частично закрыто API",
+      "note": "PtrOffset deprecated; некоторые WithOffset уже есть. Остаются недостающие overloads. Отключение cgocheck не является исправлением.",
+      "comments_saved": 25
+    },
+    {
+      "repository": "go-gl/gl",
+      "number": 77,
+      "title": "Null terminate strings automatically in Strs()",
+      "url": "https://github.com/go-gl/gl/issues/77",
+      "priority": "P1",
+      "status": "Воспроизведено",
+      "note": "Strs(\"A\", \"B\") выделяет два байта AB без NUL. Контракт с документацией расходится; Fyne уже добавляет терминатор вручную.",
+      "comments_saved": 22
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 426,
+      "title": "Possible stack buffer overflow: openJoystickDevice prints signed device-name bytes with %02x into char guid[33]",
+      "url": "https://github.com/go-gl/glfw/issues/426",
+      "priority": "P1",
+      "status": "Фрагмент воспроизведён",
+      "note": "На Linux signed char формат даёт 44 символа/45 байт при guid[33]. Маскирование даёт 32. Тот же код есть в C GLFW 3.3 и 3.4; реальное устройство и эксплуатация не проверялись.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 425,
+      "title": "Wayland build issue on OpenBSD and FreeBSD",
+      "url": "https://github.com/go-gl/glfw/issues/425",
+      "priority": "P1",
+      "status": "Подтверждён конфликт условий",
+      "note": "OpenBSD/Wayland native access включается тегом, тогда как C backend OpenBSD остаётся X11. FreeBSD требует отдельной проверки. BSD runtime не запускался.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 413,
+      "title": "v3.3/glfw: `glfw.GetKeyName()` crashes on unknown key+scancode on Wayland",
+      "url": "https://github.com/go-gl/glfw/issues/413",
+      "priority": "P1",
+      "status": "Не воспроизведено",
+      "note": "Внешний unknown scancode превращается в panic через panicError. Нужны safe query и тесты fn/media keys на Wayland; соответствующего desktop здесь нет.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 410,
+      "title": "v3.3/glfw: Make it possible to run with memory sanitizer",
+      "url": "https://github.com/go-gl/glfw/issues/410",
+      "priority": "P2",
+      "status": "Инфраструктура",
+      "note": "ASan/MSan матрица для C/Go boundary; сообщения из неинструментированных X11/dbus/libdecor нельзя автоматически считать ошибкой GLFW.",
+      "comments_saved": 1
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 407,
+      "title": "v3.3/glfw: Annotate functions with #cgo noescape/nocallback where possible",
+      "url": "https://github.com/go-gl/glfw/issues/407",
+      "priority": "P1",
+      "status": "Оптимизация",
+      "note": "Go 1.27.1 снимает барьер минимальной версии. Nocallback учитывать для error callback и событий из native setters; сначала измерить выбранные функции.",
+      "comments_saved": 2
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 405,
+      "title": "v3.2/glfw: PlatformError: Cocoa: Failed to retrieve display name",
+      "url": "https://github.com/go-gl/glfw/issues/405",
+      "priority": "P3",
+      "status": "Старый профиль/не воспроизведено",
+      "note": "Отчёт относится к GLFW 3.2 и macOS. Проверить актуальный Cocoa backend; эта Windows/Linux-проверка его не охватывает.",
+      "comments_saved": 1
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 402,
+      "title": "v3.3/glfw: Wayland compile on OpenSUSE fails",
+      "url": "https://github.com/go-gl/glfw/issues/402",
+      "priority": "P1",
+      "status": "Сборочная переносимость",
+      "note": "Wayland include paths должны приходить из pkg-config, а не зависеть от расположения headers в дистрибутиве. OpenSUSE отдельно не проверялась.",
+      "comments_saved": 3
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 377,
+      "title": "v3.3/glfw: can not build on macos 13.3.1",
+      "url": "https://github.com/go-gl/glfw/issues/377",
+      "priority": "P2",
+      "status": "Окружение/не воспроизведено",
+      "note": "Требуется macOS SDK/Xcode comparator. Предложение из комментария собирать GLES на macOS не является проверенным исправлением.",
+      "comments_saved": 5
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 376,
+      "title": "v3.3/glfw: converting to execution character set: Illegal byte sequence",
+      "url": "https://github.com/go-gl/glfw/issues/376",
+      "priority": "P2",
+      "status": "Окружение/не воспроизведено",
+      "note": "Проверить GCC execution charset и Unicode-путь checkout на Windows. Текущий X:/fyne + GCC 13.2 работает.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 370,
+      "title": "IME support",
+      "url": "https://github.com/go-gl/glfw/issues/370",
+      "priority": "P1",
+      "status": "Функциональное расширение",
+      "note": "IME требует composition/preedit, selection/candidate rectangle и платформенных callbacks, а не одного CharCallback. Патч только Go-обёрток недостаточен.",
+      "comments_saved": 6
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 359,
+      "title": "v3.3/glfw: Warnings when building using -tags wayland",
+      "url": "https://github.com/go-gl/glfw/issues/359",
+      "priority": "P2",
+      "status": "Нативный upstream",
+      "note": "Warning _GNU_SOURCE и прежние missing declarations — разные состояния. Исправление должно переживать обновление C snapshot; смена mkostemp на mkstemp меняет семантику.",
+      "comments_saved": 14
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 357,
+      "title": "v3.3/glfw: axis not recognized with Street Fighter \"Mad Catz\" Fightpad",
+      "url": "https://github.com/go-gl/glfw/issues/357",
+      "priority": "P2",
+      "status": "Не воспроизведено",
+      "note": "Gamepad mapping/axis complaint требует устройства автора или записанного backend fixture. Не считать общим дефектом всех контроллеров.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 353,
+      "title": "v3.3/glfw: port `GLFW_CONTEXT_NO_ERROR`",
+      "url": "https://github.com/go-gl/glfw/issues/353",
+      "priority": "P2",
+      "status": "Есть в GLFW 3.4",
+      "note": "ContextNoError уже экспортирован в v3.4/window.go; старый v3.3 требует отдельного backport. Это не отсутствующая возможность рабочего 3.4 API.",
+      "comments_saved": 1
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 345,
+      "title": "v3.3/glfw: X-POST from Fyne NSGL failed to find suitable pixel format",
+      "url": "https://github.com/go-gl/glfw/issues/345",
+      "priority": "P2",
+      "status": "Не воспроизведено",
+      "note": "NSGL pixel format может зависеть от виртуальной машины/драйвера/context hints. Проверять реальную macOS и параметры выбора контекста.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 296,
+      "title": "v3.3/glfw: get caps lock state",
+      "url": "https://github.com/go-gl/glfw/issues/296",
+      "priority": "P2",
+      "status": "Функциональное расширение",
+      "note": "LockKeyMods сообщает modifier события, а не произвольный текущий toggle state. Нужен отдельный контракт CapsLock/NumLock query по платформам.",
+      "comments_saved": 4
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 292,
+      "title": "v3.3/glfw: uncaught error when connecting Bluetooth controllers",
+      "url": "https://github.com/go-gl/glfw/issues/292",
+      "priority": "P1",
+      "status": "Не воспроизведено",
+      "note": "Bluetooth gamepad mapping errors способны перейти в panic при Init. Отделить ошибки внешнего устройства от programmer errors; тесты через fixtures.",
+      "comments_saved": 2
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 288,
+      "title": "Can go-gl/glfw support other UNIX systems like NetBSD?",
+      "url": "https://github.com/go-gl/glfw/issues/288",
+      "priority": "P2",
+      "status": "Теги частично/уже добавлены",
+      "note": "В текущих 3.3 и 3.4 есть NetBSD build tags. Это не доказательство успешного NetBSD runtime; дополнить BSD CI.",
+      "comments_saved": 12
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 274,
+      "title": "v3.3/glfw: error with HORIPAD mini4",
+      "url": "https://github.com/go-gl/glfw/issues/274",
+      "priority": "P1",
+      "status": "Связано с #292",
+      "note": "HORIPAD/8BitDo mapping и глобальный error channel; нужен comparator C vs Go и безопасная обработка внешних устройств.",
+      "comments_saved": 4
+    },
+    {
+      "repository": "go-gl/glfw",
+      "number": 188,
+      "title": "consider adding release tags",
+      "url": "https://github.com/go-gl/glfw/issues/188",
+      "priority": "P2",
+      "status": "Частично выполнено upstream",
+      "note": "Для v3.4/glfw есть v0.1.0-pre.2. Стабильный релиз и собственная версия wrapper должны быть отделены от версии C GLFW.",
+      "comments_saved": 23
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 127,
+      "title": "Add DrawElementsInstancedWithOffset function",
+      "url": "https://github.com/go-gl/glow/issues/127",
+      "priority": "P1",
+      "status": "Недостающие overloads",
+      "note": "DrawElementsInstanced/ReadPixels PBO требуют offset variants. Вносить в XML overrides и проверять checkptr, zero offset и pointer-width.",
+      "comments_saved": 0
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 86,
+      "title": "Make constants typed",
+      "url": "https://github.com/go-gl/glow/issues/86",
+      "priority": "P2",
+      "status": "API расширение",
+      "note": "Один GLConst int32 не подходит uint64 TIMEOUT_IGNORED и смешанным enum/integer параметрам. Добавить domain-aware names/string helpers без замены raw constants.",
+      "comments_saved": 5
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 63,
+      "title": "Code that uses unsafe.Pointer to convert an integer-typed value held in memory into a pointer is illegal and must be rewritten",
+      "url": "https://github.com/go-gl/glow/issues/63",
+      "priority": "P1",
+      "status": "Частично выполнено",
+      "note": "WithOffset уже решает некоторые вызовы. Дополнить полный перечень, убрать uintptr-to-pointer из безопасного API; legacy raw API не менять молча.",
+      "comments_saved": 6
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 51,
+      "title": "Is it viable to use glow to generate an interface with multiple backends?",
+      "url": "https://github.com/go-gl/glow/issues/51",
+      "priority": "P2",
+      "status": "Архитектура",
+      "note": "Разделить registry/IR и cgo/FFI templates, генерировать static typed dispatch. WebGL/Metal/Vulkan не становятся GL-поддержкой от смены loader.",
+      "comments_saved": 9
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 32,
+      "title": "automagic debug binding",
+      "url": "https://github.com/go-gl/glow/issues/32",
+      "priority": "P2",
+      "status": "Диагностика",
+      "note": "Generate debug/trace build variant с call counters и source labels, выключаемый из release. Сравнить overhead; использовать внешние GPU captures.",
+      "comments_saved": 4
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 31,
+      "title": "Add sanitized prebuilt packages",
+      "url": "https://github.com/go-gl/glow/issues/31",
+      "priority": "P1",
+      "status": "API расширение",
+      "note": "Генерировать typed slices, lengths и offset overloads рядом с raw bindings. XML len metadata требует overrides и тестов retained-pointer функций.",
+      "comments_saved": 4
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 23,
+      "title": "slim down glow",
+      "url": "https://github.com/go-gl/glow/issues/23",
+      "priority": "P1",
+      "status": "Оптимизация генерации",
+      "note": "Restrict уже есть. Затем исследовать общие C bridges по ABI signature, object-file splitting, size и cold build time; не обещать исторические проценты экономии.",
+      "comments_saved": 1
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 16,
+      "title": "EGL: C syntax",
+      "url": "https://github.com/go-gl/glow/issues/16",
+      "priority": "P1",
+      "status": "Воспроизведено на Linux",
+      "note": "EGL 1.5 генерируется, но Cgo не определяет AHardwareBuffer/EGLClientPixmapHI/wl_display/wl_resource. Нужна корректная обработка struct prefix и native type overrides.",
+      "comments_saved": 5
+    },
+    {
+      "repository": "go-gl/glow",
+      "number": 2,
+      "title": "Non-GL-API packages may not work out of the box",
+      "url": "https://github.com/go-gl/glow/issues/2",
+      "priority": "P2",
+      "status": "Частично проверено",
+      "note": "EGL compile failure подтверждён; GLX/WGL generation/native usage требует отдельных fixtures. Наличие ненулевого proc address не доказывает поддержку extension.",
+      "comments_saved": 10
+    }
+  ]
+}

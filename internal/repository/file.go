@@ -9,10 +9,10 @@ import (
 	"runtime"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 // Constants for file permissions to be combined using `|`.
@@ -48,16 +48,16 @@ var (
 )
 
 var (
-	_ fyne.URIReadCloser  = (*file)(nil)
-	_ fyne.URIWriteCloser = (*file)(nil)
+	_ granio.URIReadCloser  = (*file)(nil)
+	_ granio.URIWriteCloser = (*file)(nil)
 )
 
 type file struct {
 	*os.File
-	uri fyne.URI
+	uri granio.URI
 }
 
-func (f *file) URI() fyne.URI {
+func (f *file) URI() granio.URI {
 	return f.uri
 }
 
@@ -81,7 +81,7 @@ func NewFileRepository() *FileRepository {
 // Exists checks if the given URI exists.
 //
 // Since: 2.0
-func (*FileRepository) Exists(u fyne.URI) (bool, error) {
+func (*FileRepository) Exists(u granio.URI) (bool, error) {
 	p := u.Path()
 	_, err := os.Stat(p)
 	if err == nil {
@@ -96,14 +96,14 @@ func (*FileRepository) Exists(u fyne.URI) (bool, error) {
 // Reader returns a reader for the given URI.
 //
 // Since: 2.0
-func (*FileRepository) Reader(u fyne.URI) (fyne.URIReadCloser, error) {
+func (*FileRepository) Reader(u granio.URI) (granio.URIReadCloser, error) {
 	return openFile(u, false, false)
 }
 
 // CanRead checks if the given URI can be read.
 //
 // Since: 2.0
-func (*FileRepository) CanRead(u fyne.URI) (bool, error) {
+func (*FileRepository) CanRead(u granio.URI) (bool, error) {
 	f, err := os.OpenFile(u.Path(), os.O_RDONLY, filePermDefault)
 	if err != nil {
 		if os.IsPermission(err) || os.IsNotExist(err) {
@@ -124,21 +124,21 @@ func (*FileRepository) Destroy(string) {
 // Writer returns a truncating writer for the given URI.
 //
 // Since: 2.0
-func (*FileRepository) Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
+func (*FileRepository) Writer(u granio.URI) (granio.URIWriteCloser, error) {
 	return openFile(u, true, true)
 }
 
 // Appender returns a writer that appends to the given URI.
 //
 // Since: 2.6
-func (*FileRepository) Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
+func (*FileRepository) Appender(u granio.URI) (granio.URIWriteCloser, error) {
 	return openFile(u, true, false)
 }
 
 // CanWrite checks if the given URI can be written.
 //
 // Since: 2.0
-func (*FileRepository) CanWrite(u fyne.URI) (bool, error) {
+func (*FileRepository) CanWrite(u granio.URI) (bool, error) {
 	f, err := os.OpenFile(u.Path(), os.O_WRONLY, filePermDefault)
 	if err != nil {
 		if os.IsPermission(err) {
@@ -161,21 +161,21 @@ func (*FileRepository) CanWrite(u fyne.URI) (bool, error) {
 // Delete deletes the given URI.
 //
 // Since: 2.0
-func (*FileRepository) Delete(u fyne.URI) error {
+func (*FileRepository) Delete(u granio.URI) error {
 	return os.Remove(u.Path())
 }
 
 // DeleteAll deletes the given URI and all its children.
 //
 // Since: 2.7
-func (*FileRepository) DeleteAll(u fyne.URI) error {
+func (*FileRepository) DeleteAll(u granio.URI) error {
 	return os.RemoveAll(u.Path())
 }
 
 // Parent returns the parent URI of the given URI.
 //
 // Since: 2.0
-func (*FileRepository) Parent(u fyne.URI) (fyne.URI, error) {
+func (*FileRepository) Parent(u granio.URI) (granio.URI, error) {
 	child := path.Clean(u.Path())
 	if child == "." || // Clean ending up empty returns ".".
 		strings.HasSuffix(child, filePathSeparator) || // Only root has trailing slash.
@@ -194,21 +194,21 @@ func (*FileRepository) Parent(u fyne.URI) (fyne.URI, error) {
 // Child creates a child URI from the given URI and component.
 //
 // Since: 2.0
-func (*FileRepository) Child(u fyne.URI, component string) (fyne.URI, error) {
+func (*FileRepository) Child(u granio.URI, component string) (granio.URI, error) {
 	return storage.NewFileURI(path.Join(u.Path(), component)), nil
 }
 
 // List returns a list of all child URIs of the given URI.
 //
 // Since: 2.0
-func (*FileRepository) List(u fyne.URI) ([]fyne.URI, error) {
+func (*FileRepository) List(u granio.URI) ([]granio.URI, error) {
 	p := u.Path()
 	files, err := os.ReadDir(p)
 	if err != nil {
 		return nil, err
 	}
 
-	urilist := make([]fyne.URI, len(files))
+	urilist := make([]granio.URI, len(files))
 	for i, f := range files {
 		urilist[i] = storage.NewFileURI(path.Join(p, f.Name()))
 	}
@@ -217,14 +217,14 @@ func (*FileRepository) List(u fyne.URI) ([]fyne.URI, error) {
 }
 
 // CreateListable creates a new directory at the given URI.
-func (*FileRepository) CreateListable(u fyne.URI) error {
+func (*FileRepository) CreateListable(u granio.URI) error {
 	return os.Mkdir(u.Path(), dirPermDefault)
 }
 
 // CanList checks if the given URI can be listed.
 //
 // Since: 2.0
-func (*FileRepository) CanList(u fyne.URI) (bool, error) {
+func (*FileRepository) CanList(u granio.URI) (bool, error) {
 	p := u.Path()
 	info, err := os.Stat(p)
 	if err != nil {
@@ -265,7 +265,7 @@ func (*FileRepository) CanList(u fyne.URI) (bool, error) {
 // Copy copies the contents of the source URI to the destination URI.
 //
 // Since: 2.0
-func (*FileRepository) Copy(source, destination fyne.URI) error {
+func (*FileRepository) Copy(source, destination granio.URI) error {
 	err := fastCopy(destination.Path(), source.Path())
 	if err == nil {
 		return nil
@@ -277,7 +277,7 @@ func (*FileRepository) Copy(source, destination fyne.URI) error {
 // Move moves the contents of the source URI to the destination URI.
 //
 // Since: 2.0
-func (*FileRepository) Move(source, destination fyne.URI) error {
+func (*FileRepository) Move(source, destination granio.URI) error {
 	err := os.Rename(source.Path(), destination.Path())
 	if err == nil {
 		return nil
@@ -341,7 +341,7 @@ func fastCopy(dst, src string) error {
 	})
 }
 
-func openFile(uri fyne.URI, write bool, truncate bool) (*file, error) {
+func openFile(uri granio.URI, write bool, truncate bool) (*file, error) {
 	p := uri.Path()
 	var f *os.File
 	var err error

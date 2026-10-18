@@ -8,20 +8,20 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/painter"
-	intTest "fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	intTest "github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestCachedFontFace(t *testing.T) {
 	for name, tt := range map[string]struct {
-		style fyne.TextStyle
+		style granio.TextStyle
 		runes string
 	}{
 		"symbol font": {
-			fyne.TextStyle{
+			granio.TextStyle{
 				Symbol: true,
 			},
 			"←↑→↓↖↘↵↵⇞⇟⇥⇧⌃⌘⌥⌦⌫⎋␣⌃⌥⇧⌘",
@@ -45,7 +45,7 @@ func TestCachedFontFace(t *testing.T) {
 func TestDrawString(t *testing.T) {
 	for name, tt := range map[string]struct {
 		color    color.Color
-		style    fyne.TextStyle
+		style    granio.TextStyle
 		size     float32
 		string   string
 		tabWidth int
@@ -53,7 +53,7 @@ func TestDrawString(t *testing.T) {
 	}{
 		"regular": {
 			color:    color.Black,
-			style:    fyne.TextStyle{},
+			style:    granio.TextStyle{},
 			size:     40,
 			string:   "Hello\tworld!",
 			tabWidth: 7,
@@ -61,7 +61,7 @@ func TestDrawString(t *testing.T) {
 		},
 		"bold italic": {
 			color:    color.NRGBA{R: 255, A: 255},
-			style:    fyne.TextStyle{Bold: true, Italic: true},
+			style:    granio.TextStyle{Bold: true, Italic: true},
 			size:     27.42,
 			string:   "Hello\tworld!",
 			tabWidth: 3,
@@ -69,7 +69,7 @@ func TestDrawString(t *testing.T) {
 		},
 		"missing glyphs": {
 			color:    color.Black,
-			style:    fyne.TextStyle{},
+			style:    granio.TextStyle{},
 			size:     40,
 			string:   "Missing: स",
 			tabWidth: 4,
@@ -81,7 +81,7 @@ func TestDrawString(t *testing.T) {
 			f := painter.CachedFontFace(tt.style, nil, nil)
 
 			fontMap := &intTest.FontMap{f.Fonts.ResolveFace(' ')} // first (ascii) font
-			painter.DrawString(img, tt.string, tt.color, fontMap, tt.size, 1, fyne.TextStyle{TabWidth: tt.tabWidth})
+			painter.DrawString(img, tt.string, tt.color, fontMap, tt.size, 1, granio.TextStyle{TabWidth: tt.tabWidth})
 			test.AssertImageMatches(t, "font/"+tt.want, img)
 		})
 	}
@@ -96,7 +96,7 @@ func TestDrawStringOffset(t *testing.T) {
 		{name: "ligatures", text: strings.Repeat("office affine official ", 40)},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			style := fyne.TextStyle{}
+			style := granio.TextStyle{}
 			size := float32(24)
 			color := color.Black
 			faces := painter.CachedFontFace(style, nil, nil)
@@ -134,28 +134,28 @@ func TestDrawStringOffset(t *testing.T) {
 
 func TestMeasureString(t *testing.T) {
 	for name, tt := range map[string]struct {
-		style    fyne.TextStyle
+		style    granio.TextStyle
 		size     float32
 		string   string
 		tabWidth int
 		want     float32
 	}{
 		"regular": {
-			style:    fyne.TextStyle{},
+			style:    granio.TextStyle{},
 			size:     40,
 			string:   "Hello\tworld!",
 			tabWidth: 7,
 			want:     257.82812,
 		},
 		"bold italic": {
-			style:    fyne.TextStyle{Bold: true, Italic: true},
+			style:    granio.TextStyle{Bold: true, Italic: true},
 			size:     27.42,
 			string:   "Hello\tworld!",
 			tabWidth: 3,
 			want:     173.17188,
 		},
 		"missing glyph": {
-			style:    fyne.TextStyle{},
+			style:    granio.TextStyle{},
 			size:     40,
 			string:   "Missing: स",
 			tabWidth: 4,
@@ -165,15 +165,15 @@ func TestMeasureString(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			faces := painter.CachedFontFace(tt.style, nil, nil)
 			fontMap := &intTest.FontMap{faces.Fonts.ResolveFace(' ')} // first (ascii) font
-			got, _ := painter.MeasureString(fontMap, tt.string, tt.size, fyne.TextStyle{TabWidth: tt.tabWidth})
+			got, _ := painter.MeasureString(fontMap, tt.string, tt.size, granio.TextStyle{TabWidth: tt.tabWidth})
 			assert.Equal(t, tt.want, got.Width)
 		})
 	}
 }
 
 func TestRenderedTextSize(t *testing.T) {
-	size1, baseline1 := painter.RenderedTextSize("Hello World!", 20, fyne.TextStyle{}, nil)
-	size2, baseline2 := painter.RenderedTextSize("\rH\re\rl\rl\ro\r \rW\ro\rr\rl\rd\r!\r", 20, fyne.TextStyle{}, nil)
+	size1, baseline1 := painter.RenderedTextSize("Hello World!", 20, granio.TextStyle{}, nil)
+	size2, baseline2 := painter.RenderedTextSize("\rH\re\rl\rl\ro\r \rW\ro\rr\rl\rd\r!\r", 20, granio.TextStyle{}, nil)
 	assert.Equal(t, int(size1.Width), int(size2.Width))
 	assert.Equal(t, size1.Height, size2.Height)
 	assert.Equal(t, baseline1, baseline2)
@@ -184,7 +184,7 @@ func TestRenderedTextSize(t *testing.T) {
 // includes the emoji and symbol fallback fonts, so the same files come up once
 // per style.
 func BenchmarkCachedFontFace_AllStyles(b *testing.B) {
-	styles := []fyne.TextStyle{{}, {Bold: true}, {Italic: true}, {Bold: true, Italic: true}, {Monospace: true}}
+	styles := []granio.TextStyle{{}, {Bold: true}, {Italic: true}, {Bold: true, Italic: true}, {Monospace: true}}
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		painter.ClearFontCache()

@@ -1,23 +1,23 @@
 package widget
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-var _ fyne.WidgetRenderer = (*SimpleRenderer)(nil)
+var _ granio.WidgetRenderer = (*SimpleRenderer)(nil)
 
 // SimpleRenderer is a basic renderer that satisfies widget.Renderer interface by wrapping
-// a single fyne.CanvasObject.
+// a single granio.CanvasObject.
 //
 // Since: 2.1
 type SimpleRenderer struct {
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 // NewSimpleRenderer creates a new SimpleRenderer to render a widget using a
 // single CanvasObject.
 //
 // Since: 2.1
-func NewSimpleRenderer(object fyne.CanvasObject) *SimpleRenderer {
-	return &SimpleRenderer{[]fyne.CanvasObject{object}}
+func NewSimpleRenderer(object granio.CanvasObject) *SimpleRenderer {
+	return &SimpleRenderer{[]granio.CanvasObject{object}}
 }
 
 // Destroy does nothing in this implementation.
@@ -29,21 +29,21 @@ func (*SimpleRenderer) Destroy() {
 // Layout updates the contained object to be the requested size.
 //
 // Since: 2.1
-func (r *SimpleRenderer) Layout(s fyne.Size) {
+func (r *SimpleRenderer) Layout(s granio.Size) {
 	r.objects[0].Resize(s)
 }
 
 // MinSize returns the smallest size that this render can use, returned from the underlying object.
 //
 // Since: 2.1
-func (r *SimpleRenderer) MinSize() fyne.Size {
+func (r *SimpleRenderer) MinSize() granio.Size {
 	return r.objects[0].MinSize()
 }
 
 // Objects returns the objects that should be rendered.
 //
 // Since: 2.1
-func (r *SimpleRenderer) Objects() []fyne.CanvasObject {
+func (r *SimpleRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 

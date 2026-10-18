@@ -5,26 +5,26 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
-func dragSelect(sel *focusSelectable, from, to fyne.Position) {
+func dragSelect(sel *focusSelectable, from, to granio.Position) {
 	sel.MouseDown(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: from},
+		PointEvent: granio.PointEvent{Position: from},
 	})
-	sel.Dragged(&fyne.DragEvent{
-		Dragged:    fyne.Delta{DX: to.X - from.X, DY: to.Y - from.Y},
-		PointEvent: fyne.PointEvent{Position: to},
+	sel.Dragged(&granio.DragEvent{
+		Dragged:    granio.Delta{DX: to.X - from.X, DY: to.Y - from.Y},
+		PointEvent: granio.PointEvent{Position: to},
 	})
 	sel.DragEnd()
 	sel.MouseUp(&desktop.MouseEvent{
 		Button:     desktop.MouseButtonPrimary,
-		PointEvent: fyne.PointEvent{Position: to},
+		PointEvent: granio.PointEvent{Position: to},
 	})
 }
 
@@ -40,16 +40,16 @@ func TestRichText_Select(t *testing.T) {
 
 	sel := test.WidgetRenderer(rich).Objects()[0].(*focusSelectable)
 	assert.Equal(t, rich.Size(), sel.Size())
-	dragSelect(sel, fyne.NewPos(15, 10), fyne.NewPos(30, 10))
+	dragSelect(sel, granio.NewPos(15, 10), granio.NewPos(30, 10))
 	assert.Equal(t, "el", rich.SelectedText())
 
-	sel.TypedShortcut(&fyne.ShortcutCopy{})
-	assert.Equal(t, "el", fyne.CurrentApp().Clipboard().Content())
+	sel.TypedShortcut(&granio.ShortcutCopy{})
+	assert.Equal(t, "el", granio.CurrentApp().Clipboard().Content())
 
 	rich.ClearSelection()
 	assert.Empty(t, rich.SelectedText())
 
-	dragSelect(sel, fyne.NewPos(15, 10), fyne.NewPos(30, 10))
+	dragSelect(sel, granio.NewPos(15, 10), granio.NewPos(30, 10))
 	rich.Selectable = false
 	rich.Refresh()
 	assert.Len(t, test.WidgetRenderer(rich).Objects(), 1)
@@ -67,11 +67,11 @@ func TestRichText_Select_AcrossSegments(t *testing.T) {
 	rich.Resize(rich.MinSize())
 
 	sel := test.WidgetRenderer(rich).Objects()[0].(*focusSelectable)
-	sel.DoubleTapped(&fyne.PointEvent{Position: fyne.NewPos(15, 10)})
+	sel.DoubleTapped(&granio.PointEvent{Position: granio.NewPos(15, 10)})
 	assert.Equal(t, "Hello", rich.SelectedText())
 
 	y2, _ := rich.rowGeometry(1)
-	dragSelect(sel, fyne.NewPos(0, 10), fyne.NewPos(rich.Size().Width, y2+10))
+	dragSelect(sel, granio.NewPos(0, 10), granio.NewPos(rich.Size().Width, y2+10))
 	assert.Equal(t, "Hello bold first\nSecond", rich.SelectedText())
 }
 
@@ -81,19 +81,19 @@ func TestRichText_Select_Blocks(t *testing.T) {
 	rich.Resize(rich.MinSize())
 
 	sel := test.WidgetRenderer(rich).Objects()[0].(*focusSelectable)
-	dragSelect(sel, fyne.NewPos(0, 10), fyne.NewPos(rich.Size().Width, rich.Size().Height))
+	dragSelect(sel, granio.NewPos(0, 10), granio.NewPos(rich.Size().Width, rich.Size().Height))
 	assert.Equal(t, "Intro\n• one\n• two\ncode\nmore", rich.SelectedText())
 }
 
 func TestRichText_Select_Wrapped(t *testing.T) {
 	rich := NewRichTextWithText("Hello World")
-	rich.Wrapping = fyne.TextWrapWord
+	rich.Wrapping = granio.TextWrapWord
 	rich.Selectable = true
-	rich.Resize(fyne.NewSize(60, 100))
+	rich.Resize(granio.NewSize(60, 100))
 	assert.Equal(t, 2, rich.rows())
 
 	sel := test.WidgetRenderer(rich).Objects()[0].(*focusSelectable)
-	dragSelect(sel, fyne.NewPos(0, 10), fyne.NewPos(60, 90))
+	dragSelect(sel, granio.NewPos(0, 10), granio.NewPos(60, 90))
 	assert.Equal(t, "Hello World", rich.SelectedText())
 }
 
@@ -103,7 +103,7 @@ func TestRichText_Select_ContentChanged(t *testing.T) {
 	rich.Resize(rich.MinSize())
 
 	sel := test.WidgetRenderer(rich).Objects()[0].(*focusSelectable)
-	dragSelect(sel, fyne.NewPos(0, 10), fyne.NewPos(rich.Size().Width, 10))
+	dragSelect(sel, granio.NewPos(0, 10), granio.NewPos(rich.Size().Width, 10))
 	assert.Equal(t, "Hello World", rich.SelectedText())
 
 	rich.Segments[0].(*TextSegment).Text = "Hi"
@@ -122,7 +122,7 @@ func TestRichText_Select_Panel(t *testing.T) {
 
 	row := rich.rows() - 1
 	y, h := rich.rowGeometry(row)
-	sel.DoubleTapped(&fyne.PointEvent{Position: fyne.NewPos(rich.Size().Width/4, y+h/2+rich.Theme().Size("innerPadding"))})
+	sel.DoubleTapped(&granio.PointEvent{Position: granio.NewPos(rich.Size().Width/4, y+h/2+rich.Theme().Size("innerPadding"))})
 	assert.NotEmpty(t, rich.SelectedText())
 
 	objs := r.Objects()
@@ -137,7 +137,7 @@ func TestRichText_Select_Scroll(t *testing.T) {
 	rich.Scroll = widget.ScrollBoth
 	rich.Selectable = true
 	w := test.NewTempWindow(t, rich)
-	w.Resize(fyne.NewSize(100, 60))
+	w.Resize(granio.NewSize(100, 60))
 
 	r := test.WidgetRenderer(rich)
 	assert.Len(t, r.Objects(), 1) // just the scroller
@@ -146,7 +146,7 @@ func TestRichText_Select_Scroll(t *testing.T) {
 	assert.Equal(t, rich.scr.Content.Size(), sel.Size())
 	before := len(inner.Objects)
 
-	sel.DoubleTapped(&fyne.PointEvent{Position: fyne.NewPos(15, 10)})
+	sel.DoubleTapped(&granio.PointEvent{Position: granio.NewPos(15, 10)})
 	assert.Equal(t, "Intro", rich.SelectedText())
 	assert.Len(t, scrollInnerContainer(rich.scr).Objects, before+1)
 

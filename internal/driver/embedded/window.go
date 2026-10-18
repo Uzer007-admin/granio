@@ -1,7 +1,7 @@
 package embedded
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type noosWindow struct {
@@ -26,7 +26,7 @@ func (*noosWindow) FullScreen() bool {
 func (*noosWindow) SetFullScreen(_ bool) {
 }
 
-func (w *noosWindow) Resize(s fyne.Size) {
+func (w *noosWindow) Resize(s granio.Size) {
 	w.c.Resize(s)
 }
 
@@ -51,12 +51,12 @@ func (w *noosWindow) SetPadded(pad bool) {
 	w.c.SetPadded(pad)
 }
 
-func (*noosWindow) Icon() fyne.Resource {
+func (*noosWindow) Icon() granio.Resource {
 	// TODO implement me
 	return nil
 }
 
-func (*noosWindow) SetIcon(fyne.Resource) {
+func (*noosWindow) SetIcon(granio.Resource) {
 	// TODO implement me
 }
 
@@ -64,12 +64,12 @@ func (*noosWindow) SetMaster() {
 	// TODO implement me
 }
 
-func (*noosWindow) MainMenu() *fyne.MainMenu {
+func (*noosWindow) MainMenu() *granio.MainMenu {
 	// TODO implement me
 	return nil
 }
 
-func (*noosWindow) SetMainMenu(*fyne.MainMenu) {
+func (*noosWindow) SetMainMenu(*granio.MainMenu) {
 	// TODO implement me
 }
 
@@ -81,7 +81,7 @@ func (*noosWindow) SetCloseIntercept(func()) {
 	// TODO implement me
 }
 
-func (*noosWindow) SetOnDropped(func(fyne.Position, []fyne.URI)) {}
+func (*noosWindow) SetOnDropped(func(granio.Position, []granio.URI)) {}
 
 func (w *noosWindow) Show() {
 	w.d.renderWindow(w)
@@ -115,23 +115,23 @@ func (w *noosWindow) ShowAndRun() {
 	w.d.Run()
 }
 
-func (w *noosWindow) Content() fyne.CanvasObject {
+func (w *noosWindow) Content() granio.CanvasObject {
 	return w.c.Content()
 }
 
-func (w *noosWindow) SetContent(object fyne.CanvasObject) {
+func (w *noosWindow) SetContent(object granio.CanvasObject) {
 	w.c.SetContent(object)
 }
 
-func (w *noosWindow) Canvas() fyne.Canvas {
+func (w *noosWindow) Canvas() granio.Canvas {
 	return w.c
 }
 
-func (*noosWindow) Clipboard() fyne.Clipboard {
+func (*noosWindow) Clipboard() granio.Clipboard {
 	// TODO implement me
 	return nil
 }
 
-func newWindow(d *noosDriver) fyne.Window {
+func newWindow(d *noosDriver) granio.Window {
 	return &noosWindow{c: newTouchCanvas(), d: d}
 }

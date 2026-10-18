@@ -3,17 +3,17 @@ package dialog
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	internalwidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	internalwidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 var (
-	_ fyne.Widget       = (*colorButton)(nil)
+	_ granio.Widget     = (*colorButton)(nil)
 	_ desktop.Hoverable = (*colorButton)(nil)
 )
 
@@ -36,14 +36,14 @@ func newColorButton(c color.Color, onTap func(color.Color)) *colorButton {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (b *colorButton) CreateRenderer() fyne.WidgetRenderer {
+func (b *colorButton) CreateRenderer() granio.WidgetRenderer {
 	b.ExtendBaseWidget(b)
 	background := newCheckeredBackground(false)
 	rectangle := &canvas.Rectangle{
 		FillColor: b.color,
 	}
 	return &colorButtonRenderer{
-		BaseRenderer: internalwidget.NewBaseRenderer([]fyne.CanvasObject{background, rectangle}),
+		BaseRenderer: internalwidget.NewBaseRenderer([]granio.CanvasObject{background, rectangle}),
 		button:       b,
 		background:   background,
 		rectangle:    rectangle,
@@ -67,7 +67,7 @@ func (*colorButton) MouseMoved(*desktop.MouseEvent) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (b *colorButton) MinSize() fyne.Size {
+func (b *colorButton) MinSize() granio.Size {
 	return b.BaseWidget.MinSize()
 }
 
@@ -81,7 +81,7 @@ func (b *colorButton) SetColor(c color.Color) {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any change handler
-func (b *colorButton) Tapped(*fyne.PointEvent) {
+func (b *colorButton) Tapped(*granio.PointEvent) {
 	if f := b.onTap; f != nil {
 		f(b.color)
 	}
@@ -94,14 +94,14 @@ type colorButtonRenderer struct {
 	rectangle  *canvas.Rectangle
 }
 
-func (r *colorButtonRenderer) Layout(size fyne.Size) {
-	r.rectangle.Move(fyne.NewPos(0, 0))
+func (r *colorButtonRenderer) Layout(size granio.Size) {
+	r.rectangle.Move(granio.NewPos(0, 0))
 	r.rectangle.Resize(size)
 	r.background.Resize(size)
 }
 
-func (r *colorButtonRenderer) MinSize() fyne.Size {
-	return internal.MaxSizes(r.rectangle.MinSize(), fyne.NewSize(32, 32)) //revive:disable-line:add-constant
+func (r *colorButtonRenderer) MinSize() granio.Size {
+	return internal.MaxSizes(r.rectangle.MinSize(), granio.NewSize(32, 32)) //revive:disable-line:add-constant
 }
 
 func (r *colorButtonRenderer) Refresh() {

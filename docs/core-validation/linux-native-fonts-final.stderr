@@ -1,0 +1,4 @@
+dbus-daemon[2214397]: [session uid=0 pid=2214397] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=0 pid=2215018 comm="/tmp/go-build3322598842/b565/glfw.test -test.panic")
+dbus-daemon[2214397]: [session uid=0 pid=2214397] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2215054]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2215018 comm="/tmp/go-build3322598842/b565/glfw.test -test.panic")
+dbus-daemon[2215054]: Successfully activated service 'org.a11y.atspi.Registry'

@@ -4,9 +4,9 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func Test_colorPreview_Color(t *testing.T) {
@@ -16,7 +16,7 @@ func Test_colorPreview_Color(t *testing.T) {
 	preview.SetColor(color.RGBA{90, 206, 80, 180})
 	window := test.NewTempWindow(t, preview)
 	padding := theme.Padding() * 2
-	window.Resize(fyne.NewSize(128+padding, 64+padding))
+	window.Resize(granio.NewSize(128+padding, 64+padding))
 
 	test.AssertRendersToImage(t, "color/preview_color.png", window.Canvas())
 }

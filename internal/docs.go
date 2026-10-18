@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/url"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 var errNoAppID = errors.New("storage API requires a unique ID, use app.NewWithID()")
@@ -13,13 +13,13 @@ var errNoAppID = errors.New("storage API requires a unique ID, use app.NewWithID
 // Docs is an internal implementation of the document features of the Storage interface.
 // It is based on top of the current `file` repository and is rooted at RootDocURI.
 type Docs struct {
-	RootDocURI fyne.URI
+	RootDocURI granio.URI
 }
 
 // Create will create a new document ready for writing, you must write something and close the returned writer
 // for the create process to complete.
 // If the document for this app with that name already exists a storage.ErrAlreadyExists error will be returned.
-func (d *Docs) Create(name string) (fyne.URIWriteCloser, error) {
+func (d *Docs) Create(name string) (granio.URIWriteCloser, error) {
 	if d.RootDocURI == nil {
 		return nil, errNoAppID
 	}
@@ -60,7 +60,7 @@ func (d *Docs) List() []string {
 	ret := make([]string, len(uris))
 	for i, u := range uris {
 		ret[i] = u.Name()
-		if d.RootDocURI.Scheme() != fyne.URISchemeFile {
+		if d.RootDocURI.Scheme() != granio.URISchemeFile {
 			ret[i], _ = url.PathUnescape(u.Name())
 		}
 	}
@@ -69,7 +69,7 @@ func (d *Docs) List() []string {
 }
 
 // Open will grant access to the contents of the named file. If an error occurs it is returned instead.
-func (d *Docs) Open(name string) (fyne.URIReadCloser, error) {
+func (d *Docs) Open(name string) (granio.URIReadCloser, error) {
 	if d.RootDocURI == nil {
 		return nil, errNoAppID
 	}
@@ -98,7 +98,7 @@ func (d *Docs) Remove(name string) error {
 
 // Save will open a document ready for writing, you close the returned writer for the save to complete.
 // If the document for this app with that name does not exist a storage.ErrNotExists error will be returned.
-func (d *Docs) Save(name string) (fyne.URIWriteCloser, error) {
+func (d *Docs) Save(name string) (granio.URIWriteCloser, error) {
 	if d.RootDocURI == nil {
 		return nil, errNoAppID
 	}
@@ -131,9 +131,9 @@ func (d *Docs) ensureRootExists() error {
 	return storage.CreateListable(d.RootDocURI)
 }
 
-func (d *Docs) childURI(name string) (fyne.URI, error) {
+func (d *Docs) childURI(name string) (granio.URI, error) {
 	encoded := name
-	if d.RootDocURI.Scheme() != fyne.URISchemeFile {
+	if d.RootDocURI.Scheme() != granio.URISchemeFile {
 		encoded = url.PathEscape(name)
 	}
 

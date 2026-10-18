@@ -7,16 +7,16 @@ import (
 	"time"
 	"unicode"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const (
@@ -27,25 +27,25 @@ const (
 
 // Declare conformity with interfaces
 var (
-	_ fyne.Disableable    = (*Entry)(nil)
-	_ fyne.Draggable      = (*Entry)(nil)
-	_ fyne.Focusable      = (*Entry)(nil)
-	_ fyne.Tappable       = (*Entry)(nil)
-	_ fyne.Widget         = (*Entry)(nil)
+	_ granio.Disableable  = (*Entry)(nil)
+	_ granio.Draggable    = (*Entry)(nil)
+	_ granio.Focusable    = (*Entry)(nil)
+	_ granio.Tappable     = (*Entry)(nil)
+	_ granio.Widget       = (*Entry)(nil)
 	_ desktop.Mouseable   = (*Entry)(nil)
 	_ desktop.Keyable     = (*Entry)(nil)
 	_ mobile.Keyboardable = (*Entry)(nil)
 	_ mobile.Touchable    = (*Entry)(nil)
-	_ fyne.Tabbable       = (*Entry)(nil)
+	_ granio.Tabbable     = (*Entry)(nil)
 )
 
 // Entry widget allows simple text to be input when focused.
 type Entry struct {
 	DisableableWidget
-	shortcut fyne.ShortcutHandler
+	shortcut granio.ShortcutHandler
 	Text     string
 	// Since: 2.0
-	TextStyle   fyne.TextStyle
+	TextStyle   granio.TextStyle
 	PlaceHolder string
 	OnChanged   func(string) `json:"-"`
 
@@ -55,17 +55,20 @@ type Entry struct {
 	// Since: 2.0
 	OnSubmitted func(string) `json:"-"`
 	Password    bool
-	MultiLine   bool
-	Wrapping    fyne.TextWrap
+	// ReadOnly retains focus, navigation and copying, but rejects user/native
+	// edits. SetText and bindings remain programmatic updates.
+	ReadOnly  bool
+	MultiLine bool
+	Wrapping  granio.TextWrap
 
 	// Scroll can be used to turn off the scrolling of our entry when Wrapping is WrapNone.
 	//
 	// Since: 2.4
-	Scroll fyne.ScrollDirection
+	Scroll granio.ScrollDirection
 
 	// Set a validator that this entry will check against
 	// Since: 1.4
-	Validator           fyne.StringValidator `json:"-"`
+	Validator           granio.StringValidator `json:"-"`
 	validationStatus    *validationStatus
 	onValidationChanged func(error)
 	validationError     error
@@ -82,7 +85,7 @@ type Entry struct {
 	// Icon is displayed at the outer left of the entry.
 	// It is not clickable, but can be used to indicate the purpose of the entry.
 	// Since: 2.7
-	Icon fyne.Resource `json:"-"`
+	Icon granio.Resource `json:"-"`
 
 	cursorAnim *entryCursorAnimation
 
@@ -105,10 +108,10 @@ type Entry struct {
 	// TODO: Add OnSelectChanged
 
 	// ActionItem is a small item which is displayed at the outer right of the entry (like a password revealer)
-	ActionItem      fyne.CanvasObject `json:"-"`
+	ActionItem      granio.CanvasObject `json:"-"`
 	binder          basicBinder
 	conversionError error
-	minCache        fyne.Size
+	minCache        granio.Size
 	multiLineRows   int // override global default number of visible lines
 
 	// undoStack stores the data necessary for undo/redo functionality
@@ -117,7 +120,13 @@ type Entry struct {
 
 	// rich records that the content of this entry is held as styled segments,
 	// managed by a RichTextEntry, rather than being generated from Text.
-	rich bool
+	rich             bool
+	composition      *entryComposition
+	preserveScroll   bool
+	caretRecorded    bool
+	lastCaretText    string
+	lastCaretOffset  int
+	lastCaretFocused bool
 }
 
 type undoProvider interface {
@@ -127,7 +136,7 @@ type undoProvider interface {
 
 // NewEntry creates a new single line entry widget.
 func NewEntry() *Entry {
-	e := &Entry{Wrapping: fyne.TextWrap(fyne.TextTruncateClip)}
+	e := &Entry{Wrapping: granio.TextWrap(granio.TextTruncateClip)}
 	e.ExtendBaseWidget(e)
 	return e
 }
@@ -144,14 +153,14 @@ func NewEntryWithData(data binding.String) *Entry {
 
 // NewMultiLineEntry creates a new entry that allows multiple lines
 func NewMultiLineEntry() *Entry {
-	e := &Entry{MultiLine: true, Wrapping: fyne.TextWrap(fyne.TextTruncateClip)}
+	e := &Entry{MultiLine: true, Wrapping: granio.TextWrap(granio.TextTruncateClip)}
 	e.ExtendBaseWidget(e)
 	return e
 }
 
 // NewPasswordEntry creates a new entry password widget
 func NewPasswordEntry() *Entry {
-	e := &Entry{Password: true, Wrapping: fyne.TextWrap(fyne.TextTruncateClip)}
+	e := &Entry{Password: true, Wrapping: granio.TextWrap(granio.TextTruncateClip)}
 	e.ExtendBaseWidget(e)
 	e.ActionItem = newPasswordRevealer(e)
 	return e
@@ -161,7 +170,7 @@ func NewPasswordEntry() *Entry {
 //
 // Since: 2.1
 func (e *Entry) AcceptsTab() bool {
-	return e.MultiLine
+	return e.MultiLine && !e.ReadOnly
 }
 
 // Bind connects the specified data source to this Entry.
@@ -179,9 +188,9 @@ func (e *Entry) Bind(data binding.String) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (e *Entry) CreateRenderer() fyne.WidgetRenderer {
+func (e *Entry) CreateRenderer() granio.WidgetRenderer {
 	th := e.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	e.ExtendBaseWidget(e)
 
 	// initialise
@@ -199,10 +208,13 @@ func (e *Entry) CreateRenderer() fyne.WidgetRenderer {
 	cursor.Hide()
 
 	e.cursorAnim = newEntryCursorAnimation(cursor)
+	if _, modern := th.(granio.MotionTheme); modern {
+		e.cursorAnim.object = e
+	}
 	e.content = &entryContent{entry: e}
 	e.scroller = widget.NewScroll(nil)
-	objects := []fyne.CanvasObject{box, border}
-	if e.Wrapping != fyne.TextWrapOff || e.Scroll != widget.ScrollNone {
+	objects := []granio.CanvasObject{box, border}
+	if e.Wrapping != granio.TextWrapOff || e.Scroll != widget.ScrollNone {
 		e.scroller.Content = e.content
 		objects = append(objects, e.scroller)
 	} else {
@@ -229,13 +241,13 @@ func (e *Entry) CreateRenderer() fyne.WidgetRenderer {
 	}
 
 	e.syncSegments()
-	return &entryRenderer{box, border, e.scroller, icon, objects, e}
+	return &entryRenderer{box: box, border: border, scroll: e.scroller, icon: icon, objects: objects, entry: e}
 }
 
 // CursorPosition returns the relative position of this Entry widget's cursor.
 //
 // Since: 2.7
-func (e *Entry) CursorPosition() fyne.Position {
+func (e *Entry) CursorPosition() granio.Position {
 	provider := e.textProvider()
 	th := e.Theme()
 	innerPad := th.Size(theme.SizeNameInnerPadding)
@@ -246,7 +258,7 @@ func (e *Entry) CursorPosition() fyne.Position {
 	xPos := size.Width
 	yPos, _ := provider.rowGeometry(e.CursorRow)
 
-	return fyne.NewPos(xPos-(inputBorder/2), yPos+innerPad-inputBorder)
+	return granio.NewPos(xPos-(inputBorder/2), yPos+innerPad-inputBorder)
 }
 
 // CursorTextOffset returns how many runes into the source text the cursor is positioned at.
@@ -262,7 +274,7 @@ func (*Entry) Cursor() desktop.Cursor {
 }
 
 // DoubleTapped is called when this entry has been double tapped so we should select text below the pointer
-func (e *Entry) DoubleTapped(_ *fyne.PointEvent) {
+func (e *Entry) DoubleTapped(_ *granio.PointEvent) {
 	e.focused = true
 	e.syncSelectable()
 	e.sel.doubleTappedAtUnixMillis = time.Now().UnixMilli()
@@ -300,14 +312,14 @@ func (e *Entry) DragEnd() {
 
 // Dragged is called when the pointer moves while a button is held down.
 // It updates the selection accordingly.
-func (e *Entry) Dragged(d *fyne.DragEvent) {
-	d.Position = d.Position.Add(fyne.NewPos(0, e.Theme().Size(theme.SizeNameInputBorder)))
+func (e *Entry) Dragged(d *granio.DragEvent) {
+	d.Position = d.Position.Add(granio.NewPos(0, e.Theme().Size(theme.SizeNameInputBorder)))
 	e.sel.Dragged(d)
 	e.updateMousePointer(d.Position, false)
 }
 
 // ExtendBaseWidget is used by an extending widget to make use of BaseWidget functionality.
-func (e *Entry) ExtendBaseWidget(wid fyne.Widget) {
+func (e *Entry) ExtendBaseWidget(wid granio.Widget) {
 	e.BaseWidget.ExtendBaseWidget(wid)
 	e.registerShortcut()
 }
@@ -326,6 +338,7 @@ func (e *Entry) FocusGained() {
 
 // FocusLost is called when the Entry has had focus removed.
 func (e *Entry) FocusLost() {
+	e.CancelComposition()
 	e.setFieldsAndRefresh(func() {
 		e.focused = false
 		e.selectKeyDown = false
@@ -360,7 +373,7 @@ func (e *Entry) Keyboard() mobile.KeyboardType {
 }
 
 // KeyDown handler for keypress events - used to store shift modifier state for text selection
-func (e *Entry) KeyDown(key *fyne.KeyEvent) {
+func (e *Entry) KeyDown(key *granio.KeyEvent) {
 	if e.Disabled() {
 		return
 	}
@@ -377,7 +390,7 @@ func (e *Entry) KeyDown(key *fyne.KeyEvent) {
 }
 
 // KeyUp handler for key release events - used to reset shift modifier state for text selection
-func (e *Entry) KeyUp(key *fyne.KeyEvent) {
+func (e *Entry) KeyUp(key *granio.KeyEvent) {
 	if e.Disabled() {
 		return
 	}
@@ -389,7 +402,7 @@ func (e *Entry) KeyUp(key *fyne.KeyEvent) {
 }
 
 // MinSize returns the size that this widget should not shrink below.
-func (e *Entry) MinSize() fyne.Size {
+func (e *Entry) MinSize() granio.Size {
 	cached := e.minCache
 	if !cached.IsZero() {
 		return cached
@@ -398,6 +411,7 @@ func (e *Entry) MinSize() fyne.Size {
 	e.ExtendBaseWidget(e)
 	minSize := e.BaseWidget.MinSize()
 
+	minSize = minimumComponentHeight(minSize, e.Theme(), granio.ComponentInput)
 	e.minCache = minSize
 	return minSize
 }
@@ -443,14 +457,22 @@ func (e *Entry) MouseUp(*desktop.MouseEvent) {
 //
 // Since: 2.5
 func (e *Entry) Redo() {
-	newText, action := e.undoStack.Redo(e.Text)
-	modify, ok := action.(*entryModifyAction)
-	if !ok {
+	if e.ReadOnly || e.Disabled() {
 		return
 	}
-	pos := modify.Position
-	if !modify.Delete {
-		pos += len(modify.Text)
+	e.CancelComposition()
+	newText, action := e.undoStack.Redo(e.Text)
+	pos := 0
+	switch modify := action.(type) {
+	case *entryModifyAction:
+		pos = modify.Position
+		if !modify.Delete {
+			pos += len(modify.Text)
+		}
+	case *entryReplaceAction:
+		pos = modify.position + len(modify.inserted)
+	default:
+		return
 	}
 	e.updateText(newText, false)
 	e.CursorRow, e.CursorColumn = e.rowColFromTextPos(pos)
@@ -461,9 +483,9 @@ func (e *Entry) Redo() {
 	e.Refresh()
 }
 
-// Refresh implements the [fyne.CanvasObject] interface.
+// Refresh implements the [granio.CanvasObject] interface.
 func (e *Entry) Refresh() {
-	e.minCache = fyne.Size{}
+	e.minCache = granio.Size{}
 
 	if e.sel != nil {
 		e.sel.style = e.TextStyle
@@ -497,7 +519,7 @@ func (e *Entry) ClearSelection() {
 // This can be used to indicate the purpose of the entry, such as an email or password field.
 //
 // Since: 2.7
-func (e *Entry) SetIcon(res fyne.Resource) {
+func (e *Entry) SetIcon(res granio.Resource) {
 	e.Icon = res
 	e.Refresh()
 }
@@ -560,13 +582,13 @@ func (e *Entry) Append(text string) {
 
 // Tapped is called when this entry has been tapped.
 // Cursor position and selection state are updated in the device-specific down callbacks.
-func (*Entry) Tapped(*fyne.PointEvent) {
+func (*Entry) Tapped(*granio.PointEvent) {
 }
 
 // TappedSecondary is called when right or alternative tap is invoked.
 //
 // Opens the PopUpMenu with `Paste` item to paste text from the clipboard.
-func (e *Entry) TappedSecondary(pe *fyne.PointEvent) {
+func (e *Entry) TappedSecondary(pe *granio.PointEvent) {
 	if e.Disabled() && e.Password {
 		return // no popup options for a disabled concealed field
 	}
@@ -574,38 +596,38 @@ func (e *Entry) TappedSecondary(pe *fyne.PointEvent) {
 	e.requestFocus()
 
 	impl := e.super()
-	app := fyne.CurrentApp()
+	app := granio.CurrentApp()
 	clipboard := app.Clipboard()
-	typedShortcut := impl.(fyne.Shortcutable).TypedShortcut
-	cutItem := fyne.NewMenuItem(lang.L("Cut"), func() {
-		typedShortcut(&fyne.ShortcutCut{Clipboard: clipboard})
+	typedShortcut := impl.(granio.Shortcutable).TypedShortcut
+	cutItem := granio.NewMenuItem(lang.L("Cut"), func() {
+		typedShortcut(&granio.ShortcutCut{Clipboard: clipboard})
 	})
-	copyItem := fyne.NewMenuItem(lang.L("Copy"), func() {
-		typedShortcut(&fyne.ShortcutCopy{Clipboard: clipboard})
+	copyItem := granio.NewMenuItem(lang.L("Copy"), func() {
+		typedShortcut(&granio.ShortcutCopy{Clipboard: clipboard})
 	})
-	pasteItem := fyne.NewMenuItem(lang.L("Paste"), func() {
-		typedShortcut(&fyne.ShortcutPaste{Clipboard: clipboard})
+	pasteItem := granio.NewMenuItem(lang.L("Paste"), func() {
+		typedShortcut(&granio.ShortcutPaste{Clipboard: clipboard})
 	})
-	selectAllItem := fyne.NewMenuItem(lang.L("Select all"), e.selectAll)
+	selectAllItem := granio.NewMenuItem(lang.L("Select all"), e.selectAll)
 
 	const maxMenuItems = 6
-	menuItems := make([]*fyne.MenuItem, 0, maxMenuItems)
-	if e.Disabled() {
+	menuItems := make([]*granio.MenuItem, 0, maxMenuItems)
+	if e.Disabled() || e.ReadOnly {
 		menuItems = append(menuItems, copyItem, selectAllItem)
 	} else if e.Password {
 		menuItems = append(menuItems, pasteItem, selectAllItem)
 	} else {
 		canUndo, canRedo := e.undoStack.CanUndo(), e.undoStack.CanRedo()
 		if canUndo {
-			undoItem := fyne.NewMenuItem(lang.L("Undo"), e.undoer().Undo)
+			undoItem := granio.NewMenuItem(lang.L("Undo"), e.undoer().Undo)
 			menuItems = append(menuItems, undoItem)
 		}
 		if canRedo {
-			redoItem := fyne.NewMenuItem(lang.L("Redo"), e.undoer().Redo)
+			redoItem := granio.NewMenuItem(lang.L("Redo"), e.undoer().Redo)
 			menuItems = append(menuItems, redoItem)
 		}
 		if canUndo || canRedo {
-			menuItems = append(menuItems, fyne.NewMenuItemSeparator())
+			menuItems = append(menuItems, granio.NewMenuItemSeparator())
 		}
 		menuItems = append(menuItems, cutItem, copyItem, pasteItem, selectAllItem)
 	}
@@ -619,7 +641,7 @@ func (e *Entry) TappedSecondary(pe *fyne.PointEvent) {
 	}
 	entryPos := driver.AbsolutePositionForObject(impl)
 	popUpPos := entryPos.Add(pe.Position)
-	e.popUp = NewPopUpMenu(fyne.NewMenu("", menuItems...), c)
+	e.popUp = NewPopUpMenu(granio.NewMenu("", menuItems...), c)
 	e.popUp.ShowAtPosition(popUpPos)
 }
 
@@ -672,8 +694,12 @@ func (*Entry) TouchCancel(*mobile.TouchEvent) {
 }
 
 // TypedKey receives key input events when the Entry widget is focused.
-func (e *Entry) TypedKey(key *fyne.KeyEvent) {
+func (e *Entry) TypedKey(key *granio.KeyEvent) {
+	e.CancelComposition()
 	if e.Disabled() {
+		return
+	}
+	if e.ReadOnly && (key.Name == granio.KeyBackspace || key.Name == granio.KeyDelete || key.Name == granio.KeyReturn || key.Name == granio.KeyEnter || key.Name == granio.KeyTab) {
 		return
 	}
 	if e.cursorAnim != nil {
@@ -690,7 +716,7 @@ func (e *Entry) TypedKey(key *fyne.KeyEvent) {
 	}
 
 	switch key.Name {
-	case fyne.KeyBackspace:
+	case granio.KeyBackspace:
 		isEmpty := provider.len() == 0 || (e.CursorColumn == 0 && e.CursorRow == 0)
 		if isEmpty {
 			return
@@ -705,7 +731,7 @@ func (e *Entry) TypedKey(key *fyne.KeyEvent) {
 			Position: pos - 1,
 			Text:     deletedText,
 		})
-	case fyne.KeyDelete:
+	case granio.KeyDelete:
 		pos := e.CursorTextOffset()
 		if provider.len() == 0 || pos == provider.len() {
 			return
@@ -717,29 +743,29 @@ func (e *Entry) TypedKey(key *fyne.KeyEvent) {
 			Position: pos,
 			Text:     deletedText,
 		})
-	case fyne.KeyReturn, fyne.KeyEnter:
+	case granio.KeyReturn, granio.KeyEnter:
 		e.typedKeyReturn(provider, multiLine)
-	case fyne.KeyTab:
+	case granio.KeyTab:
 		e.typedKeyTab()
-	case fyne.KeyUp:
+	case granio.KeyUp:
 		e.typedKeyUp(provider)
-	case fyne.KeyDown:
+	case granio.KeyDown:
 		e.typedKeyDown(provider)
-	case fyne.KeyLeft:
+	case granio.KeyLeft:
 		e.typedKeyLeft(provider)
-	case fyne.KeyRight:
+	case granio.KeyRight:
 		e.typedKeyRight(provider)
-	case fyne.KeyEnd:
+	case granio.KeyEnd:
 		e.typedKeyEnd(provider)
-	case fyne.KeyHome:
+	case granio.KeyHome:
 		e.typedKeyHome()
-	case fyne.KeyPageUp:
+	case granio.KeyPageUp:
 		if e.MultiLine {
 			e.CursorRow = 0
 		}
 		e.CursorColumn = 0
 		e.syncSelectable()
-	case fyne.KeyPageDown:
+	case granio.KeyPageDown:
 		if e.MultiLine {
 			e.CursorRow = provider.rows() - 1
 			e.CursorColumn = provider.rowLength(e.CursorRow)
@@ -770,14 +796,22 @@ func (e *Entry) TypedKey(key *fyne.KeyEvent) {
 //
 // Since: 2.5
 func (e *Entry) Undo() {
-	newText, action := e.undoStack.Undo(e.Text)
-	modify, ok := action.(*entryModifyAction)
-	if !ok {
+	if e.ReadOnly || e.Disabled() {
 		return
 	}
-	pos := modify.Position
-	if modify.Delete {
-		pos += len(modify.Text)
+	e.CancelComposition()
+	newText, action := e.undoStack.Undo(e.Text)
+	pos := 0
+	switch modify := action.(type) {
+	case *entryModifyAction:
+		pos = modify.Position
+		if modify.Delete {
+			pos += len(modify.Text)
+		}
+	case *entryReplaceAction:
+		pos = modify.position + len(modify.removed)
+	default:
+		return
 	}
 	e.updateText(newText, false)
 	e.CursorRow, e.CursorColumn = e.rowColFromTextPos(pos)
@@ -858,6 +892,9 @@ func (e *Entry) typedKeyEnd(provider *RichText) {
 // handler for Ctrl+[backspace/delete] - delete the word
 // to the left or right of the cursor
 func (e *Entry) deleteWord(right bool) {
+	if e.ReadOnly || e.Disabled() {
+		return
+	}
 	provider := e.textProvider()
 	cursorRow, cursorCol := e.CursorRow, e.CursorColumn
 
@@ -893,8 +930,8 @@ func (e *Entry) deleteWord(right bool) {
 }
 
 func (e *Entry) typedKeyTab() {
-	if dd, ok := fyne.CurrentApp().Driver().(desktop.Driver); ok {
-		if dd.CurrentKeyModifiers()&fyne.KeyModifierShift != 0 {
+	if dd, ok := granio.CurrentApp().Driver().(desktop.Driver); ok {
+		if dd.CurrentKeyModifiers()&granio.KeyModifierShift != 0 {
 			return // don't insert a tab when Shift+Tab typed
 		}
 	}
@@ -903,7 +940,8 @@ func (e *Entry) typedKeyTab() {
 
 // TypedRune receives text input events when the Entry widget is focused.
 func (e *Entry) TypedRune(r rune) {
-	if e.Disabled() {
+	e.CancelComposition()
+	if e.Disabled() || e.ReadOnly {
 		return
 	}
 
@@ -942,7 +980,8 @@ func (e *Entry) TypedRune(r rune) {
 }
 
 // TypedShortcut implements the Shortcutable interface
-func (e *Entry) TypedShortcut(shortcut fyne.Shortcut) {
+func (e *Entry) TypedShortcut(shortcut granio.Shortcut) {
+	e.CancelComposition()
 	e.shortcut.TypedShortcut(shortcut)
 }
 
@@ -957,7 +996,7 @@ func (e *Entry) Unbind() {
 
 // copyToClipboard copies the current selection to a given clipboard.
 // This does nothing if it is a concealed entry.
-func (e *Entry) copyToClipboard(clipboard fyne.Clipboard) {
+func (e *Entry) copyToClipboard(clipboard granio.Clipboard) {
 	if !e.sel.selecting || e.Password {
 		return
 	}
@@ -967,8 +1006,8 @@ func (e *Entry) copyToClipboard(clipboard fyne.Clipboard) {
 
 // cutToClipboard copies the current selection to a given clipboard and then removes the selected text.
 // This does nothing if it is a concealed entry.
-func (e *Entry) cutToClipboard(clipboard fyne.Clipboard) {
-	if !e.sel.selecting || e.Password {
+func (e *Entry) cutToClipboard(clipboard granio.Clipboard) {
+	if e.ReadOnly || e.Disabled() || !e.sel.selecting || e.Password {
 		return
 	}
 
@@ -986,7 +1025,7 @@ func (e *Entry) cutToClipboard(clipboard fyne.Clipboard) {
 
 // eraseSelection deletes the selected text and moves the cursor but does not update the text field.
 func (e *Entry) eraseSelection() bool {
-	if e.Disabled() {
+	if e.Disabled() || e.ReadOnly {
 		return false
 	}
 
@@ -1022,7 +1061,10 @@ func (e *Entry) eraseSelectionAndUpdate() {
 
 // pasteFromClipboard inserts text from the clipboard content,
 // starting from the cursor position.
-func (e *Entry) pasteFromClipboard(clipboard fyne.Clipboard) {
+func (e *Entry) pasteFromClipboard(clipboard granio.Clipboard) {
+	if e.ReadOnly || e.Disabled() {
+		return
+	}
 	e.syncSelectable()
 	text := clipboard.Content()
 	if text == "" {
@@ -1074,7 +1116,7 @@ func (e *Entry) placeholderProvider() *RichText {
 	}
 
 	e.placeholderWidget.Scroll = widget.ScrollNone
-	e.placeholderWidget.inset = fyne.NewSize(0, e.Theme().Size(theme.SizeNameInputBorder))
+	e.placeholderWidget.inset = granio.NewSize(0, e.Theme().Size(theme.SizeNameInputBorder))
 
 	style := RichTextStyleInline
 	style.ColorName = theme.ColorNamePlaceHolder
@@ -1091,29 +1133,29 @@ func (e *Entry) placeholderProvider() *RichText {
 }
 
 func (e *Entry) registerShortcut() {
-	e.shortcut.AddShortcut(&fyne.ShortcutUndo{}, func(fyne.Shortcut) {
+	e.shortcut.AddShortcut(&granio.ShortcutUndo{}, func(granio.Shortcut) {
 		e.undoer().Undo()
 	})
-	e.shortcut.AddShortcut(&fyne.ShortcutRedo{}, func(fyne.Shortcut) {
+	e.shortcut.AddShortcut(&granio.ShortcutRedo{}, func(granio.Shortcut) {
 		e.undoer().Redo()
 	})
-	e.shortcut.AddShortcut(&fyne.ShortcutCut{}, func(se fyne.Shortcut) {
-		cut, _ := se.(*fyne.ShortcutCut)
+	e.shortcut.AddShortcut(&granio.ShortcutCut{}, func(se granio.Shortcut) {
+		cut, _ := se.(*granio.ShortcutCut)
 		e.cutToClipboard(cut.Clipboard)
 	})
-	e.shortcut.AddShortcut(&fyne.ShortcutCopy{}, func(se fyne.Shortcut) {
-		cpy, _ := se.(*fyne.ShortcutCopy)
+	e.shortcut.AddShortcut(&granio.ShortcutCopy{}, func(se granio.Shortcut) {
+		cpy, _ := se.(*granio.ShortcutCopy)
 		e.copyToClipboard(cpy.Clipboard)
 	})
-	e.shortcut.AddShortcut(&fyne.ShortcutPaste{}, func(se fyne.Shortcut) {
-		paste, _ := se.(*fyne.ShortcutPaste)
+	e.shortcut.AddShortcut(&granio.ShortcutPaste{}, func(se granio.Shortcut) {
+		paste, _ := se.(*granio.ShortcutPaste)
 		e.pasteFromClipboard(paste.Clipboard)
 	})
-	e.shortcut.AddShortcut(&fyne.ShortcutSelectAll{}, func(fyne.Shortcut) {
+	e.shortcut.AddShortcut(&granio.ShortcutSelectAll{}, func(granio.Shortcut) {
 		e.selectAll()
 	})
 
-	moveWord := func(s fyne.Shortcut) {
+	moveWord := func(s granio.Shortcut) {
 		row := e.textProvider().row(e.CursorRow)
 		start, end := getTextWhitespaceRegion(row, e.CursorColumn, true)
 		if start == -1 || end == -1 {
@@ -1121,7 +1163,7 @@ func (e *Entry) registerShortcut() {
 		}
 
 		e.setFieldsAndRefresh(func() {
-			if s.(*desktop.CustomShortcut).KeyName == fyne.KeyLeft {
+			if s.(*desktop.CustomShortcut).KeyName == granio.KeyLeft {
 				if e.CursorColumn == 0 {
 					if e.CursorRow > 0 {
 						e.CursorRow--
@@ -1143,7 +1185,7 @@ func (e *Entry) registerShortcut() {
 			e.syncSelectable()
 		})
 	}
-	selectMoveWord := func(se fyne.Shortcut) {
+	selectMoveWord := func(se granio.Shortcut) {
 		if !e.sel.selecting {
 			e.sel.selectColumn = e.CursorColumn
 			e.sel.selectRow = e.CursorRow
@@ -1151,38 +1193,38 @@ func (e *Entry) registerShortcut() {
 		}
 		moveWord(se)
 	}
-	unselectMoveWord := func(se fyne.Shortcut) {
+	unselectMoveWord := func(se granio.Shortcut) {
 		e.sel.selecting = false
 		moveWord(se)
 	}
 
-	moveWordModifier := fyne.KeyModifierShortcutDefault
+	moveWordModifier := granio.KeyModifierShortcutDefault
 	if runtime.GOOS == goos.Darwin {
-		moveWordModifier = fyne.KeyModifierAlt
+		moveWordModifier = granio.KeyModifierAlt
 
 		// Cmd+left, Cmd+right shortcuts behave like Home and End keys on Mac OS
-		shortcutHomeEnd := func(s fyne.Shortcut) {
+		shortcutHomeEnd := func(s granio.Shortcut) {
 			e.sel.selecting = false
-			if s.(*desktop.CustomShortcut).KeyName == fyne.KeyLeft {
+			if s.(*desktop.CustomShortcut).KeyName == granio.KeyLeft {
 				e.typedKeyHome()
 			} else {
 				e.typedKeyEnd(e.textProvider())
 			}
 			e.Refresh()
 		}
-		e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyLeft, Modifier: fyne.KeyModifierSuper}, shortcutHomeEnd)
-		e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyRight, Modifier: fyne.KeyModifierSuper}, shortcutHomeEnd)
+		e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyLeft, Modifier: granio.KeyModifierSuper}, shortcutHomeEnd)
+		e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyRight, Modifier: granio.KeyModifierSuper}, shortcutHomeEnd)
 	}
 
-	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyLeft, Modifier: moveWordModifier}, unselectMoveWord)
-	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyLeft, Modifier: moveWordModifier | fyne.KeyModifierShift}, selectMoveWord)
-	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyRight, Modifier: moveWordModifier}, unselectMoveWord)
-	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyRight, Modifier: moveWordModifier | fyne.KeyModifierShift}, selectMoveWord)
+	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyLeft, Modifier: moveWordModifier}, unselectMoveWord)
+	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyLeft, Modifier: moveWordModifier | granio.KeyModifierShift}, selectMoveWord)
+	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyRight, Modifier: moveWordModifier}, unselectMoveWord)
+	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyRight, Modifier: moveWordModifier | granio.KeyModifierShift}, selectMoveWord)
 
-	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyBackspace, Modifier: moveWordModifier},
-		func(fyne.Shortcut) { e.deleteWord(false) })
-	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: fyne.KeyDelete, Modifier: moveWordModifier},
-		func(fyne.Shortcut) { e.deleteWord(true) })
+	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyBackspace, Modifier: moveWordModifier},
+		func(granio.Shortcut) { e.deleteWord(false) })
+	e.shortcut.AddShortcut(&desktop.CustomShortcut{KeyName: granio.KeyDelete, Modifier: moveWordModifier},
+		func(granio.Shortcut) { e.deleteWord(true) })
 }
 
 // undoer returns the widget that handles undo and redo for this entry, so that a
@@ -1197,8 +1239,8 @@ func (e *Entry) undoer() undoProvider {
 
 func (e *Entry) requestFocus() {
 	impl := e.super()
-	if c := fyne.CurrentApp().Driver().CanvasForObject(impl); c != nil {
-		c.Focus(impl.(fyne.Focusable))
+	if c := granio.CurrentApp().Driver().CanvasForObject(impl); c != nil {
+		c.Focus(impl.(granio.Focusable))
 	}
 }
 
@@ -1206,7 +1248,7 @@ func (e *Entry) requestFocus() {
 // expects a read or write lock to be held by the caller
 func (e *Entry) rowColFromTextPos(pos int) (row int, col int) {
 	provider := e.textProvider()
-	canWrap := e.Wrapping == fyne.TextWrapBreak || e.Wrapping == fyne.TextWrapWord
+	canWrap := e.Wrapping == granio.TextWrapBreak || e.Wrapping == granio.TextWrapWord
 	totalRows := provider.rows()
 	for i := 0; i < totalRows; i++ {
 		b := provider.rowBoundary(i)
@@ -1249,13 +1291,13 @@ func (e *Entry) selectAll() {
 // selectingKeyHandler performs keypress action in the scenario that a selection
 // is either a) in progress or b) about to start
 // returns true if the keypress has been fully handled
-func (e *Entry) selectingKeyHandler(key *fyne.KeyEvent) bool {
+func (e *Entry) selectingKeyHandler(key *granio.KeyEvent) bool {
 	if e.selectKeyDown && !e.sel.selecting {
 		switch key.Name {
-		case fyne.KeyUp, fyne.KeyDown,
-			fyne.KeyLeft, fyne.KeyRight,
-			fyne.KeyEnd, fyne.KeyHome,
-			fyne.KeyPageUp, fyne.KeyPageDown:
+		case granio.KeyUp, granio.KeyDown,
+			granio.KeyLeft, granio.KeyRight,
+			granio.KeyEnd, granio.KeyHome,
+			granio.KeyPageUp, granio.KeyPageDown:
 			e.sel.selecting = true
 		}
 	}
@@ -1265,7 +1307,7 @@ func (e *Entry) selectingKeyHandler(key *fyne.KeyEvent) bool {
 	}
 
 	switch key.Name {
-	case fyne.KeyBackspace, fyne.KeyDelete:
+	case granio.KeyBackspace, granio.KeyDelete:
 		// clears the selection -- return handled
 		e.eraseSelectionAndUpdate()
 		content := e.Text
@@ -1277,7 +1319,7 @@ func (e *Entry) selectingKeyHandler(key *fyne.KeyEvent) bool {
 		}
 		e.Refresh()
 		return true
-	case fyne.KeyReturn, fyne.KeyEnter:
+	case granio.KeyReturn, granio.KeyEnter:
 		if e.MultiLine {
 			// clear the selection -- return unhandled to add the newline
 			e.setFieldsAndRefresh(e.eraseSelectionAndUpdate)
@@ -1287,21 +1329,21 @@ func (e *Entry) selectingKeyHandler(key *fyne.KeyEvent) bool {
 
 	if !e.selectKeyDown {
 		switch key.Name {
-		case fyne.KeyLeft:
+		case granio.KeyLeft:
 			// seek to the start of the selection -- return handled
 			selectStart, _ := e.sel.selection()
 			e.CursorRow, e.CursorColumn = e.rowColFromTextPos(selectStart)
 			e.syncSelectable()
 			e.sel.selecting = false
 			return true
-		case fyne.KeyRight:
+		case granio.KeyRight:
 			// seek to the end of the selection -- return handled
 			_, selectEnd := e.sel.selection()
 			e.CursorRow, e.CursorColumn = e.rowColFromTextPos(selectEnd)
 			e.syncSelectable()
 			e.sel.selecting = false
 			return true
-		case fyne.KeyUp, fyne.KeyDown, fyne.KeyEnd, fyne.KeyHome, fyne.KeyPageUp, fyne.KeyPageDown:
+		case granio.KeyUp, granio.KeyDown, granio.KeyEnd, granio.KeyHome, granio.KeyPageUp, granio.KeyPageDown:
 			// cursor movement without left or right shift -- clear selection and return unhandled
 			e.sel.selecting = false
 			return false
@@ -1321,6 +1363,10 @@ func (e *Entry) syncSegments() {
 
 	text := e.textProvider()
 	text.Wrapping = wrap
+	if e.composition != nil {
+		text.Segments = e.compositionSegments()
+		return
+	}
 
 	if e.rich {
 		// Ignore segments we don't control, just style the text type
@@ -1369,7 +1415,7 @@ func (e *Entry) syncSelectable() {
 // initTextProvider prepares the rich text that renders this entry's content.
 func (e *Entry) initTextProvider() {
 	e.textWidget.Scroll = widget.ScrollNone
-	e.textWidget.inset = fyne.NewSize(0, e.Theme().Size(theme.SizeNameInputBorder))
+	e.textWidget.inset = granio.NewSize(0, e.Theme().Size(theme.SizeNameInputBorder))
 }
 
 // textProvider returns the text handler for this entry
@@ -1388,15 +1434,15 @@ func (e *Entry) textProvider() *RichText {
 }
 
 // textWrap calculates the wrapping that we should apply.
-func (e *Entry) textWrap() fyne.TextWrap {
-	if e.Wrapping == fyne.TextWrap(fyne.TextTruncateClip) { // this is now the default - but we scroll around this large content
-		return fyne.TextWrapOff
+func (e *Entry) textWrap() granio.TextWrap {
+	if e.Wrapping == granio.TextWrap(granio.TextTruncateClip) { // this is now the default - but we scroll around this large content
+		return granio.TextWrapOff
 	}
 
-	if !e.MultiLine && (e.Wrapping == fyne.TextWrapBreak || e.Wrapping == fyne.TextWrapWord) {
-		fyne.LogError("Entry cannot wrap single line", nil)
-		e.Wrapping = fyne.TextWrap(fyne.TextTruncateClip)
-		return fyne.TextWrapOff
+	if !e.MultiLine && (e.Wrapping == granio.TextWrapBreak || e.Wrapping == granio.TextWrapWord) {
+		granio.LogError("Entry cannot wrap single line", nil)
+		e.Wrapping = granio.TextWrap(granio.TextTruncateClip)
+		return granio.TextWrapOff
 	}
 	return e.Wrapping
 }
@@ -1427,7 +1473,7 @@ func (e *Entry) updateFromData(data binding.DataItem) {
 }
 
 func (e *Entry) truncatePosition(row, col int) (newRow, newCol int) {
-	if e.Text == "" {
+	if e.Text == "" && e.composition == nil {
 		return 0, 0
 	}
 	newRow = row
@@ -1442,7 +1488,7 @@ func (e *Entry) truncatePosition(row, col int) (newRow, newCol int) {
 	return newRow, newCol
 }
 
-func (e *Entry) updateMousePointer(p fyne.Position, rightClick bool) {
+func (e *Entry) updateMousePointer(p granio.Position, rightClick bool) {
 	row, col := e.sel.getRowCol(p)
 
 	if !rightClick || !e.sel.selecting {
@@ -1466,6 +1512,7 @@ func (e *Entry) updateMousePointer(p fyne.Position, rightClick bool) {
 // updateText updates the internal text to the given value.
 // It assumes that a lock exists on the widget.
 func (e *Entry) updateText(text string, fromBinding bool) bool {
+	e.restoreComposition()
 	changed := e.Text != text
 	wasEmpty := e.Text == ""
 	e.Text = text
@@ -1570,14 +1617,16 @@ func (e *Entry) setFieldsAndRefresh(f func()) {
 	impl.Refresh()
 }
 
-var _ fyne.WidgetRenderer = (*entryRenderer)(nil)
+var _ granio.WidgetRenderer = (*entryRenderer)(nil)
 
 type entryRenderer struct {
+	lastModern  bool
 	box, border *canvas.Rectangle
+	focusBorder *canvas.Rectangle
 	scroll      *widget.Scroll
 	icon        *canvas.Image
 
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 	entry   *Entry
 }
 
@@ -1615,7 +1664,7 @@ func (r *entryRenderer) leadingInset() float32 {
 	return xInset
 }
 
-func (r *entryRenderer) Layout(size fyne.Size) {
+func (r *entryRenderer) Layout(size granio.Size) {
 	th := r.entry.Theme()
 	borderSize := th.Size(theme.SizeNameInputBorder)
 	iconSize := th.Size(theme.SizeNameInlineIcon)
@@ -1623,48 +1672,58 @@ func (r *entryRenderer) Layout(size fyne.Size) {
 	inputBorder := th.Size(theme.SizeNameInputBorder)
 
 	// 0.5 is removed so on low DPI it rounds down on the trailing edge
-	r.border.Resize(fyne.NewSize(size.Width-borderSize-.5, size.Height-borderSize-.5))
+	r.border.Resize(granio.NewSize(size.Width-borderSize-.5, size.Height-borderSize-.5))
 	r.border.StrokeWidth = borderSize
-	r.border.Move(fyne.NewSquareOffsetPos(borderSize / 2))
-	r.box.Resize(size.Subtract(fyne.NewSquareSize(borderSize * 2)))
-	r.box.Move(fyne.NewSquareOffsetPos(borderSize))
+	r.border.Move(granio.NewSquareOffsetPos(borderSize / 2))
+	if _, modern := r.entry.Theme().(granio.ComponentTheme); modern {
+		// Reserve both contours regardless of the current state; text geometry
+		// does not jump when error and focus are combined.
+		r.border.Move(granio.NewPos(4, 4))
+		r.border.Resize(granio.NewSize(max(0, size.Width-8), max(0, size.Height-8)))
+		if r.focusBorder != nil {
+			r.focusBorder.Move(granio.NewPos(1, 1))
+			r.focusBorder.Resize(granio.NewSize(max(0, size.Width-2), max(0, size.Height-2)))
+		}
+	}
+	r.box.Resize(size.Subtract(granio.NewSquareSize(borderSize * 2)))
+	r.box.Move(granio.NewSquareOffsetPos(borderSize))
 
 	pad := theme.InputBorderSize()
-	actionIconSize := fyne.NewSize(0, size.Height-pad*2)
+	actionIconSize := granio.NewSize(0, size.Height-pad*2)
 	if r.entry.ActionItem != nil {
 		actionIconSize.Width = r.entry.ActionItem.MinSize().Width
 		r.entry.ActionItem.Resize(actionIconSize)
-		r.entry.ActionItem.Move(fyne.NewPos(size.Width-actionIconSize.Width-pad, pad))
+		r.entry.ActionItem.Move(granio.NewPos(size.Width-actionIconSize.Width-pad, pad))
 	}
 
-	validatorIconSize := fyne.NewSize(0, 0)
+	validatorIconSize := granio.NewSize(0, 0)
 	if r.entry.Validator != nil || r.entry.AlwaysShowValidationError {
-		validatorIconSize = fyne.NewSquareSize(iconSize)
+		validatorIconSize = granio.NewSquareSize(iconSize)
 
 		r.ensureValidationSetup()
 		r.entry.validationStatus.Resize(validatorIconSize)
 
 		if r.entry.ActionItem == nil {
-			r.entry.validationStatus.Move(fyne.NewPos(size.Width-validatorIconSize.Width-innerPad, innerPad))
+			r.entry.validationStatus.Move(granio.NewPos(size.Width-validatorIconSize.Width-innerPad, innerPad))
 		} else {
-			r.entry.validationStatus.Move(fyne.NewPos(size.Width-validatorIconSize.Width-actionIconSize.Width, innerPad))
+			r.entry.validationStatus.Move(granio.NewPos(size.Width-validatorIconSize.Width-actionIconSize.Width, innerPad))
 		}
 	}
 
 	if r.entry.Icon != nil {
-		r.icon.Resize(fyne.NewSquareSize(iconSize))
-		r.icon.Move(fyne.NewPos(innerPad, innerPad))
+		r.icon.Resize(granio.NewSquareSize(iconSize))
+		r.icon.Move(granio.NewPos(innerPad, innerPad))
 	}
 
-	r.entry.textProvider().inset = fyne.NewSize(0, inputBorder)
-	r.entry.placeholderProvider().inset = fyne.NewSize(0, inputBorder)
-	entrySize := size.Subtract(fyne.NewSize(r.trailingInset()+r.leadingInset(), inputBorder*2))
-	entryPos := fyne.NewPos(r.leadingInset(), inputBorder)
+	r.entry.textProvider().inset = granio.NewSize(0, inputBorder)
+	r.entry.placeholderProvider().inset = granio.NewSize(0, inputBorder)
+	entrySize := size.Subtract(granio.NewSize(r.trailingInset()+r.leadingInset(), inputBorder*2))
+	entryPos := granio.NewPos(r.leadingInset(), inputBorder)
 
 	prov := r.entry.textProvider()
 	textPos := textPosFromRowCol(r.entry.CursorRow, r.entry.CursorColumn, prov)
 	selectPos := textPosFromRowCol(r.entry.sel.selectRow, r.entry.sel.selectColumn, prov)
-	if r.entry.Wrapping == fyne.TextWrapOff && r.entry.Scroll == widget.ScrollNone {
+	if r.entry.Wrapping == granio.TextWrapOff && r.entry.Scroll == widget.ScrollNone {
 		r.entry.content.Resize(entrySize)
 		r.entry.content.Move(entryPos)
 	} else {
@@ -1676,7 +1735,7 @@ func (r *entryRenderer) Layout(size fyne.Size) {
 	if textPos != resizedTextPos {
 		r.entry.setFieldsAndRefresh(func() {
 			r.entry.CursorRow, r.entry.CursorColumn = r.entry.rowColFromTextPos(textPos)
-			r.entry.sel.cursorRow, r.entry.sel.cursorRow = r.entry.CursorRow, r.entry.CursorColumn
+			r.entry.sel.cursorRow, r.entry.sel.cursorColumn = r.entry.CursorRow, r.entry.CursorColumn
 
 			if r.entry.sel.selecting {
 				r.entry.sel.selectRow, r.entry.sel.selectColumn = r.entry.rowColFromTextPos(selectPos)
@@ -1688,13 +1747,13 @@ func (r *entryRenderer) Layout(size fyne.Size) {
 // MinSize calculates the minimum size of an entry widget.
 // This is based on the contained text with a standard amount of padding added.
 // If MultiLine is true then we will reserve space for at leasts 3 lines
-func (r *entryRenderer) MinSize() fyne.Size {
+func (r *entryRenderer) MinSize() granio.Size {
 	if rend := cache.Renderer(r.entry.content); rend != nil {
 		rend.(*entryContentRenderer).updateScrollDirections()
 	}
 
 	th := r.entry.Theme()
-	minSize := fyne.Size{}
+	minSize := granio.Size{}
 
 	if r.scroll.Direction == widget.ScrollNone {
 		minSize = r.entry.content.MinSize().AddWidthHeight(0, th.Size(theme.SizeNameInputBorder)*2)
@@ -1702,7 +1761,7 @@ func (r *entryRenderer) MinSize() fyne.Size {
 		innerPadding := th.Size(theme.SizeNameInnerPadding)
 		textSize := th.Size(theme.SizeNameText)
 		charMin := r.entry.placeholderProvider().charMinSize(r.entry.Password, r.entry.TextStyle, textSize)
-		minSize = charMin.Add(fyne.NewSquareSize(innerPadding))
+		minSize = charMin.Add(granio.NewSquareSize(innerPadding))
 
 		if r.entry.MultiLine {
 			count := r.entry.multiLineRows
@@ -1730,11 +1789,29 @@ func (r *entryRenderer) MinSize() fyne.Size {
 	return minSize
 }
 
-func (r *entryRenderer) Objects() []fyne.CanvasObject {
+func (r *entryRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
 func (r *entryRenderer) Refresh() {
+	_, modern := r.entry.Theme().(granio.ComponentTheme)
+	stableEdit := r.entry.caretRecorded && r.entry.lastCaretText == r.entry.Text && r.entry.lastCaretOffset == r.entry.CursorTextOffset() && r.entry.lastCaretFocused == r.entry.focused
+	// Style/state refreshes move neither the caret nor the viewport. Editing or
+	// keyboard navigation still reveals the new caret. Clamp a restored offset
+	// only when the content actually becomes smaller than the viewport.
+	var offset granio.Position
+	if r.entry.scroller != nil {
+		offset = r.entry.scroller.Offset
+	}
+	previousPreserve := r.entry.preserveScroll
+	r.entry.preserveScroll = previousPreserve || (modern || r.lastModern) && stableEdit
+	defer func() {
+		if r.entry.preserveScroll && r.entry.scroller != nil {
+			r.entry.scroller.ScrollToOffset(offset)
+		}
+		r.entry.preserveScroll = previousPreserve
+		r.lastModern = modern
+	}()
 	content := r.entry.content
 	focusedAppearance := r.entry.focused && !r.entry.Disabled()
 	scroll := r.entry.Scroll
@@ -1750,11 +1827,11 @@ func (r *entryRenderer) Refresh() {
 	inputBorder := th.Size(theme.SizeNameInputBorder)
 
 	// correct our scroll wrappers if the wrap mode changed
-	entrySize := r.entry.Size().Subtract(fyne.NewSize(r.trailingInset()+r.leadingInset(), inputBorder*2))
-	if wrapping == fyne.TextWrapOff && scroll == widget.ScrollNone && r.scroll.Content != nil {
+	entrySize := r.entry.Size().Subtract(granio.NewSize(r.trailingInset()+r.leadingInset(), inputBorder*2))
+	if wrapping == granio.TextWrapOff && scroll == widget.ScrollNone && r.scroll.Content != nil {
 		r.scroll.Hide()
 		r.scroll.Content = nil
-		content.Move(fyne.NewPos(0, inputBorder))
+		content.Move(granio.NewPos(0, inputBorder))
 		content.Resize(entrySize)
 
 		for i, o := range r.objects {
@@ -1763,10 +1840,10 @@ func (r *entryRenderer) Refresh() {
 				break
 			}
 		}
-	} else if (wrapping != fyne.TextWrapOff || scroll != widget.ScrollNone) && r.scroll.Content == nil {
+	} else if (wrapping != granio.TextWrapOff || scroll != widget.ScrollNone) && r.scroll.Content == nil {
 		r.scroll.Content = content
-		content.Move(fyne.NewPos(0, 0))
-		r.scroll.Move(fyne.NewPos(0, inputBorder))
+		content.Move(granio.NewPos(0, 0))
+		r.scroll.Move(granio.NewPos(0, inputBorder))
 		r.scroll.Resize(entrySize)
 		r.scroll.Show()
 
@@ -1779,7 +1856,7 @@ func (r *entryRenderer) Refresh() {
 	}
 	r.entry.updateCursorAndSelection()
 
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	r.box.FillColor = th.Color(theme.ColorNameInputBackground, v)
 	r.box.CornerRadius = th.Size(theme.SizeNameInputRadius)
 	r.border.CornerRadius = r.box.CornerRadius
@@ -1804,6 +1881,37 @@ func (r *entryRenderer) Refresh() {
 		r.entry.validationStatus.Refresh()
 	} else if r.entry.validationStatus != nil {
 		r.entry.validationStatus.Hide()
+	}
+	state := granio.VisualState(0)
+	if r.entry.ReadOnly {
+		state |= granio.VisualReadOnly
+	}
+	if focusedAppearance {
+		state |= granio.VisualFocused
+	}
+	if r.entry.Disabled() {
+		state |= granio.VisualDisabled
+	}
+	if r.entry.validationError != nil && (r.entry.dirty || r.entry.AlwaysShowValidationError) {
+		state |= granio.VisualError
+	}
+	if style, modern := componentStyle(th, granio.ComponentInput, state); modern {
+		r.box.FillColor = style.Background
+		r.border.StrokeColor, r.border.StrokeWidth = style.Border, style.BorderWidth
+		if r.focusBorder == nil {
+			r.focusBorder = canvas.NewRectangle(color.Transparent)
+			r.objects = append(r.objects, r.focusBorder)
+		}
+		r.focusBorder.StrokeColor, r.focusBorder.StrokeWidth = style.Focus, style.FocusWidth
+		r.focusBorder.CornerRadius = style.Radius
+		if style.FocusWidth > 0 {
+			r.focusBorder.Show()
+		} else {
+			r.focusBorder.Hide()
+		}
+		r.Layout(r.entry.Size())
+	} else if r.focusBorder != nil {
+		r.focusBorder.Hide()
 	}
 
 	if r.entry.Icon != nil {
@@ -1831,7 +1939,7 @@ func (r *entryRenderer) ensureValidationSetup() {
 	}
 }
 
-var _ fyne.Widget = (*entryContent)(nil)
+var _ granio.Widget = (*entryContent)(nil)
 
 type entryContent struct {
 	BaseWidget
@@ -1840,7 +1948,7 @@ type entryContent struct {
 	scroll *widget.Scroll
 }
 
-func (e *entryContent) CreateRenderer() fyne.WidgetRenderer {
+func (e *entryContent) CreateRenderer() granio.WidgetRenderer {
 	e.ExtendBaseWidget(e)
 
 	provider := e.entry.textProvider()
@@ -1848,7 +1956,7 @@ func (e *entryContent) CreateRenderer() fyne.WidgetRenderer {
 	if provider.len() != 0 {
 		placeholder.Hide()
 	}
-	objects := []fyne.CanvasObject{placeholder, provider, e.entry.cursorAnim.cursor}
+	objects := []granio.CanvasObject{placeholder, provider, e.entry.cursorAnim.cursor}
 
 	r := &entryContentRenderer{
 		e.entry.cursorAnim.cursor, objects,
@@ -1869,15 +1977,15 @@ func (e *entryContent) DragEnd() {
 
 // Dragged is called when the pointer moves while a button is held down.
 // It updates the selection accordingly.
-func (e *entryContent) Dragged(d *fyne.DragEvent) {
+func (e *entryContent) Dragged(d *granio.DragEvent) {
 	e.entry.Dragged(d)
 }
 
-var _ fyne.WidgetRenderer = (*entryContentRenderer)(nil)
+var _ granio.WidgetRenderer = (*entryContentRenderer)(nil)
 
 type entryContentRenderer struct {
 	cursor  *canvas.Rectangle
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 
 	provider, placeholder *RichText
 	content               *entryContent
@@ -1887,12 +1995,12 @@ func (r *entryContentRenderer) Destroy() {
 	r.content.entry.cursorAnim.stop()
 }
 
-func (r *entryContentRenderer) Layout(size fyne.Size) {
+func (r *entryContentRenderer) Layout(size granio.Size) {
 	r.provider.Resize(size)
 	r.placeholder.Resize(size)
 }
 
-func (r *entryContentRenderer) MinSize() fyne.Size {
+func (r *entryContentRenderer) MinSize() granio.Size {
 	r.content.Theme() // setup theme cache before locking
 	minSize := r.content.entry.placeholderProvider().MinSize()
 
@@ -1903,10 +2011,10 @@ func (r *entryContentRenderer) MinSize() fyne.Size {
 	return minSize
 }
 
-func (r *entryContentRenderer) Objects() []fyne.CanvasObject {
+func (r *entryContentRenderer) Objects() []granio.CanvasObject {
 	// Objects are generated dynamically force selection rectangles to appear underneath the text
 	if r.content.entry.sel.selecting {
-		return append([]fyne.CanvasObject{r.content.entry.sel}, r.objects...)
+		return append([]granio.CanvasObject{r.content.entry.sel}, r.objects...)
 	}
 	return r.objects
 }
@@ -1926,8 +2034,8 @@ func (r *entryContentRenderer) Refresh() {
 
 	th := r.content.entry.Theme()
 	if focusedAppearance {
-		settings := fyne.CurrentApp().Settings()
-		if settings.ShowAnimations() {
+		settings := granio.CurrentApp().Settings()
+		if animationsAllowed(th, granio.MotionHover) {
 			r.content.entry.cursorAnim.start()
 		} else {
 			r.cursor.FillColor = th.Color(theme.ColorNamePrimary, settings.ThemeVariant())
@@ -1943,10 +2051,13 @@ func (r *entryContentRenderer) Refresh() {
 }
 
 func (r *entryContentRenderer) ensureCursorVisible() {
+	if r.content.entry.preserveScroll {
+		return
+	}
 	th := r.content.entry.Theme()
 	lineSpace := th.Size(theme.SizeNameLineSpacing)
 
-	letter := fyne.MeasureText("e", th.Size(theme.SizeNameText), r.content.entry.TextStyle)
+	letter := granio.MeasureText("e", th.Size(theme.SizeNameText), r.content.entry.TextStyle)
 	padX := letter.Width*2 + lineSpace
 	padY := letter.Height - lineSpace
 	cx := r.cursor.Position().X
@@ -1963,7 +2074,7 @@ func (r *entryContentRenderer) ensureCursorVisible() {
 		return
 	}
 
-	move := fyne.NewDelta(0, 0)
+	move := granio.NewDelta(0, 0)
 	if cx1 < offset.X {
 		move.DX -= offset.X - cx1
 	} else if cx2 >= offset.X+size.Width {
@@ -1991,11 +2102,13 @@ func (r *entryContentRenderer) moveCursor() {
 	if _, rowHeight := r.content.entry.textWidget.rowGeometry(r.content.entry.CursorRow); rowHeight > lineHeight {
 		lineHeight = rowHeight // rich content rows may be taller than the standard text size
 	}
-	r.cursor.Resize(fyne.NewSize(inputBorder, lineHeight))
+	r.cursor.Resize(granio.NewSize(inputBorder, lineHeight))
 	r.cursor.Move(r.content.entry.CursorPosition())
 
 	callback := r.content.entry.OnCursorChanged
 	r.ensureCursorVisible()
+	e := r.content.entry
+	e.caretRecorded, e.lastCaretText, e.lastCaretOffset, e.lastCaretFocused = true, e.Text, e.CursorTextOffset(), e.focused
 
 	if callback != nil {
 		callback()
@@ -2008,11 +2121,11 @@ func (r *entryContentRenderer) updateScrollDirections() {
 	}
 
 	switch r.content.entry.Wrapping {
-	case fyne.TextWrapOff:
+	case granio.TextWrapOff:
 		r.content.scroll.Direction = r.content.entry.Scroll
-	case fyne.TextWrap(fyne.TextTruncateClip): // this is now the default - but we scroll
+	case granio.TextWrap(granio.TextTruncateClip): // this is now the default - but we scroll
 		r.content.scroll.Direction = widget.ScrollBoth
-	default: // fyne.TextWrapBreak, fyne.TextWrapWord
+	default: // granio.TextWrapBreak, granio.TextWrapWord
 		r.content.scroll.Direction = widget.ScrollVerticalOnly
 	}
 }

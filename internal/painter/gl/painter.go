@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"image"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/driver"
-	paint "fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
 )
 
 // Painter defines the functionality of our OpenGL based renderer
@@ -18,28 +17,28 @@ type Painter interface {
 	// Init tell a new painter to initialize, usually called after a context is available
 	Init()
 	// Capture requests that the specified canvas be drawn to an in-memory image
-	Capture(fyne.Canvas) image.Image
+	Capture(granio.Canvas) image.Image
 	// Clear tells our painter to prepare a fresh paint
 	Clear()
 	// Free is used to indicate that a certain canvas object is no longer needed
-	Free(fyne.CanvasObject)
+	Free(granio.CanvasObject)
 	// MaxTextureSize returns the largest texture dimension supported by the GL driver, or 0 if not yet known
 	MaxTextureSize() int
-	// Paint a single fyne.CanvasObject but not its children.
-	Paint(fyne.CanvasObject, fyne.Position, fyne.Size, *internal.ClipItem)
+	// Paint a single granio.CanvasObject but not its children.
+	Paint(granio.CanvasObject, granio.Position, granio.Size, *internal.ClipItem)
 	// SetFrameBufferScale tells us when we have more than 1 framebuffer pixel for each output pixel
 	SetFrameBufferScale(float32)
 	// SetOutputSize is used to change the resolution of our output viewport
 	SetOutputSize(int, int)
 	// StartClipping tells us that the following paint actions should be clipped to the specified area.
-	StartClipping(fyne.Position, fyne.Size)
+	StartClipping(granio.Position, granio.Size)
 	// StopClipping stops clipping paint actions.
 	StopClipping()
 }
 
 // NewPainter creates a new GL based renderer for the provided canvas.
 // If it is a master painter it will also initialize OpenGL
-func NewPainter(c fyne.Canvas, ctx driver.WithContext) Painter {
+func NewPainter(c granio.Canvas, ctx driver.WithContext) Painter {
 	p := &painter{canvas: c, contextProvider: ctx}
 	p.SetFrameBufferScale(1.0)
 	return p
@@ -51,7 +50,7 @@ type painter struct {
 	atlasTexValid       bool       // whether atlasTex has been allocated
 	blurKernel          blurKernel // cached 1D kernel texture on GPU
 	blurSnap            blurSnap   // cached texture for GPU-side blur snapshot
-	canvas              fyne.Canvas
+	canvas              granio.Canvas
 	clippedTextTextures map[*canvas.Text]clippedTextTexture
 	contextProvider     driver.WithContext
 	ctx                 context
@@ -59,6 +58,9 @@ type painter struct {
 	glyphPending        []float32 // queued batch vertices, glyphVertexFloats each
 	linePending         []float32 // queued line vertices, lineVertexFloats each
 	maxTextureSize      int
+	materials           materialPipeline
+	materialUnavailable bool
+	materialGeneration  uint64
 	pixScale            float32 // pre-calculate scale*texScale for each draw
 	programs            *programs
 	quadScratch         []paint.GlyphQuad       // one string's glyph quads, reused
@@ -66,25 +68,30 @@ type painter struct {
 	stats               drawStats               // FYNE_GL_DEBUG counters
 	texScale            float32
 	vertices            []float32 // updateBuffer's upload buffer, reused
+	windowSurface       WindowSurfaceMode
 }
 
 // Declare conformity to Painter interface
 var _ Painter = (*painter)(nil)
 
 func (p *painter) Clear() {
+	if p.materials != nil {
+		p.materials.ResetFrame()
+	}
 	if glDebug {
 		p.startFrame()
 	}
 	// Anything still queued belongs to a frame that is about to be wiped.
 	p.glyphPending = p.glyphPending[:0]
 	p.linePending = p.linePending[:0]
-	r, g, b, a := theme.Color(theme.ColorNameBackground).RGBA()
-	p.ctx.ClearColor(float32(r)/max16bit, float32(g)/max16bit, float32(b)/max16bit, float32(a)/max16bit)
+	r, g, b, a := p.windowClearColor()
+	p.ctx.ClearColor(r, g, b, a)
 	p.ctx.Clear(bitColorBuffer | bitDepthBuffer)
 	p.logError()
 }
 
-func (p *painter) Free(obj fyne.CanvasObject) {
+func (p *painter) Free(obj granio.CanvasObject) {
+	p.materialGeneration++
 	// Shader programs are immutable and compiled once per Shader.Name, living for
 	// the lifetime of the GL context like the built-in shader programs. They are
 	// deliberately not freed here: Free is also called for every object on each
@@ -100,14 +107,14 @@ func (p *painter) MaxTextureSize() int {
 	return p.maxTextureSize
 }
 
-func (p *painter) Paint(obj fyne.CanvasObject, pos fyne.Position, frame fyne.Size, clip *internal.ClipItem) {
+func (p *painter) Paint(obj granio.CanvasObject, pos granio.Position, frame granio.Size, clip *internal.ClipItem) {
 	if !obj.Visible() {
 		return
 	}
 
 	size := obj.Size()
-	var clipPos fyne.Position
-	var clipSize fyne.Size
+	var clipPos granio.Position
+	var clipSize granio.Size
 	if clip != nil {
 		clipPos, clipSize = clip.Rect()
 	} else {
@@ -198,7 +205,7 @@ func (p *painter) SetUniform4f(pState programState, name string, v0, v1, v2, v3 
 	p.ctx.Uniform4f(u.ref, v0, v1, v2, v3)
 }
 
-func (p *painter) StartClipping(pos fyne.Position, size fyne.Size) {
+func (p *painter) StartClipping(pos granio.Position, size granio.Size) {
 	p.FlushGlyphs() // queued quads belong to the outgoing scissor rectangle
 	x := p.textureScale(pos.X)
 	y := p.textureScale(p.canvas.Size().Height - pos.Y - size.Height)

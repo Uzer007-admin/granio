@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Preferences describes the ways that an app can save and load user preferences
 type Preferences interface {

@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Window describes a user interface window. Depending on the platform an app
 // may have many windows or just the one.

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Check widget has a text label and a checked (or unchecked) icon and triggers an event func when toggled
@@ -32,7 +32,7 @@ type Check struct {
 
 	binder basicBinder
 
-	minSize fyne.Size // cached for hover/tap position calculations
+	minSize granio.Size // cached for hover/tap position calculations
 }
 
 // NewCheck creates a new check widget with the set label and change handler
@@ -94,7 +94,7 @@ func (c *Check) Hide() {
 		c.FocusLost()
 		impl := c.super()
 
-		if c := fyne.CurrentApp().Driver().CanvasForObject(impl); c != nil {
+		if c := granio.CurrentApp().Driver().CanvasForObject(impl); c != nil {
 			c.Focus(nil)
 		}
 	}
@@ -134,7 +134,7 @@ func (c *Check) MouseMoved(me *desktop.MouseEvent) {
 }
 
 // Tapped is called when a pointer tapped event is captured and triggers any change handler
-func (c *Check) Tapped(pe *fyne.PointEvent) {
+func (c *Check) Tapped(pe *granio.PointEvent) {
 	if c.Disabled() {
 		return
 	}
@@ -154,27 +154,27 @@ func (c *Check) Tapped(pe *fyne.PointEvent) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (c *Check) MinSize() fyne.Size {
+func (c *Check) MinSize() granio.Size {
 	c.ExtendBaseWidget(c)
 	c.minSize = c.BaseWidget.MinSize()
 	return c.minSize
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (c *Check) CreateRenderer() fyne.WidgetRenderer {
+func (c *Check) CreateRenderer() granio.WidgetRenderer {
 	th := c.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	c.ExtendBaseWidget(c)
 	bg := canvas.NewImageFromResource(th.Icon(theme.IconNameCheckButtonFill))
 	icon := canvas.NewImageFromResource(th.Icon(theme.IconNameCheckButton))
 
 	text := canvas.NewText(c.Text, th.Color(theme.ColorNameForeground, v))
-	text.Alignment = fyne.TextAlignLeading
+	text.Alignment = granio.TextAlignLeading
 
 	focusIndicator := canvas.NewCircle(th.Color(theme.ColorNameBackground, v))
 	r := &checkRenderer{
-		widget.NewBaseRenderer([]fyne.CanvasObject{focusIndicator, bg, icon, text}),
+		widget.NewBaseRenderer([]granio.CanvasObject{focusIndicator, bg, icon, text}),
 		bg,
 		icon,
 		text,
@@ -216,7 +216,7 @@ func (c *Check) TypedRune(r rune) {
 }
 
 // TypedKey receives key input events when the Check is focused.
-func (*Check) TypedKey(*fyne.KeyEvent) {}
+func (*Check) TypedKey(*granio.KeyEvent) {}
 
 // SetText sets the text of the Check
 //
@@ -245,7 +245,7 @@ func (c *Check) updateFromData(data binding.DataItem) {
 	}
 	val, err := boolSource.Get()
 	if err != nil {
-		fyne.LogError("Error getting current data value", err)
+		granio.LogError("Error getting current data value", err)
 		return
 	}
 	c.SetChecked(val) // if val != c.Checked, this will call updateFromData again, but only once
@@ -266,7 +266,7 @@ func (c *Check) writeData(data binding.DataItem) {
 	if currentValue != c.Checked {
 		err := boolTarget.Set(c.Checked)
 		if err != nil {
-			fyne.LogError(fmt.Sprintf("Failed to set binding value to %t", c.Checked), err)
+			granio.LogError(fmt.Sprintf("Failed to set binding value to %t", c.Checked), err)
 		}
 	}
 }
@@ -281,37 +281,37 @@ type checkRenderer struct {
 
 // MinSize calculates the minimum size of a check.
 // This is based on the contained text, the check icon and a standard amount of padding added.
-func (c *checkRenderer) MinSize() fyne.Size {
+func (c *checkRenderer) MinSize() granio.Size {
 	th := c.check.Theme()
 
 	pad4 := th.Size(theme.SizeNameInnerPadding) * 2
-	minSize := c.label.MinSize().Add(fyne.NewSize(th.Size(theme.SizeNameInlineIcon)+pad4, pad4))
+	minSize := c.label.MinSize().Add(granio.NewSize(th.Size(theme.SizeNameInlineIcon)+pad4, pad4))
 
 	if c.check.Text != "" {
-		minSize.Add(fyne.NewSize(th.Size(theme.SizeNamePadding), 0))
+		minSize.Add(granio.NewSize(th.Size(theme.SizeNamePadding), 0))
 	}
 
-	return minSize
+	return minimumComponentHeight(minSize, th, granio.ComponentChoice)
 }
 
 // Layout the components of the check widget
-func (c *checkRenderer) Layout(size fyne.Size) {
+func (c *checkRenderer) Layout(size granio.Size) {
 	th := c.check.Theme()
 	innerPadding := th.Size(theme.SizeNameInnerPadding)
 	borderSize := th.Size(theme.SizeNameInputBorder)
 	iconInlineSize := th.Size(theme.SizeNameInlineIcon)
 
-	focusIndicatorSize := fyne.NewSquareSize(iconInlineSize + innerPadding)
+	focusIndicatorSize := granio.NewSquareSize(iconInlineSize + innerPadding)
 	c.focusIndicator.Resize(focusIndicatorSize)
-	c.focusIndicator.Move(fyne.NewPos(borderSize, (size.Height-focusIndicatorSize.Height)/2))
+	c.focusIndicator.Move(granio.NewPos(borderSize, (size.Height-focusIndicatorSize.Height)/2))
 
 	xOff := focusIndicatorSize.Width + borderSize*2
 	labelSize := size.SubtractWidthHeight(xOff, 0)
 	c.label.Resize(labelSize)
-	c.label.Move(fyne.NewPos(xOff, 0))
+	c.label.Move(granio.NewPos(xOff, 0))
 
-	iconPos := fyne.NewPos(innerPadding/2+borderSize, (size.Height-iconInlineSize)/2)
-	iconSize := fyne.NewSquareSize(iconInlineSize)
+	iconPos := granio.NewPos(innerPadding/2+borderSize, (size.Height-iconInlineSize)/2)
+	iconSize := granio.NewSquareSize(iconInlineSize)
 	c.bg.Move(iconPos)
 	c.bg.Resize(iconSize)
 	c.icon.Move(iconPos)
@@ -319,7 +319,7 @@ func (c *checkRenderer) Layout(size fyne.Size) {
 }
 
 // applyTheme updates this Check to the current theme
-func (c *checkRenderer) applyTheme(th fyne.Theme, v fyne.ThemeVariant) {
+func (c *checkRenderer) applyTheme(th granio.Theme, v granio.ThemeVariant) {
 	c.label.Color = th.Color(theme.ColorNameForeground, v)
 	c.label.TextSize = th.Size(theme.SizeNameText)
 	if c.check.Disabled() {
@@ -329,7 +329,7 @@ func (c *checkRenderer) applyTheme(th fyne.Theme, v fyne.ThemeVariant) {
 
 func (c *checkRenderer) Refresh() {
 	th := c.check.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	c.applyTheme(th, v)
 	c.updateLabel()
@@ -344,7 +344,7 @@ func (c *checkRenderer) updateLabel() {
 }
 
 // must be called while holding c.check.propertyLock for reading
-func (c *checkRenderer) updateResource(th fyne.Theme) {
+func (c *checkRenderer) updateResource(th granio.Theme) {
 	res := theme.NewThemedResource(th.Icon(theme.IconNameCheckButton))
 	res.ColorName = theme.ColorNameInputBorder
 	bgRes := theme.NewThemedResource(th.Icon(theme.IconNameCheckButtonFill))
@@ -373,7 +373,7 @@ func (c *checkRenderer) updateResource(th fyne.Theme) {
 }
 
 // must be called while holding c.check.propertyLock for reading
-func (c *checkRenderer) updateFocusIndicator(th fyne.Theme, v fyne.ThemeVariant) {
+func (c *checkRenderer) updateFocusIndicator(th granio.Theme, v granio.ThemeVariant) {
 	c.focusIndicator.FillColor = color.Transparent
 	if !c.check.Disabled() {
 		if c.check.focused {
@@ -382,16 +382,17 @@ func (c *checkRenderer) updateFocusIndicator(th fyne.Theme, v fyne.ThemeVariant)
 			c.focusIndicator.FillColor = th.Color(theme.ColorNameHover, v)
 		}
 	}
+	applySystemFocusCircle(c.focusIndicator, th, c.check.focused && !c.check.Disabled())
 }
 
-func focusIfNotMobile(w fyne.Widget) {
+func focusIfNotMobile(w granio.Widget) {
 	if w == nil {
 		return
 	}
 
-	if !fyne.CurrentDevice().IsMobile() {
-		if c := fyne.CurrentApp().Driver().CanvasForObject(w); c != nil {
-			c.Focus(w.(fyne.Focusable))
+	if !granio.CurrentDevice().IsMobile() {
+		if c := granio.CurrentApp().Driver().CanvasForObject(w); c != nil {
+			c.Focus(w.(granio.Focusable))
 		}
 	}
 }

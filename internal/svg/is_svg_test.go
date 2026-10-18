@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestIsFileSVG(t *testing.T) {
@@ -16,17 +16,17 @@ func TestIsFileSVG(t *testing.T) {
 }
 
 func TestIsResourceSVG(t *testing.T) {
-	res, err := fyne.LoadResourceFromPath("./testdata/circles.svg")
+	res, err := granio.LoadResourceFromPath("./testdata/circles.svg")
 	assert.Nil(t, err)
 	assert.True(t, IsResourceSVG(res))
 
-	res.(*fyne.StaticResource).StaticName = "stroke"
+	res.(*granio.StaticResource).StaticName = "stroke"
 	assert.True(t, IsResourceSVG(res))
 
 	svgString := "<svg version=\"1.1\"></svg>"
-	res.(*fyne.StaticResource).StaticContent = []byte(svgString)
+	res.(*granio.StaticResource).StaticContent = []byte(svgString)
 	assert.True(t, IsResourceSVG(res))
 
-	res.(*fyne.StaticResource).StaticContent = []byte("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + svgString)
+	res.(*granio.StaticResource).StaticContent = []byte("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" + svgString)
 	assert.True(t, IsResourceSVG(res))
 }

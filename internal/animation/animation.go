@@ -1,23 +1,32 @@
 package animation
 
 import (
+	"sync/atomic"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type anim struct {
-	a            *fyne.Animation
+	a            *granio.Animation
 	repeatsLeft  int
 	reverse      bool
 	start        time.Time
 	lastDuration time.Duration
 	pinTime      time.Time
 	pinProgress  float32
-	stopped      bool
+	stopped      atomic.Bool
+	finished     atomic.Bool
+	pausedAt     time.Time
 }
 
-func newAnim(a *fyne.Animation) *anim {
+func (a *anim) finish() {
+	if !a.isStopped() && a.finished.CompareAndSwap(false, true) && a.a.OnFinished != nil {
+		a.a.OnFinished()
+	}
+}
+
+func newAnim(a *granio.Animation) *anim {
 	now := time.Now()
 	animate := &anim{
 		a:            a,
@@ -52,9 +61,9 @@ func (a *anim) resetCycle(now time.Time) {
 }
 
 func (a *anim) setStopped() {
-	a.stopped = true
+	a.stopped.Store(true)
 }
 
 func (a *anim) isStopped() bool {
-	return a.stopped
+	return a.stopped.Load()
 }

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-var defaultTheme fyne.Theme
+var defaultTheme granio.Theme
 
 // Try to keep these in sync with the existing color names at theme/color.go.
-var knownColorNames = [...]fyne.ThemeColorName{
+var knownColorNames = [...]granio.ThemeColorName{
 	theme.ColorNameBackground,
 	theme.ColorNameButton,
 	theme.ColorNameDisabled,
@@ -19,6 +19,7 @@ var knownColorNames = [...]fyne.ThemeColorName{
 	theme.ColorNameError,
 	theme.ColorNameFocus,
 	theme.ColorNameForeground,
+	theme.ColorNameForegroundOnButton,
 	theme.ColorNameForegroundOnError,
 	theme.ColorNameForegroundOnPrimary,
 	theme.ColorNameForegroundOnSuccess,
@@ -43,16 +44,16 @@ var knownColorNames = [...]fyne.ThemeColorName{
 }
 
 // KnownThemeVariants returns the known theme variants mapped by a descriptive key.
-func KnownThemeVariants() map[string]fyne.ThemeVariant {
+func KnownThemeVariants() map[string]granio.ThemeVariant {
 	// Try to keep this in sync with the existing variants at theme/theme.go
-	return map[string]fyne.ThemeVariant{
+	return map[string]granio.ThemeVariant{
 		"dark":  theme.VariantDark,
 		"light": theme.VariantLight,
 	}
 }
 
 // NewTheme returns a new test theme using quiet ugly colors.
-func NewTheme() fyne.Theme {
+func NewTheme() granio.Theme {
 	blue := func(alpha uint8) color.Color {
 		return &color.NRGBA{R: 0, G: 0, B: 255, A: alpha}
 	}
@@ -67,7 +68,7 @@ func NewTheme() fyne.Theme {
 	}
 
 	return &configurableTheme{
-		colors: map[fyne.ThemeColorName]color.Color{
+		colors: map[granio.ThemeColorName]color.Color{
 			theme.ColorNameBackground:          red(255),
 			theme.ColorNameButton:              gray(100),
 			theme.ColorNameDisabled:            gray(20),
@@ -75,6 +76,7 @@ func NewTheme() fyne.Theme {
 			theme.ColorNameError:               blue(255),
 			theme.ColorNameFocus:               red(66),
 			theme.ColorNameForeground:          gray(255),
+			theme.ColorNameForegroundOnButton:  gray(254),
 			theme.ColorNameForegroundOnError:   red(210),
 			theme.ColorNameForegroundOnPrimary: red(200),
 			theme.ColorNameForegroundOnSuccess: blue(201),
@@ -97,7 +99,7 @@ func NewTheme() fyne.Theme {
 			theme.ColorNameSuccess:             green(150),
 			theme.ColorNameWarning:             red(100),
 		},
-		fonts: map[fyne.TextStyle]fyne.Resource{
+		fonts: map[granio.TextStyle]granio.Resource{
 			{}:                         theme.DefaultTextBoldFont(),
 			{Bold: true}:               theme.DefaultTextItalicFont(),
 			{Bold: true, Italic: true}: theme.DefaultTextMonospaceFont(),
@@ -106,7 +108,7 @@ func NewTheme() fyne.Theme {
 			{Symbol: true}:             theme.DefaultSymbolFont(),
 		},
 		name: "Ugly Test Theme",
-		sizes: map[fyne.ThemeSizeName]float32{
+		sizes: map[granio.ThemeSizeName]float32{
 			theme.SizeNameInlineIcon:               float32(24),
 			theme.SizeNameInnerPadding:             float32(20),
 			theme.SizeNameLineSpacing:              float32(6),
@@ -136,10 +138,10 @@ func NewTheme() fyne.Theme {
 }
 
 // Theme returns a test theme useful for image based tests.
-func Theme() fyne.Theme {
+func Theme() granio.Theme {
 	if defaultTheme == nil {
 		defaultTheme = &configurableTheme{
-			colors: map[fyne.ThemeColorName]color.Color{
+			colors: map[granio.ThemeColorName]color.Color{
 				theme.ColorNameBackground:                color.NRGBA{R: 0x44, G: 0x44, B: 0x44, A: 0xff},
 				theme.ColorNameButton:                    color.NRGBA{R: 0x33, G: 0x33, B: 0x33, A: 0xff},
 				theme.ColorNameDisabled:                  color.NRGBA{R: 0x88, G: 0x88, B: 0x88, A: 0xff},
@@ -147,6 +149,7 @@ func Theme() fyne.Theme {
 				theme.ColorNameError:                     color.NRGBA{R: 0xf4, G: 0x43, B: 0x36, A: 0xff},
 				theme.ColorNameFocus:                     color.NRGBA{R: 0x78, G: 0x3a, B: 0x3a, A: 0xff},
 				theme.ColorNameForeground:                color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff},
+				theme.ColorNameForegroundOnButton:        color.NRGBA{R: 0xfb, G: 0xfe, B: 0xff, A: 0xff},
 				theme.ColorNameForegroundOnError:         color.NRGBA{R: 0x08, G: 0x0a, B: 0x0f, A: 0xff},
 				theme.ColorNameForegroundOnPrimary:       color.NRGBA{R: 0x08, G: 0x0c, B: 0x0f, A: 0xff},
 				theme.ColorNameForegroundOnSuccess:       color.NRGBA{R: 0x0a, G: 0x0c, B: 0x0f, A: 0xff},
@@ -171,7 +174,7 @@ func Theme() fyne.Theme {
 				theme.ColorNameSuccess:                   color.NRGBA{R: 0x00, G: 0x99, B: 0x00, A: 0xff},
 				theme.ColorNameWarning:                   color.NRGBA{R: 0xee, G: 0xee, B: 0x00, A: 0xff},
 			},
-			fonts: map[fyne.TextStyle]fyne.Resource{
+			fonts: map[granio.TextStyle]granio.Resource{
 				{}:                         theme.DefaultTextFont(),
 				{Bold: true}:               theme.DefaultTextBoldFont(),
 				{Bold: true, Italic: true}: theme.DefaultTextBoldItalicFont(),
@@ -180,7 +183,7 @@ func Theme() fyne.Theme {
 				{Symbol: true}:             theme.DefaultSymbolFont(),
 			},
 			name: "Default Test Theme",
-			sizes: map[fyne.ThemeSizeName]float32{
+			sizes: map[granio.ThemeSizeName]float32{
 				theme.SizeNameInlineIcon:               float32(20),
 				theme.SizeNameInnerPadding:             float32(8),
 				theme.SizeNameLineSpacing:              float32(4),
@@ -217,41 +220,41 @@ func Theme() fyne.Theme {
 }
 
 type configurableTheme struct {
-	colors map[fyne.ThemeColorName]color.Color
-	fonts  map[fyne.TextStyle]fyne.Resource
+	colors map[granio.ThemeColorName]color.Color
+	fonts  map[granio.TextStyle]granio.Resource
 	name   string
-	sizes  map[fyne.ThemeSizeName]float32
+	sizes  map[granio.ThemeSizeName]float32
 }
 
-var _ fyne.Theme = (*configurableTheme)(nil)
+var _ granio.Theme = (*configurableTheme)(nil)
 
-func (t *configurableTheme) Color(n fyne.ThemeColorName, _ fyne.ThemeVariant) color.Color {
+func (t *configurableTheme) Color(n granio.ThemeColorName, _ granio.ThemeVariant) color.Color {
 	if t.colors[n] == nil {
-		fyne.LogError(fmt.Sprintf("color %s not defined in theme %s", n, t.name), nil)
+		granio.LogError(fmt.Sprintf("color %s not defined in theme %s", n, t.name), nil)
 	}
 
 	return t.colors[n]
 }
 
-func (t *configurableTheme) Font(style fyne.TextStyle) fyne.Resource {
+func (t *configurableTheme) Font(style granio.TextStyle) granio.Resource {
 	lookup := style
 	lookup.Strikethrough = false
 	lookup.Underline = false
 
 	if t.fonts[lookup] == nil {
-		fyne.LogError(fmt.Sprintf("font for style %#v not defined in theme %s", style, t.name), nil)
+		granio.LogError(fmt.Sprintf("font for style %#v not defined in theme %s", style, t.name), nil)
 	}
 
 	return t.fonts[lookup]
 }
 
-func (*configurableTheme) Icon(n fyne.ThemeIconName) fyne.Resource {
+func (*configurableTheme) Icon(n granio.ThemeIconName) granio.Resource {
 	return theme.DefaultTheme().Icon(n)
 }
 
-func (t *configurableTheme) Size(s fyne.ThemeSizeName) float32 {
+func (t *configurableTheme) Size(s granio.ThemeSizeName) float32 {
 	if _, ok := t.sizes[s]; !ok {
-		fyne.LogError(fmt.Sprintf("size %s not defined in theme %s", s, t.name), nil)
+		granio.LogError(fmt.Sprintf("size %s not defined in theme %s", s, t.name), nil)
 		return 0
 	}
 

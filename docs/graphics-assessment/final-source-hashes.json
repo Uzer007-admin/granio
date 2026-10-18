@@ -1,0 +1,13 @@
+{
+  "go.mod": "e99329b7bdd5b37d22ef153bb6daf1f22d06194293b3022ea02ac06f1c19750e",
+  "go.sum": "a46dfa8b18d060684959be9615731cf2065fb957eb899a416ab6f13c7735c4ab",
+  "go.work": "a0f82538e28018cb97f3d64dda609e424980ec8bdac728f49253558466618dd1",
+  "go.work.sum": "23bf5695451c3224f441cd141908e202a7de2af049281a8f0c5cc8e16b893424",
+  "internal/cache/widget.go": "1c6bdd7d3a9322871ae127f3e4fe3ea19a4d016486bcd829685e8a2698b98ed3",
+  "cmd/fyne/internal/mobile/binres/pool.go": "cc559885dbdc484d9900d0adff7a716e32311be4fe01d17ed99fec4ba0ad7e10",
+  "deps/gl/go.mod": "b4b58d0cfb9108b7435032391ab996372e8c172532739f57ea0e1790b1d3eae0",
+  "deps/glfw/v3.3/glfw/go.mod": "57d9af8bc1a420a76bbbb59d7d8931ac147fa54e8904c8764d40558758ec4792",
+  "deps/glfw/v3.4/glfw/go.mod": "6041a6d0e3131baaa76fa952f58c90798896fad401fd050219bb33afe734704b",
+  "deps/glow/go.mod": "62f4538c78ccb6efd08dcdd62a4806622bfc6c9b002b2ca8893100f0eef51025",
+  "extras/apps/go.mod": "adabea084ef98ff5e781e8fe4c405014c652e795a330e5376045e21a118fde93"
+}

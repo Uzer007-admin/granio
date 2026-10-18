@@ -9,12 +9,12 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +33,7 @@ func TestImage_TranslucencyDefault(t *testing.T) {
 
 func TestImage_RefreshBlank(t *testing.T) {
 	img := &canvas.Image{}
-	img.Resize(fyne.NewSize(64, 64))
+	img.Resize(granio.NewSize(64, 64))
 	img.Refresh()
 	assert.Nil(t, img.Image)
 
@@ -140,16 +140,16 @@ func TestImage_CornerRadius(t *testing.T) {
 	}
 	c := software.NewCanvas()
 	c.SetContent(i)
-	c.Resize(fyne.NewSize(120, 120))
+	c.Resize(granio.NewSize(120, 120))
 
 	test.AssertRendersToImage(t, "image_rounded_corners.png", c)
 
 	i.CornerRadius = canvas.RadiusMaximum
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 	test.AssertRendersToImage(t, "image_fully_rounded_corners.png", c)
 
 	i.FillMode = canvas.ImageFillCover
 	i.CornerRadius = 20
-	c.Resize(fyne.NewSize(60, 100))
+	c.Resize(granio.NewSize(60, 100))
 	test.AssertRendersToImage(t, "image_cover_rounded_corners.png", c)
 }

@@ -4,29 +4,29 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/layout"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCenterLayout(t *testing.T) {
-	size := fyne.NewSize(100, 100)
-	minSize := fyne.NewSize(10, 10)
+	size := granio.NewSize(100, 100)
+	minSize := granio.NewSize(10, 10)
 
 	obj := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	obj.SetMinSize(minSize)
-	c := &fyne.Container{
-		Objects: []fyne.CanvasObject{obj},
+	c := &granio.Container{
+		Objects: []granio.CanvasObject{obj},
 	}
 	c.Resize(size)
 
 	layout.NewCenterLayout().Layout(c.Objects, size)
 
 	assert.Equal(t, obj.Size(), minSize)
-	assert.Equal(t, fyne.NewPos(45, 45), obj.Position())
+	assert.Equal(t, granio.NewPos(45, 45), obj.Position())
 }
 
 func TestCenterLayout_MinSize(t *testing.T) {

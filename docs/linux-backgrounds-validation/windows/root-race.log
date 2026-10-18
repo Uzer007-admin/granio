@@ -1,0 +1,60 @@
+ok  	fyne.io/fyne/v2	1.361s
+--- FAIL: TestPreferences_Remove (0.00s)
+    preferences_test.go:27: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:27
+        	Error:      	Received unexpected error:
+        	            	open C:\Users\night\AppData\Roaming\fyne\dummy\preferences.json: Access is denied.
+        	Test:       	TestPreferences_Remove
+    preferences_test.go:31: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:31
+        	Error:      	Not equal: 
+        	            	expected: 4
+        	            	actual  : 0
+        	Test:       	TestPreferences_Remove
+--- FAIL: TestPreferences_Save (0.00s)
+    preferences_test.go:52: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:52
+        	Error:      	Received unexpected error:
+        	            	open C:\Users\night\AppData\Roaming\fyne\dummy\preferences.json: Access is denied.
+        	Test:       	TestPreferences_Save
+    preferences_test.go:60: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:60
+        	Error:      	Failed to load, %v
+        	Test:       	TestPreferences_Save
+        	Messages:   	open C:\Users\night\AppData\Roaming\fyne\dummy\preferences.json: The system cannot find the file specified.
+    preferences_test.go:62: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:62
+        	Error:      	Input ('') needs to be valid json.
+        	            	JSON parsing error: 'unexpected end of JSON input'
+        	Test:       	TestPreferences_Save
+    preferences_test.go:66: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:66
+        	Error:      	Not equal: 
+        	            	expected: "value"
+        	            	actual  : ""
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-value
+        	            	+
+        	Test:       	TestPreferences_Save
+    preferences_test.go:67: 
+        	Error Trace:	X:/fyne/app/preferences_test.go:67
+        	Error:      	"[]" should have 3 item(s), but has 0
+        	Test:       	TestPreferences_Save
+--- FAIL: TestStore_RootURI (0.00s)
+    storage_test.go:15: 
+        	Error Trace:	X:/fyne/app/storage_test.go:15
+        	Error:      	Received unexpected error:
+        	            	open C:/Users/night/AppData/Roaming/fyne/io.fyne.test/Documents/test: Access is denied.
+        	Test:       	TestStore_RootURI
+    storage_test.go:18: 
+        	Error Trace:	X:/fyne/app/storage_test.go:18
+        	Error:      	Received unexpected error:
+        	            	remove C:/Users/night/AppData/Roaming/fyne/io.fyne.test/Documents/test: The system cannot find the file specified.
+        	Test:       	TestStore_RootURI
+FAIL
+FAIL	fyne.io/fyne/v2/app	15.727s
+?   	fyne.io/fyne/v2/cache	[no test files]

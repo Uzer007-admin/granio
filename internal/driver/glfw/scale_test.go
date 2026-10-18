@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	_ "fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	_ "github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -58,7 +58,7 @@ func TestUserScale(t *testing.T) {
 	defer os.Setenv(scaleEnvKey, envVal)
 
 	_ = os.Setenv(scaleEnvKey, "auto")
-	set := fyne.CurrentApp().Settings().Scale()
+	set := granio.CurrentApp().Settings().Scale()
 	if set == float32(0.0) { // no config set
 		assert.Equal(t, float32(1.0), userScale())
 	} else {

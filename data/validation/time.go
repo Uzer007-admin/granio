@@ -3,7 +3,7 @@ package validation
 import (
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // NewTime creates a new validator that verifies times using time.Parse.
@@ -12,7 +12,7 @@ import (
 // See time.Parse() for more information about the reference time: https://pkg.go.dev/time#Parse
 //
 // Since: 2.1
-func NewTime(format string) fyne.StringValidator {
+func NewTime(format string) granio.StringValidator {
 	return func(text string) error {
 		_, err := time.Parse(format, text)
 		return err

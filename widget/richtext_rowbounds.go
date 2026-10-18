@@ -4,18 +4,18 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // rowBoundsBuilder walks a tree of segments to work out the rows that they lay out on.
 type rowBoundsBuilder struct {
 	text         *RichText
-	theme        fyne.Theme
+	theme        granio.Theme
 	innerPadding float32
 
 	bounds  []rowBoundary
-	fitSize fyne.Size // the space that is left for content to fit within
+	fitSize granio.Size // the space that is left for content to fit within
 
 	maxWidth  float32 // the width available to a row that starts at the left edge
 	wrapWidth float32 // the width that is left on the row being built
@@ -43,8 +43,8 @@ func newRowBoundsBuilder(t *RichText) *rowBoundsBuilder {
 	}
 	fitSize.Height -= (innerPadding + t.inset.Height) * 2
 	maxWidth := t.Size().Width - 2*innerPadding + 2*t.inset.Width
-	truncating := t.Wrapping == fyne.TextWrap(fyne.TextTruncateClip) ||
-		t.Wrapping == fyne.TextWrapOff && t.Truncation != fyne.TextTruncateOff
+	truncating := t.Wrapping == granio.TextWrap(granio.TextTruncateClip) ||
+		t.Wrapping == granio.TextWrapOff && t.Truncation != granio.TextTruncateOff
 
 	return &rowBoundsBuilder{
 		text: t, theme: th, innerPadding: innerPadding, fitSize: fitSize,
@@ -172,8 +172,8 @@ func (b *rowBoundsBuilder) appendText(seg RichTextSegment, depth int) {
 	}
 
 	style, size, leftPad := b.textAttributes(seg)
-	measurer := func(text []rune) fyne.Size {
-		return fyne.MeasureText(string(text), size, style)
+	measurer := func(text []rune) granio.Size {
+		return granio.MeasureText(string(text), size, style)
 	}
 
 	// the first line of this text runs on along the open row, which may have paid for its height already
@@ -181,7 +181,7 @@ func (b *rowBoundsBuilder) appendText(seg RichTextSegment, depth int) {
 	if b.rowOpen && b.rowPaid && len(runes) > 0 && runes[0] != '\n' {
 		shared = measurer([]rune(averageChar)).Height
 	}
-	rows, height := lineBounds(b.text, seg, b.wrapWidth-leftPad, fyne.NewSize(b.maxWidth, b.fitSize.Height+shared), measurer)
+	rows, height := lineBounds(b.text, seg, b.wrapWidth-leftPad, granio.NewSize(b.maxWidth, b.fitSize.Height+shared), measurer)
 	for i := range rows {
 		rows[i].docBegin = b.docOffset + rows[i].segBegin
 		rows[i].docEnd = b.docOffset + rows[i].segEnd
@@ -193,7 +193,7 @@ func (b *rowBoundsBuilder) appendText(seg RichTextSegment, depth int) {
 		b.full = true // there was not enough height left to show all of this text
 	}
 	if len(rows) == 0 {
-		if b.rowOpen && b.text.Truncation == fyne.TextTruncateEllipsis {
+		if b.rowOpen && b.text.Truncation == granio.TextTruncateEllipsis {
 			b.endRowWithEllipsis()
 		}
 		return
@@ -288,7 +288,7 @@ func (b *rowBoundsBuilder) indentContinuation(seg RichTextSegment, rows []rowBou
 
 // advanceRow takes the width of the text that an inline segment just placed on
 // the open row off the space that is left for whatever follows it.
-func (b *rowBoundsBuilder) advanceRow(seg RichTextSegment, rows []rowBoundary, style fyne.TextStyle, size float32) {
+func (b *rowBoundsBuilder) advanceRow(seg RichTextSegment, rows []rowBoundary, style granio.TextStyle, size float32) {
 	last := b.bounds[len(b.bounds)-1]
 	begin := 0
 	if len(last.segments) == 1 {
@@ -300,7 +300,7 @@ func (b *rowBoundsBuilder) advanceRow(seg RichTextSegment, rows []rowBoundary, s
 	begin = min(begin, len(runes))
 	end := min(last.segEnd, len(runes))
 
-	lastWidth := fyne.MeasureText(string(runes[begin:end]), size, style).Width
+	lastWidth := granio.MeasureText(string(runes[begin:end]), size, style).Width
 	if len(rows) == 1 {
 		b.wrapWidth -= lastWidth
 	} else {
@@ -324,8 +324,8 @@ func (b *rowBoundsBuilder) endRowWithEllipsis() {
 		}
 
 		style, size, _ := b.textAttributes(row.segments[last])
-		measurer := func(text []rune) fyne.Size {
-			return fyne.MeasureText(string(text), size, style)
+		measurer := func(text []rune) granio.Size {
+			return granio.MeasureText(string(text), size, style)
 		}
 		runes := rowSegmentRunes(row, last)
 		width := measurer(runes).Width
@@ -355,7 +355,7 @@ func isTextSegment(seg RichTextSegment) bool {
 
 // textAttributes returns the style and size that a text or hyperlink segment is
 // measured with, along with the padding that quoting it adds to its left.
-func (b *rowBoundsBuilder) textAttributes(seg RichTextSegment) (style fyne.TextStyle, size, leftPad float32) {
+func (b *rowBoundsBuilder) textAttributes(seg RichTextSegment) (style granio.TextStyle, size, leftPad float32) {
 	switch s := seg.(type) {
 	case *TextSegment:
 		return s.Style.TextStyle, s.size(), b.innerPadding * 2 * float32(s.Style.QuotingDepth)

@@ -1,0 +1,2 @@
+EGL 1.5, OpenGL ES 2.0 Mesa 25.0.5-1, GLES2 core lookups=142, pixel=[0 255 0 255]
+GLES 2.0 capabilities and texture-FBO separate alpha blend: [128 32 0 160]

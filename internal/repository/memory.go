@@ -5,17 +5,17 @@ import (
 	"io"
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
 // declare conformance to interfaces
 var (
-	_ io.ReadCloser       = (*nodeReaderWriter)(nil)
-	_ io.WriteCloser      = (*nodeReaderWriter)(nil)
-	_ fyne.URIReadCloser  = (*nodeReaderWriter)(nil)
-	_ fyne.URIWriteCloser = (*nodeReaderWriter)(nil)
+	_ io.ReadCloser         = (*nodeReaderWriter)(nil)
+	_ io.WriteCloser        = (*nodeReaderWriter)(nil)
+	_ granio.URIReadCloser  = (*nodeReaderWriter)(nil)
+	_ granio.URIWriteCloser = (*nodeReaderWriter)(nil)
 )
 
 // declare conformance with repository types
@@ -123,9 +123,9 @@ func (n *nodeReaderWriter) Write(p []byte) (int, error) {
 }
 
 // URI returns the URI of the node.
-func (n *nodeReaderWriter) URI() fyne.URI {
+func (n *nodeReaderWriter) URI() granio.URI {
 	// discarding the error because this should never fail
-	u, _ := storage.ParseURI(n.repo.scheme + fyne.URISchemeSeparator + fyne.URIAuthorityPrefix + n.path)
+	u, _ := storage.ParseURI(n.repo.scheme + granio.URISchemeSeparator + granio.URIAuthorityPrefix + n.path)
 	return u
 }
 
@@ -144,7 +144,7 @@ func NewInMemoryRepository(scheme string) *InMemoryRepository {
 // Exists checks if the given URI exists.
 //
 // Since: 2.0
-func (m *InMemoryRepository) Exists(u fyne.URI) (bool, error) {
+func (m *InMemoryRepository) Exists(u granio.URI) (bool, error) {
 	return withValidPath(u.Path(), func(path string) bool {
 		_, ok := m.Data[path]
 		return ok
@@ -154,7 +154,7 @@ func (m *InMemoryRepository) Exists(u fyne.URI) (bool, error) {
 // Reader reads the contents of the given URI.
 //
 // Since: 2.0
-func (m *InMemoryRepository) Reader(u fyne.URI) (fyne.URIReadCloser, error) {
+func (m *InMemoryRepository) Reader(u granio.URI) (granio.URIReadCloser, error) {
 	readable, err := m.CanRead(u)
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (m *InMemoryRepository) Reader(u fyne.URI) (fyne.URIReadCloser, error) {
 // CanRead checks if the given URI can be read.
 //
 // Since: 2.0
-func (m *InMemoryRepository) CanRead(u fyne.URI) (bool, error) {
+func (m *InMemoryRepository) CanRead(u granio.URI) (bool, error) {
 	return m.Exists(u)
 }
 
@@ -181,8 +181,8 @@ func (*InMemoryRepository) Destroy(string) {
 // Writer writes to the given URI.
 //
 // Since: 2.0
-func (m *InMemoryRepository) Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
-	return withValidPath(u.Path(), func(path string) fyne.URIWriteCloser {
+func (m *InMemoryRepository) Writer(u granio.URI) (granio.URIWriteCloser, error) {
+	return withValidPath(u.Path(), func(path string) granio.URIWriteCloser {
 		return &nodeReaderWriter{path: path, repo: m}
 	})
 }
@@ -190,7 +190,7 @@ func (m *InMemoryRepository) Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
 // Appender returns a writer that appends to the given URI.
 //
 // Since: 2.6
-func (m *InMemoryRepository) Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
+func (m *InMemoryRepository) Appender(u granio.URI) (granio.URIWriteCloser, error) {
 	path := u.Path()
 	if path == "" {
 		return nil, fmt.Errorf("invalid path '%s'", path)
@@ -202,7 +202,7 @@ func (m *InMemoryRepository) Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
 // CanWrite checks if the given URI can be written to.
 //
 // Since: 2.0
-func (*InMemoryRepository) CanWrite(u fyne.URI) (bool, error) {
+func (*InMemoryRepository) CanWrite(u granio.URI) (bool, error) {
 	return withValidPath(u.Path(), func(string) bool {
 		return true
 	})
@@ -211,7 +211,7 @@ func (*InMemoryRepository) CanWrite(u fyne.URI) (bool, error) {
 // Delete deletes the given URI.
 //
 // Since: 2.0
-func (m *InMemoryRepository) Delete(u fyne.URI) error {
+func (m *InMemoryRepository) Delete(u granio.URI) error {
 	path := u.Path()
 	_, ok := m.Data[path]
 	if ok {
@@ -224,35 +224,35 @@ func (m *InMemoryRepository) Delete(u fyne.URI) error {
 // Parent returns the parent URI of the given URI.
 //
 // Since: 2.0
-func (*InMemoryRepository) Parent(u fyne.URI) (fyne.URI, error) {
+func (*InMemoryRepository) Parent(u granio.URI) (granio.URI, error) {
 	return repository.GenericParent(u)
 }
 
 // Child returns the child URI created from the given URI and component.
 //
 // Since: 2.0
-func (*InMemoryRepository) Child(u fyne.URI, component string) (fyne.URI, error) {
+func (*InMemoryRepository) Child(u granio.URI, component string) (granio.URI, error) {
 	return repository.GenericChild(u, component)
 }
 
 // Copy copies the source URI to the destination URI.
 //
 // Since: 2.0
-func (*InMemoryRepository) Copy(source, destination fyne.URI) error {
+func (*InMemoryRepository) Copy(source, destination granio.URI) error {
 	return repository.GenericCopy(source, destination)
 }
 
 // Move moves the contents of the source URI to the destination.
 //
 // Since: 2.0
-func (*InMemoryRepository) Move(source, destination fyne.URI) error {
+func (*InMemoryRepository) Move(source, destination granio.URI) error {
 	return repository.GenericMove(source, destination)
 }
 
 // CanList checks if the given URI can be listed.
 //
 // Since: 2.0
-func (m *InMemoryRepository) CanList(u fyne.URI) (bool, error) {
+func (m *InMemoryRepository) CanList(u granio.URI) (bool, error) {
 	path := u.Path()
 	exist, err := m.Exists(u)
 	if err != nil || !exist {
@@ -270,38 +270,38 @@ func (m *InMemoryRepository) CanList(u fyne.URI) (bool, error) {
 // List returns a list of URIs that are children of the given URI.
 //
 // Since: 2.0
-func (m *InMemoryRepository) List(u fyne.URI) ([]fyne.URI, error) {
+func (m *InMemoryRepository) List(u granio.URI) ([]granio.URI, error) {
 	// Get the prefix, and make sure it ends with a path separator so that
 	// HasPrefix() will only find things that are children of it - this
 	// solves the edge case where you have say '/foo/bar' and
 	// '/foo/barbaz'.
 	prefix := u.Path()
 
-	if !strings.HasSuffix(prefix, fyne.URIPathSeparator) {
-		prefix = prefix + fyne.URIPathSeparator
+	if !strings.HasSuffix(prefix, granio.URIPathSeparator) {
+		prefix = prefix + granio.URIPathSeparator
 	}
 
-	prefixSplit := strings.Split(prefix, fyne.URIPathSeparator)
+	prefixSplit := strings.Split(prefix, granio.URIPathSeparator)
 	prefixSplitLen := len(prefixSplit)
 
 	// Now we can simply loop over all the paths and find the ones with an
 	// appropriate prefix, then eliminate those with too many path
 	// components.
-	listing := []fyne.URI{}
+	listing := []granio.URI{}
 	for p := range m.Data {
 		// We are going to compare ncomp with the number of elements in
 		// prefixSplit, which is guaranteed to have a trailing slash,
 		// so we want to also make pSplit be counted in ncomp like it
 		// does not have one.
-		pSplit := strings.Split(p, fyne.URIPathSeparator)
+		pSplit := strings.Split(p, granio.URIPathSeparator)
 		ncomp := len(pSplit)
 
-		if strings.HasSuffix(p, fyne.URIPathSeparator) {
+		if strings.HasSuffix(p, granio.URIPathSeparator) {
 			ncomp--
 		}
 
 		if strings.HasPrefix(p, prefix) && ncomp == prefixSplitLen {
-			uri, err := storage.ParseURI(m.scheme + fyne.URISchemeSeparator + fyne.URIAuthorityPrefix + p)
+			uri, err := storage.ParseURI(m.scheme + granio.URISchemeSeparator + granio.URIAuthorityPrefix + p)
 			if err != nil {
 				return nil, err
 			}
@@ -316,7 +316,7 @@ func (m *InMemoryRepository) List(u fyne.URI) ([]fyne.URI, error) {
 // CreateListable makes the given URI a listable URI.
 //
 // Since: 2.0
-func (m *InMemoryRepository) CreateListable(u fyne.URI) error {
+func (m *InMemoryRepository) CreateListable(u granio.URI) error {
 	ex, err := m.Exists(u)
 	if err != nil {
 		return err

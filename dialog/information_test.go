@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,28 +17,28 @@ func TestDialog_MinSize(t *testing.T) {
 	information := d.(*dialog)
 
 	dialogContent := information.win.Content.MinSize()
-	label := information.win.Content.(*fyne.Container).Objects[4].MinSize()
+	label := information.win.Content.(*granio.Container).Objects[4].MinSize()
 
 	assert.Less(t, label.Width, dialogContent.Width)
 }
 
 func TestDialog_Resize(t *testing.T) {
 	window := test.NewWindow(nil)
-	window.Resize(fyne.NewSize(600, 400))
+	window.Resize(granio.NewSize(600, 400))
 	defer window.Close()
 	d := NewInformation("Looooooooooooooong title", "message...", window)
 	theDialog := d.(*dialog)
 	d.Show() // we cannot check window size if not shown
 
 	// Test resize - normal size scenario
-	size := fyne.NewSize(300, 180) // normal size to fit (600,400)
+	size := granio.NewSize(300, 180) // normal size to fit (600,400)
 	theDialog.Resize(size)
 	expectedWidth := float32(300)
 	assert.Equal(t, expectedWidth, theDialog.win.Content.Size().Width)
 	expectedHeight := float32(180)
 	assert.Equal(t, expectedHeight, theDialog.win.Content.Size().Height)
 	// Test resize - normal size scenario again
-	size = fyne.NewSize(310, 280) // normal size to fit (600,400)
+	size = granio.NewSize(310, 280) // normal size to fit (600,400)
 	theDialog.Resize(size)
 	expectedWidth = 310
 	assert.Equal(t, expectedWidth, theDialog.win.Content.Size().Width)
@@ -47,7 +47,7 @@ func TestDialog_Resize(t *testing.T) {
 	d.Hide()
 
 	// Test resize - greater than max size scenario
-	size = fyne.NewSize(800, 600)
+	size = granio.NewSize(800, 600)
 	theDialog.Resize(size)
 	d.Show()
 	expectedWidth = 600                                        // since win width only 600
@@ -59,7 +59,7 @@ func TestDialog_Resize(t *testing.T) {
 	d.Hide()
 
 	// Test again - tiny size
-	size = fyne.NewSize(1, 1)
+	size = granio.NewSize(1, 1)
 	theDialog.Resize(size)
 	d.Show()
 	expectedWidth = theDialog.win.Content.MinSize().Width
@@ -71,7 +71,7 @@ func TestDialog_Resize(t *testing.T) {
 
 func TestDialog_TextWrapping(t *testing.T) {
 	window := test.NewTempWindow(t, nil)
-	window.Resize(fyne.NewSize(600, 400))
+	window.Resize(granio.NewSize(600, 400))
 
 	d := NewInformation("Title", "This is a really really long message that will be used to test the dialog text wrapping capabilities", window)
 	theDialog := d.(*dialog)
@@ -80,8 +80,8 @@ func TestDialog_TextWrapping(t *testing.T) {
 	// limits width to 90% of window size
 	assert.Equal(t, 600.0*maxTextDialogWinPcntWidth, theDialog.desiredSize.Width)
 
-	theDialog.desiredSize = fyne.NewSquareSize(0)
-	window.Resize(fyne.NewSize(900, 400))
+	theDialog.desiredSize = granio.NewSquareSize(0)
+	window.Resize(granio.NewSize(900, 400))
 	d.Show()
 
 	// limits width to absolute maximum

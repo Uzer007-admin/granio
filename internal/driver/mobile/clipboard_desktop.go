@@ -2,15 +2,15 @@
 
 package mobile
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // Content returns the clipboard content for mobile simulator runs
 func (mobileClipboard) Content() string {
-	fyne.LogError("Clipboard is not supported in mobile simulation", nil)
+	granio.LogError("Clipboard is not supported in mobile simulation", nil)
 	return ""
 }
 
 // SetContent sets the clipboard content for mobile simulator runs
 func (mobileClipboard) SetContent(string) {
-	fyne.LogError("Clipboard is not supported in mobile simulation", nil)
+	granio.LogError("Clipboard is not supported in mobile simulation", nil)
 }

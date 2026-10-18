@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestCheckSize(t *testing.T) {
@@ -139,7 +139,7 @@ func TestCheck_Focused(t *testing.T) {
 	assert.Equal(t, color.Transparent, render.focusIndicator.FillColor)
 
 	test.Tap(check)
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		assert.False(t, check.focused)
 	} else {
 		assert.True(t, check.focused)
@@ -151,7 +151,7 @@ func TestCheck_Focused(t *testing.T) {
 	assert.Equal(t, color.Transparent, render.focusIndicator.FillColor)
 
 	check.Enable()
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		assert.False(t, check.focused)
 	} else {
 		assert.True(t, check.focused)
@@ -180,7 +180,7 @@ func TestCheck_Hovered(t *testing.T) {
 
 	test.Tap(check)
 	assert.True(t, check.hovered)
-	if !fyne.CurrentDevice().IsMobile() {
+	if !granio.CurrentDevice().IsMobile() {
 		assert.Equal(t, theme.Color(theme.ColorNameFocus), render.focusIndicator.FillColor)
 	}
 
@@ -191,7 +191,7 @@ func TestCheck_Hovered(t *testing.T) {
 
 	check.Enable()
 	assert.True(t, check.hovered)
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		assert.Equal(t, theme.Color(theme.ColorNameHover), render.focusIndicator.FillColor)
 	} else {
 		assert.Equal(t, theme.Color(theme.ColorNameFocus), render.focusIndicator.FillColor)
@@ -199,7 +199,7 @@ func TestCheck_Hovered(t *testing.T) {
 
 	check.MouseOut()
 	assert.False(t, check.hovered)
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		assert.Equal(t, color.Transparent, render.focusIndicator.FillColor)
 	} else {
 		assert.Equal(t, theme.Color(theme.ColorNameFocus), render.focusIndicator.FillColor)
@@ -221,8 +221,8 @@ func TestCheck_HoveredOutsideActiveArea(t *testing.T) {
 	assert.Equal(t, color.Transparent, render.focusIndicator.FillColor)
 
 	ms := check.MinSize()
-	check.MouseIn(&desktop.MouseEvent{PointEvent: fyne.PointEvent{
-		Position: fyne.NewPos(ms.Width+2, 1),
+	check.MouseIn(&desktop.MouseEvent{PointEvent: granio.PointEvent{
+		Position: granio.NewPos(ms.Width+2, 1),
 	}})
 	assert.False(t, check.hovered)
 	assert.Equal(t, color.Transparent, render.focusIndicator.FillColor)
@@ -236,8 +236,8 @@ func TestCheck_TappedOutsideActiveArea(t *testing.T) {
 	check.SetChecked(true)
 
 	ms := check.MinSize()
-	check.Tapped(&fyne.PointEvent{
-		Position: fyne.NewPos(ms.Width+2, 1),
+	check.Tapped(&granio.PointEvent{
+		Position: granio.NewPos(ms.Width+2, 1),
 	})
 	assert.True(t, check.Checked)
 }
@@ -249,7 +249,7 @@ func TestCheck_TypedRune(t *testing.T) {
 	assert.False(t, check.Checked)
 
 	test.Tap(check)
-	if !fyne.CurrentDevice().IsMobile() {
+	if !granio.CurrentDevice().IsMobile() {
 		assert.True(t, check.focused)
 	}
 	assert.True(t, check.Checked)
@@ -273,7 +273,7 @@ func TestCheck_Disabled(t *testing.T) {
 
 func TestCheckRenderer_ApplyTheme(t *testing.T) {
 	check := &Check{}
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	render := test.TempWidgetRenderer(t, check).(*checkRenderer)
 
 	textSize := render.label.TextSize

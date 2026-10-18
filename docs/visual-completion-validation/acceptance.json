@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-14",
+  "go": "1.27.1",
+  "token_version": 1,
+  "root_race_cgocheck2_packages": {
+    "windows": 47,
+    "linux": null
+  },
+  "native_cycles": 100,
+  "native_functional_windows_checkptr2": true,
+  "live_text_scale": [
+    1,
+    1.5,
+    2,
+    2.25,
+    1
+  ],
+  "software_dpi": [
+    1,
+    1.5,
+    2
+  ],
+  "software_text_scale": [
+    1,
+    1.5,
+    2,
+    2.25
+  ],
+  "opaque_reference_images": 39,
+  "references_repeat_sha256_identical": true,
+  "source_snapshot_files": 2215,
+  "matching_linux_source_files": null,
+  "linux_evidence_status": "earlier native/root run passed; final exporter delta and raw-log retrieval blocked by SSH reset",
+  "linux_transport": {
+    "host": "f-test-bench",
+    "route_available": false,
+    "user_confirmed_temporary_outage": true
+  },
+  "temporary_cleanup": {
+    "local": "removed and verified",
+    "remote": "SSH unavailable; /tmp/fvc14-c83f cleanup pending"
+  },
+  "wasm_build": true,
+  "macos_arm64_software_build": true,
+  "windows_native_vet_unsafeptr": "seven existing clipboard/IMM bridge diagnostics; other analyzers passed; raw log retained",
+  "kde": {
+    "f-test-osnovacustom": {
+      "ip": "172.21.9.27",
+      "expected_session": "X11",
+      "tested": false
+    },
+    "f-autotest-altkde": {
+      "ip": "172.21.9.21",
+      "tested": false
+    },
+    "reason": "SSH no route/timeout; user confirmed inactive hosts"
+  },
+  "long_performance_runs": "excluded by user",
+  "real_os_setting_changes_tested": false,
+  "full_hardware_tz_accepted": false
+}

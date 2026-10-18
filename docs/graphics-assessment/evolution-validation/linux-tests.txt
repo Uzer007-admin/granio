@@ -1,0 +1,26 @@
+go version go1.27.1 linux/amd64
+PASS: three production gamma bridges; uniform WGL loader: NULL, 1, 2, 3, -1, valid pointer and DLL failure
+9 production blocks x 11 controls + 9 legacy converters passed
+signed char: passed
+9 production blocks x 11 controls + 9 legacy converters passed
+unsigned char: passed
+ok  	github.com/Uzer007-admin/dbus/v5	5.617s
+?   	github.com/Uzer007-admin/dbus/v5/introspect	[no test files]
+ok  	github.com/Uzer007-admin/dbus/v5/prop	1.024s
+ok  	github.com/Uzer007-admin/dbus/v5	5.598s
+?   	github.com/Uzer007-admin/dbus/v5/introspect	[no test files]
+ok  	github.com/Uzer007-admin/dbus/v5/prop	1.023s
+ok  	github.com/Uzer007-admin/glow	1.030s
+ok  	github.com/Uzer007-admin/glfw/v3.3/glfw	2.228s
+ok  	github.com/Uzer007-admin/glfw/v3.4/glfw	1.167s
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	1.185s
+ok  	github.com/Uzer007-admin/gl/v2.1/fyne	1.010s
+ok  	github.com/Uzer007-admin/gl/v2.0/gles2	1.011s
+Go: go1.27.1-X:cgocheck2 lookups: 50 renderer: llvmpipe (LLVM 19.1.7, 256 bits)
+Compact GL Init: 17.2 us/op, 0.0 Go allocs/op
+Framebuffer: [0 255 0 255]
+Shader compilation: passed
+EGL 1.5, OpenGL ES 2.0 Mesa 25.0.5-1, GLES2 core lookups=142, pixel=[0 255 0 255]
+ok  	github.com/Uzer007-admin/granio/v2/app	18.767s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	2.192s
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	23.874s

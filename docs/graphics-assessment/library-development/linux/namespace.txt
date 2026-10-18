@@ -1,0 +1,5 @@
+=== RUN   TestConnectToDifferentUserNamespace
+    conn_linux_test.go:85: user/PID namespaces unavailable on this host: fork/exec /usr/bin/dbus-daemon: no space left on device
+--- SKIP: TestConnectToDifferentUserNamespace (0.00s)
+PASS
+ok  	github.com/Uzer007-admin/dbus/v5	1.012s

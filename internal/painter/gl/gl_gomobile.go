@@ -5,7 +5,7 @@ package gl
 import (
 	"math"
 
-	"fyne.io/fyne/v2/internal/driver/mobile/gl"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
 )
 
 const (

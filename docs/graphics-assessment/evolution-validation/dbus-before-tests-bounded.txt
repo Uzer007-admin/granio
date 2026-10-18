@@ -1,0 +1,12 @@
+--- FAIL: TestSendPreCancelledSerial (0.00s)
+    send_regression_test.go:64: flags 1: <nil>
+--- FAIL: TestSendClosedConnectionRetiresSerial (1.00s)
+    send_regression_test.go:108: serials retained: map[0:true 1:true]
+    send_regression_test.go:102: call completion timed out
+--- FAIL: TestObjectInteractiveAuthorizationFlag (0.00s)
+    send_regression_test.go:117: flags 3, want 7; <nil>
+--- FAIL: TestSerialZeroRemainsReserved (0.00s)
+    send_regression_test.go:129: serial after wrap: 0
+FAIL
+FAIL	github.com/Uzer007-admin/dbus/v5	2.110s
+FAIL

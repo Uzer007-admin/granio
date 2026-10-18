@@ -1,0 +1,26 @@
+=== RUN   TestWindowsAccessibilityProviderLifetime
+--- PASS: TestWindowsAccessibilityProviderLifetime (0.01s)
+=== RUN   TestWindowsAccessibilityRecycledSelection
+--- PASS: TestWindowsAccessibilityRecycledSelection (0.54s)
+=== RUN   TestWindowsAccessibilityTextRangeABI
+--- PASS: TestWindowsAccessibilityTextRangeABI (0.00s)
+=== RUN   TestWindowsAccessibilityEventABI
+--- PASS: TestWindowsAccessibilityEventABI (0.02s)
+=== RUN   TestWindowsAccessibilityScrollPreservesSelection
+--- PASS: TestWindowsAccessibilityScrollPreservesSelection (0.25s)
+=== RUN   TestExternalWindowsOLEDrop
+=== RUN   TestExternalWindowsOLEDrop/text
+    transfer_native_windows_test.go:116: external OLE text/plain: 24 bytes
+=== RUN   TestExternalWindowsOLEDrop/html
+    transfer_native_windows_test.go:116: external OLE text/html: 18 bytes
+=== RUN   TestExternalWindowsOLEDrop/binary
+    transfer_native_windows_test.go:116: external OLE application/x-fyne-drag-test: 524288 bytes
+=== RUN   TestExternalWindowsOLEDrop/files
+    transfer_native_windows_test.go:102: external CF_HDROP reached the legacy file callback alongside a MIME target
+--- PASS: TestExternalWindowsOLEDrop (11.54s)
+    --- PASS: TestExternalWindowsOLEDrop/text (2.96s)
+    --- PASS: TestExternalWindowsOLEDrop/html (2.88s)
+    --- PASS: TestExternalWindowsOLEDrop/binary (2.85s)
+    --- PASS: TestExternalWindowsOLEDrop/files (2.77s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	15.216s

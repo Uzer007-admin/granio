@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
 )
 
 // secretStore persists the encoded secret preferences.
@@ -39,7 +39,7 @@ type secretPreferences struct {
 }
 
 // Declare conformity with Preferences interface
-var _ fyne.Preferences = (*secretPreferences)(nil)
+var _ granio.Preferences = (*secretPreferences)(nil)
 
 // newSecretPreferences returns the secret preferences loaded from the app's secret store.
 // An error is returned if existing data could not be loaded, in which case nothing must be saved over it.
@@ -66,7 +66,7 @@ func newSecretPreferences(a *fyneApp, newStore func([]byte) secretStore, passwor
 		}
 
 		if err := p.save(); err != nil {
-			fyne.LogError("Failed on saving secret preferences", err)
+			granio.LogError("Failed on saving secret preferences", err)
 		}
 	})
 	return p, nil
@@ -79,7 +79,7 @@ func (p *secretPreferences) forceImmediateSave() {
 		return
 	}
 	if err := p.save(); err != nil {
-		fyne.LogError("Failed on force saving secret preferences", err)
+		granio.LogError("Failed on force saving secret preferences", err)
 	}
 }
 
@@ -139,7 +139,7 @@ func (p *secretPreferences) resetSavedRecently() {
 	go func() {
 		time.Sleep(time.Millisecond * 100) // writes are not always atomic. 10ms worked, 100 is safer.
 
-		fyne.DoAndWait(func() {
+		granio.DoAndWait(func() {
 			p.prefLock.Lock()
 			p.savedRecently = false
 			changedDuringSaving := p.changedDuringSaving
@@ -148,7 +148,7 @@ func (p *secretPreferences) resetSavedRecently() {
 
 			if changedDuringSaving {
 				if err := p.save(); err != nil {
-					fyne.LogError("failed on saving secret preferences", err)
+					granio.LogError("failed on saving secret preferences", err)
 				}
 			}
 		})
@@ -204,7 +204,7 @@ func (e *encryptedStore) load() ([]byte, error) {
 	}
 	plain, err := decryptSecret(key, data)
 	if err != nil && err != errSecretFormat {
-		return nil, fyne.ErrPasswordIncorrect
+		return nil, granio.ErrPasswordIncorrect
 	}
 	return plain, err
 }
@@ -242,7 +242,7 @@ func (e *encryptedStore) keyForSalt(salt []byte) ([]byte, error) {
 		return e.key, nil
 	}
 	if len(e.password) == 0 {
-		return nil, fyne.ErrPasswordRequired
+		return nil, granio.ErrPasswordRequired
 	}
 
 	e.salt = append([]byte{}, salt...)

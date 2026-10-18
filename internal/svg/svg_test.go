@@ -10,12 +10,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fyne-io/oksvg"
+	"github.com/Uzer007-admin/granio-oksvg"
 	"github.com/srwiley/rasterx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/internal/test"
 )
 
 var tests = map[string]struct {

@@ -4,14 +4,14 @@ import (
 	"path/filepath"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
-	"github.com/FyshOS/fancyfs"
+	"github.com/Uzer007-admin/granio/v2/internal/foldermeta"
 )
 
 const (
@@ -36,16 +36,16 @@ type fileDialogItem struct {
 	id       int // id in the parent container
 	choose   func(id int)
 	open     func()
-	location fyne.URI
+	location granio.URI
 	dir      bool
 
 	lastClick time.Time
 }
 
-func (i *fileDialogItem) CreateRenderer() fyne.WidgetRenderer {
-	text := widget.NewLabelWithStyle(i.name, fyne.TextAlignCenter, fyne.TextStyle{})
-	text.Truncation = fyne.TextTruncateEllipsis
-	text.Wrapping = fyne.TextWrapBreak
+func (i *fileDialogItem) CreateRenderer() granio.WidgetRenderer {
+	text := widget.NewLabelWithStyle(i.name, granio.TextAlignCenter, granio.TextStyle{})
+	text.Truncation = granio.TextTruncateEllipsis
+	text.Wrapping = granio.TextWrapBreak
 	icon := widget.NewFileIcon(i.location)
 	over := &canvas.Image{}
 
@@ -54,12 +54,12 @@ func (i *fileDialogItem) CreateRenderer() fyne.WidgetRenderer {
 		icon:         icon,
 		text:         text,
 		over:         over,
-		objects:      []fyne.CanvasObject{icon, text, over},
+		objects:      []granio.CanvasObject{icon, text, over},
 		fileTextSize: widget.NewLabel("M\nM").MinSize().Height, // cache two-line label height,
 	}
 }
 
-func (i *fileDialogItem) setLocation(l fyne.URI, dir, up bool) {
+func (i *fileDialogItem) setLocation(l granio.URI, dir, up bool) {
 	i.dir = dir
 	i.location = l
 	i.name = l.Name()
@@ -76,19 +76,19 @@ func (i *fileDialogItem) setLocation(l fyne.URI, dir, up bool) {
 	i.Refresh()
 }
 
-func (i *fileDialogItem) Tapped(*fyne.PointEvent) {
+func (i *fileDialogItem) Tapped(*granio.PointEvent) {
 	if i.choose != nil {
 		i.choose(i.id)
 	}
 	now := time.Now()
-	if !i.dir && now.Sub(i.lastClick) < fyne.CurrentApp().Driver().DoubleTapDelay() && i.open != nil {
+	if !i.dir && now.Sub(i.lastClick) < granio.CurrentApp().Driver().DoubleTapDelay() && i.open != nil {
 		// It is a double click, so we ask the dialog to open
 		i.open()
 	}
 	i.lastClick = now
 }
 
-func (f *fileDialog) newFileItem(location fyne.URI, dir, up bool) *fileDialogItem {
+func (f *fileDialog) newFileItem(location granio.URI, dir, up bool) *fileDialogItem {
 	item := &fileDialogItem{
 		picker:   f,
 		location: location,
@@ -116,41 +116,41 @@ type fileItemRenderer struct {
 	icon    *widget.FileIcon
 	text    *widget.Label
 	over    *canvas.Image
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
-func (s *fileItemRenderer) Layout(size fyne.Size) {
+func (s *fileItemRenderer) Layout(size granio.Size) {
 	if s.item.picker.view == GridView {
-		s.icon.Resize(fyne.NewSquareSize(iconSize))
-		s.icon.Move(fyne.NewPos((size.Width-iconSize)/2, 0))
+		s.icon.Resize(granio.NewSquareSize(iconSize))
+		s.icon.Move(granio.NewPos((size.Width-iconSize)/2, 0))
 
-		s.over.Resize(fyne.NewSize(iconSize-folderInsetX*2, iconSize-folderInsetX-folderInsetBottom))
+		s.over.Resize(granio.NewSize(iconSize-folderInsetX*2, iconSize-folderInsetX-folderInsetBottom))
 		s.over.Move(s.icon.Position().AddXY(folderInsetX, folderInsetTop))
 
-		s.text.Alignment = fyne.TextAlignCenter
-		s.text.Resize(fyne.NewSize(size.Width, s.fileTextSize))
-		s.text.Move(fyne.NewPos(0, size.Height-s.fileTextSize))
+		s.text.Alignment = granio.TextAlignCenter
+		s.text.Resize(granio.NewSize(size.Width, s.fileTextSize))
+		s.text.Move(granio.NewPos(0, size.Height-s.fileTextSize))
 	} else {
-		s.icon.Resize(fyne.NewSquareSize(iconSizeInline))
-		s.icon.Move(fyne.NewPos(theme.Padding(), (size.Height-iconSizeInline)/2))
+		s.icon.Resize(granio.NewSquareSize(iconSizeInline))
+		s.icon.Move(granio.NewPos(theme.Padding(), (size.Height-iconSizeInline)/2))
 
-		s.over.Resize(fyne.NewSize(iconSizeInline-folderInsetXInline*2, iconSizeInline-folderInsetXInline-folderInsetBottomInline))
+		s.over.Resize(granio.NewSize(iconSizeInline-folderInsetXInline*2, iconSizeInline-folderInsetXInline-folderInsetBottomInline))
 		s.over.Move(s.icon.Position().AddXY(folderInsetXInline, folderInsetTopInline))
 
-		s.text.Alignment = fyne.TextAlignLeading
+		s.text.Alignment = granio.TextAlignLeading
 		textMin := s.text.MinSize()
-		s.text.Resize(fyne.NewSize(size.Width, textMin.Height))
-		s.text.Move(fyne.NewPos(iconSizeInline, (size.Height-textMin.Height)/2))
+		s.text.Resize(granio.NewSize(size.Width, textMin.Height))
+		s.text.Move(granio.NewPos(iconSizeInline, (size.Height-textMin.Height)/2))
 	}
 }
 
-func (s *fileItemRenderer) MinSize() fyne.Size {
+func (s *fileItemRenderer) MinSize() granio.Size {
 	if s.item.picker.view == GridView {
-		return fyne.NewSize(cellWidthIcon, iconSize+s.fileTextSize)
+		return granio.NewSize(cellWidthIcon, iconSize+s.fileTextSize)
 	}
 
 	textMin := s.text.MinSize()
-	return fyne.NewSize(iconSizeInline+textMin.Width+theme.Padding(), textMin.Height)
+	return granio.NewSize(iconSizeInline+textMin.Width+theme.Padding(), textMin.Height)
 }
 
 func (s *fileItemRenderer) Refresh() {
@@ -164,7 +164,7 @@ func (s *fileItemRenderer) Refresh() {
 		loc, _ = storage.ParseURI(loc.String()[:len(loc.String())-1])
 	}
 
-	if ff, _ := fancyfs.DetailsForFolder(loc); ff != nil {
+	if ff, _ := foldermeta.DetailsForFolder(loc); ff != nil {
 		if ff.BackgroundURI != nil {
 			s.over.File = ff.BackgroundURI.Path()
 		} else {
@@ -185,7 +185,7 @@ func (s *fileItemRenderer) Refresh() {
 	s.over.Refresh()
 }
 
-func (s *fileItemRenderer) Objects() []fyne.CanvasObject {
+func (s *fileItemRenderer) Objects() []granio.CanvasObject {
 	return s.objects
 }
 

@@ -3,11 +3,11 @@ package painter_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/painter/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,7 +32,7 @@ func TestPaintImageWithBadSVGElement(t *testing.T) {
 	img := canvas.NewImageFromFile("testdata/stroke-bad-element-data.svg")
 	c := test.NewCanvasWithPainter(software.NewPainter())
 	c.SetContent(img)
-	c.Resize(fyne.NewSize(480, 240))
+	c.Resize(granio.NewSize(480, 240))
 	img.Refresh()
 
 	test.AssertImageMatches(t, "svg-stroke-default.png", c.Capture())
@@ -76,7 +76,7 @@ func TestPaintImage_SVG(t *testing.T) {
 			img := canvas.NewImageFromFile("testdata/stroke.svg")
 			c := test.NewCanvasWithPainter(software.NewPainter())
 			c.SetContent(img)
-			c.Resize(fyne.NewSize(tt.width, tt.height))
+			c.Resize(granio.NewSize(tt.width, tt.height))
 			img.Refresh()
 			img.FillMode = tt.fillMode
 

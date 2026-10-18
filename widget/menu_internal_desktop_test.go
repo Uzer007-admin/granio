@@ -5,40 +5,40 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMenu_ItemHovered(t *testing.T) {
-	sub1 := fyne.NewMenuItem("sub1", nil)
-	sub1.ChildMenu = fyne.NewMenu(
+	sub1 := granio.NewMenuItem("sub1", nil)
+	sub1.ChildMenu = granio.NewMenu(
 		"",
-		fyne.NewMenuItem("sub1 A", nil),
-		fyne.NewMenuItem("sub1 B", nil),
+		granio.NewMenuItem("sub1 A", nil),
+		granio.NewMenuItem("sub1 B", nil),
 	)
-	sub2sub := fyne.NewMenuItem("sub2sub", nil)
-	sub2sub.ChildMenu = fyne.NewMenu(
+	sub2sub := granio.NewMenuItem("sub2sub", nil)
+	sub2sub.ChildMenu = granio.NewMenu(
 		"",
-		fyne.NewMenuItem("sub2sub A", nil),
-		fyne.NewMenuItem("sub2sub B", nil),
+		granio.NewMenuItem("sub2sub A", nil),
+		granio.NewMenuItem("sub2sub B", nil),
 	)
-	sub2 := fyne.NewMenuItem("sub2", nil)
-	sub2.ChildMenu = fyne.NewMenu(
+	sub2 := granio.NewMenuItem("sub2", nil)
+	sub2.ChildMenu = granio.NewMenu(
 		"",
-		fyne.NewMenuItem("sub2 A", nil),
-		fyne.NewMenuItem("sub2 B", nil),
+		granio.NewMenuItem("sub2 A", nil),
+		granio.NewMenuItem("sub2 B", nil),
 		sub2sub,
 	)
 	m := NewMenu(
-		fyne.NewMenu(
+		granio.NewMenu(
 			"",
-			fyne.NewMenuItem("Foo", nil),
-			fyne.NewMenuItemSeparator(),
-			fyne.NewMenuItem("Bar", nil),
+			granio.NewMenuItem("Foo", nil),
+			granio.NewMenuItemSeparator(),
+			granio.NewMenuItem("Bar", nil),
 			sub1,
 			sub2,
 		),
@@ -89,9 +89,9 @@ func TestMenu_ItemHovered(t *testing.T) {
 }
 
 func TestMenu_ItemWithChildTapped(t *testing.T) {
-	sub := fyne.NewMenuItem("sub1", nil)
-	sub.ChildMenu = fyne.NewMenu("", fyne.NewMenuItem("sub A", nil))
-	m := NewMenu(fyne.NewMenu("", sub))
+	sub := granio.NewMenuItem("sub1", nil)
+	sub.ChildMenu = granio.NewMenu("", granio.NewMenuItem("sub A", nil))
+	m := NewMenu(granio.NewMenu("", sub))
 	size := m.MinSize()
 	m.Resize(size)
 

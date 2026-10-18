@@ -1,0 +1,39 @@
+[
+  {
+    "repository": "deps/gl",
+    "patches": [
+      "go127-gl.patch"
+    ],
+    "fresh_apply": true,
+    "reverse_check": true,
+    "matches_current_files": true
+  },
+  {
+    "repository": "deps/glfw",
+    "patches": [
+      "go127-glfw.patch"
+    ],
+    "fresh_apply": true,
+    "reverse_check": true,
+    "matches_current_files": true
+  },
+  {
+    "repository": "deps/glow",
+    "patches": [
+      "go127-glow.patch"
+    ],
+    "fresh_apply": true,
+    "reverse_check": true,
+    "matches_current_files": true
+  },
+  {
+    "repository": "extras/apps",
+    "patches": [
+      "apps-tests.patch",
+      "go127-apps.patch"
+    ],
+    "fresh_apply": true,
+    "reverse_check": true,
+    "matches_current_files": true
+  }
+]

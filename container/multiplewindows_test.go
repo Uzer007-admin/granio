@@ -3,9 +3,9 @@ package container
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,18 +20,18 @@ func TestMultipleWindows_Add(t *testing.T) {
 func TestMultipleWindows_Drag(t *testing.T) {
 	w := NewInnerWindow("1", widget.NewLabel("Inside"))
 	m := NewMultipleWindows(w)
-	m.Resize(fyne.NewSize(30, 30))
+	m.Resize(granio.NewSize(30, 30))
 	_ = test.TempWidgetRenderer(t, m) // initialise display
 	assert.Equal(t, 1, len(m.Windows))
 
 	assert.True(t, w.Position().IsZero())
-	w.OnDragged(&fyne.DragEvent{Dragged: fyne.Delta{DX: 10, DY: 5}})
+	w.OnDragged(&granio.DragEvent{Dragged: granio.Delta{DX: 10, DY: 5}})
 	assert.Equal(t, float32(10), w.Position().X)
 	assert.Equal(t, float32(5), w.Position().Y)
 
-	drag := &fyne.DragEvent{Dragged: fyne.Delta{DX: -10, DY: -5}}
-	drag.Position = fyne.NewPos(5, 5)
-	drag.AbsolutePosition = fyne.NewPos(5, 5)
+	drag := &granio.DragEvent{Dragged: granio.Delta{DX: -10, DY: -5}}
+	drag.Position = granio.NewPos(5, 5)
+	drag.AbsolutePosition = granio.NewPos(5, 5)
 	w.OnDragged(drag)
 	assert.Equal(t, float32(0), w.Position().X)
 	assert.Equal(t, float32(0), w.Position().Y)

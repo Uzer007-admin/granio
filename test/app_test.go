@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestTestApp_CloudProvider(t *testing.T) {
@@ -20,11 +20,11 @@ func TestFyneApp_transitionCloud(t *testing.T) {
 	a := NewApp()
 	p := &mockCloud{}
 	preferenceChanged := false
-	settingsChan := make(chan fyne.Settings, 1)
+	settingsChan := make(chan granio.Settings, 1)
 	a.Preferences().AddChangeListener(func() {
 		preferenceChanged = true
 	})
-	a.Settings().AddListener(func(s fyne.Settings) {
+	a.Settings().AddListener(func(s granio.Settings) {
 		go func() { settingsChan <- s }()
 	})
 	a.SetCloudProvider(p)

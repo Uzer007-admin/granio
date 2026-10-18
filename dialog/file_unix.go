@@ -5,15 +5,15 @@ package dialog
 import (
 	"path/filepath"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func (*fileDialog) getPlaces() []favoriteItem {
 	lister, err := storage.ListerForURI(storage.NewFileURI("/"))
 	if err != nil {
-		fyne.LogError("could not create lister for /", err)
+		granio.LogError("could not create lister for /", err)
 		return []favoriteItem{}
 	}
 	return []favoriteItem{{
@@ -23,9 +23,9 @@ func (*fileDialog) getPlaces() []favoriteItem {
 	}}
 }
 
-func isHidden(file fyne.URI) bool {
-	if file.Scheme() != fyne.URISchemeFile {
-		fyne.LogError("Cannot check if non file is hidden", nil)
+func isHidden(file granio.URI) bool {
+	if file.Scheme() != granio.URISchemeFile {
+		granio.LogError("Cannot check if non file is hidden", nil)
 		return false
 	}
 

@@ -1,0 +1,12 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/dbus/v5
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkCodecNumericArray/16-16 	  480013	      3123 ns/op	  40.99 MB/s	    1224 B/op	      43 allocs/op
+BenchmarkCodecNumericArray/16-16 	  408588	      2960 ns/op	  43.25 MB/s	    1224 B/op	      43 allocs/op
+BenchmarkCodecNumericArray/16-16 	  570189	      2603 ns/op	  49.17 MB/s	    1224 B/op	      43 allocs/op
+BenchmarkCodecNumericArray/4096-16         	    2436	    502998 ns/op	  65.15 MB/s	  229722 B/op	    8212 allocs/op
+BenchmarkCodecNumericArray/4096-16         	    2121	    629075 ns/op	  52.09 MB/s	  229725 B/op	    8212 allocs/op
+BenchmarkCodecNumericArray/4096-16         	    2222	    477050 ns/op	  68.69 MB/s	  229723 B/op	    8212 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/dbus/v5	9.052s

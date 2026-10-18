@@ -6,20 +6,20 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestSplitContainer_MinSize(t *testing.T) {
 	rectA := canvas.NewRectangle(color.Black)
-	rectA.SetMinSize(fyne.NewSize(10, 10))
+	rectA.SetMinSize(granio.NewSize(10, 10))
 	rectB := canvas.NewRectangle(color.Black)
-	rectB.SetMinSize(fyne.NewSize(10, 10))
+	rectB.SetMinSize(granio.NewSize(10, 10))
 	t.Run("Horizontal", func(t *testing.T) {
 		minSize := NewHSplit(rectA, rectB).MinSize()
 		assert.Equal(t, rectA.MinSize().Width+rectB.MinSize().Width+dividerThickness(nil), minSize.Width)
@@ -35,84 +35,84 @@ func TestSplitContainer_MinSize(t *testing.T) {
 func TestSplitContainer_Resize(t *testing.T) {
 	for name, tt := range map[string]struct {
 		horizontal       bool
-		size             fyne.Size
-		wantLeadingPos   fyne.Position
-		wantLeadingSize  fyne.Size
-		wantTrailingPos  fyne.Position
-		wantTrailingSize fyne.Size
+		size             granio.Size
+		wantLeadingPos   granio.Position
+		wantLeadingSize  granio.Size
+		wantTrailingPos  granio.Position
+		wantTrailingSize granio.Size
 	}{
 		"horizontal": {
 			true,
-			fyne.NewSize(100, 100),
-			fyne.NewPos(0, 0),
-			fyne.NewSize(50-dividerThickness(nil)/2, 100),
-			fyne.NewPos(50+dividerThickness(nil)/2, 0),
-			fyne.NewSize(50-dividerThickness(nil)/2, 100),
+			granio.NewSize(100, 100),
+			granio.NewPos(0, 0),
+			granio.NewSize(50-dividerThickness(nil)/2, 100),
+			granio.NewPos(50+dividerThickness(nil)/2, 0),
+			granio.NewSize(50-dividerThickness(nil)/2, 100),
 		},
 		"vertical": {
 			false,
-			fyne.NewSize(100, 100),
-			fyne.NewPos(0, 0),
-			fyne.NewSize(100, 50-dividerThickness(nil)/2),
-			fyne.NewPos(0, 50+dividerThickness(nil)/2),
-			fyne.NewSize(100, 50-dividerThickness(nil)/2),
+			granio.NewSize(100, 100),
+			granio.NewPos(0, 0),
+			granio.NewSize(100, 50-dividerThickness(nil)/2),
+			granio.NewPos(0, 50+dividerThickness(nil)/2),
+			granio.NewSize(100, 50-dividerThickness(nil)/2),
 		},
 		"horizontal insufficient width": {
 			true,
-			fyne.NewSize(20, 100),
-			fyne.NewPos(0, 0),
+			granio.NewSize(20, 100),
+			granio.NewPos(0, 0),
 			// minSize of leading is 1/3 of minSize of trailing
-			fyne.NewSize((20-dividerThickness(nil))/4, 100),
-			fyne.NewPos((20-dividerThickness(nil))/4+dividerThickness(nil), 0),
-			fyne.NewSize((20-dividerThickness(nil))*3/4, 100),
+			granio.NewSize((20-dividerThickness(nil))/4, 100),
+			granio.NewPos((20-dividerThickness(nil))/4+dividerThickness(nil), 0),
+			granio.NewSize((20-dividerThickness(nil))*3/4, 100),
 		},
 		"vertical insufficient height": {
 			false,
-			fyne.NewSize(100, 20),
-			fyne.NewPos(0, 0),
+			granio.NewSize(100, 20),
+			granio.NewPos(0, 0),
 			// minSize of leading is 1/3 of minSize of trailing
-			fyne.NewSize(100, (20-dividerThickness(nil))/4),
-			fyne.NewPos(0, (20-dividerThickness(nil))/4+dividerThickness(nil)),
-			fyne.NewSize(100, (20-dividerThickness(nil))*3/4),
+			granio.NewSize(100, (20-dividerThickness(nil))/4),
+			granio.NewPos(0, (20-dividerThickness(nil))/4+dividerThickness(nil)),
+			granio.NewSize(100, (20-dividerThickness(nil))*3/4),
 		},
 		"horizontal zero width": {
 			true,
-			fyne.NewSize(0, 100),
-			fyne.NewPos(0, 0),
-			fyne.NewSize(0, 100),
-			fyne.NewPos(dividerThickness(nil), 0),
-			fyne.NewSize(0, 100),
+			granio.NewSize(0, 100),
+			granio.NewPos(0, 0),
+			granio.NewSize(0, 100),
+			granio.NewPos(dividerThickness(nil), 0),
+			granio.NewSize(0, 100),
 		},
 		"horizontal zero height": {
 			true,
-			fyne.NewSize(100, 0),
-			fyne.NewPos(0, 0),
-			fyne.NewSize(50-dividerThickness(nil)/2, 0),
-			fyne.NewPos(50+dividerThickness(nil)/2, 0),
-			fyne.NewSize(50-dividerThickness(nil)/2, 0),
+			granio.NewSize(100, 0),
+			granio.NewPos(0, 0),
+			granio.NewSize(50-dividerThickness(nil)/2, 0),
+			granio.NewPos(50+dividerThickness(nil)/2, 0),
+			granio.NewSize(50-dividerThickness(nil)/2, 0),
 		},
 		"vertical zero width": {
 			false,
-			fyne.NewSize(0, 100),
-			fyne.NewPos(0, 0),
-			fyne.NewSize(0, 50-dividerThickness(nil)/2),
-			fyne.NewPos(0, 50+dividerThickness(nil)/2),
-			fyne.NewSize(0, 50-dividerThickness(nil)/2),
+			granio.NewSize(0, 100),
+			granio.NewPos(0, 0),
+			granio.NewSize(0, 50-dividerThickness(nil)/2),
+			granio.NewPos(0, 50+dividerThickness(nil)/2),
+			granio.NewSize(0, 50-dividerThickness(nil)/2),
 		},
 		"vertical zero height": {
 			false,
-			fyne.NewSize(100, 0),
-			fyne.NewPos(0, 0),
-			fyne.NewSize(100, 0),
-			fyne.NewPos(0, dividerThickness(nil)),
-			fyne.NewSize(100, 0),
+			granio.NewSize(100, 0),
+			granio.NewPos(0, 0),
+			granio.NewSize(100, 0),
+			granio.NewPos(0, dividerThickness(nil)),
+			granio.NewSize(100, 0),
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			objA := canvas.NewRectangle(color.White)
 			objB := canvas.NewRectangle(color.Black)
-			objA.SetMinSize(fyne.NewSize(10, 10))
-			objB.SetMinSize(fyne.NewSize(30, 30))
+			objA.SetMinSize(granio.NewSize(10, 10))
+			objB.SetMinSize(granio.NewSize(30, 30))
 			var c *Split
 			if tt.horizontal {
 				c = NewHSplit(objA, objB)
@@ -130,7 +130,7 @@ func TestSplitContainer_Resize(t *testing.T) {
 }
 
 func TestSplitContainer_SetRatio(t *testing.T) {
-	size := fyne.NewSize(100, 100)
+	size := granio.NewSize(100, 100)
 	usableLength := 100 - float64(dividerThickness(nil))
 
 	objA := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
@@ -183,7 +183,7 @@ func TestSplitContainer_SetRatio(t *testing.T) {
 }
 
 func TestSplitContainer_SetRatio_limits(t *testing.T) {
-	size := fyne.NewSize(50, 50)
+	size := granio.NewSize(50, 50)
 	objA := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	objA.SetMinSize(size)
 	objB := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
@@ -192,7 +192,7 @@ func TestSplitContainer_SetRatio_limits(t *testing.T) {
 		sc := NewHSplit(objA, objB)
 		t.Run("Leading", func(t *testing.T) {
 			sc.SetOffset(1.0)
-			sc.Resize(fyne.NewSize(200, 50))
+			sc.Resize(granio.NewSize(200, 50))
 			sizeA := objA.Size()
 			sizeB := objB.Size()
 			assert.Equal(t, 150-dividerThickness(nil), sizeA.Width)
@@ -202,7 +202,7 @@ func TestSplitContainer_SetRatio_limits(t *testing.T) {
 		})
 		t.Run("Trailing", func(t *testing.T) {
 			sc.SetOffset(0.0)
-			sc.Resize(fyne.NewSize(200, 50))
+			sc.Resize(granio.NewSize(200, 50))
 			sizeA := objA.Size()
 			sizeB := objB.Size()
 			assert.Equal(t, float32(50), sizeA.Width)
@@ -215,7 +215,7 @@ func TestSplitContainer_SetRatio_limits(t *testing.T) {
 		sc := NewVSplit(objA, objB)
 		t.Run("Leading", func(t *testing.T) {
 			sc.SetOffset(1.0)
-			sc.Resize(fyne.NewSize(50, 200))
+			sc.Resize(granio.NewSize(50, 200))
 			sizeA := objA.Size()
 			sizeB := objB.Size()
 			assert.Equal(t, float32(50), sizeA.Width)
@@ -225,7 +225,7 @@ func TestSplitContainer_SetRatio_limits(t *testing.T) {
 		})
 		t.Run("Trailing", func(t *testing.T) {
 			sc.SetOffset(0.0)
-			sc.Resize(fyne.NewSize(50, 200))
+			sc.Resize(granio.NewSize(50, 200))
 			sizeA := objA.Size()
 			sizeB := objB.Size()
 			assert.Equal(t, float32(50), sizeA.Width)
@@ -243,7 +243,7 @@ func TestSplitContainer_ThemeOverride(t *testing.T) {
 	w := test.NewWindow(split)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 	c := w.Canvas()
 
 	test.AssertRendersToImage(t, "split/default.png", c)
@@ -255,7 +255,7 @@ func TestSplitContainer_ThemeOverride(t *testing.T) {
 	normal := test.Theme()
 	bg := canvas.NewRectangle(normal.Color(theme.ColorNameBackground, theme.VariantDark))
 	w.SetContent(NewStack(bg, NewThemeOverride(split, normal)))
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 	test.AssertRendersToImage(t, "split/default.png", c)
 }
 
@@ -268,11 +268,11 @@ func TestSplitContainer_swap_contents(t *testing.T) {
 	expectedHeight := max(100, dl)
 
 	objA := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
-	objA.SetMinSize(fyne.NewSize(10, 10))
+	objA.SetMinSize(granio.NewSize(10, 10))
 	objB := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
-	objB.SetMinSize(fyne.NewSize(10, 10))
+	objB.SetMinSize(granio.NewSize(10, 10))
 	objC := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
-	objC.SetMinSize(fyne.NewSize(100, 100))
+	objC.SetMinSize(granio.NewSize(100, 100))
 	t.Run("Leading", func(t *testing.T) {
 		sc := NewHSplit(objA, objB)
 		minSize := sc.MinSize()
@@ -309,20 +309,20 @@ func TestSplitContainer_divider_cursor(t *testing.T) {
 }
 
 func TestSplitContainer_divider_drag(t *testing.T) {
-	size := fyne.NewSize(10, 10)
+	size := granio.NewSize(10, 10)
 	objA := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	objA.SetMinSize(size)
 	objB := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	objB.SetMinSize(size)
 	t.Run("Horizontal", func(t *testing.T) {
 		split := NewHSplit(objA, objB)
-		split.Resize(fyne.NewSize(105, 105))
+		split.Resize(granio.NewSize(105, 105))
 		divider := test.TempWidgetRenderer(t, split).(*splitContainerRenderer).divider
 		assert.Equal(t, 0.5, split.Offset)
 
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(13, 9)},
-			Dragged:    fyne.NewDelta(10, 0),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(13, 9)},
+			Dragged:    granio.NewDelta(10, 0),
 		})
 		assert.Equal(t, 0.6, split.Offset)
 
@@ -330,33 +330,33 @@ func TestSplitContainer_divider_drag(t *testing.T) {
 		assert.Equal(t, 0.6, split.Offset)
 
 		// test max limit
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(53, 9)},
-			Dragged:    fyne.NewDelta(54, 0),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(53, 9)},
+			Dragged:    granio.NewDelta(54, 0),
 		})
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(53, 9)},
-			Dragged:    fyne.NewDelta(54, 0),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(53, 9)},
+			Dragged:    granio.NewDelta(54, 0),
 		})
 		assert.Equal(t, 0.9, split.Offset)
 
 		// test returns to position after over-drag
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(-97, 9)},
-			Dragged:    fyne.NewDelta(-108, 0),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(-97, 9)},
+			Dragged:    granio.NewDelta(-108, 0),
 		})
 		divider.DragEnd()
 		assert.Equal(t, 0.6, split.Offset)
 	})
 	t.Run("Vertical", func(t *testing.T) {
 		split := NewVSplit(objA, objB)
-		split.Resize(fyne.NewSize(105, 105))
+		split.Resize(granio.NewSize(105, 105))
 		divider := test.TempWidgetRenderer(t, split).(*splitContainerRenderer).divider
 		assert.Equal(t, 0.5, split.Offset)
 
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(13, 9)},
-			Dragged:    fyne.NewDelta(0, 10),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(13, 9)},
+			Dragged:    granio.NewDelta(0, 10),
 		})
 		assert.Equal(t, 0.6, split.Offset)
 
@@ -364,20 +364,20 @@ func TestSplitContainer_divider_drag(t *testing.T) {
 		assert.Equal(t, 0.6, split.Offset)
 
 		// test max limit
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(9, 53)},
-			Dragged:    fyne.NewDelta(0, 54),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(9, 53)},
+			Dragged:    granio.NewDelta(0, 54),
 		})
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(9, 53)},
-			Dragged:    fyne.NewDelta(0, 54),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(9, 53)},
+			Dragged:    granio.NewDelta(0, 54),
 		})
 		assert.Equal(t, 0.9, split.Offset)
 
 		// test returns to position after over-drag
-		divider.Dragged(&fyne.DragEvent{
-			PointEvent: fyne.PointEvent{Position: fyne.NewPos(9, -97)},
-			Dragged:    fyne.NewDelta(0, -108),
+		divider.Dragged(&granio.DragEvent{
+			PointEvent: granio.PointEvent{Position: granio.NewPos(9, -97)},
+			Dragged:    granio.NewDelta(0, -108),
 		})
 		divider.DragEnd()
 		assert.Equal(t, 0.6, split.Offset)
@@ -385,20 +385,20 @@ func TestSplitContainer_divider_drag(t *testing.T) {
 }
 
 func TestSplitContainer_divider_drag_StartOffsetLessThanMinSize(t *testing.T) {
-	size := fyne.NewSize(30, 30)
+	size := granio.NewSize(30, 30)
 	objA := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	objA.SetMinSize(size)
 	objB := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	objB.SetMinSize(size)
 	t.Run("Horizontal", func(t *testing.T) {
 		split := NewHSplit(objA, objB)
-		split.Resize(fyne.NewSize(105, 105))
+		split.Resize(granio.NewSize(105, 105))
 		divider := test.TempWidgetRenderer(t, split).(*splitContainerRenderer).divider
 		t.Run("Leading", func(t *testing.T) {
 			split.SetOffset(0.1)
 
-			divider.Dragged(&fyne.DragEvent{
-				Dragged: fyne.NewDelta(10, 0),
+			divider.Dragged(&granio.DragEvent{
+				Dragged: granio.NewDelta(10, 0),
 			})
 			divider.DragEnd()
 
@@ -407,8 +407,8 @@ func TestSplitContainer_divider_drag_StartOffsetLessThanMinSize(t *testing.T) {
 		t.Run("Trailing", func(t *testing.T) {
 			split.SetOffset(0.9)
 
-			divider.Dragged(&fyne.DragEvent{
-				Dragged: fyne.NewDelta(-10, 0),
+			divider.Dragged(&granio.DragEvent{
+				Dragged: granio.NewDelta(-10, 0),
 			})
 			divider.DragEnd()
 
@@ -417,13 +417,13 @@ func TestSplitContainer_divider_drag_StartOffsetLessThanMinSize(t *testing.T) {
 	})
 	t.Run("Vertical", func(t *testing.T) {
 		split := NewVSplit(objA, objB)
-		split.Resize(fyne.NewSize(105, 105))
+		split.Resize(granio.NewSize(105, 105))
 		divider := test.TempWidgetRenderer(t, split).(*splitContainerRenderer).divider
 		t.Run("Leading", func(t *testing.T) {
 			split.SetOffset(0.1)
 
-			divider.Dragged(&fyne.DragEvent{
-				Dragged: fyne.NewDelta(0, 10),
+			divider.Dragged(&granio.DragEvent{
+				Dragged: granio.NewDelta(0, 10),
 			})
 			divider.DragEnd()
 
@@ -432,8 +432,8 @@ func TestSplitContainer_divider_drag_StartOffsetLessThanMinSize(t *testing.T) {
 		t.Run("Trailing", func(t *testing.T) {
 			split.SetOffset(0.9)
 
-			divider.Dragged(&fyne.DragEvent{
-				Dragged: fyne.NewDelta(0, -10),
+			divider.Dragged(&granio.DragEvent{
+				Dragged: granio.NewDelta(0, -10),
 			})
 			divider.DragEnd()
 
@@ -482,14 +482,14 @@ func TestSplitContainer_divider_MinSize(t *testing.T) {
 
 func TestSplitContainer_Hidden(t *testing.T) {
 	dt := dividerThickness(nil)
-	size := fyne.NewSize(10, 10)
+	size := granio.NewSize(10, 10)
 	objA := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	objA.SetMinSize(size)
 	objB := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 
 	t.Run("Horizontal_Leading", func(t *testing.T) {
 		sc := NewHSplit(objA, objB)
-		sc.Resize(fyne.NewSize(100, 100))
+		sc.Resize(granio.NewSize(100, 100))
 		assert.Equal(t, 50-(dt/2), sc.Trailing.Size().Width)
 
 		objA.Hide()
@@ -501,7 +501,7 @@ func TestSplitContainer_Hidden(t *testing.T) {
 	t.Run("Horizontal_Trailing", func(t *testing.T) {
 		objA.Show()
 		sc := NewHSplit(objA, objB)
-		sc.Resize(fyne.NewSize(100, 100))
+		sc.Resize(granio.NewSize(100, 100))
 		assert.Equal(t, 50-(dt/2), sc.Leading.Size().Width)
 
 		objB.Hide()
@@ -511,7 +511,7 @@ func TestSplitContainer_Hidden(t *testing.T) {
 	t.Run("Vertical_Leading", func(t *testing.T) {
 		objB.Show()
 		sc := NewVSplit(objA, objB)
-		sc.Resize(fyne.NewSize(100, 100))
+		sc.Resize(granio.NewSize(100, 100))
 		assert.Equal(t, 50-(dt/2), sc.Trailing.Size().Height)
 
 		objA.Hide()
@@ -521,7 +521,7 @@ func TestSplitContainer_Hidden(t *testing.T) {
 	t.Run("Vertical_Trailing", func(t *testing.T) {
 		objA.Show()
 		sc := NewVSplit(objA, objB)
-		sc.Resize(fyne.NewSize(100, 100))
+		sc.Resize(granio.NewSize(100, 100))
 		assert.Equal(t, 50-(dt/2), sc.Leading.Size().Height)
 
 		objB.Hide()
@@ -531,7 +531,7 @@ func TestSplitContainer_Hidden(t *testing.T) {
 	t.Run("MinSize", func(t *testing.T) {
 		objA.Show()
 		objB.Hide()
-		objB.SetMinSize(fyne.NewSize(10, 10))
+		objB.SetMinSize(granio.NewSize(10, 10))
 		sc := NewVSplit(objA, objB)
 		assert.Equal(t, objA.MinSize(), sc.MinSize())
 	})
@@ -571,7 +571,7 @@ type refreshCountingWidget struct {
 	refreshCount int
 }
 
-func (*refreshCountingWidget) CreateRenderer() fyne.WidgetRenderer {
+func (*refreshCountingWidget) CreateRenderer() granio.WidgetRenderer {
 	return widget.NewSimpleRenderer(canvas.NewRectangle(color.Transparent))
 }
 

@@ -5,14 +5,14 @@ package test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // NewTempWindow creates and registers a new window for test purposes.
 // This window will get removed automatically once the running test ends.
 //
 // Since: 2.5
-func NewTempWindow(t testing.TB, content fyne.CanvasObject) fyne.Window {
+func NewTempWindow(t testing.TB, content granio.CanvasObject) granio.Window {
 	window := NewWindow(content)
 	t.Cleanup(window.Close)
 	return window

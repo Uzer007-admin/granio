@@ -3,10 +3,10 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -71,7 +71,7 @@ func TestSlider_HorizontalLayout(t *testing.T) {
 	app.Settings().SetTheme(test.Theme())
 
 	slider := NewSlider(0, 1)
-	slider.Resize(fyne.NewSize(100, 10))
+	slider.Resize(granio.NewSize(100, 10))
 
 	render := test.TempWidgetRenderer(t, slider).(*sliderRenderer)
 	wSize := render.slider.Size()
@@ -89,7 +89,7 @@ func TestSlider_HorizontalLayout(t *testing.T) {
 
 	w := test.NewWindow(slider)
 	defer w.Close()
-	w.Resize(fyne.NewSize(220, 50))
+	w.Resize(granio.NewSize(220, 50))
 
 	test.AssertRendersToMarkup(t, "slider/horizontal.xml", w.Canvas())
 }
@@ -103,7 +103,7 @@ func TestSlider_MinSize(t *testing.T) {
 
 func TestSlider_OutOfRange(t *testing.T) {
 	slider := NewSlider(2, 5)
-	slider.Resize(fyne.NewSize(100, 10))
+	slider.Resize(granio.NewSize(100, 10))
 
 	assert.Equal(t, float64(2), slider.Value)
 }
@@ -114,7 +114,7 @@ func TestSlider_VerticalLayout(t *testing.T) {
 
 	slider := NewSlider(0, 1)
 	slider.Orientation = Vertical
-	slider.Resize(fyne.NewSize(10, 100))
+	slider.Resize(granio.NewSize(10, 100))
 
 	render := test.TempWidgetRenderer(t, slider).(*sliderRenderer)
 	wSize := render.slider.Size()
@@ -132,7 +132,7 @@ func TestSlider_VerticalLayout(t *testing.T) {
 
 	w := test.NewWindow(slider)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 220))
+	w.Resize(granio.NewSize(50, 220))
 
 	test.AssertRendersToMarkup(t, "slider/vertical.xml", w.Canvas())
 }
@@ -153,33 +153,33 @@ func TestSlider_OnChanged(t *testing.T) {
 	slider.SetValue(0.5)
 	assert.Equal(t, 0, changes)
 
-	drag := &fyne.DragEvent{}
-	drag.Position = fyne.NewPos(25, 2)
+	drag := &granio.DragEvent{}
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 1, changes)
 
-	drag.Position = fyne.NewPos(25, 2)
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 1, changes)
 
-	drag.Position = fyne.NewPos(50, 2)
+	drag.Position = granio.NewPos(50, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 2, changes)
 
-	tap := &fyne.PointEvent{}
-	tap.Position = fyne.NewPos(25, 2)
+	tap := &granio.PointEvent{}
+	tap.Position = granio.NewPos(25, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 3, changes)
 
-	tap.Position = fyne.NewPos(25, 2)
+	tap.Position = granio.NewPos(25, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 3, changes)
 
-	tap.Position = fyne.NewPos(50, 2)
+	tap.Position = granio.NewPos(50, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 4, changes)
 
-	slider.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	slider.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.Equal(t, 5, changes)
 }
 
@@ -199,34 +199,34 @@ func TestSlider_OnChangeEnded(t *testing.T) {
 	slider.SetValue(0.5)
 	assert.Equal(t, 0, changes)
 
-	drag := &fyne.DragEvent{}
-	drag.Position = fyne.NewPos(25, 2)
+	drag := &granio.DragEvent{}
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 0, changes)
 
-	drag.Position = fyne.NewPos(25, 2)
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 0, changes)
 
-	drag.Position = fyne.NewPos(50, 2)
+	drag.Position = granio.NewPos(50, 2)
 	slider.Dragged(drag)
 	slider.DragEnd()
 	assert.Equal(t, 1, changes)
 
-	tap := &fyne.PointEvent{}
-	tap.Position = fyne.NewPos(25, 2)
+	tap := &granio.PointEvent{}
+	tap.Position = granio.NewPos(25, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 2, changes)
 
-	tap.Position = fyne.NewPos(25, 2)
+	tap.Position = granio.NewPos(25, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 2, changes)
 
-	tap.Position = fyne.NewPos(50, 2)
+	tap.Position = granio.NewPos(50, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 3, changes)
 
-	slider.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	slider.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.Equal(t, 4, changes)
 }
 
@@ -247,29 +247,29 @@ func TestSlider_OnChanged_Float(t *testing.T) {
 	slider.SetValue(0.15)
 	assert.Equal(t, 0, changes)
 
-	drag := &fyne.DragEvent{}
-	drag.Position = fyne.NewPos(25, 2)
+	drag := &granio.DragEvent{}
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 1, changes)
 
-	drag.Position = fyne.NewPos(25, 2)
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 1, changes)
 
-	drag.Position = fyne.NewPos(50, 2)
+	drag.Position = granio.NewPos(50, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 2, changes)
 
-	tap := &fyne.PointEvent{}
-	tap.Position = fyne.NewPos(25, 2)
+	tap := &granio.PointEvent{}
+	tap.Position = granio.NewPos(25, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 3, changes)
 
-	tap.Position = fyne.NewPos(25, 2)
+	tap.Position = granio.NewPos(25, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 3, changes)
 
-	tap.Position = fyne.NewPos(50, 2)
+	tap.Position = granio.NewPos(50, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 4, changes)
 
@@ -289,7 +289,7 @@ func TestSlider_SetValue(t *testing.T) {
 }
 
 func TestSlider_FocusDesktop(t *testing.T) {
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		return
 	}
 	slider := NewSlider(0, 10)
@@ -314,8 +314,8 @@ func TestSlider_Focus(t *testing.T) {
 	slider.MouseOut()
 	assert.False(t, slider.hovered)
 
-	left := &fyne.KeyEvent{Name: fyne.KeyLeft}
-	right := &fyne.KeyEvent{Name: fyne.KeyRight}
+	left := &granio.KeyEvent{Name: granio.KeyLeft}
+	right := &granio.KeyEvent{Name: granio.KeyRight}
 
 	for i := 1; i <= int(slider.Max); i++ {
 		slider.TypedKey(right)
@@ -334,8 +334,8 @@ func TestSlider_Focus(t *testing.T) {
 	assert.Equal(t, slider.Min, slider.Value)
 
 	slider.Orientation = Vertical
-	up := &fyne.KeyEvent{Name: fyne.KeyUp}
-	down := &fyne.KeyEvent{Name: fyne.KeyDown}
+	up := &granio.KeyEvent{Name: granio.KeyUp}
+	down := &granio.KeyEvent{Name: granio.KeyDown}
 
 	slider.TypedKey(up)
 	assert.Equal(t, slider.Min+1, slider.Value)
@@ -353,17 +353,17 @@ func TestSlider_Disabled(t *testing.T) {
 		changes++
 	}
 
-	tap := &fyne.PointEvent{}
-	tap.Position = fyne.NewPos(30, 2)
+	tap := &granio.PointEvent{}
+	tap.Position = granio.NewPos(30, 2)
 	slider.Tapped(tap)
 	assert.Equal(t, 0, changes)
 
-	drag := &fyne.DragEvent{}
-	drag.Position = fyne.NewPos(25, 2)
+	drag := &granio.DragEvent{}
+	drag.Position = granio.NewPos(25, 2)
 	slider.Dragged(drag)
 	assert.Equal(t, 0, changes)
 
-	slider.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	slider.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, 0, changes)
 
 	slider.Enable()

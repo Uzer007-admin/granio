@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // scheduleFile is the cache entry name used to persist pending schedules.
@@ -23,7 +23,7 @@ const scheduleFile = "fyne-scheduled-notifications.json"
 
 // FireFunc delivers a notification. It is invoked by the scheduler when a timer
 // fires or when a stored schedule's delivery time has passed at startup.
-type FireFunc func(n *fyne.Notification)
+type FireFunc func(n *granio.Notification)
 
 // Entry is the persisted record for a single pending notification.
 type Entry struct {
@@ -34,9 +34,9 @@ type Entry struct {
 }
 
 // Scheduler manages a set of pending in-process scheduled notifications, persisting
-// them to a [fyne.Cache] so that schedules survive an app restart.
+// them to a [granio.Cache] so that schedules survive an app restart.
 type Scheduler struct {
-	cache fyne.Cache
+	cache granio.Cache
 	fire  FireFunc
 
 	mu      sync.Mutex
@@ -47,7 +47,7 @@ type Scheduler struct {
 
 // New returns a new Scheduler that persists to the given cache and delivers via fire.
 // Call [Scheduler.Start] once the application is ready to deliver notifications.
-func New(cache fyne.Cache, fire FireFunc) *Scheduler {
+func New(cache granio.Cache, fire FireFunc) *Scheduler {
 	return &Scheduler{
 		cache:   cache,
 		fire:    fire,
@@ -89,7 +89,7 @@ func (s *Scheduler) Start() {
 
 // Schedule queues a notification for delivery at the given time, returning the
 // generated ID. An error is returned if when is in the past or persistence fails.
-func (s *Scheduler) Schedule(n *fyne.Notification, when time.Time) (string, error) {
+func (s *Scheduler) Schedule(n *granio.Notification, when time.Time) (string, error) {
 	if n == nil {
 		return "", errors.New("nil notification")
 	}
@@ -174,7 +174,7 @@ func (s *Scheduler) deliver(e *Entry) {
 	if s.fire == nil {
 		return
 	}
-	s.fire(&fyne.Notification{Title: e.Title, Content: e.Content})
+	s.fire(&granio.Notification{Title: e.Title, Content: e.Content})
 }
 
 // saveLocked writes the current entries map to the cache. Must be called with s.mu held.
@@ -211,7 +211,7 @@ func (s *Scheduler) loadLocked() []*Entry {
 
 	var list []*Entry
 	if err = json.NewDecoder(r).Decode(&list); err != nil {
-		fyne.LogError("Failed to read scheduled notifications", err)
+		granio.LogError("Failed to read scheduled notifications", err)
 		return nil
 	}
 	return list

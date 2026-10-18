@@ -2,8 +2,8 @@
 
 package glfw
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func setupNativeMenu(_ *window, _ *fyne.MainMenu) {
+func setupNativeMenu(_ *window, _ *granio.MainMenu) {
 	// no-op
 }

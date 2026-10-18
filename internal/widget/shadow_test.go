@@ -3,12 +3,12 @@ package widget_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,10 +24,10 @@ func TestShadow_ApplyTheme(t *testing.T) {
 	w := test.NewWindow(c)
 	w.SetPadded(false)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
-	c.Resize(fyne.NewSize(30, 30))
-	c.Move(fyne.NewPos(10, 10))
+	c.Resize(granio.NewSize(30, 30))
+	c.Move(granio.NewPos(10, 10))
 	test.AssertImageMatches(t, "shadow/theme_default.png", w.Canvas().Capture())
 
 	test.ApplyTheme(t, test.NewTheme())
@@ -45,10 +45,10 @@ func TestShadow_AroundShadow(t *testing.T) {
 	w := test.NewWindow(c)
 	w.SetPadded(false)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
-	c.Resize(fyne.NewSize(30, 30))
-	c.Move(fyne.NewPos(10, 10))
+	c.Resize(granio.NewSize(30, 30))
+	c.Move(granio.NewPos(10, 10))
 	test.AssertImageMatches(t, "shadow/around.png", w.Canvas().Capture())
 }
 
@@ -58,14 +58,14 @@ func TestShadow_Transparency(t *testing.T) {
 	s := widget.NewShadow(widget.ShadowAround, shadowLevel)
 	w := test.NewWindow(s)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
-	s.Resize(fyne.NewSize(40, 20))
-	s.Move(fyne.NewPos(5, 15))
+	s.Resize(granio.NewSize(40, 20))
+	s.Move(granio.NewPos(5, 15))
 	s2 := widget.NewShadow(widget.ShadowAround, shadowLevel)
 	w.Canvas().Overlays().Add(s2)
-	s2.Resize(fyne.NewSize(20, 40))
-	s2.Move(fyne.NewPos(15, 5))
+	s2.Resize(granio.NewSize(20, 40))
+	s2.Move(granio.NewPos(15, 5))
 	test.AssertImageMatches(t, "shadow/transparency.png", w.Canvas().Capture())
 }
 
@@ -75,15 +75,15 @@ func TestShadow_BottomShadow(t *testing.T) {
 	s := widget.NewShadow(widget.ShadowBottom, shadowLevel)
 	w := test.NewWindow(s)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
-	s.Resize(fyne.NewSize(30, 30))
-	s.Move(fyne.NewPos(10, 10))
+	s.Resize(granio.NewSize(30, 30))
+	s.Move(granio.NewPos(10, 10))
 	test.AssertImageMatches(t, "shadow/bottom.png", w.Canvas().Capture())
 }
 
 func TestShadow_MinSize(t *testing.T) {
-	assert.Equal(t, fyne.NewSize(0, 0), widget.NewShadow(widget.ShadowAround, 1).MinSize())
+	assert.Equal(t, granio.NewSize(0, 0), widget.NewShadow(widget.ShadowAround, 1).MinSize())
 }
 
 func TestShadow_TopShadow(t *testing.T) {
@@ -92,9 +92,9 @@ func TestShadow_TopShadow(t *testing.T) {
 	s := widget.NewShadow(widget.ShadowTop, shadowLevel)
 	w := test.NewWindow(s)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50))
 
-	s.Resize(fyne.NewSize(30, 30))
-	s.Move(fyne.NewPos(10, 10))
+	s.Resize(granio.NewSize(30, 30))
+	s.Move(granio.NewPos(10, 10))
 	test.AssertImageMatches(t, "shadow/top.png", w.Canvas().Capture())
 }

@@ -6,9 +6,9 @@ import (
 	"context"
 	"syscall/js"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 
 	"github.com/hack-pad/go-indexeddb/idb"
 )
@@ -66,7 +66,7 @@ func NewIndexDBRepository() (*IndexDBRepository, error) {
 	return &IndexDBRepository{db: db}, nil
 }
 
-func (r *IndexDBRepository) Exists(u fyne.URI) (bool, error) {
+func (r *IndexDBRepository) Exists(u granio.URI) (bool, error) {
 	p := u.Path()
 	ctx := context.Background()
 	txn, err := r.db.Transaction(idb.TransactionReadOnly, "meta")
@@ -113,7 +113,7 @@ func get(db *idb.Database, s, p string) (js.Value, error) {
 	return v, nil
 }
 
-func (r *IndexDBRepository) CanList(u fyne.URI) (bool, error) {
+func (r *IndexDBRepository) CanList(u granio.URI) (bool, error) {
 	p := u.Path()
 
 	v, err := get(r.db, "meta", p)
@@ -158,7 +158,7 @@ func mkdir(db *idb.Database, dir, parent string) error {
 	return err
 }
 
-func (r *IndexDBRepository) CreateListable(u fyne.URI) error {
+func (r *IndexDBRepository) CreateListable(u granio.URI) error {
 	pu, err := storage.Parent(u)
 	if err != nil {
 		return err
@@ -166,7 +166,7 @@ func (r *IndexDBRepository) CreateListable(u fyne.URI) error {
 	return mkdir(r.db, u.Path(), pu.Path())
 }
 
-func (r *IndexDBRepository) CanRead(u fyne.URI) (bool, error) {
+func (r *IndexDBRepository) CanRead(u granio.URI) (bool, error) {
 	p := u.Path()
 
 	v, err := get(r.db, "meta", p)
@@ -185,7 +185,7 @@ func (r *IndexDBRepository) Destroy(scheme string) {
 	// do nothing
 }
 
-func (r *IndexDBRepository) List(u fyne.URI) ([]fyne.URI, error) {
+func (r *IndexDBRepository) List(u granio.URI) ([]granio.URI, error) {
 	p := u.Path()
 	ctx := context.Background()
 	txn, err := r.db.Transaction(idb.TransactionReadOnly, "meta")
@@ -220,7 +220,7 @@ func (r *IndexDBRepository) List(u fyne.URI) ([]fyne.URI, error) {
 		return nil, err
 	}
 
-	us := make([]fyne.URI, len(paths))
+	us := make([]granio.URI, len(paths))
 	for n, path := range paths {
 		us[n], err = storage.ParseURI(path)
 		if err != nil {
@@ -230,7 +230,7 @@ func (r *IndexDBRepository) List(u fyne.URI) ([]fyne.URI, error) {
 	return us, nil
 }
 
-func (r *IndexDBRepository) CanWrite(u fyne.URI) (bool, error) {
+func (r *IndexDBRepository) CanWrite(u granio.URI) (bool, error) {
 	p := u.Path()
 	v, err := get(r.db, "meta", p)
 	if err != nil {
@@ -249,7 +249,7 @@ func (r *IndexDBRepository) CanWrite(u fyne.URI) (bool, error) {
 	return !isDir.Bool(), nil
 }
 
-func (r *IndexDBRepository) Delete(u fyne.URI) error {
+func (r *IndexDBRepository) Delete(u granio.URI) error {
 	p := u.Path()
 	ctx := context.Background()
 	txn, err := r.db.Transaction(idb.TransactionReadWrite, "meta", "data")
@@ -281,7 +281,7 @@ func (r *IndexDBRepository) Delete(u fyne.URI) error {
 	return datareq.Await(ctx)
 }
 
-func (r *IndexDBRepository) Reader(u fyne.URI) (fyne.URIReadCloser, error) {
+func (r *IndexDBRepository) Reader(u granio.URI) (granio.URIReadCloser, error) {
 	pu, err := storage.Parent(u)
 	if err != nil {
 		return nil, err
@@ -294,7 +294,7 @@ func (r *IndexDBRepository) Reader(u fyne.URI) (fyne.URIReadCloser, error) {
 	}, nil
 }
 
-func (r *IndexDBRepository) Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
+func (r *IndexDBRepository) Writer(u granio.URI) (granio.URIWriteCloser, error) {
 	pu, err := storage.Parent(u)
 	if err != nil {
 		return nil, err
@@ -308,7 +308,7 @@ func (r *IndexDBRepository) Writer(u fyne.URI) (fyne.URIWriteCloser, error) {
 	}, nil
 }
 
-func (r *IndexDBRepository) Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
+func (r *IndexDBRepository) Appender(u granio.URI) (granio.URIWriteCloser, error) {
 	pu, err := storage.Parent(u)
 	if err != nil {
 		return nil, err
@@ -322,18 +322,18 @@ func (r *IndexDBRepository) Appender(u fyne.URI) (fyne.URIWriteCloser, error) {
 	}, nil
 }
 
-func (r *IndexDBRepository) Copy(src, dst fyne.URI) error {
+func (r *IndexDBRepository) Copy(src, dst granio.URI) error {
 	return repository.GenericCopy(src, dst)
 }
 
-func (r *IndexDBRepository) Move(source, destination fyne.URI) error {
+func (r *IndexDBRepository) Move(source, destination granio.URI) error {
 	return repository.GenericMove(source, destination)
 }
 
-func (r *IndexDBRepository) Child(u fyne.URI, component string) (fyne.URI, error) {
+func (r *IndexDBRepository) Child(u granio.URI, component string) (granio.URI, error) {
 	return repository.GenericChild(u, component)
 }
 
-func (r *IndexDBRepository) Parent(u fyne.URI) (fyne.URI, error) {
+func (r *IndexDBRepository) Parent(u granio.URI) (granio.URI, error) {
 	return repository.GenericParent(u)
 }

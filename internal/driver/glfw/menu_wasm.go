@@ -2,9 +2,9 @@
 
 package glfw
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func addMissingQuitForMainMenu(menus *fyne.MainMenu, w *window) *fyne.MainMenu {
+func addMissingQuitForMainMenu(menus *granio.MainMenu, w *window) *granio.MainMenu {
 	// no-op for a web browser
 	return menus
 }

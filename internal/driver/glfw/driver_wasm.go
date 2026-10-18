@@ -6,16 +6,16 @@ import (
 	"image/color"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
 )
 
 const webDefaultDoubleTapDelay = 300 * time.Millisecond
 
-func (d *gLDriver) CreateWindow(title string) (win fyne.Window) {
+func (d *gLDriver) CreateWindow(title string) (win granio.Window) {
 	// handling multiple windows by overlaying on the root for web
-	var root fyne.Window
+	var root granio.Window
 	hasVisible := false
 	for _, w := range d.windows {
 		if w.(*window).visible {
@@ -46,7 +46,7 @@ func (d *gLDriver) HasSecondaryDisplay() bool {
 	return false
 }
 
-func (d *gLDriver) SetSystemTrayMenu(m *fyne.Menu) {
+func (d *gLDriver) SetSystemTrayMenu(m *granio.Menu) {
 	// no-op for wasm apps using this driver
 }
 

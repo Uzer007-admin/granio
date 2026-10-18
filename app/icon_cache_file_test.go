@@ -7,18 +7,18 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 //go:embed testdata/fyne.png
 var iconData []byte
 
 func TestCachedIcon_PATH(t *testing.T) {
-	SetMetadata(fyne.AppMetadata{})
+	SetMetadata(granio.AppMetadata{})
 	a := &fyneApp{uniqueID: "icontest"}
 	assert.Equal(t, "", a.cachedIconPath())
 
-	a.SetIcon(fyne.NewStaticResource("dummy", iconData))
+	a.SetIcon(granio.NewStaticResource("dummy", iconData))
 	path := a.cachedIconPath()
 	if path == "" {
 		t.Error("cache path not constructed")

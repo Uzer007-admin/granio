@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestProgressInfiniteDialog_MinSize(t *testing.T) {
@@ -23,20 +23,20 @@ func TestProgressInfiniteDialog_MinSize(t *testing.T) {
 
 func TestProgressInfiniteDialog_Resize(t *testing.T) {
 	window := test.NewWindow(nil)
-	window.Resize(fyne.NewSize(600, 400))
+	window.Resize(granio.NewSize(600, 400))
 	defer window.Close()
 	d := NewProgressInfinite("title", "message", window)
 	d.Show() // we cannot check window size if not shown
 
 	// Test resize - normal size scenario
-	size := fyne.NewSize(300, 180) // normal size to fit (600,400)
+	size := granio.NewSize(300, 180) // normal size to fit (600,400)
 	d.Resize(size)
 	expectedWidth := float32(300)
 	assert.Equal(t, expectedWidth, d.win.Content.Size().Width)
 	expectedHeight := float32(180)
 	assert.Equal(t, expectedHeight, d.win.Content.Size().Height)
 	// Test resize - normal size scenario again
-	size = fyne.NewSize(310, 280) // normal size to fit (600,400)
+	size = granio.NewSize(310, 280) // normal size to fit (600,400)
 	d.Resize(size)
 	expectedWidth = 310
 	assert.Equal(t, expectedWidth, d.win.Content.Size().Width)
@@ -45,7 +45,7 @@ func TestProgressInfiniteDialog_Resize(t *testing.T) {
 	d.Hide()
 
 	// Test resize - greater than max size scenario
-	size = fyne.NewSize(800, 600)
+	size = granio.NewSize(800, 600)
 	d.Resize(size)
 	d.Show()
 	expectedWidth = 600                                // since win width only 600
@@ -57,7 +57,7 @@ func TestProgressInfiniteDialog_Resize(t *testing.T) {
 	d.Hide()
 
 	// Test again - tiny size
-	size = fyne.NewSize(1, 1)
+	size = granio.NewSize(1, 1)
 	d.Resize(size)
 	expectedWidth = d.win.Content.MinSize().Width
 	assert.Equal(t, expectedWidth, d.win.Content.Size().Width)

@@ -1,0 +1,8 @@
+=== RUN   TestATSPINativeClient
+--- PASS: TestATSPINativeClient (0.39s)
+=== RUN   TestATSPINativeOffscreenHierarchyAndCache
+--- PASS: TestATSPINativeOffscreenHierarchyAndCache (0.07s)
+=== RUN   TestNativeCanvasAndPopupMaterials
+--- PASS: TestNativeCanvasAndPopupMaterials (0.10s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.832s

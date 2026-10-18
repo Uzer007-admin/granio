@@ -14,7 +14,7 @@ var (
 	// Since: 2.0
 	ErrOperationNotSupported = errors.New("operation not supported for this URI")
 
-	// ErrURIRoot should be thrown by fyne.URI implementations when the caller
+	// ErrURIRoot should be thrown by granio.URI implementations when the caller
 	// attempts to take the parent of the root. This way, downstream code that
 	// wants to programmatically walk up a URIs parent's will know when to stop
 	// iterating.

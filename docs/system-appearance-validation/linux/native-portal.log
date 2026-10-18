@@ -1,0 +1,4 @@
+=== RUN   TestNativeXDGAppearanceProviderLifecycle
+--- PASS: TestNativeXDGAppearanceProviderLifecycle (0.01s)
+PASS
+ok  	fyne.io/fyne/v2/app	1.039s

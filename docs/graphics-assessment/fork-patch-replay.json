@@ -1,0 +1,37 @@
+[
+  {
+    "patch": "gl-fork.patch",
+    "base": "4566fea9a2762279aa48096fa3a0339db7406044",
+    "sha256": "96c2971bc5d35cc3efd0f232817628a161c3d946b46c167f95da0186720c16fe",
+    "identical": true,
+    "files": 216
+  },
+  {
+    "patch": "glfw-fork.patch",
+    "base": "d41da22a9587f777098f96d37014f6cdd35d1afb",
+    "sha256": "cc30d659ac3d4bda464f9ec04aa41a4c69aa79f6a2ff5ff2bf60800c60ccc0fc",
+    "identical": true,
+    "files": 721
+  },
+  {
+    "patch": "glow-fork.patch",
+    "base": "394d535962b324f7dd84b9244afbd952a4fe717e",
+    "sha256": "c0a0c792080715506cd9f35e25c53fc28b25bf7943983468d9816081c8126666",
+    "identical": true,
+    "files": 549
+  },
+  {
+    "patch": "dbus-fork.patch",
+    "base": "4ad75260bdbdd09d51af62b316a17dd60c6aa0e3",
+    "sha256": "718567cd25f9026ddfed30ef234ea4e5beb2104988a01a8c633f0c3a10742b2c",
+    "identical": true,
+    "files": 118
+  },
+  {
+    "patch": "apps-fork.patch",
+    "base": "c977ab9a872c439a5e84c0edaaf533f81cf19e70",
+    "sha256": "5087f9ce114822874877c288ce8dd67caea165b6e1a0d1f285ee7338f24b55ab",
+    "identical": true,
+    "files": 20
+  }
+]

@@ -3,15 +3,15 @@ package container
 import (
 	"testing"
 
-	internalTest "fyne.io/fyne/v2/internal/test"
+	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestTabButton_Icon_Change(t *testing.T) {
@@ -26,7 +26,7 @@ func TestTabButton_Icon_Change(t *testing.T) {
 }
 
 func TestTabButton_ContentFitsMinSize(t *testing.T) {
-	for name, th := range map[string]fyne.Theme{
+	for name, th := range map[string]granio.Theme{
 		"default": theme.DefaultTheme(),
 		"test":    test.Theme(),
 		"custom":  test.NewTheme(),
@@ -93,7 +93,7 @@ func TestAppTabs_IconOnlyFitsButton(t *testing.T) {
 				tabs.SetTabLocation(location)
 				w := test.NewTempWindow(t, override)
 				w.SetPadded(false)
-				w.Resize(fyne.NewSize(150, 150))
+				w.Resize(granio.NewSize(150, 150))
 
 				b := item.button
 				r := cache.Renderer(b).(*tabButtonRenderer)
@@ -112,7 +112,7 @@ func TestTab_ThemeChange(t *testing.T) {
 		NewTabItem("b", widget.NewLabel("b")),
 	)
 	w := test.NewTempWindow(t, tabs)
-	w.Resize(fyne.NewSize(180, 120))
+	w.Resize(granio.NewSize(180, 120))
 
 	initial := w.Canvas().Capture()
 

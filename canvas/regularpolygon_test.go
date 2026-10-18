@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -30,12 +30,12 @@ func TestPolygon_SidesRotation(t *testing.T) {
 		Sides:        3,
 	}
 
-	polygon.Resize(fyne.NewSize(50, 50))
+	polygon.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "polygon.xml", polygon)
 
 	c := software.NewCanvas()
 	c.SetContent(polygon)
-	c.Resize(fyne.NewSize(150, 150))
+	c.Resize(granio.NewSize(150, 150))
 	polygon.Angle = 0
 	polygon.CornerRadius = 0
 	test.AssertRendersToImage(t, "polygon_stroke.png", c)
@@ -69,12 +69,12 @@ func TestPolygon_RadiusMaximum(t *testing.T) {
 		Sides:        3,
 	}
 
-	polygon.Resize(fyne.NewSize(50, 50))
+	polygon.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "maximum_rounded_polygon.xml", polygon)
 
 	c := software.NewCanvas()
 	c.SetContent(polygon)
-	c.Resize(fyne.NewSize(150, 150))
+	c.Resize(granio.NewSize(150, 150))
 
 	test.AssertRendersToImage(t, "maximum_rounded_polygon.png", c)
 

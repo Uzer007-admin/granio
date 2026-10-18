@@ -3,10 +3,10 @@ package dialog
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func Test_colorGreyscalePicker_Layout(t *testing.T) {
@@ -15,7 +15,7 @@ func Test_colorGreyscalePicker_Layout(t *testing.T) {
 	color := newColorGreyscalePicker(nil)
 
 	window := test.NewTempWindow(t, container.NewCenter(color))
-	window.Resize(color.MinSize().Max(fyne.NewSize(360, 60)))
+	window.Resize(color.MinSize().Max(granio.NewSize(360, 60)))
 
 	test.AssertRendersToImage(t, "color/picker_layout_greyscale.png", window.Canvas())
 }
@@ -26,7 +26,7 @@ func Test_colorBasicPicker_Layout(t *testing.T) {
 	color := newColorBasicPicker(nil)
 
 	window := test.NewTempWindow(t, container.NewCenter(color))
-	window.Resize(color.MinSize().Max(fyne.NewSize(360, 60)))
+	window.Resize(color.MinSize().Max(granio.NewSize(360, 60)))
 
 	test.AssertRendersToImage(t, "color/picker_layout_basic.png", window.Canvas())
 }
@@ -40,7 +40,7 @@ func Test_colorRecentPicker_Layout(t *testing.T) {
 	color := newColorRecentPicker(nil)
 
 	window := test.NewTempWindow(t, container.NewCenter(color))
-	window.Resize(color.MinSize().Max(fyne.NewSize(360, 60)))
+	window.Resize(color.MinSize().Max(granio.NewSize(360, 60)))
 
 	test.AssertRendersToImage(t, "color/picker_layout_recent.png", window.Canvas())
 }
@@ -53,7 +53,7 @@ func Test_colorAdvancedPicker_Layout(t *testing.T) {
 	color.Refresh()
 
 	window := test.NewTempWindow(t, container.NewCenter(color))
-	window.Resize(color.MinSize().Max(fyne.NewSize(200, 200)))
+	window.Resize(color.MinSize().Max(granio.NewSize(200, 200)))
 
 	test.AssertRendersToImage(t, "color/picker_layout_advanced.png", window.Canvas())
 }

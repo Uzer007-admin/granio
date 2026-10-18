@@ -1,0 +1,12 @@
+{
+  "os": {
+    "Caption": "Майкрософт Windows 11 Pro",
+    "Version": "10.0.26300",
+    "BuildNumber": "26300"
+  },
+  "gpu": {
+    "Name": "NVIDIA GeForce RTX 4080 SUPER",
+    "DriverVersion": "32.0.16.1692"
+  },
+  "go": "go version go1.27.1 windows/amd64"
+}

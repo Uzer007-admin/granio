@@ -3,8 +3,8 @@ package app_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestApplySettings_BeforeContentSet(*testing.T) {

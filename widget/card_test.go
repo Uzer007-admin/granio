@@ -4,11 +4,11 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -39,7 +39,7 @@ func TestCard_Layout(t *testing.T) {
 	for name, tt := range map[string]struct {
 		title, subtitle string
 		icon            *canvas.Image
-		content         fyne.CanvasObject
+		content         granio.CanvasObject
 	}{
 		"title": {
 			title:    "Title",
@@ -105,8 +105,8 @@ func TestCard_Layout(t *testing.T) {
 			}
 
 			window := test.NewTempWindow(t, card)
-			size := card.MinSize().Max(fyne.NewSize(80, 0)) // give a little width for image only tests
-			window.Resize(size.Add(fyne.NewSize(theme.InnerPadding(), theme.InnerPadding())))
+			size := card.MinSize().Max(granio.NewSize(80, 0)) // give a little width for image only tests
+			window.Resize(size.Add(granio.NewSize(theme.InnerPadding(), theme.InnerPadding())))
 			if tt.content != nil {
 				assert.Equal(t, float32(10), tt.content.Size().Height)
 			}
@@ -119,7 +119,7 @@ func TestCard_MinSize(t *testing.T) {
 	content := widget.NewLabel("simple")
 	card := &widget.Card{Content: content}
 
-	inner := card.MinSize().Subtract(fyne.NewSize(theme.InnerPadding()+theme.Padding(), theme.InnerPadding()+theme.Padding())) // shadow + content pad
+	inner := card.MinSize().Subtract(granio.NewSize(theme.InnerPadding()+theme.Padding(), theme.InnerPadding()+theme.Padding())) // shadow + content pad
 	assert.Equal(t, content.MinSize(), inner)
 }
 
@@ -138,7 +138,7 @@ func newContentRect() *canvas.Rectangle {
 	rect := canvas.NewRectangle(color.Gray{0x66})
 	rect.StrokeColor = color.Black
 	rect.StrokeWidth = 2
-	rect.SetMinSize(fyne.NewSize(10, 10))
+	rect.SetMinSize(granio.NewSize(10, 10))
 
 	return rect
 }

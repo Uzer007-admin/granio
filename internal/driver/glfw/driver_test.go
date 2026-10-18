@@ -5,10 +5,10 @@ package glfw
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -31,9 +31,9 @@ func Test_gLDriver_AbsolutePositionForObject(t *testing.T) {
 	content := container.NewVBox(cr1, cr2, cr3)
 	cr2c2.Hide()
 
-	mm := fyne.NewMainMenu(
-		fyne.NewMenu("Menu 1", fyne.NewMenuItem("Menu 1 Item", nil)),
-		fyne.NewMenu("Menu 2", fyne.NewMenuItem("Menu 2 Item", nil)),
+	mm := granio.NewMainMenu(
+		granio.NewMenu("Menu 1", granio.NewMenuItem("Menu 1 Item", nil)),
+		granio.NewMenu("Menu 2", granio.NewMenuItem("Menu 2 Item", nil)),
 	)
 	// We want to test the handling of the canvas' Fyne menu here.
 	// We work around w.SetMainMenu because on MacOS the main menu is a native menu.
@@ -41,8 +41,8 @@ func Test_gLDriver_AbsolutePositionForObject(t *testing.T) {
 	movl := buildMenuOverlay(mm, w.window)
 	c.setMenuOverlay(movl)
 	w.SetContent(content)
-	w.Resize(fyne.NewSize(300, 200))
-	ensureCanvasSize(t, w, fyne.NewSize(300, 200))
+	w.Resize(granio.NewSize(300, 200))
+	ensureCanvasSize(t, w, granio.NewSize(300, 200))
 
 	ovli1 := widget.NewLabel("Overlay Item 1")
 	ovli2 := widget.NewLabel("Overlay Item 2")
@@ -54,7 +54,7 @@ func Test_gLDriver_AbsolutePositionForObject(t *testing.T) {
 
 	// This helps to detect size changes which might happen when the font size or rendering are changed.
 	// It gives also a hint on the expected offset for the overlay components.
-	var size fyne.Size
+	var size granio.Size
 	runOnMain(func() {
 		size = ovlContent.Size()
 	})
@@ -63,20 +63,20 @@ func Test_gLDriver_AbsolutePositionForObject(t *testing.T) {
 	assert.InDelta(t, 113, size.Height, 1)
 
 	repaintWindow(w)
-	ensureCanvasSize(t, w, fyne.NewSize(300, 200))
+	ensureCanvasSize(t, w, granio.NewSize(300, 200))
 	// accessing the menu bar's actual CanvasObjects isn't straight forward
 	// 0 is the shadow
 	// 1 is the menu bar’s underlay
 	// 2 is the menu bar's background
 	// 3 is the container holding the items
-	var m2 fyne.CanvasObject
+	var m2 granio.CanvasObject
 	runOnMain(func() {
-		mbarCont := cache.Renderer(movl.(fyne.Widget)).Objects()[2].(*fyne.Container)
+		mbarCont := cache.Renderer(movl.(granio.Widget)).Objects()[2].(*granio.Container)
 		m2 = mbarCont.Objects[1]
 	})
 
 	tests := map[string]struct {
-		object       fyne.CanvasObject
+		object       granio.CanvasObject
 		wantX, wantY int
 	}{
 		"a cell": {

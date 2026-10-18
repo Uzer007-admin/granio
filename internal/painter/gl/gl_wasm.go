@@ -5,7 +5,7 @@ package gl
 import (
 	"math"
 
-	"github.com/fyne-io/gl-js"
+	"github.com/Uzer007-admin/granio-gl-js"
 )
 
 const (
@@ -76,7 +76,7 @@ func (p *painter) Init() {
 	p.programs = p.compilePrograms()
 }
 
-type xjsContext struct{}
+type xjsContext struct{ premultiplied bool }
 
 var _ context = (*xjsContext)(nil)
 
@@ -101,8 +101,18 @@ func (c *xjsContext) BlendColor(r, g, b, a float32) {
 }
 
 func (c *xjsContext) BlendFunc(srcFactor, destFactor uint32) {
+	if c.premultiplied {
+		alphaSource := srcFactor
+		if srcFactor == gl.SRC_ALPHA {
+			alphaSource = gl.ONE
+		}
+		gl.BlendFuncSeparate(gl.Enum(srcFactor), gl.Enum(destFactor), gl.Enum(alphaSource), gl.Enum(destFactor))
+		return
+	}
 	gl.BlendFunc(gl.Enum(srcFactor), gl.Enum(destFactor))
 }
+
+func (c *xjsContext) setPremultipliedAlpha(enabled bool) bool { c.premultiplied = enabled; return true }
 
 func (c *xjsContext) BufferData(target uint32, points []float32, usage uint32) {
 	gl.BufferData(gl.Enum(target), toLEByteOrder(points...), gl.Enum(usage))

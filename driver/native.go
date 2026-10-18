@@ -1,6 +1,6 @@
 package driver
 
-// NativeWindow is an extension interface for `fyne.Window` that gives access
+// NativeWindow is an extension interface for `granio.Window` that gives access
 // to platform-native features of application windows.
 //
 // Since: 2.5

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func encodeJSON(w io.Writer, v any) error {
@@ -23,13 +23,13 @@ func TestScheduler_Schedule_FiresAtDeliveryTime(t *testing.T) {
 	cache := newMemCache()
 	var fired atomic.Int32
 	done := make(chan struct{}, 1)
-	s := New(cache, func(*fyne.Notification) {
+	s := New(cache, func(*granio.Notification) {
 		fired.Add(1)
 		done <- struct{}{}
 	})
 	s.Start()
 
-	id, err := s.Schedule(fyne.NewNotification("hello", "world"), time.Now().Add(50*time.Millisecond))
+	id, err := s.Schedule(granio.NewNotification("hello", "world"), time.Now().Add(50*time.Millisecond))
 	require.NoError(t, err)
 	assert.NotEmpty(t, id)
 
@@ -42,18 +42,18 @@ func TestScheduler_Schedule_FiresAtDeliveryTime(t *testing.T) {
 }
 
 func TestScheduler_Schedule_RejectsPastTime(t *testing.T) {
-	s := New(newMemCache(), func(*fyne.Notification) {})
-	_, err := s.Schedule(fyne.NewNotification("a", "b"), time.Now().Add(-time.Second))
+	s := New(newMemCache(), func(*granio.Notification) {})
+	_, err := s.Schedule(granio.NewNotification("a", "b"), time.Now().Add(-time.Second))
 	assert.Error(t, err)
 }
 
 func TestScheduler_Cancel_StopsDelivery(t *testing.T) {
 	cache := newMemCache()
 	var fired atomic.Int32
-	s := New(cache, func(*fyne.Notification) { fired.Add(1) })
+	s := New(cache, func(*granio.Notification) { fired.Add(1) })
 	s.Start()
 
-	id, err := s.Schedule(fyne.NewNotification("a", "b"), time.Now().Add(100*time.Millisecond))
+	id, err := s.Schedule(granio.NewNotification("a", "b"), time.Now().Add(100*time.Millisecond))
 	require.NoError(t, err)
 
 	s.Cancel(id)
@@ -65,18 +65,18 @@ func TestScheduler_Cancel_StopsDelivery(t *testing.T) {
 func TestScheduler_Persistence_AcrossInstances(t *testing.T) {
 	cache := newMemCache()
 
-	first := New(cache, func(*fyne.Notification) {})
+	first := New(cache, func(*granio.Notification) {})
 	first.Start()
 	deliverAt := time.Now().Add(2 * time.Second)
-	id, err := first.Schedule(fyne.NewNotification("p", "q"), deliverAt)
+	id, err := first.Schedule(granio.NewNotification("p", "q"), deliverAt)
 	require.NoError(t, err)
 	require.NotEmpty(t, id)
 	assert.True(t, cache.Exists(scheduleFile))
 
 	// Second instance: should pick up the persisted entry and re-arm it.
 	var fired atomic.Int32
-	done := make(chan *fyne.Notification, 1)
-	second := New(cache, func(n *fyne.Notification) {
+	done := make(chan *granio.Notification, 1)
+	second := New(cache, func(n *granio.Notification) {
 		fired.Add(1)
 		done <- n
 	})
@@ -107,8 +107,8 @@ func TestScheduler_PastEntries_FireImmediatelyOnStart(t *testing.T) {
 	require.NoError(t, encodeJSON(w, []*Entry{pastEntry}))
 	require.NoError(t, w.Close())
 
-	done := make(chan *fyne.Notification, 1)
-	s := New(cache, func(n *fyne.Notification) { done <- n })
+	done := make(chan *granio.Notification, 1)
+	s := New(cache, func(n *granio.Notification) { done <- n })
 	s.Start()
 
 	select {
@@ -125,7 +125,7 @@ func TestScheduler_PastEntries_FireImmediatelyOnStart(t *testing.T) {
 		"past-due entry must be cleared from cache after delivery on Start")
 }
 
-// memCache is an in-memory implementation of fyne.Cache for tests.
+// memCache is an in-memory implementation of granio.Cache for tests.
 type memCache struct {
 	mu    sync.Mutex
 	files map[string][]byte
@@ -135,7 +135,7 @@ func newMemCache() *memCache {
 	return &memCache{files: map[string][]byte{}}
 }
 
-func (*memCache) RootURI() fyne.URI { return nil }
+func (*memCache) RootURI() granio.URI { return nil }
 
 func (m *memCache) Exists(name string) bool {
 	m.mu.Lock()

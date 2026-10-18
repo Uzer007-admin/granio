@@ -1,19 +1,20 @@
 // Package test provides utility drivers for running UI tests without rendering to a screen.
-package test // import "fyne.io/fyne/v2/test"
+package test // import "github.com/Uzer007-admin/granio/v2/test"
 
 import (
 	"net/url"
 	"sync"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	intapp "fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/scheduler"
-	"fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	intapp "github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/scheduler"
+	"github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // ensure we have a dummy app loaded and ready to test
@@ -24,36 +25,36 @@ func init() {
 type app struct {
 	driver       *driver
 	settings     *testSettings
-	prefs        fyne.Preferences
-	secretPrefs  fyne.Preferences
+	prefs        granio.Preferences
+	secretPrefs  granio.Preferences
 	propertyLock sync.RWMutex
-	storage      fyne.Storage
+	storage      granio.Storage
 	lifecycle    intapp.Lifecycle
-	cache        fyne.Cache
-	clip         fyne.Clipboard
-	cloud        fyne.CloudProvider
+	cache        granio.Cache
+	clip         granio.Clipboard
+	cloud        granio.CloudProvider
 
 	// user action variables
-	appliedTheme              fyne.Theme
-	lastNotification          *fyne.Notification
-	scheduledNotifications    map[string]*fyne.ScheduledNotification
-	lastScheduledNotification *fyne.ScheduledNotification
+	appliedTheme              granio.Theme
+	lastNotification          *granio.Notification
+	scheduledNotifications    map[string]*granio.ScheduledNotification
+	lastScheduledNotification *granio.ScheduledNotification
 	lastCancelledScheduleID   string
 }
 
-func (a *app) CloudProvider() fyne.CloudProvider {
+func (a *app) CloudProvider() granio.CloudProvider {
 	return a.cloud
 }
 
-func (*app) Icon() fyne.Resource {
+func (*app) Icon() granio.Resource {
 	return nil
 }
 
-func (*app) SetIcon(fyne.Resource) {
+func (*app) SetIcon(granio.Resource) {
 	// no-op
 }
 
-func (a *app) NewWindow(title string) fyne.Window {
+func (a *app) NewWindow(title string) granio.Window {
 	return a.driver.CreateWindow(title)
 }
 
@@ -70,11 +71,11 @@ func (*app) Quit() {
 	// no-op
 }
 
-func (a *app) Cache() fyne.Cache {
+func (a *app) Cache() granio.Cache {
 	return a.cache
 }
 
-func (a *app) Clipboard() fyne.Clipboard {
+func (a *app) Clipboard() granio.Clipboard {
 	return a.clip
 }
 
@@ -82,26 +83,26 @@ func (*app) UniqueID() string {
 	return "testApp" // TODO should this be randomised?
 }
 
-func (a *app) Driver() fyne.Driver {
+func (a *app) Driver() granio.Driver {
 	return a.driver
 }
 
-func (a *app) SendNotification(notify *fyne.Notification) {
+func (a *app) SendNotification(notify *granio.Notification) {
 	a.propertyLock.Lock()
 	defer a.propertyLock.Unlock()
 
 	a.lastNotification = notify
 }
 
-func (a *app) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *app) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	id, _ := scheduler.NewID()
-	scheduled := fyne.NewScheduledNotification(id, n, when)
+	scheduled := granio.NewScheduledNotification(id, n, when)
 
 	a.propertyLock.Lock()
 	defer a.propertyLock.Unlock()
 
 	if a.scheduledNotifications == nil {
-		a.scheduledNotifications = map[string]*fyne.ScheduledNotification{}
+		a.scheduledNotifications = map[string]*granio.ScheduledNotification{}
 	}
 	a.scheduledNotifications[id] = scheduled
 	a.lastScheduledNotification = scheduled
@@ -118,7 +119,7 @@ func (a *app) CancelScheduledNotification(id string) error {
 	return nil
 }
 
-func (a *app) SetCloudProvider(p fyne.CloudProvider) {
+func (a *app) SetCloudProvider(p granio.CloudProvider) {
 	if p == nil {
 		a.cloud = nil
 		return
@@ -127,56 +128,56 @@ func (a *app) SetCloudProvider(p fyne.CloudProvider) {
 	a.transitionCloud(p)
 }
 
-func (a *app) Settings() fyne.Settings {
+func (a *app) Settings() granio.Settings {
 	return a.settings
 }
 
-func (a *app) Preferences() fyne.Preferences {
+func (a *app) Preferences() granio.Preferences {
 	return a.prefs
 }
 
-func (a *app) SecretPreferences([]byte) (fyne.Preferences, error) {
+func (a *app) SecretPreferences([]byte) (granio.Preferences, error) {
 	return a.secretPrefs, nil
 }
 
-func (a *app) Storage() fyne.Storage {
+func (a *app) Storage() granio.Storage {
 	return a.storage
 }
 
-func (a *app) Lifecycle() fyne.Lifecycle {
+func (a *app) Lifecycle() granio.Lifecycle {
 	return &a.lifecycle
 }
 
-func (*app) Metadata() fyne.AppMetadata {
-	return fyne.AppMetadata{} // just dummy data
+func (*app) Metadata() granio.AppMetadata {
+	return granio.AppMetadata{} // just dummy data
 }
 
-func (a *app) lastAppliedTheme() fyne.Theme {
+func (a *app) lastAppliedTheme() granio.Theme {
 	a.propertyLock.Lock()
 	defer a.propertyLock.Unlock()
 
 	return a.appliedTheme
 }
 
-func (a *app) transitionCloud(p fyne.CloudProvider) {
+func (a *app) transitionCloud(p granio.CloudProvider) {
 	if a.cloud != nil {
 		a.cloud.Cleanup(a)
 	}
 
 	err := p.Setup(a)
 	if err != nil {
-		fyne.LogError("Failed to set up cloud provider "+p.ProviderName(), err)
+		granio.LogError("Failed to set up cloud provider "+p.ProviderName(), err)
 		return
 	}
 	a.cloud = p
 
 	listeners := a.prefs.ChangeListeners()
-	if pp, ok := p.(fyne.CloudProviderPreferences); ok {
+	if pp, ok := p.(granio.CloudProviderPreferences); ok {
 		a.prefs = pp.CloudPreferences(a)
 	} else {
 		a.prefs = internal.NewInMemoryPreferences()
 	}
-	if store, ok := p.(fyne.CloudProviderStorage); ok {
+	if store, ok := p.(granio.CloudProviderStorage); ok {
 		a.storage = store.CloudStorage(a)
 	} else {
 		a.storage = &testStorage{}
@@ -193,7 +194,7 @@ func (a *app) transitionCloud(p fyne.CloudProvider) {
 
 // NewApp returns a new dummy app used for testing.
 // It loads a test driver which creates a virtual window in memory for testing.
-func NewApp() fyne.App {
+func NewApp() granio.App {
 	settings := &testSettings{scale: 1.0, theme: Theme()}
 	prefs := internal.NewInMemoryPreferences()
 	secretPrefs := internal.NewInMemoryPreferences()
@@ -207,7 +208,8 @@ func NewApp() fyne.App {
 	store.Docs = &internal.Docs{RootDocURI: root}
 	painter.ClearFontCache()
 	cache.ResetThemeCaches()
-	fyne.SetCurrentApp(testApp)
+	granio.SetCurrentApp(testApp)
+	lang.SetLocale(testApp.Driver().Device().Locale())
 
 	return testApp
 }
@@ -215,28 +217,28 @@ func NewApp() fyne.App {
 type testSettings struct {
 	primaryColor string
 	scale        float32
-	theme        fyne.Theme
+	theme        granio.Theme
 
-	listeners       []func(fyne.Settings)
-	changeListeners []chan fyne.Settings
+	listeners       []func(granio.Settings)
+	changeListeners []chan granio.Settings
 	propertyLock    sync.RWMutex
 	app             *app
 }
 
-func (s *testSettings) AddChangeListener(listener chan fyne.Settings) {
+func (s *testSettings) AddChangeListener(listener chan granio.Settings) {
 	s.propertyLock.Lock()
 	defer s.propertyLock.Unlock()
 	s.changeListeners = append(s.changeListeners, listener)
 }
 
-func (s *testSettings) AddListener(listener func(fyne.Settings)) {
+func (s *testSettings) AddListener(listener func(granio.Settings)) {
 	s.propertyLock.Lock()
 	defer s.propertyLock.Unlock()
 	s.listeners = append(s.listeners, listener)
 }
 
-func (*testSettings) BuildType() fyne.BuildType {
-	return fyne.BuildStandard
+func (*testSettings) BuildType() granio.BuildType {
+	return granio.BuildStandard
 }
 
 func (s *testSettings) PrimaryColor() string {
@@ -247,7 +249,7 @@ func (s *testSettings) PrimaryColor() string {
 	return theme.ColorBlue
 }
 
-func (s *testSettings) SetTheme(t fyne.Theme) {
+func (s *testSettings) SetTheme(t granio.Theme) {
 	s.propertyLock.Lock()
 	s.theme = t
 	s.propertyLock.Unlock()
@@ -259,7 +261,7 @@ func (*testSettings) ShowAnimations() bool {
 	return true
 }
 
-func (s *testSettings) Theme() fyne.Theme {
+func (s *testSettings) Theme() granio.Theme {
 	s.propertyLock.RLock()
 	defer s.propertyLock.RUnlock()
 
@@ -270,7 +272,7 @@ func (s *testSettings) Theme() fyne.Theme {
 	return s.theme
 }
 
-func (*testSettings) ThemeVariant() fyne.ThemeVariant {
+func (*testSettings) ThemeVariant() granio.ThemeVariant {
 	return 2 // not a preference
 }
 

@@ -1,0 +1,6 @@
+=== RUN   TestAssessmentRGBASubImageStride
+    assessment_6c36517f_test.go:60: RGBA SubImage upload ignored Stride=16, packed row=8: got [72 20 5 255 112 20 5 255 152 20 5 255 32 100 5 255], want [72 20 5 255 112 20 5 255 72 100 5 255 112 100 5 255]
+--- FAIL: TestAssessmentRGBASubImageStride (0.77s)
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/painter/gl	1.282s
+FAIL

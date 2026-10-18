@@ -1,8 +1,8 @@
 package dialog
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 var folderFilter = storage.NewMimeTypeFileFilter([]string{"application/x-directory"})
@@ -14,7 +14,7 @@ var folderFilter = storage.NewMimeTypeFileFilter([]string{"application/x-directo
 // The dialog will appear over the window specified when Show() is called.
 //
 // Since: 1.4
-func NewFolderOpen(callback func(fyne.ListableURI, error), parent fyne.Window) *FileDialog {
+func NewFolderOpen(callback func(granio.ListableURI, error), parent granio.Window) *FileDialog {
 	dialog := &FileDialog{}
 	dialog.callback = callback
 	dialog.parent = parent
@@ -29,7 +29,7 @@ func NewFolderOpen(callback func(fyne.ListableURI, error), parent fyne.Window) *
 // The dialog will appear over the window specified.
 //
 // Since: 1.4
-func ShowFolderOpen(callback func(fyne.ListableURI, error), parent fyne.Window) {
+func ShowFolderOpen(callback func(granio.ListableURI, error), parent granio.Window) {
 	dialog := NewFolderOpen(callback, parent)
 	if fileOpenOSOverride(dialog) {
 		return

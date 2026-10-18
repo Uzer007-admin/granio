@@ -5,12 +5,12 @@ package container_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -24,7 +24,7 @@ func TestDocTabs_ApplyTheme(t *testing.T) {
 	)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToImage(t, "doctabs/mobile/theme_default.png", c)
@@ -43,7 +43,7 @@ func TestDocTabs_ChangeItemContent(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/mobile/change_content_initial.xml", c)
@@ -66,7 +66,7 @@ func TestDocTabs_ChangeItemIcon(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/mobile/change_icon_initial.xml", c)
@@ -89,7 +89,7 @@ func TestDocTabs_ChangeItemText(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/mobile/change_label_initial.xml", c)
@@ -111,7 +111,7 @@ func TestDocTabs_DynamicTabs(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(300, 150))
+	w.Resize(granio.NewSize(300, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/mobile/dynamic_initial.xml", c)
@@ -164,12 +164,12 @@ func TestDocTabs_HoverButtons(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/mobile/hover_none.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(10, 10))
+	test.MoveMouse(c, granio.NewPos(10, 10))
 	test.AssertRendersToMarkup(t, "doctabs/mobile/hover_none.xml", c, "no hovering on mobile")
 }
 
@@ -266,7 +266,7 @@ func TestDocTabs_Layout(t *testing.T) {
 			tabs := container.NewDocTabs(tt.item)
 			tabs.SetTabLocation(tt.location)
 			w.SetContent(tabs)
-			w.Resize(fyne.NewSize(150, 150))
+			w.Resize(granio.NewSize(150, 150))
 
 			test.AssertRendersToMarkup(t, tt.want, c)
 		})
@@ -318,28 +318,28 @@ func TestDocTabs_Tapped(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(380, 100))
+	w.Resize(granio.NewSize(380, 100))
 	c := w.Canvas()
 
 	require.Equal(t, 0, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/mobile/tapped_first_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(100, 10))
+	test.TapCanvas(c, granio.NewPos(100, 10))
 	assert.Equal(t, 1, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/mobile/tapped_second_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(180, 10))
+	test.TapCanvas(c, granio.NewPos(180, 10))
 	assert.Equal(t, 2, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/mobile/tapped_third_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(10, 10))
+	test.TapCanvas(c, granio.NewPos(10, 10))
 	require.Equal(t, 0, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/mobile/tapped_first_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(320, 10))
+	test.TapCanvas(c, granio.NewPos(320, 10))
 	require.Equal(t, 3, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/mobile/tapped_create_tab.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(346, 10))
+	test.TapCanvas(c, granio.NewPos(346, 10))
 	test.AssertRendersToMarkup(t, "doctabs/mobile/tapped_all_tabs.xml", c)
 }

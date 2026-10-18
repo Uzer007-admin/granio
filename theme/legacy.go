@@ -3,24 +3,24 @@ package theme
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // FromLegacy returns a 2.0 Theme created from the given LegacyTheme data.
 // This is a transition path and will be removed in the future (probably version 3.0).
 //
 // Since: 2.0
-func FromLegacy(t fyne.LegacyTheme) fyne.Theme {
+func FromLegacy(t granio.LegacyTheme) granio.Theme {
 	return &legacyWrapper{old: t}
 }
 
-var _ fyne.Theme = (*legacyWrapper)(nil)
+var _ granio.Theme = (*legacyWrapper)(nil)
 
 type legacyWrapper struct {
-	old fyne.LegacyTheme
+	old granio.LegacyTheme
 }
 
-func (l *legacyWrapper) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
+func (l *legacyWrapper) Color(n granio.ThemeColorName, v granio.ThemeVariant) color.Color {
 	switch n { //revive:disable-line:identical-switch-branches
 	case ColorNameBackground:
 		return l.old.BackgroundColor()
@@ -51,7 +51,7 @@ func (l *legacyWrapper) Color(n fyne.ThemeColorName, v fyne.ThemeVariant) color.
 	}
 }
 
-func (l *legacyWrapper) Font(s fyne.TextStyle) fyne.Resource {
+func (l *legacyWrapper) Font(s granio.TextStyle) granio.Resource {
 	if s.Monospace {
 		return l.old.TextMonospaceFont()
 	}
@@ -67,11 +67,11 @@ func (l *legacyWrapper) Font(s fyne.TextStyle) fyne.Resource {
 	return l.old.TextFont()
 }
 
-func (*legacyWrapper) Icon(n fyne.ThemeIconName) fyne.Resource {
+func (*legacyWrapper) Icon(n granio.ThemeIconName) granio.Resource {
 	return DefaultTheme().Icon(n)
 }
 
-func (l *legacyWrapper) Size(n fyne.ThemeSizeName) float32 {
+func (l *legacyWrapper) Size(n granio.ThemeSizeName) float32 {
 	switch n {
 	case SizeNameInlineIcon:
 		return float32(l.old.IconInlineSize())

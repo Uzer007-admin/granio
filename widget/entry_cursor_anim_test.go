@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	col "fyne.io/fyne/v2/internal/color"
-	_ "fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	_ "github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestEntryCursorAnim(t *testing.T) {
@@ -29,7 +29,7 @@ func TestEntryCursorAnim(t *testing.T) {
 	a.start()
 
 	assert.True(t, a.anim.AutoReverse)
-	assert.Equal(t, fyne.AnimationRepeatForever, a.anim.RepeatCount)
+	assert.Equal(t, granio.AnimationRepeatForever, a.anim.RepeatCount)
 
 	t.Run("animation changes from opaque to dimmed fading only a small time in between", func(t *testing.T) {
 		a.anim.Tick(0.0)

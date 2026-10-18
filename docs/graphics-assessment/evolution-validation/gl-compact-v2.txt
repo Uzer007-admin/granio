@@ -1,0 +1,4 @@
+Go: go1.27.1 lookups: 50 renderer: NVIDIA GeForce RTX 4080 SUPER/PCIe/SSE2
+Compact GL Init: 53.3 us/op, 0.0 Go allocs/op
+Framebuffer: [0 255 0 255]
+Shader compilation: passed

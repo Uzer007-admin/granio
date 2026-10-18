@@ -1,0 +1,9 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/dbus/v5
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkBoundedSignalDelivery-16    	12879861	        86.74 ns/op	       0 B/op	       0 allocs/op
+BenchmarkBoundedSignalDelivery-16    	13909866	        85.49 ns/op	       0 B/op	       0 allocs/op
+BenchmarkBoundedSignalDelivery-16    	14223536	        85.14 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/dbus/v5	3.930s

@@ -1,0 +1,8 @@
+{
+  "command": "GOOS=js GOARCH=wasm CGO_ENABLED=0 go build -tags migrated_fynedo ./cmd/fyne_gallery",
+  "compiler": "go1.27.1-X:cgocheck2",
+  "build_exit_code": 0,
+  "format": "WASM v1",
+  "bytes": 42516232,
+  "sha256": "c4ece57569f2e1af7cf2ea0a4b59936efffd9de2b84c0a1cc020f891913a38a0"
+}

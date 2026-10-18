@@ -1,14 +1,14 @@
 package cache
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
-var canvases async.Map[fyne.CanvasObject, *canvasInfo]
+var canvases async.Map[granio.CanvasObject, *canvasInfo]
 
 // GetCanvasForObject returns the canvas for the specified object.
-func GetCanvasForObject(obj fyne.CanvasObject) fyne.Canvas {
+func GetCanvasForObject(obj granio.CanvasObject) granio.Canvas {
 	cinfo, ok := canvases.Load(obj)
 	if cinfo == nil || !ok {
 		return nil
@@ -19,7 +19,7 @@ func GetCanvasForObject(obj fyne.CanvasObject) fyne.Canvas {
 
 // SetCanvasForObject sets the canvas for the specified object.
 // The passed function will be called if the item was not previously attached to this canvas
-func SetCanvasForObject(obj fyne.CanvasObject, c fyne.Canvas, setup func()) {
+func SetCanvasForObject(obj granio.CanvasObject, c granio.Canvas, setup func()) {
 	// this runs for every visible object on every repaint, so avoid allocating
 	// a canvasInfo we would only throw away - and keep the entry alive so a
 	// constantly repainting window does not expire its own cache.
@@ -41,5 +41,5 @@ func SetCanvasForObject(obj fyne.CanvasObject, c fyne.Canvas, setup func()) {
 
 type canvasInfo struct {
 	expiringCache
-	canvas fyne.Canvas
+	canvas granio.Canvas
 }

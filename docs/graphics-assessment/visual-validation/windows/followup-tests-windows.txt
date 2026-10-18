@@ -1,0 +1,2 @@
+ok  	github.com/Uzer007-admin/glow	1.777s
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.248s

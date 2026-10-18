@@ -5,8 +5,8 @@ package glfw
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,9 +16,9 @@ func TestGlCanvas_FocusHandlingWhenActivatingOrDeactivatingTheMenu(t *testing.T)
 	w.SetPadded(false)
 	runOnMain(func() {
 		w.SetMainMenu(
-			fyne.NewMainMenu(
-				fyne.NewMenu("test", fyne.NewMenuItem("item", func() {})),
-				fyne.NewMenu("other", fyne.NewMenuItem("item", func() {})),
+			granio.NewMainMenu(
+				granio.NewMenu("test", granio.NewMenuItem("item", func() {})),
+				granio.NewMenu("other", granio.NewMenuItem("item", func() {})),
 			),
 		)
 	})
@@ -38,7 +38,7 @@ func TestGlCanvas_FocusHandlingWhenActivatingOrDeactivatingTheMenu(t *testing.T)
 	assert.True(t, ce2.focused)
 
 	runOnMain(func() {
-		m.Items[0].(*menuBarItem).Tapped(&fyne.PointEvent{})
+		m.Items[0].(*menuBarItem).Tapped(&granio.PointEvent{})
 	})
 	assert.True(t, m.IsActive())
 	ctxt := "activating the menu changes focus handler and focuses the menu bar item but does not remove focus from content"
@@ -51,7 +51,7 @@ func TestGlCanvas_FocusHandlingWhenActivatingOrDeactivatingTheMenu(t *testing.T)
 	assert.Equal(t, m.Items[1], c.Focused(), ctxt)
 
 	runOnMain(func() {
-		m.Items[0].(*menuBarItem).Tapped(&fyne.PointEvent{})
+		m.Items[0].(*menuBarItem).Tapped(&granio.PointEvent{})
 	})
 	assert.False(t, m.IsActive())
 	ctxt = "deactivating the menu restores focus handler from content"

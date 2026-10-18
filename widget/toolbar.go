@@ -1,30 +1,33 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/layout"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/layout"
 )
 
 // ToolbarItem represents any interface element that can be added to a toolbar
 type ToolbarItem interface {
-	ToolbarObject() fyne.CanvasObject
+	ToolbarObject() granio.CanvasObject
 }
 
 // ToolbarAction is push button style of ToolbarItem
 type ToolbarAction struct {
-	Icon        fyne.Resource
-	OnActivated func() `json:"-"`
-	button      Button
+	Icon granio.Resource
+	// AccessibleName describes icon-only actions independently of asset names.
+	AccessibleName string
+	OnActivated    func() `json:"-"`
+	button         Button
 }
 
 // ToolbarObject gets a button to render this ToolbarAction
-func (t *ToolbarAction) ToolbarObject() fyne.CanvasObject {
+func (t *ToolbarAction) ToolbarObject() granio.CanvasObject {
 	t.button.Importance = LowImportance
 
 	// synchronize properties
 	t.button.Icon = t.Icon
+	t.button.AccessibleName = t.AccessibleName
 	t.button.OnTapped = t.OnActivated
 
 	return &t.button
@@ -33,7 +36,7 @@ func (t *ToolbarAction) ToolbarObject() fyne.CanvasObject {
 // SetIcon updates the icon on a ToolbarItem
 //
 // Since: 2.2
-func (t *ToolbarAction) SetIcon(icon fyne.Resource) {
+func (t *ToolbarAction) SetIcon(icon granio.Resource) {
 	t.Icon = icon
 	t.button.SetIcon(t.Icon)
 }
@@ -60,7 +63,7 @@ func (t *ToolbarAction) Disabled() bool {
 }
 
 // NewToolbarAction returns a new push button style ToolbarItem
-func NewToolbarAction(icon fyne.Resource, onActivated func()) *ToolbarAction {
+func NewToolbarAction(icon granio.Resource, onActivated func()) *ToolbarAction {
 	return &ToolbarAction{Icon: icon, OnActivated: onActivated}
 }
 
@@ -70,7 +73,7 @@ func NewToolbarAction(icon fyne.Resource, onActivated func()) *ToolbarAction {
 type ToolbarSpacer struct{}
 
 // ToolbarObject gets the actual spacer object for this ToolbarSpacer
-func (*ToolbarSpacer) ToolbarObject() fyne.CanvasObject {
+func (*ToolbarSpacer) ToolbarObject() granio.CanvasObject {
 	return layout.NewSpacer()
 }
 
@@ -84,7 +87,7 @@ func NewToolbarSpacer() *ToolbarSpacer {
 type ToolbarSeparator struct{}
 
 // ToolbarObject gets the visible line object for this ToolbarSeparator
-func (*ToolbarSeparator) ToolbarObject() fyne.CanvasObject {
+func (*ToolbarSeparator) ToolbarObject() granio.CanvasObject {
 	return &Separator{invert: true}
 }
 
@@ -100,7 +103,7 @@ type Toolbar struct {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *Toolbar) CreateRenderer() fyne.WidgetRenderer {
+func (t *Toolbar) CreateRenderer() granio.WidgetRenderer {
 	t.ExtendBaseWidget(t)
 	r := &toolbarRenderer{toolbar: t, layout: layout.NewHBoxLayout()}
 	r.resetObjects()
@@ -120,7 +123,7 @@ func (t *Toolbar) Prepend(item ToolbarItem) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (t *Toolbar) MinSize() fyne.Size {
+func (t *Toolbar) MinSize() granio.Size {
 	t.ExtendBaseWidget(t)
 	return t.BaseWidget.MinSize()
 }
@@ -136,16 +139,16 @@ func NewToolbar(items ...ToolbarItem) *Toolbar {
 
 type toolbarRenderer struct {
 	widget.BaseRenderer
-	layout  fyne.Layout
-	items   []fyne.CanvasObject
+	layout  granio.Layout
+	items   []granio.CanvasObject
 	toolbar *Toolbar
 }
 
-func (r *toolbarRenderer) MinSize() fyne.Size {
+func (r *toolbarRenderer) MinSize() granio.Size {
 	return r.layout.MinSize(r.items)
 }
 
-func (r *toolbarRenderer) Layout(size fyne.Size) {
+func (r *toolbarRenderer) Layout(size granio.Size) {
 	r.layout.Layout(r.items, size)
 }
 
@@ -155,7 +158,7 @@ func (r *toolbarRenderer) Refresh() {
 }
 
 func (r *toolbarRenderer) resetObjects() {
-	r.items = make([]fyne.CanvasObject, 0, len(r.toolbar.Items))
+	r.items = make([]granio.CanvasObject, 0, len(r.toolbar.Items))
 	for _, item := range r.toolbar.Items {
 		r.items = append(r.items, item.ToolbarObject())
 	}

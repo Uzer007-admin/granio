@@ -10,15 +10,15 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	intWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/lang"
+	intWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/lang"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestEffectiveStartingDir(t *testing.T) {
@@ -102,8 +102,8 @@ func TestFileDialogStartRemember(t *testing.T) {
 
 func TestFileDialogResize(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	win.Resize(fyne.NewSize(600, 400))
-	file := NewFileOpen(func(fyne.URIReadCloser, error) {}, win)
+	win.Resize(granio.NewSize(600, 400))
+	file := NewFileOpen(func(granio.URIReadCloser, error) {}, win)
 	file.SetFilter(storage.NewExtensionFileFilter([]string{".png"}))
 
 	// Mimic the fileopen dialog
@@ -118,14 +118,14 @@ func TestFileDialogResize(t *testing.T) {
 	file.dialog = d
 
 	// Test resize - normal size scenario
-	size := fyne.NewSize(200, 180) // normal size to fit (600,400)
+	size := granio.NewSize(200, 180) // normal size to fit (600,400)
 	file.Resize(size)
 	expectedWidth := float32(200)
 	assert.Equal(t, expectedWidth, file.dialog.win.Content.Size().Width)
 	expectedHeight := float32(180)
 	assert.Equal(t, expectedHeight, file.dialog.win.Content.Size().Height)
 	// Test resize - normal size scenario again
-	size = fyne.NewSize(300, 280) // normal size to fit (600,400)
+	size = granio.NewSize(300, 280) // normal size to fit (600,400)
 	file.Resize(size)
 	expectedWidth = 300
 	assert.Equal(t, expectedWidth, file.dialog.win.Content.Size().Width)
@@ -134,7 +134,7 @@ func TestFileDialogResize(t *testing.T) {
 	file.Hide()
 
 	// Test resize - greater than max size scenario
-	size = fyne.NewSize(800, 600)
+	size = granio.NewSize(800, 600)
 	file.Resize(size)
 	file.Show()
 	expectedWidth = 600                                          // since win width only 600
@@ -146,7 +146,7 @@ func TestFileDialogResize(t *testing.T) {
 	file.Hide()
 
 	// Test again - tiny size
-	size = fyne.NewSize(1, 1)
+	size = granio.NewSize(1, 1)
 	file.Resize(size)
 	file.Show()
 	expectedWidth = file.dialog.win.Content.MinSize().Width
@@ -156,10 +156,10 @@ func TestFileDialogResize(t *testing.T) {
 }
 
 func TestShowFileOpen(t *testing.T) {
-	var chosen fyne.URIReadCloser
+	var chosen granio.URIReadCloser
 	var openErr error
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	d := NewFileOpen(func(file fyne.URIReadCloser, err error) {
+	d := NewFileOpen(func(file granio.URIReadCloser, err error) {
 		chosen = file
 		openErr = err
 	}, win)
@@ -176,26 +176,26 @@ func TestShowFileOpen(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
 	// header
-	title := ui.Objects[1].(*fyne.Container).Objects[0].(*widget.Label)
+	title := ui.Objects[1].(*granio.Container).Objects[0].(*widget.Label)
 	assert.Equal(t, lang.L("Open")+" "+lang.L("File"), title.Text)
 	// optionsbuttons
-	createNewFolderButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[0].(*widget.Button)
+	createNewFolderButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[0].(*widget.Button)
 	assert.Equal(t, "", createNewFolderButton.Text)
 	assert.Equal(t, theme.FolderNewIcon().Name(), createNewFolderButton.Icon.Name())
-	toggleViewButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
+	toggleViewButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
 	assert.Equal(t, "", toggleViewButton.Text)
 	assert.Equal(t, theme.ListIcon().Name(), toggleViewButton.Icon.Name())
-	optionsButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[2].(*widget.Button)
+	optionsButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[2].(*widget.Button)
 	assert.Equal(t, "", optionsButton.Text)
 	assert.Equal(t, theme.SettingsIcon().Name(), optionsButton.Icon.Name())
 	// footer
-	nameLabel := ui.Objects[2].(*fyne.Container).Objects[0].(*container.Scroll).Content.(*widget.Label)
-	buttons := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container)
+	nameLabel := ui.Objects[2].(*granio.Container).Objects[0].(*container.Scroll).Content.(*widget.Label)
+	buttons := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container)
 	open := buttons.Objects[1].(*widget.Button)
 	// body
-	breadcrumb := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[1].(*container.Scroll).Content.(*fyne.Container).Objects[0].(*fyne.Container)
+	breadcrumb := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[1].(*container.Scroll).Content.(*granio.Container).Objects[0].(*granio.Container)
 	assert.NotEmpty(t, breadcrumb.Objects)
 
 	assert.NoError(t, err)
@@ -213,18 +213,18 @@ func TestShowFileOpen(t *testing.T) {
 		}
 	}
 
-	files := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0].(*widget.GridWrap)
-	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*fyne.Container).Objects
+	files := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0].(*widget.GridWrap)
+	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*granio.Container).Objects
 	assert.NotEmpty(t, objects)
 
-	fileName := test.TempWidgetRenderer(t, objects[0].(fyne.Widget)).Objects()[1].(*fileDialogItem).name
+	fileName := test.TempWidgetRenderer(t, objects[0].(granio.Widget)).Objects()[1].(*fileDialogItem).name
 	assert.Equal(t, lang.L("(Parent)"), fileName)
 	assert.True(t, open.Disabled())
 
 	var target *fileDialogItem
 	id := 0
 	for i, icon := range objects {
-		item := test.TempWidgetRenderer(t, icon.(fyne.Widget)).Objects()[1].(*fileDialogItem)
+		item := test.TempWidgetRenderer(t, icon.(granio.Widget)).Objects()[1].(*fileDialogItem)
 		if !item.dir {
 			target = item
 			id = i
@@ -257,7 +257,7 @@ func TestHiddenFiles(t *testing.T) {
 	assert.NoError(t, err)
 
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	d := NewFileOpen(func(fyne.URIReadCloser, error) {
+	d := NewFileOpen(func(granio.URIReadCloser, error) {
 	}, win)
 	d.SetLocation(dir)
 	d.Show()
@@ -267,25 +267,25 @@ func TestHiddenFiles(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
 
-	createNewFolderButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[0].(*widget.Button)
+	createNewFolderButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[0].(*widget.Button)
 	assert.Equal(t, "", createNewFolderButton.Text)
 	assert.Equal(t, theme.FolderNewIcon().Name(), createNewFolderButton.Icon.Name())
-	toggleViewButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
+	toggleViewButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
 	assert.Equal(t, "", toggleViewButton.Text)
 	assert.Equal(t, theme.ListIcon().Name(), toggleViewButton.Icon.Name())
-	optionsButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[2].(*widget.Button)
+	optionsButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[2].(*widget.Button)
 	assert.Equal(t, "", optionsButton.Text)
 	assert.Equal(t, theme.SettingsIcon().Name(), optionsButton.Icon.Name())
 
-	files := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0].(*widget.GridWrap)
-	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*fyne.Container).Objects
+	files := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0].(*widget.GridWrap)
+	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*granio.Container).Objects
 	assert.NotEmpty(t, objects)
 
 	var target *fileDialogItem
 	for _, icon := range objects {
-		item := test.TempWidgetRenderer(t, icon.(fyne.Widget)).Objects()[1].(*fileDialogItem)
+		item := test.TempWidgetRenderer(t, icon.(granio.Widget)).Objects()[1].(*fileDialogItem)
 		if item.name == ".hidden" {
 			target = item
 		}
@@ -296,7 +296,7 @@ func TestHiddenFiles(t *testing.T) {
 	d.dialog.refreshDir(d.dialog.dir)
 
 	for _, icon := range objects {
-		item := test.TempWidgetRenderer(t, icon.(fyne.Widget)).Objects()[1].(*fileDialogItem)
+		item := test.TempWidgetRenderer(t, icon.(granio.Widget)).Objects()[1].(*fileDialogItem)
 		if item.name == ".hidden" {
 			target = item
 		}
@@ -305,10 +305,10 @@ func TestHiddenFiles(t *testing.T) {
 }
 
 func TestShowFileSave(t *testing.T) {
-	var chosen fyne.URIWriteCloser
+	var chosen granio.URIWriteCloser
 	var saveErr error
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	saver := NewFileSave(func(file fyne.URIWriteCloser, err error) {
+	saver := NewFileSave(func(file granio.URIWriteCloser, err error) {
 		chosen = file
 		saveErr = err
 	}, win)
@@ -319,19 +319,19 @@ func TestShowFileSave(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
-	title := ui.Objects[1].(*fyne.Container).Objects[0].(*widget.Label)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
+	title := ui.Objects[1].(*granio.Container).Objects[0].(*widget.Label)
 	assert.Equal(t, "Save File", title.Text)
 
-	nameEntry := ui.Objects[2].(*fyne.Container).Objects[0].(*container.Scroll).Content.(*widget.Entry)
-	buttons := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container)
+	nameEntry := ui.Objects[2].(*granio.Container).Objects[0].(*container.Scroll).Content.(*widget.Entry)
+	buttons := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container)
 	save := buttons.Objects[1].(*widget.Button)
 
-	files := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0].(*widget.GridWrap)
-	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*fyne.Container).Objects
+	files := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0].(*widget.GridWrap)
+	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*granio.Container).Objects
 	assert.NotEmpty(t, objects)
 
-	item := test.TempWidgetRenderer(t, objects[0].(fyne.Widget)).Objects()[1].(*fileDialogItem)
+	item := test.TempWidgetRenderer(t, objects[0].(granio.Widget)).Objects()[1].(*fileDialogItem)
 	assert.Equal(t, lang.L("(Parent)"), item.name)
 	assert.True(t, save.Disabled())
 
@@ -342,7 +342,7 @@ func TestShowFileSave(t *testing.T) {
 	var target *fileDialogItem
 	id := -1
 	for i, icon := range objects {
-		item := test.TempWidgetRenderer(t, icon.(fyne.Widget)).Objects()[1].(*fileDialogItem)
+		item := test.TempWidgetRenderer(t, icon.(granio.Widget)).Objects()[1].(*fileDialogItem)
 		if !item.dir {
 			target = item
 			id = i
@@ -386,7 +386,7 @@ func TestShowFileSave(t *testing.T) {
 
 func TestFileFilters(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	f := NewFileOpen(func(fyne.URIReadCloser, error) {
+	f := NewFileOpen(func(granio.URIReadCloser, error) {
 	}, win)
 
 	f.SetFilter(storage.NewExtensionFileFilter([]string{".png"}))
@@ -394,7 +394,7 @@ func TestFileFilters(t *testing.T) {
 
 	workingDir, err := os.Getwd()
 	if err != nil {
-		fyne.LogError("Could not get current working directory", err)
+		granio.LogError("Could not get current working directory", err)
 		t.FailNow()
 	}
 	testDataDir := storage.NewFileURI(filepath.Join(workingDir, "testdata"))
@@ -452,7 +452,7 @@ func TestFileSort(t *testing.T) {
 	assert.NoError(t, err)
 
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	d := NewFileOpen(func(fyne.URIReadCloser, error) {
+	d := NewFileOpen(func(granio.URIReadCloser, error) {
 	}, win)
 	d.SetLocation(dir)
 	d.Show()
@@ -462,16 +462,16 @@ func TestFileSort(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
 
-	files := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0].(*widget.GridWrap)
-	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*fyne.Container).Objects
+	files := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0].(*widget.GridWrap)
+	objects := test.TempWidgetRenderer(t, files).Objects()[0].(*container.Scroll).Content.(*granio.Container).Objects
 	assert.NotEmpty(t, objects)
 
 	binPos := -1
 	capitalPos := -1
 	for i, icon := range objects {
-		item := test.TempWidgetRenderer(t, icon.(fyne.Widget)).Objects()[1].(*fileDialogItem)
+		item := test.TempWidgetRenderer(t, icon.(granio.Widget)).Objects()[1].(*fileDialogItem)
 		switch item.name {
 		case "bin":
 			binPos = i
@@ -488,7 +488,7 @@ func TestFileSort(t *testing.T) {
 func TestView(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
 
-	dlg := NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	dlg := NewFileOpen(func(reader granio.URIReadCloser, err error) {
 		assert.NoError(t, err)
 		assert.Nil(t, reader)
 	}, win)
@@ -503,9 +503,9 @@ func TestView(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
-	toggleViewButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
-	panel := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
+	toggleViewButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
+	panel := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
 
 	// view should be a grid
 	_, isGrid := panel.(*widget.GridWrap)
@@ -517,7 +517,7 @@ func TestView(t *testing.T) {
 	// toggle view
 	test.Tap(toggleViewButton)
 	// reload files container
-	panel = ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
+	panel = ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
 
 	// view should be a list
 	_, isList := panel.(*widget.List)
@@ -529,7 +529,7 @@ func TestView(t *testing.T) {
 	// toggle view
 	test.Tap(toggleViewButton)
 	// reload files container
-	panel = ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
+	panel = ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
 
 	// view should be a grid again
 	_, isGrid = panel.(*widget.GridWrap)
@@ -538,20 +538,20 @@ func TestView(t *testing.T) {
 	assert.Equal(t, "", toggleViewButton.Text)
 	assert.Equal(t, theme.ListIcon().Name(), toggleViewButton.Icon.Name())
 
-	title := ui.Objects[1].(*fyne.Container).Objects[0].(*widget.Label)
+	title := ui.Objects[1].(*granio.Container).Objects[0].(*widget.Label)
 	assert.Equal(t, "File Selection", title.Text)
-	confirm := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
+	confirm := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
 	assert.Equal(t, "Yes", confirm.Text)
-	dismiss := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container).Objects[0].(*widget.Button)
+	dismiss := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container).Objects[0].(*widget.Button)
 	assert.Equal(t, "Dismiss", dismiss.Text)
 }
 
 func TestSetView(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
 
-	fyne.CurrentApp().Preferences().SetInt(viewLayoutKey, int(defaultView))
+	granio.CurrentApp().Preferences().SetInt(viewLayoutKey, int(defaultView))
 
-	dlg := NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	dlg := NewFileOpen(func(reader granio.URIReadCloser, err error) {
 		assert.NoError(t, err)
 		assert.Nil(t, reader)
 	}, win)
@@ -570,9 +570,9 @@ func TestSetView(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
-	toggleViewButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
-	panel := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
+	toggleViewButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
+	panel := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
 
 	// view should be a list
 	_, isList := panel.(*widget.List)
@@ -581,18 +581,18 @@ func TestSetView(t *testing.T) {
 	assert.Equal(t, "", toggleViewButton.Text)
 	assert.Equal(t, theme.GridIcon(), toggleViewButton.Icon)
 
-	title := ui.Objects[1].(*fyne.Container).Objects[0].(*widget.Label)
+	title := ui.Objects[1].(*granio.Container).Objects[0].(*widget.Label)
 	assert.Equal(t, "File Selection", title.Text)
-	confirm := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
+	confirm := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
 	assert.Equal(t, "Yes", confirm.Text)
-	dismiss := ui.Objects[2].(*fyne.Container).Objects[1].(*fyne.Container).Objects[0].(*widget.Button)
+	dismiss := ui.Objects[2].(*granio.Container).Objects[1].(*granio.Container).Objects[0].(*widget.Button)
 	assert.Equal(t, "Dismiss", dismiss.Text)
 
 	// set view to grid on already opened dialog - should be updated automatically
 	dlg.SetView(GridView)
 
 	// view should be a grid again
-	panel = ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
+	panel = ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
 	_, isGrid := panel.(*widget.GridWrap)
 	assert.True(t, isGrid)
 	// toggleViewButton should reflect to what it will do (change to a list view).
@@ -603,12 +603,12 @@ func TestSetView(t *testing.T) {
 func TestSetViewPreferences(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
 
-	prefs := fyne.CurrentApp().Preferences()
+	prefs := granio.CurrentApp().Preferences()
 
 	// set user-saved viewLayout to GridView
 	prefs.SetInt(viewLayoutKey, int(GridView))
 
-	dlg := NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	dlg := NewFileOpen(func(reader granio.URIReadCloser, err error) {
 		assert.NoError(t, err)
 		assert.Nil(t, reader)
 	}, win)
@@ -623,9 +623,9 @@ func TestSetViewPreferences(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
-	toggleViewButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
-	panel := ui.Objects[0].(*container.Split).Trailing.(*fyne.Container).Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects[0]
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
+	toggleViewButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
+	panel := ui.Objects[0].(*container.Split).Trailing.(*granio.Container).Objects[0].(*container.Scroll).Content.(*granio.Container).Objects[0]
 
 	// check that preference setting overrules configured default view
 	_, isGrid := panel.(*widget.GridWrap)
@@ -638,12 +638,12 @@ func TestSetViewPreferences(t *testing.T) {
 func TestViewPreferences(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
 
-	prefs := fyne.CurrentApp().Preferences()
+	prefs := granio.CurrentApp().Preferences()
 
 	// set viewLayout to an invalid value to verify that this situation is handled properly
 	prefs.SetInt(viewLayoutKey, -1)
 
-	dlg := NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	dlg := NewFileOpen(func(reader granio.URIReadCloser, err error) {
 		assert.NoError(t, err)
 		assert.Nil(t, reader)
 	}, win)
@@ -655,8 +655,8 @@ func TestViewPreferences(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
-	toggleViewButton := ui.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[1].(*widget.Button)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
+	toggleViewButton := ui.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[1].(*widget.Button)
 
 	// default viewLayout preference should be 'grid'
 	view := ViewLayout(prefs.Int(viewLayoutKey))
@@ -681,7 +681,7 @@ func TestFileFavorites(t *testing.T) {
 	_ = test.NewApp()
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
 
-	dlg := NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	dlg := NewFileOpen(func(reader granio.URIReadCloser, err error) {
 		assert.NoError(t, err)
 		assert.Nil(t, reader)
 	}, win)
@@ -693,7 +693,7 @@ func TestFileFavorites(t *testing.T) {
 	assert.NotNil(t, popup)
 
 	// padded container -> content container
-	ui := popup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
+	ui := popup.Content.(*granio.Container).Objects[0].(*granio.Container)
 
 	dlg.dialog.loadFavorites()
 	favoriteLocations, _ := getFavoriteLocations()
@@ -726,14 +726,14 @@ func TestFileFavorites(t *testing.T) {
 
 func TestSetFileNameBeforeShow(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	dSave := NewFileSave(func(fyne.URIWriteCloser, error) {}, win)
+	dSave := NewFileSave(func(granio.URIWriteCloser, error) {}, win)
 	dSave.SetFileName("testfile.zip")
 	dSave.Show()
 
 	assert.Equal(t, "testfile.zip", dSave.dialog.fileName.(*widget.Entry).Text)
 
 	// Should have no effect on FileOpen dialog
-	dOpen := NewFileOpen(func(fyne.URIReadCloser, error) {}, win)
+	dOpen := NewFileOpen(func(granio.URIReadCloser, error) {}, win)
 	dOpen.SetFileName("testfile.zip")
 	dOpen.Show()
 
@@ -742,14 +742,14 @@ func TestSetFileNameBeforeShow(t *testing.T) {
 
 func TestSetFileNameAfterShow(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	dSave := NewFileSave(func(fyne.URIWriteCloser, error) {}, win)
+	dSave := NewFileSave(func(granio.URIWriteCloser, error) {}, win)
 	dSave.Show()
 	dSave.SetFileName("testfile.zip")
 
 	assert.Equal(t, "testfile.zip", dSave.dialog.fileName.(*widget.Entry).Text)
 
 	// Should have no effect on FileOpen dialog
-	dOpen := NewFileOpen(func(fyne.URIReadCloser, error) {}, win)
+	dOpen := NewFileOpen(func(granio.URIReadCloser, error) {}, win)
 	dOpen.Show()
 	dOpen.SetFileName("testfile.zip")
 
@@ -758,7 +758,7 @@ func TestSetFileNameAfterShow(t *testing.T) {
 
 func TestTapParent_GoesUpOne(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	d := NewFileOpen(func(fyne.URIReadCloser, error) {}, win)
+	d := NewFileOpen(func(granio.URIReadCloser, error) {}, win)
 	home, _ := os.UserHomeDir()
 	homeURI, _ := storage.ListerForURI(storage.NewFileURI(home))
 	parentURI, _ := storage.Parent(homeURI)
@@ -768,8 +768,8 @@ func TestTapParent_GoesUpOne(t *testing.T) {
 	d.Show()
 
 	items := test.WidgetRenderer(d.dialog.files)
-	item := items.Objects()[0].(*intWidget.Scroll).Content.(*fyne.Container).Objects[0]
-	parent := test.WidgetRenderer(item.(fyne.Widget)).Objects()[1].(*fileDialogItem)
+	item := items.Objects()[0].(*intWidget.Scroll).Content.(*granio.Container).Objects[0]
+	parent := test.WidgetRenderer(item.(granio.Widget)).Objects()[1].(*fileDialogItem)
 	test.Tap(parent)
 
 	assert.Equal(t, d.dialog.dir.String(), parentURI.String())
@@ -778,7 +778,7 @@ func TestTapParent_GoesUpOne(t *testing.T) {
 func TestCreateNewFolderInDir(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
 
-	folderDialog := NewFolderOpen(func(_ fyne.ListableURI, err error) {
+	folderDialog := NewFolderOpen(func(_ granio.ListableURI, err error) {
 		assert.NoError(t, err)
 	}, win)
 	folderDialog.SetConfirmText("Choose")
@@ -790,9 +790,9 @@ func TestCreateNewFolderInDir(t *testing.T) {
 	assert.NotNil(t, folderDialogPopup)
 
 	// padded container -> content container
-	folderDialogUI := folderDialogPopup.Content.(*fyne.Container).Objects[0].(*fyne.Container)
+	folderDialogUI := folderDialogPopup.Content.(*granio.Container).Objects[0].(*granio.Container)
 
-	createNewFolderButton := folderDialogUI.Objects[1].(*fyne.Container).Objects[1].(*fyne.Container).Objects[0].(*widget.Button)
+	createNewFolderButton := folderDialogUI.Objects[1].(*granio.Container).Objects[1].(*granio.Container).Objects[0].(*widget.Button)
 	assert.Equal(t, "", createNewFolderButton.Text)
 	assert.Equal(t, theme.FolderNewIcon().Name(), createNewFolderButton.Icon.Name())
 
@@ -803,7 +803,7 @@ func TestCreateNewFolderInDir(t *testing.T) {
 	defer win.Canvas().Overlays().Remove(inputPopup)
 	assert.NotNil(t, inputPopup)
 
-	folderNameInputUI := inputPopup.Content.(*fyne.Container)
+	folderNameInputUI := inputPopup.Content.(*granio.Container)
 
 	folderNameInputTitle := folderNameInputUI.Objects[4].(*widget.Label)
 	assert.Equal(t, "New Folder", folderNameInputTitle.Text)
@@ -814,17 +814,17 @@ func TestCreateNewFolderInDir(t *testing.T) {
 	folderNameInputEntry := folderNameInputUI.Objects[2].(*widget.Form).Items[0].Widget.(*widget.Entry)
 	assert.Equal(t, "", folderNameInputEntry.Text)
 
-	folderNameInputCancel := folderNameInputUI.Objects[3].(*fyne.Container).Objects[0].(*widget.Button)
+	folderNameInputCancel := folderNameInputUI.Objects[3].(*granio.Container).Objects[0].(*widget.Button)
 	assert.Equal(t, "Cancel", folderNameInputCancel.Text)
 	assert.Equal(t, theme.CancelIcon(), folderNameInputCancel.Icon)
 
-	folderNameInputCreate := folderNameInputUI.Objects[3].(*fyne.Container).Objects[1].(*widget.Button)
+	folderNameInputCreate := folderNameInputUI.Objects[3].(*granio.Container).Objects[1].(*widget.Button)
 	assert.Equal(t, theme.ConfirmIcon(), folderNameInputCreate.Icon)
 }
 
 func TestSetOnClosedBeforeShow(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	d := NewFileSave(func(fyne.URIWriteCloser, error) {}, win)
+	d := NewFileSave(func(granio.URIWriteCloser, error) {}, win)
 	onClosedCalled := false
 	d.SetOnClosed(func() { onClosedCalled = true })
 	d.Show()
@@ -834,16 +834,16 @@ func TestSetOnClosedBeforeShow(t *testing.T) {
 
 func TestFileDialogSizeBeforeShow(t *testing.T) {
 	win := test.NewTempWindow(t, widget.NewLabel("Content"))
-	win.Resize(fyne.NewSize(1000, 800))
-	d := NewFileOpen(func(fyne.URIReadCloser, error) {}, win)
+	win.Resize(granio.NewSize(1000, 800))
+	d := NewFileOpen(func(granio.URIReadCloser, error) {}, win)
 
 	// the popup does not exist yet, none of these may panic
 	d.MinSize()
 	d.Refresh()
 	d.Dismiss()
-	d.Resize(fyne.NewSize(700, 500))
+	d.Resize(granio.NewSize(700, 500))
 
 	d.Show()
-	assert.Equal(t, fyne.NewSize(700, 500), d.dialog.win.Content.Size())
+	assert.Equal(t, granio.NewSize(700, 500), d.dialog.win.Content.Size())
 	d.Hide()
 }

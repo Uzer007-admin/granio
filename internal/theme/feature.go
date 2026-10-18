@@ -1,8 +1,8 @@
 package theme
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
 )
 
 type FeatureName string
@@ -18,7 +18,7 @@ type FeatureTheme interface {
 // FeatureForWidget looks up the specified feature flag for the requested widget using the current theme.
 // This is for internal purposes and will do nothing if the theme has not been overridden with the
 // ThemeOverride container.
-func FeatureForWidget(name FeatureName, w fyne.Widget) any {
+func FeatureForWidget(name FeatureName, w granio.Widget) any {
 	if custom := cache.WidgetTheme(w); custom != nil {
 		if f, ok := custom.(FeatureTheme); ok {
 			return f.Feature(name)

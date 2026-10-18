@@ -1,28 +1,28 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Widget     = (*Label)(nil)
-	_ fyne.Accessible = (*Label)(nil)
+	_ granio.Widget     = (*Label)(nil)
+	_ granio.Accessible = (*Label)(nil)
 )
 
 // Label widget is a label component with appropriate padding and layout.
 type Label struct {
 	BaseWidget
 	Text      string
-	Alignment fyne.TextAlign // The alignment of the text
-	Wrapping  fyne.TextWrap  // The wrapping of the text
-	TextStyle fyne.TextStyle // The style of the label text
+	Alignment granio.TextAlign // The alignment of the text
+	Wrapping  granio.TextWrap  // The wrapping of the text
+	TextStyle granio.TextStyle // The style of the label text
 
 	// The truncation mode of the text
 	//
 	// Since: 2.4
-	Truncation fyne.TextTruncation
+	Truncation granio.TextTruncation
 	// Importance informs how the label should be styled, i.e. warning or disabled
 	//
 	// Since: 2.4
@@ -31,7 +31,8 @@ type Label struct {
 	// The theme size name for the text size of the label
 	//
 	// Since: 2.6
-	SizeName fyne.ThemeSizeName
+	SizeName granio.ThemeSizeName
+	TextRole granio.TextRole
 
 	// If set to true, Selectable indicates that this label should support select interaction
 	// to allow the text to be copied.
@@ -46,7 +47,7 @@ type Label struct {
 
 // NewLabel creates a new label widget with the set text content
 func NewLabel(text string) *Label {
-	return NewLabelWithStyle(text, fyne.TextAlignLeading, fyne.TextStyle{})
+	return NewLabelWithStyle(text, granio.TextAlignLeading, granio.TextStyle{})
 }
 
 // NewLabelWithData returns a Label widget connected to the specified data source.
@@ -60,7 +61,7 @@ func NewLabelWithData(data binding.String) *Label {
 }
 
 // NewLabelWithStyle creates a new label widget with the set text content
-func NewLabelWithStyle(text string, alignment fyne.TextAlign, style fyne.TextStyle) *Label {
+func NewLabelWithStyle(text string, alignment granio.TextAlign, style granio.TextStyle) *Label {
 	l := &Label{
 		Text:      text,
 		Alignment: alignment,
@@ -78,11 +79,11 @@ func (l *Label) AccessibilityLabel() string {
 	return l.Text
 }
 
-// AccessibilityRole for a label is fyne.AccessibleRoleText.
+// AccessibilityRole for a label is granio.AccessibleRoleText.
 //
 // Since: 2.8
-func (*Label) AccessibilityRole() fyne.AccessibleRole {
-	return fyne.AccessibleRoleText
+func (*Label) AccessibilityRole() granio.AccessibleRole {
+	return granio.AccessibleRoleText
 }
 
 // Bind connects the specified data source to this Label.
@@ -95,7 +96,7 @@ func (l *Label) Bind(data binding.String) {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (l *Label) CreateRenderer() fyne.WidgetRenderer {
+func (l *Label) CreateRenderer() granio.WidgetRenderer {
 	l.provider = NewRichTextWithText(l.Text)
 	l.ExtendBaseWidget(l)
 	l.syncSegments()
@@ -107,11 +108,11 @@ func (l *Label) CreateRenderer() fyne.WidgetRenderer {
 	l.selection.theme = l.Theme()
 	l.selection.provider = l.provider
 
-	return &labelRenderer{l: l, objects: []fyne.CanvasObject{l.selection, l.provider}}
+	return &labelRenderer{l: l, objects: []granio.CanvasObject{l.selection, l.provider}}
 }
 
 // MinSize returns the size that this label should not shrink below.
-func (l *Label) MinSize() fyne.Size {
+func (l *Label) MinSize() granio.Size {
 	l.ExtendBaseWidget(l)
 	return l.BaseWidget.MinSize()
 }
@@ -172,7 +173,7 @@ func (l *Label) Unbind() {
 }
 
 func (l *Label) syncSegments() {
-	var color fyne.ThemeColorName
+	var color granio.ThemeColorName
 	switch l.Importance {
 	case LowImportance:
 		color = theme.ColorNameDisabled
@@ -200,6 +201,7 @@ func (l *Label) syncSegments() {
 		Inline:    true,
 		TextStyle: l.TextStyle,
 		SizeName:  sizeName,
+		TextRole:  l.TextRole,
 	}
 	l.provider.Segments[0].(*TextSegment).Text = l.Text
 }
@@ -214,7 +216,7 @@ func (l *Label) updateFromData(data binding.DataItem) {
 	}
 	val, err := textSource.Get()
 	if err != nil {
-		fyne.LogError("Error getting current data value", err)
+		granio.LogError("Error getting current data value", err)
 		return
 	}
 	l.SetText(val)
@@ -222,22 +224,22 @@ func (l *Label) updateFromData(data binding.DataItem) {
 
 type labelRenderer struct {
 	l       *Label
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 }
 
 func (*labelRenderer) Destroy() {
 }
 
-func (r *labelRenderer) Layout(s fyne.Size) {
+func (r *labelRenderer) Layout(s granio.Size) {
 	r.l.selection.Resize(s)
 	r.l.provider.Resize(s)
 }
 
-func (r *labelRenderer) MinSize() fyne.Size {
+func (r *labelRenderer) MinSize() granio.Size {
 	return r.l.provider.MinSize()
 }
 
-func (r *labelRenderer) Objects() []fyne.CanvasObject {
+func (r *labelRenderer) Objects() []granio.CanvasObject {
 	if !r.l.Selectable {
 		return r.objects[1:] // only the RichText provider; exclude selection
 	}
@@ -273,7 +275,7 @@ func (f *focusSelectable) FocusLost() {
 	f.Refresh()
 }
 
-func (*focusSelectable) TypedKey(*fyne.KeyEvent) {
+func (*focusSelectable) TypedKey(*granio.KeyEvent) {
 }
 
 func (*focusSelectable) TypedRune(rune) {

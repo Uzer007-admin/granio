@@ -1,14 +1,14 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Requireable = (*Entry)(nil)
-	_ fyne.Validatable = (*Entry)(nil)
+	_ granio.Requireable = (*Entry)(nil)
+	_ granio.Validatable = (*Entry)(nil)
 )
 
 // HasValue is used for required validation and returns true if the text is not empty.
@@ -88,7 +88,7 @@ func (e *Entry) setValidationErrorWithoutRefresh(err error) bool {
 	return true
 }
 
-var _ fyne.Widget = (*validationStatus)(nil)
+var _ granio.Widget = (*validationStatus)(nil)
 
 type validationStatus struct {
 	BaseWidget
@@ -104,7 +104,7 @@ func newValidationStatus(e *Entry) *validationStatus {
 	return rs
 }
 
-func (r *validationStatus) CreateRenderer() fyne.WidgetRenderer {
+func (r *validationStatus) CreateRenderer() granio.WidgetRenderer {
 	icon := &canvas.Image{}
 	icon.Hide()
 	return &validationStatusRenderer{
@@ -114,23 +114,23 @@ func (r *validationStatus) CreateRenderer() fyne.WidgetRenderer {
 	}
 }
 
-var _ fyne.WidgetRenderer = (*validationStatusRenderer)(nil)
+var _ granio.WidgetRenderer = (*validationStatusRenderer)(nil)
 
 type validationStatusRenderer struct {
-	fyne.WidgetRenderer
+	granio.WidgetRenderer
 	entry *Entry
 	icon  *canvas.Image
 }
 
-func (r *validationStatusRenderer) Layout(size fyne.Size) {
+func (r *validationStatusRenderer) Layout(size granio.Size) {
 	iconSize := r.entry.Theme().Size(theme.SizeNameInlineIcon)
-	r.icon.Resize(fyne.NewSquareSize(iconSize))
-	r.icon.Move(fyne.NewPos((size.Width-iconSize)/2, (size.Height-iconSize)/2))
+	r.icon.Resize(granio.NewSquareSize(iconSize))
+	r.icon.Move(granio.NewPos((size.Width-iconSize)/2, (size.Height-iconSize)/2))
 }
 
-func (r *validationStatusRenderer) MinSize() fyne.Size {
+func (r *validationStatusRenderer) MinSize() granio.Size {
 	iconSize := r.entry.Theme().Size(theme.SizeNameInlineIcon)
-	return fyne.NewSquareSize(iconSize)
+	return granio.NewSquareSize(iconSize)
 }
 
 func (r *validationStatusRenderer) Refresh() {

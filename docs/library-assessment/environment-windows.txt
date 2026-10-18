@@ -1,0 +1,12 @@
+Assessment date: 2026-10-12 Europe/Moscow
+Commit: 7f99a87b0e1903ebc17f3c8c8f478b840a6eabe5
+Worktree: contains existing uncommitted changes
+Toolchain: go version go1.27.1 windows/amd64
+GOOS: windows
+GOARCH: amd64
+GOAMD64: v3
+CGO_ENABLED: 1
+CPU: 13th Gen Intel(R) Core(TM) i5-13400
+Build profile: ordinary desktop, no migrated_fynedo tag, no race detector
+Benchmarks: three runs of 500ms per case
+Final runs: packages serialized with -p 1; timeouts 120s ordinary and 60s migrated; benchmark cases RunOnDraw excluded from primary baseline.

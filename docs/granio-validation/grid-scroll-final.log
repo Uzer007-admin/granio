@@ -1,0 +1,12 @@
+=== RUN   TestDataGridProjectionKeepsIdentityAndSourceOrder
+--- PASS: TestDataGridProjectionKeepsIdentityAndSourceOrder (0.05s)
+=== RUN   TestDataGridEditingValidationFailureAndKeyboard
+--- PASS: TestDataGridEditingValidationFailureAndKeyboard (0.09s)
+=== RUN   TestDataGridVirtualizesLargeSource
+--- PASS: TestDataGridVirtualizesLargeSource (0.19s)
+=== RUN   TestDataGridEditingKeepsDraftAndSearchFocus
+--- PASS: TestDataGridEditingKeepsDraftAndSearchFocus (0.07s)
+=== RUN   TestDataGridScrollKeepsDraftWithoutHiddenFocus
+--- PASS: TestDataGridScrollKeepsDraftWithoutHiddenFocus (0.05s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/widget	3.664s

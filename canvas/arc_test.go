@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -56,12 +56,12 @@ func TestArc_InnerRadiusStartEndAngles(t *testing.T) {
 		StrokeColor:  color.Black,
 	}
 
-	arc.Resize(fyne.NewSize(50, 50))
+	arc.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "arc.xml", arc)
 
 	c := software.NewCanvas()
 	c.SetContent(arc)
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 
 	arc.StartAngle = 0
 	arc.EndAngle = 360
@@ -113,12 +113,12 @@ func TestArc_RadiusMaximum(t *testing.T) {
 		StrokeColor:  color.Black,
 	}
 
-	arc.Resize(fyne.NewSize(50, 50))
+	arc.Resize(granio.NewSize(50, 50))
 	test.AssertObjectRendersToMarkup(t, "maximum_rounded_arc.xml", arc)
 
 	c := software.NewCanvas()
 	c.SetContent(arc)
-	c.Resize(fyne.NewSize(60, 60))
+	c.Resize(granio.NewSize(60, 60))
 
 	test.AssertRendersToImage(t, "maximum_rounded_arc_80_220_stroke.png", c)
 

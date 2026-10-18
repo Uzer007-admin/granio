@@ -19,8 +19,8 @@ import "C"
 import (
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 )
 
 const (
@@ -70,21 +70,21 @@ func (w *window) gatherIOSAccessNodes() []iosAccessNode {
 	var nodes []iosAccessNode
 
 	if w.canvas.Content() != nil {
-		w.collectIOSNodes(w.canvas.Content(), fyne.NewPos(0, 0), &nodes)
+		w.collectIOSNodes(w.canvas.Content(), granio.NewPos(0, 0), &nodes)
 	}
 	if w.canvas.menu != nil {
-		w.collectIOSNodes(w.canvas.menu, fyne.NewPos(0, 0), &nodes)
+		w.collectIOSNodes(w.canvas.menu, granio.NewPos(0, 0), &nodes)
 	}
 	for _, overlay := range w.canvas.Overlays().List() {
-		w.collectIOSNodes(overlay, fyne.NewPos(0, 0), &nodes)
+		w.collectIOSNodes(overlay, granio.NewPos(0, 0), &nodes)
 	}
 
 	return nodes
 }
 
 func (w *window) collectIOSNodes(
-	obj fyne.CanvasObject,
-	pos fyne.Position,
+	obj granio.CanvasObject,
+	pos granio.Position,
 	nodes *[]iosAccessNode,
 ) {
 	if obj == nil || !obj.Visible() {
@@ -95,7 +95,7 @@ func (w *window) collectIOSNodes(
 
 	// Only add leaf roles (text, button, link) as accessibility elements.
 	// Containers are skipped so VoiceOver can navigate their children directly.
-	if accessible, ok := obj.(fyne.Accessible); ok {
+	if accessible, ok := obj.(granio.Accessible); ok {
 		role := roleNameToIOS(string(accessible.AccessibilityRole()))
 		if role != iosRoleContainer {
 			*nodes = append(*nodes, iosAccessNode{
@@ -109,7 +109,7 @@ func (w *window) collectIOSNodes(
 		}
 	}
 
-	if cont, ok := obj.(*fyne.Container); ok {
+	if cont, ok := obj.(*granio.Container); ok {
 		for _, child := range cont.Objects {
 			w.collectIOSNodes(child, objPos, nodes)
 		}

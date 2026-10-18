@@ -5,17 +5,17 @@ package mobile
 import (
 	"io"
 
-	"fyne.io/fyne/v2"
-	intRepo "fyne.io/fyne/v2/internal/repository"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
-func deleteURI(_ fyne.URI) error {
+func deleteURI(_ granio.URI) error {
 	// no-op as we use the internal FileRepository
 	return nil
 }
 
-func existsURI(fyne.URI) (bool, error) {
+func existsURI(granio.URI) (bool, error) {
 	// no-op as we use the internal FileRepository
 	return false, nil
 }
@@ -31,5 +31,5 @@ func nativeFileSave(*fileSave, bool) (io.WriteCloser, error) {
 }
 
 func registerRepository(_ *driver) {
-	repository.Register(fyne.URISchemeFile, intRepo.NewFileRepository())
+	repository.Register(granio.URISchemeFile, intRepo.NewFileRepository())
 }

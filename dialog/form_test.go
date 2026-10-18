@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -148,7 +148,7 @@ func TestFormDialog_Submit(t *testing.T) {
 	assert.True(t, form.win.Hidden)
 }
 
-func validatingFormDialog(result *formDialogResult, parent fyne.Window) *FormDialog {
+func validatingFormDialog(result *formDialogResult, parent granio.Window) *FormDialog {
 	validatingEntry := widget.NewEntry()
 	validatingEntry.Validator = func(input string) error {
 		if input != "abc" {
@@ -176,7 +176,7 @@ func validatingFormDialog(result *formDialogResult, parent fyne.Window) *FormDia
 	}, parent)
 }
 
-func controlFormDialog(result *formDialogResult, parent fyne.Window) *FormDialog {
+func controlFormDialog(result *formDialogResult, parent granio.Window) *FormDialog {
 	controlEntry := widget.NewEntry()
 	controlItem := &widget.FormItem{
 		Text:   "I accept anything",
@@ -197,7 +197,7 @@ func controlFormDialog(result *formDialogResult, parent fyne.Window) *FormDialog
 	}, parent)
 }
 
-func hintsFormDialog(result *formDialogResult, parent fyne.Window) *FormDialog {
+func hintsFormDialog(result *formDialogResult, parent granio.Window) *FormDialog {
 	validatingEntry := widget.NewEntry()
 	validatingEntry.Validator = func(input string) error {
 		if input != "abc" {

@@ -1,7 +1,7 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // KeyboardType represents a type of virtual keyboard
@@ -20,7 +20,7 @@ const (
 
 // Keyboardable describes any CanvasObject that needs a keyboard
 type Keyboardable interface {
-	fyne.Focusable
+	granio.Focusable
 
 	Keyboard() KeyboardType
 }

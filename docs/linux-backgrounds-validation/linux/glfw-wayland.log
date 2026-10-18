@@ -1,0 +1,5 @@
+=== RUN   TestBackgroundNativeLifecycle
+    background_integration_test.go:31: actual surface: {Platform:2 AlphaSurface:true TransparencyAvailable:true Composition:true BlurAvailable:true BlurRequested:false Revision:2 Compositor:21}
+--- PASS: TestBackgroundNativeLifecycle (0.08s)
+PASS
+ok  	github.com/go-gl/glfw/v3.5/glfw	1.098s

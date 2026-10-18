@@ -1,0 +1,7 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/granio/v2/widget
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkText_lineBounds_WrapWord-16    	    1675	   1467723 ns/op
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/widget	3.184s

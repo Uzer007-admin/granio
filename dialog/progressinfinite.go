@@ -3,11 +3,11 @@ package dialog
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // ProgressInfiniteDialog is a simple dialog window that displays text and a infinite progress bar.
@@ -23,11 +23,11 @@ type ProgressInfiniteDialog struct {
 // Using the returned type you should call Show().
 //
 // Deprecated: Use NewCustomWithoutButtons() and add a widget.ProgressBarInfinite() inside.
-func NewProgressInfinite(title, message string, parent fyne.Window) *ProgressInfiniteDialog {
+func NewProgressInfinite(title, message string, parent granio.Window) *ProgressInfiniteDialog {
 	d := newTextDialog(title, message, theme.InfoIcon(), parent)
 	bar := widget.NewProgressBarInfinite()
 	rect := canvas.NewRectangle(color.Transparent)
-	rect.SetMinSize(fyne.NewSize(200, 0)) //revive:disable-line:add-constant
+	rect.SetMinSize(granio.NewSize(200, 0)) //revive:disable-line:add-constant
 
 	d.create(container.NewStack(rect, bar))
 	return &ProgressInfiniteDialog{d, bar}

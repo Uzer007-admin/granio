@@ -8,13 +8,13 @@ import (
 	"strings"
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	col "fyne.io/fyne/v2/internal/color"
-	intdriver "fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 type markupRenderer struct {
@@ -23,20 +23,20 @@ type markupRenderer struct {
 }
 
 // snapshot creates a new snapshot of the current render tree.
-func snapshot(c fyne.Canvas) string {
+func snapshot(c granio.Canvas) string {
 	r := markupRenderer{}
 	r.writeCanvas(c)
 	return r.w.String()
 }
 
-func (r *markupRenderer) setAlignmentAttr(attrs map[string]*string, name string, a fyne.TextAlign) {
+func (r *markupRenderer) setAlignmentAttr(attrs map[string]*string, name string, a granio.TextAlign) {
 	var value string
 	switch a {
-	case fyne.TextAlignLeading:
+	case granio.TextAlignLeading:
 		// default mode, don’t add an attr
-	case fyne.TextAlignCenter:
+	case granio.TextAlignCenter:
 		value = "center"
-	case fyne.TextAlignTrailing:
+	case granio.TextAlignTrailing:
 		value = "trailing"
 	default:
 		value = fmt.Sprintf("unknown alignment: %d", a)
@@ -112,7 +112,7 @@ func (*markupRenderer) setSizeAttrWithDefault(attrs map[string]*string, name str
 	attrs[name] = &value
 }
 
-func (*markupRenderer) setPosAttr(attrs map[string]*string, name string, pos fyne.Position) {
+func (*markupRenderer) setPosAttr(attrs map[string]*string, name string, pos granio.Position) {
 	if int(pos.X) == 0 && int(pos.Y) == 0 {
 		return
 	}
@@ -120,7 +120,7 @@ func (*markupRenderer) setPosAttr(attrs map[string]*string, name string, pos fyn
 	attrs[name] = &value
 }
 
-func (r *markupRenderer) setResourceAttr(attrs map[string]*string, name string, rsc fyne.Resource) {
+func (r *markupRenderer) setResourceAttr(attrs map[string]*string, name string, rsc granio.Resource) {
 	if rsc == nil {
 		return
 	}
@@ -154,7 +154,7 @@ func (r *markupRenderer) setResourceAttr(attrs map[string]*string, name string, 
 	if !named {
 		// That’s some magic to access the private `source` field of the themed resource.
 		v := reflect.ValueOf(rsc).Elem().Field(0)
-		src, _ := reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem().Interface().(fyne.Resource) //gosec:disable G103
+		src, _ := reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem().Interface().(granio.Resource) //gosec:disable G103
 		r.setResourceAttr(attrs, name, src)
 	}
 	r.setStringAttr(attrs, "themed", variant)
@@ -173,7 +173,7 @@ func (r *markupRenderer) setScaleModeAttr(attrs map[string]*string, name string,
 	r.setStringAttr(attrs, name, scaleMode)
 }
 
-func (*markupRenderer) setSizeAttr(attrs map[string]*string, name string, size fyne.Size) {
+func (*markupRenderer) setSizeAttr(attrs map[string]*string, name string, size granio.Size) {
 	value := fmt.Sprintf("%dx%d", int(size.Width), int(size.Height))
 	attrs[name] = &value
 }
@@ -185,7 +185,7 @@ func (*markupRenderer) setStringAttr(attrs map[string]*string, name string, s st
 	attrs[name] = &s
 }
 
-func (r *markupRenderer) writeCanvas(c fyne.Canvas) {
+func (r *markupRenderer) writeCanvas(c granio.Canvas) {
 	attrs := map[string]*string{}
 	r.setSizeAttr(attrs, "size", c.Size())
 	if tc, ok := c.(software.WindowlessCanvas); ok {
@@ -215,7 +215,7 @@ func (r *markupRenderer) writeCanvas(c fyne.Canvas) {
 	r.writeCloseTag("canvas")
 }
 
-func (r *markupRenderer) writeCanvasObject(obj fyne.CanvasObject, _, _ fyne.Position, _ fyne.Size) bool {
+func (r *markupRenderer) writeCanvasObject(obj granio.CanvasObject, _, _ granio.Position, _ granio.Size) bool {
 	attrs := map[string]*string{}
 	r.setPosAttr(attrs, "pos", obj.Position())
 	r.setSizeAttr(attrs, "size", obj.Size())
@@ -240,9 +240,9 @@ func (r *markupRenderer) writeCanvasObject(obj fyne.CanvasObject, _, _ fyne.Posi
 		r.writeRectangle(o, attrs)
 	case *fynecanvas.Text:
 		r.writeText(o, attrs)
-	case *fyne.Container:
+	case *granio.Container:
 		r.writeContainer(o, attrs)
-	case fyne.Widget:
+	case granio.Widget:
 		r.writeWidget(o, attrs)
 	case *layout.Spacer:
 		r.writeSpacer(o, attrs)
@@ -285,13 +285,13 @@ func (r *markupRenderer) writeCircle(c *fynecanvas.Circle, attrs map[string]*str
 	r.writeTag("circle", true, attrs)
 }
 
-func (r *markupRenderer) writeCloseCanvasObject(o fyne.CanvasObject, _ fyne.Position, _ fyne.CanvasObject) {
+func (r *markupRenderer) writeCloseCanvasObject(o granio.CanvasObject, _ granio.Position, _ granio.CanvasObject) {
 	switch o.(type) {
-	case *fyne.Container:
+	case *granio.Container:
 		r.indentation--
 		r.writeIndent()
 		r.writeCloseTag("container")
-	case fyne.Widget:
+	case granio.Widget:
 		r.indentation--
 		r.writeIndent()
 		r.writeCloseTag("widget")
@@ -304,7 +304,7 @@ func (r *markupRenderer) writeCloseTag(name string) {
 	r.w.WriteString(">\n")
 }
 
-func (r *markupRenderer) writeContainer(_ *fyne.Container, attrs map[string]*string) {
+func (r *markupRenderer) writeContainer(_ *granio.Container, attrs map[string]*string) {
 	r.writeTag("container", false, attrs)
 	r.w.WriteRune('\n')
 	r.indentation++
@@ -456,7 +456,7 @@ func (r *markupRenderer) writeText(t *fynecanvas.Text, attrs map[string]*string)
 	r.writeCloseTag("text")
 }
 
-func (r *markupRenderer) writeWidget(w fyne.Widget, attrs map[string]*string) {
+func (r *markupRenderer) writeWidget(w granio.Widget, attrs map[string]*string) {
 	r.setStringAttr(attrs, "type", reflect.TypeOf(w).String())
 	r.writeTag("widget", false, attrs)
 	r.w.WriteRune('\n')
@@ -490,6 +490,8 @@ func knownColor(c color.Color) string {
 		return "foregroundOnError"
 	case nrgbaColor(theme.Color(theme.ColorNameForegroundOnPrimary)):
 		return "foregroundOnPrimary"
+	case nrgbaColor(theme.Color(theme.ColorNameForegroundOnButton)):
+		return "foregroundOnButton"
 	case nrgbaColor(theme.Color(theme.ColorNameForegroundOnSuccess)):
 		return "foregroundOnSuccess"
 	case nrgbaColor(theme.Color(theme.ColorNameForegroundOnWarning)):
@@ -534,7 +536,7 @@ func knownColor(c color.Color) string {
 }
 
 //gocyclo:ignore
-func knownResource(rsc fyne.Resource) string {
+func knownResource(rsc granio.Resource) string {
 	switch rsc {
 	case theme.CancelIcon():
 		return "cancelIcon"

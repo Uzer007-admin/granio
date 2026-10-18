@@ -1,0 +1,3 @@
+OS=Microsoft Windows NT 10.0.26300.0 Administrator=False
+CapabilityQueryError=Запрошенная операция требует повышения.
+

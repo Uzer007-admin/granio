@@ -8,9 +8,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
 )
 
 func TestGetFragmentColor(t *testing.T) {
@@ -38,8 +38,8 @@ func TestGetFragmentColor(t *testing.T) {
 }
 
 func TestInnerRect_Stretch(t *testing.T) {
-	pos := fyne.NewPos(10, 10)
-	size := fyne.NewSize(40, 40)
+	pos := granio.NewPos(10, 10)
+	size := granio.NewSize(40, 40)
 
 	innerSize, innerPos := rectInnerCoords(size, pos, canvas.ImageFillStretch, 0.0)
 
@@ -48,8 +48,8 @@ func TestInnerRect_Stretch(t *testing.T) {
 }
 
 func TestInnerRect_StretchIgnoreRatio(t *testing.T) {
-	pos := fyne.NewPos(10, 10)
-	size := fyne.NewSize(40, 40)
+	pos := granio.NewPos(10, 10)
+	size := granio.NewSize(40, 40)
 
 	innerSize, innerPos := rectInnerCoords(size, pos, canvas.ImageFillStretch, 2.0)
 
@@ -58,8 +58,8 @@ func TestInnerRect_StretchIgnoreRatio(t *testing.T) {
 }
 
 func TestInnerRect_ContainScale(t *testing.T) {
-	pos := fyne.NewPos(10, 10)
-	size := fyne.NewSize(40, 40)
+	pos := granio.NewPos(10, 10)
+	size := granio.NewSize(40, 40)
 
 	innerSize, innerPos := rectInnerCoords(size, pos, canvas.ImageFillContain, 1.0)
 
@@ -68,19 +68,19 @@ func TestInnerRect_ContainScale(t *testing.T) {
 }
 
 func TestInnerRect_ContainPillarbox(t *testing.T) {
-	pos := fyne.NewPos(10, 10)
-	size := fyne.NewSize(40, 40)
+	pos := granio.NewPos(10, 10)
+	size := granio.NewSize(40, 40)
 
 	innerSize, innerPos := rectInnerCoords(size, pos, canvas.ImageFillContain, 0.5)
 
-	assert.Equal(t, fyne.NewSize(20, 40), innerSize)
-	assert.Equal(t, fyne.NewPos(20, 10), innerPos)
+	assert.Equal(t, granio.NewSize(20, 40), innerSize)
+	assert.Equal(t, granio.NewPos(20, 10), innerPos)
 }
 
 func TestInnerRect_Original(t *testing.T) {
 	// TODO add check for minsize somehow?
-	pos := fyne.NewPos(10, 10)
-	size := fyne.NewSize(40, 40)
+	pos := granio.NewPos(10, 10)
+	size := granio.NewSize(40, 40)
 
 	innerSize1, innerPos1 := rectInnerCoords(size, pos, canvas.ImageFillOriginal, 0.5)
 	innerSize2, innerPos2 := rectInnerCoords(size, pos, canvas.ImageFillContain, 0.5)
@@ -90,19 +90,19 @@ func TestInnerRect_Original(t *testing.T) {
 }
 
 func TestVisibleTextPixels(t *testing.T) {
-	frame := fyne.NewSize(400, 100)
+	frame := granio.NewSize(400, 100)
 
-	offset, width := visibleTextPixels(fyne.NewPos(10, 0), fyne.NewSize(100, 20), frame, nil, 1)
+	offset, width := visibleTextPixels(granio.NewPos(10, 0), granio.NewSize(100, 20), frame, nil, 1)
 	assert.Equal(t, 0, offset)
 	assert.Equal(t, 100, width)
 
 	stack := &internal.ClipStack{}
-	clip := stack.Push(fyne.NewPos(100, 0), fyne.NewSize(200, 100))
-	offset, width = visibleTextPixels(fyne.NewPos(50, 0), fyne.NewSize(1000, 20), frame, clip, 1)
+	clip := stack.Push(granio.NewPos(100, 0), granio.NewSize(200, 100))
+	offset, width = visibleTextPixels(granio.NewPos(50, 0), granio.NewSize(1000, 20), frame, clip, 1)
 	assert.Equal(t, 50, offset)
 	assert.Equal(t, 200, width)
 
-	offset, width = visibleTextPixels(fyne.NewPos(-500, 0), fyne.NewSize(1000, 20), frame, nil, 2)
+	offset, width = visibleTextPixels(granio.NewPos(-500, 0), granio.NewSize(1000, 20), frame, nil, 2)
 	assert.Equal(t, 1000, offset)
 	assert.Equal(t, 800, width)
 }
@@ -128,8 +128,8 @@ func TestTextTextureWindow(t *testing.T) {
 func TestVecRectCoordsWithPad_Shadow(t *testing.T) {
 	p := &painter{pixScale: 1.0}
 	rect := &canvas.Rectangle{}
-	pos := fyne.NewPos(5, 5)
-	frame := fyne.NewSize(100, 100)
+	pos := granio.NewPos(5, 5)
+	frame := granio.NewSize(100, 100)
 
 	coords, bounds := p.vecRectCoordsWithPad(pos, rect, frame, 0, 0, rect.Shadow)
 	assert.Equal(t, [4]float32{5, 5, 5, 5}, bounds)
@@ -142,7 +142,7 @@ func TestVecRectCoordsWithPad_Shadow(t *testing.T) {
 
 	rect.Shadow = canvas.Shadow{
 		Color:      color.NRGBA{R: 0, G: 0, B: 0, A: 255},
-		Offset:     fyne.NewPos(30, -20),
+		Offset:     granio.NewPos(30, -20),
 		BlurRadius: 80,
 	}
 
@@ -163,16 +163,16 @@ func TestVecRectCoordsWithPad_Shadow(t *testing.T) {
 func TestVecRectCoordsWithPad_SharedEdge(t *testing.T) {
 	for _, scale := range []float32{1, 1.25, 2} {
 		p := &painter{pixScale: scale}
-		frame := fyne.NewSize(400, 800)
+		frame := granio.NewSize(400, 800)
 		for trackY := float32(20); trackY < 22; trackY += 0.13 {
 			for fill := float32(10); fill < 300; fill += 0.37 {
 				track, bar := &canvas.Rectangle{}, &canvas.Rectangle{}
-				track.Resize(fyne.NewSize(50, 500.3))
-				bar.Resize(fyne.NewSize(50, fill))
+				track.Resize(granio.NewSize(50, 500.3))
+				bar.Resize(granio.NewSize(50, fill))
 				barY := trackY + track.Size().Height - fill
 
-				_, tb := p.vecRectCoordsWithPad(fyne.NewPos(0, trackY), track, frame, 0, 0, canvas.Shadow{})
-				_, bb := p.vecRectCoordsWithPad(fyne.NewPos(0, barY), bar, frame, 0, 0, canvas.Shadow{})
+				_, tb := p.vecRectCoordsWithPad(granio.NewPos(0, trackY), track, frame, 0, 0, canvas.Shadow{})
+				_, bb := p.vecRectCoordsWithPad(granio.NewPos(0, barY), bar, frame, 0, 0, canvas.Shadow{})
 				if tb[3] != bb[3] {
 					t.Fatalf("scale %v, track at %v, fill %v: track bottom %v, bar bottom %v", scale, trackY, fill, tb[3], bb[3])
 				}

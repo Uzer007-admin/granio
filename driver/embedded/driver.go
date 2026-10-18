@@ -5,7 +5,7 @@ package embedded
 import (
 	"image"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Driver is an embedded driver designed for handling custom hardware.
@@ -16,6 +16,6 @@ type Driver interface {
 	Render(image.Image)
 	Run(func())
 
-	ScreenSize() fyne.Size
+	ScreenSize() granio.Size
 	Queue() chan Event
 }

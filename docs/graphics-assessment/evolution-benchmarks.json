@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-12",
+  "go": "1.27.1",
+  "os_arch": "windows/amd64",
+  "cpu": "Intel Core i5-13400",
+  "gpu": "NVIDIA GeForce RTX 4080 SUPER, OpenGL 4.6, driver 616.92",
+  "dbus_before": {
+    "BenchmarkCodecNumericArray/16-16": {
+      "samples": [
+        {
+          "ns": 3123.0,
+          "bytes": 1224,
+          "allocs": 43
+        },
+        {
+          "ns": 2960.0,
+          "bytes": 1224,
+          "allocs": 43
+        },
+        {
+          "ns": 2603.0,
+          "bytes": 1224,
+          "allocs": 43
+        }
+      ],
+      "median_ns": 2960.0,
+      "allocs": 43,
+      "bytes": 1224
+    },
+    "BenchmarkCodecNumericArray/4096-16": {
+      "samples": [
+        {
+          "ns": 502998.0,
+          "bytes": 229722,
+          "allocs": 8212
+        },
+        {
+          "ns": 629075.0,
+          "bytes": 229725,
+          "allocs": 8212
+        },
+        {
+          "ns": 477050.0,
+          "bytes": 229723,
+          "allocs": 8212
+        }
+      ],
+      "median_ns": 502998.0,
+      "allocs": 8212,
+      "bytes": 229722
+    }
+  },
+  "dbus_after": {
+    "BenchmarkCodecNumericArray/16-16": {
+      "samples": [
+        {
+          "ns": 818.5,
+          "bytes": 644,
+          "allocs": 9
+        },
+        {
+          "ns": 914.8,
+          "bytes": 644,
+          "allocs": 9
+        },
+        {
+          "ns": 822.9,
+          "bytes": 644,
+          "allocs": 9
+        }
+      ],
+      "median_ns": 822.9,
+      "allocs": 9,
+      "bytes": 644
+    },
+    "BenchmarkCodecNumericArray/4096-16": {
+      "samples": [
+        {
+          "ns": 41174.0,
+          "bytes": 98566,
+          "allocs": 9
+        },
+        {
+          "ns": 47697.0,
+          "bytes": 98566,
+          "allocs": 9
+        },
+        {
+          "ns": 43876.0,
+          "bytes": 98566,
+          "allocs": 9
+        }
+      ],
+      "median_ns": 43876.0,
+      "allocs": 9,
+      "bytes": 98566
+    }
+  },
+  "glfw_copy": {
+    "BenchmarkLegacyAxisCopy-16": {
+      "samples": [
+        {
+          "ns": 2392.0,
+          "bytes": 0,
+          "allocs": 0
+        },
+        {
+          "ns": 2520.0,
+          "bytes": 0,
+          "allocs": 0
+        },
+        {
+          "ns": 2663.0,
+          "bytes": 0,
+          "allocs": 0
+        }
+      ],
+      "median_ns": 2520.0,
+      "allocs": 0,
+      "bytes": 0
+    },
+    "BenchmarkNativeArrayCopy-16": {
+      "samples": [
+        {
+          "ns": 6.071,
+          "bytes": 0,
+          "allocs": 0
+        },
+        {
+          "ns": 5.518,
+          "bytes": 0,
+          "allocs": 0
+        },
+        {
+          "ns": 5.283,
+          "bytes": 0,
+          "allocs": 0
+        }
+      ],
+      "median_ns": 5.518,
+      "allocs": 0,
+      "bytes": 0
+    }
+  },
+  "gl_init": {
+    "full_before_us": 7780.4,
+    "full_after_us": 6709.9,
+    "compact_us": 53.3,
+    "full_lookups": 2848,
+    "compact_lookups": 50,
+    "go_allocs_both": 0
+  },
+  "glfw_reusable_queries": {
+    "before_allocs_for_four_calls": 4,
+    "after_allocs_for_four_calls": 0,
+    "path": "Null platform, absent joystick; GetAxesInto/GetButtonsInto/GetHatsInto/GetGamepadStateInto"
+  },
+  "notes": "Copy benchmark excludes hardware polling; GL Init timings are repeated averages, not three independent benchmark samples. No FPS/IPC throughput claim."
+}

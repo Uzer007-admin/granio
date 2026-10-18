@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestScaleIcon(t *testing.T) {
-	data, err := fyne.LoadResourceFromPath("./testdata/fyne.png")
+	data, err := granio.LoadResourceFromPath("./testdata/fyne.png")
 	assert.Nil(t, err)
 
 	assert.Equal(t, "fyne.png", data.Name())

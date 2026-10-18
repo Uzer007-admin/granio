@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"fyne.io/fyne/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/internal/repository"
 )
 
 func (p *preferences) storageWriter() (writeSyncCloser, error) {

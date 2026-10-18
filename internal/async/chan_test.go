@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
 func TestUnboundedChann(t *testing.T) {

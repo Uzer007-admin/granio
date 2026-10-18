@@ -5,7 +5,7 @@ package async
 import (
 	"sync/atomic"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // CanvasObjectQueue implements lock-free FIFO freelist based queue.
@@ -28,7 +28,7 @@ func NewCanvasObjectQueue() *CanvasObjectQueue {
 
 type itemCanvasObject struct {
 	next atomic.Pointer[itemCanvasObject]
-	v    fyne.CanvasObject
+	v    granio.CanvasObject
 }
 
 var itemCanvasObjectPool = Pool[*itemCanvasObject]{
@@ -36,7 +36,7 @@ var itemCanvasObjectPool = Pool[*itemCanvasObject]{
 }
 
 // In puts the given value at the tail of the queue.
-func (q *CanvasObjectQueue) In(v fyne.CanvasObject) {
+func (q *CanvasObjectQueue) In(v granio.CanvasObject) {
 	i := itemCanvasObjectPool.Get()
 	i.next.Store(nil)
 	i.v = v
@@ -61,7 +61,7 @@ func (q *CanvasObjectQueue) In(v fyne.CanvasObject) {
 
 // Out removes and returns the value at the head of the queue.
 // It returns nil if the queue is empty.
-func (q *CanvasObjectQueue) Out() fyne.CanvasObject {
+func (q *CanvasObjectQueue) Out() granio.CanvasObject {
 	var first, last, firstnext *itemCanvasObject
 	for {
 		first = q.head.Load()

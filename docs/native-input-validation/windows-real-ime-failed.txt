@@ -1,0 +1,12 @@
+=== RUN   TestRealMicrosoftJapaneseIME
+    ime_real_windows_test.go:35: Microsoft IME activation stage=4 HRESULT=0x80004005
+    ime_real_windows_test.go:36: 
+        	Error Trace:	X:/fyne/internal/driver/glfw/ime_real_windows_test.go:36
+        	Error:      	Should be zero, but was -2147467259
+        	Test:       	TestRealMicrosoftJapaneseIME
+        	Messages:   	Microsoft IME activation HRESULT 0x80004005
+FYNE-TSF: key=17 tested=0 eaten=0 enabled=1
+--- FAIL: TestRealMicrosoftJapaneseIME (0.60s)
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	2.260s
+FAIL

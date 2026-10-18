@@ -7,31 +7,31 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 const undoTestMarkdown = "# Title\n\nSome **bold** text\n\n- one\n- two\n\n```\ncode\n```\n\nend"
 
-func typeKey(e *RichTextEntry, key fyne.KeyName, count int) {
+func typeKey(e *RichTextEntry, key granio.KeyName, count int) {
 	for i := 0; i < count; i++ {
-		e.TypedKey(&fyne.KeyEvent{Name: key})
+		e.TypedKey(&granio.KeyEvent{Name: key})
 	}
 }
 
 func undo(e *RichTextEntry) {
-	e.TypedShortcut(&fyne.ShortcutUndo{})
+	e.TypedShortcut(&granio.ShortcutUndo{})
 }
 
 func redo(e *RichTextEntry) {
-	e.TypedShortcut(&fyne.ShortcutRedo{})
+	e.TypedShortcut(&granio.ShortcutRedo{})
 }
 
 func TestRichTextEntry_Undo_DeletedStyle(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("a **bold** c")
 	e.setCursorOffset(6)
 
-	typeKey(e, fyne.KeyBackspace, 4)
+	typeKey(e, granio.KeyBackspace, 4)
 	assert.Equal(t, "a  c", e.Text)
 
 	undo(e)
@@ -52,7 +52,7 @@ func TestRichTextEntry_Undo_DeleteKey(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("a **bold** c")
 	e.setCursorOffset(2)
 
-	typeKey(e, fyne.KeyDelete, 4)
+	typeKey(e, granio.KeyDelete, 4)
 	assert.Equal(t, "a  c", e.Text)
 
 	// as in an Entry, each use of the delete key is a change of its own
@@ -70,8 +70,8 @@ func TestRichTextEntry_Undo_SelectAll(t *testing.T) {
 	segments := segmentDump(e)
 	text := e.Text
 
-	e.TypedShortcut(&fyne.ShortcutSelectAll{})
-	typeKey(e, fyne.KeyBackspace, 1)
+	e.TypedShortcut(&granio.ShortcutSelectAll{})
+	typeKey(e, granio.KeyBackspace, 1)
 	assert.Equal(t, "", e.Text)
 
 	undo(e)
@@ -91,7 +91,7 @@ func TestRichTextEntry_Undo_SelectAll(t *testing.T) {
 func TestRichTextEntry_Undo_SelectAllReplace(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown(undoTestMarkdown)
 
-	e.TypedShortcut(&fyne.ShortcutSelectAll{})
+	e.TypedShortcut(&granio.ShortcutSelectAll{})
 	test.Type(e, "new")
 	assert.Equal(t, "new", e.Text)
 
@@ -108,7 +108,7 @@ func TestRichTextEntry_Undo_Cut(t *testing.T) {
 	selectRange(e, 2, 7)
 
 	clipboard := test.NewClipboard()
-	e.TypedShortcut(&fyne.ShortcutCut{Clipboard: clipboard})
+	e.TypedShortcut(&granio.ShortcutCut{Clipboard: clipboard})
 	assert.Equal(t, "a c", e.Text)
 	assert.Equal(t, "bold ", clipboard.Content())
 
@@ -116,7 +116,7 @@ func TestRichTextEntry_Undo_Cut(t *testing.T) {
 	assert.Equal(t, "a **bold** c", e.Markdown())
 
 	e.setCursorOffset(8)
-	e.TypedShortcut(&fyne.ShortcutPaste{Clipboard: clipboard})
+	e.TypedShortcut(&granio.ShortcutPaste{Clipboard: clipboard})
 	assert.Equal(t, "a bold cbold ", e.Text)
 
 	undo(e)
@@ -203,7 +203,7 @@ func TestRichTextEntry_Undo_List(t *testing.T) {
 	e := NewRichTextEntryFromMarkdown("- one\n- two")
 	e.setCursorOffset(3)
 
-	typeKey(e, fyne.KeyReturn, 1)
+	typeKey(e, granio.KeyReturn, 1)
 	assert.Equal(t, "- one\n- \n- two", e.Markdown())
 
 	undo(e)
@@ -220,7 +220,7 @@ func TestRichTextEntry_Undo_TypingStyle(t *testing.T) {
 	test.Type(e, "ab")
 	e.setCursorOffset(1)
 
-	e.TypedShortcut(styleShortcut(fyne.KeyB))
+	e.TypedShortcut(styleShortcut(granio.KeyB))
 	test.Type(e, "X")
 	assert.Equal(t, "a**X**b", e.Markdown())
 
@@ -298,7 +298,7 @@ func TestRichTextEntry_Undo_Disabled(t *testing.T) {
 // follows each of them and that it leads back to the content that was there before.
 func TestRichTextEntry_Undo_Random(t *testing.T) {
 	test.NewTempApp(t)
-	keys := []fyne.KeyName{fyne.KeyBackspace, fyne.KeyDelete, fyne.KeyReturn, fyne.KeyLeft, fyne.KeyUp}
+	keys := []granio.KeyName{granio.KeyBackspace, granio.KeyDelete, granio.KeyReturn, granio.KeyLeft, granio.KeyUp}
 	runes := []rune("ab c*_#->1. ~")
 	clipboard := test.NewClipboard()
 	clipboard.SetContent("pa**st**e\nd")
@@ -321,7 +321,7 @@ func TestRichTextEntry_Undo_Random(t *testing.T) {
 			case 6:
 				e.TypedShortcut(styleShortcuts[r.Intn(len(styleShortcuts))].shortcut)
 			case 7:
-				e.TypedShortcut(&fyne.ShortcutPaste{Clipboard: clipboard})
+				e.TypedShortcut(&granio.ShortcutPaste{Clipboard: clipboard})
 			case 8:
 				undo(e)
 			case 9:

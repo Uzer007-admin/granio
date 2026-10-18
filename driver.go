@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 import "time"
 
@@ -49,7 +49,7 @@ type Driver interface {
 
 	// DoFromGoroutine provides a way to queue a function `fn` that is running on a goroutine back to
 	// the central thread for Fyne updates, waiting for it to return if `wait` is true.
-	// The driver provides the implementation normally accessed through [fyne.Do].
+	// The driver provides the implementation normally accessed through [granio.Do].
 	// This is required when background tasks want to execute code safely in the graphical context.
 	//
 	// Since: 2.6

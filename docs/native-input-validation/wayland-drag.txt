@@ -1,0 +1,18 @@
+dbus-daemon[2895530]: [session uid=0 pid=2895530] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=0 pid=2895574 comm="/tmp/fa11y-d4DB3py5/input-probe-wayland -drop-targ")
+dbus-daemon[2895530]: [session uid=0 pid=2895530] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2895619]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2895574 comm="/tmp/fa11y-d4DB3py5/input-probe-wayland -drop-targ")
+dbus-daemon[2895619]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+external Wayland unicode: 24 bytes, source finished, PASS
+external Wayland html: 18 bytes, source finished, PASS
+external Wayland files: 32 bytes, source finished, PASS
+external Wayland binary: 524288 bytes, source finished, PASS
+external Wayland unsupported MIME: rejected, PASS
+=== RUN   TestATSPINativeClient
+--- PASS: TestATSPINativeClient (0.39s)
+=== RUN   TestATSPINativeOffscreenHierarchyAndCache
+--- PASS: TestATSPINativeOffscreenHierarchyAndCache (0.07s)
+=== RUN   TestNativeCanvasAndPopupMaterials
+--- PASS: TestNativeCanvasAndPopupMaterials (0.10s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.832s

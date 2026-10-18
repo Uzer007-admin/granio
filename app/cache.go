@@ -4,17 +4,17 @@ import (
 	"encoding/base64"
 	"io"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 type cache struct {
-	a fyne.App
+	a granio.App
 
 	enc base64.Encoding
 }
 
-func makeCache(a fyne.App) fyne.Cache {
+func makeCache(a granio.App) granio.Cache {
 	c := &cache{a: a, enc: base64.Encoding{}}
 
 	root := c.RootURI()
@@ -25,20 +25,20 @@ func makeCache(a fyne.App) fyne.Cache {
 		if !exists || err != nil {
 			err = storage.CreateListable(parent)
 			if err != nil {
-				fyne.LogError("Failed to create fyne cache space", err)
+				granio.LogError("Failed to create fyne cache space", err)
 			}
 		}
 
 		err = storage.CreateListable(root)
 		if err != nil {
-			fyne.LogError("Failed to create app cache space", err)
+			granio.LogError("Failed to create app cache space", err)
 		}
 	}
 
 	return c
 }
 
-func (c *cache) RootURI() fyne.URI {
+func (c *cache) RootURI() granio.URI {
 	return storage.NewFileURI(rootCacheDir(c.a))
 }
 
@@ -67,7 +67,7 @@ func (c *cache) Remove(name string) error {
 	return storage.Delete(path)
 }
 
-func (c *cache) encodePath(badName string) fyne.URI {
+func (c *cache) encodePath(badName string) granio.URI {
 	name := base64.StdEncoding.EncodeToString([]byte(badName))
 	child, _ := storage.Child(c.a.Cache().RootURI(), name)
 	return child

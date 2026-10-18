@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 var (
 	_ Vector2 = (*Delta)(nil)

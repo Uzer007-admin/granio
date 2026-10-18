@@ -1,0 +1,5 @@
+--- FAIL: TestSend (0.03s)
+    conn_test.go:85: exec: "dbus-launch": executable file not found in %PATH%
+FAIL
+FAIL	github.com/Uzer007-admin/dbus/v5	0.360s
+FAIL

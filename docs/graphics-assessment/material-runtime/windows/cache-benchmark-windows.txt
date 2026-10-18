@@ -1,0 +1,9 @@
+goos: windows
+goarch: amd64
+pkg: github.com/Uzer007-admin/gl/material
+cpu: 13th Gen Intel(R) Core(TM) i5-13400
+BenchmarkCachedMaterial-16    	31897077	        37.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCachedMaterial-16    	30712609	        35.83 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCachedMaterial-16    	34949758	        33.87 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/gl/material	3.878s

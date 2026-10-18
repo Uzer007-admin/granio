@@ -4,55 +4,55 @@ import (
 	"os"
 	"path/filepath"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/cache"
-	intdriver "fyne.io/fyne/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
 )
 
 // DoubleTap simulates a double left mouse click on the specified object.
-func DoubleTap(obj fyne.DoubleTappable) {
-	ev, c := prepareTap(obj, fyne.NewPos(1, 1))
+func DoubleTap(obj granio.DoubleTappable) {
+	ev, c := prepareTap(obj, granio.NewPos(1, 1))
 	handleFocusOnTap(c, obj)
 	obj.DoubleTapped(ev)
 }
 
 // Drag drags at an absolute position on the canvas.
 // deltaX/Y is the dragging distance: <0 for dragging up/left, >0 for dragging down/right.
-func Drag(c fyne.Canvas, pos fyne.Position, deltaX, deltaY float32) {
-	matches := func(object fyne.CanvasObject) bool {
-		_, ok := object.(fyne.Draggable)
+func Drag(c granio.Canvas, pos granio.Position, deltaX, deltaY float32) {
+	matches := func(object granio.CanvasObject) bool {
+		_, ok := object.(granio.Draggable)
 		return ok
 	}
 	o, p, _ := intdriver.FindObjectAtPositionMatching(pos, matches, c.Overlays().Top(), c.Content())
 	if o == nil {
 		return
 	}
-	e := &fyne.DragEvent{
-		PointEvent: fyne.PointEvent{Position: p},
-		Dragged:    fyne.Delta{DX: deltaX, DY: deltaY},
+	e := &granio.DragEvent{
+		PointEvent: granio.PointEvent{Position: p},
+		Dragged:    granio.Delta{DX: deltaX, DY: deltaY},
 	}
-	o.(fyne.Draggable).Dragged(e)
-	o.(fyne.Draggable).DragEnd()
+	o.(granio.Draggable).Dragged(e)
+	o.(granio.Draggable).DragEnd()
 }
 
 // FocusNext focuses the next focusable on the canvas.
 //
-// Deprecated: Use fyne.Canvas#FocusNext() instead.
-func FocusNext(c fyne.Canvas) {
+// Deprecated: Use granio.Canvas#FocusNext() instead.
+func FocusNext(c granio.Canvas) {
 	c.FocusNext()
 }
 
 // FocusPrevious focuses the previous focusable on the canvas.
 //
-// Deprecated: Use fyne.Canvas#FocusPrevious() instead.
-func FocusPrevious(c fyne.Canvas) {
+// Deprecated: Use granio.Canvas#FocusPrevious() instead.
+func FocusPrevious(c granio.Canvas) {
 	c.FocusPrevious()
 }
 
-// LaidOutObjects returns all fyne.CanvasObject starting at the given fyne.CanvasObject which is laid out previously.
-func LaidOutObjects(o fyne.CanvasObject) (objects []fyne.CanvasObject) {
+// LaidOutObjects returns all granio.CanvasObject starting at the given granio.CanvasObject which is laid out previously.
+func LaidOutObjects(o granio.CanvasObject) (objects []granio.CanvasObject) {
 	if o != nil {
 		objects = layoutAndCollect(objects, o, internal.MaxSizes(o.MinSize(), o.Size()))
 	}
@@ -60,8 +60,8 @@ func LaidOutObjects(o fyne.CanvasObject) (objects []fyne.CanvasObject) {
 }
 
 // MoveMouse simulates a mouse movement to the given position.
-func MoveMouse(c fyne.Canvas, pos fyne.Position) {
-	if fyne.CurrentDevice().IsMobile() {
+func MoveMouse(c granio.Canvas, pos granio.Position) {
+	if granio.CurrentDevice().IsMobile() {
 		return
 	}
 
@@ -70,7 +70,7 @@ func MoveMouse(c fyne.Canvas, pos fyne.Position) {
 	if tc != nil {
 		oldHovered = tc.hovered
 	}
-	matches := func(object fyne.CanvasObject) bool {
+	matches := func(object granio.CanvasObject) bool {
 		_, ok := object.(desktop.Hoverable)
 		return ok
 	}
@@ -78,7 +78,7 @@ func MoveMouse(c fyne.Canvas, pos fyne.Position) {
 	if o != nil {
 		hovered, _ = o.(desktop.Hoverable)
 		me := &desktop.MouseEvent{
-			PointEvent: fyne.PointEvent{
+			PointEvent: granio.PointEvent{
 				AbsolutePosition: pos,
 				Position:         p,
 			},
@@ -99,10 +99,10 @@ func MoveMouse(c fyne.Canvas, pos fyne.Position) {
 	}
 }
 
-// RenderObjectToMarkup renders the given [fyne.io/fyne/v2.CanvasObject] to a markup string.
+// RenderObjectToMarkup renders the given [github.com/Uzer007-admin/granio/v2.CanvasObject] to a markup string.
 //
 // Since: 2.6
-func RenderObjectToMarkup(o fyne.CanvasObject) string {
+func RenderObjectToMarkup(o granio.CanvasObject) string {
 	c := NewCanvas()
 	c.SetPadded(false)
 	size := internal.MaxSizes(o.MinSize(), o.Size())
@@ -112,18 +112,18 @@ func RenderObjectToMarkup(o fyne.CanvasObject) string {
 	return snapshot(c)
 }
 
-// RenderToMarkup renders the given [fyne.io/fyne/v2.Canvas] to a markup string.
+// RenderToMarkup renders the given [github.com/Uzer007-admin/granio/v2.Canvas] to a markup string.
 //
 // Since: 2.6
-func RenderToMarkup(c fyne.Canvas) string {
+func RenderToMarkup(c granio.Canvas) string {
 	return snapshot(c)
 }
 
 // Scroll scrolls at an absolute position on the canvas.
 // deltaX/Y is the scrolling distance: <0 for scrolling up/left, >0 for scrolling down/right.
-func Scroll(c fyne.Canvas, pos fyne.Position, deltaX, deltaY float32) {
-	matches := func(object fyne.CanvasObject) bool {
-		_, ok := object.(fyne.Scrollable)
+func Scroll(c granio.Canvas, pos granio.Position, deltaX, deltaY float32) {
+	matches := func(object granio.CanvasObject) bool {
+		_, ok := object.(granio.Scrollable)
 		return ok
 	}
 	o, _, _ := intdriver.FindObjectAtPositionMatching(pos, matches, c.Overlays().Top(), c.Content())
@@ -131,35 +131,35 @@ func Scroll(c fyne.Canvas, pos fyne.Position, deltaX, deltaY float32) {
 		return
 	}
 
-	e := &fyne.ScrollEvent{Scrolled: fyne.Delta{DX: deltaX, DY: deltaY}}
-	o.(fyne.Scrollable).Scrolled(e)
+	e := &granio.ScrollEvent{Scrolled: granio.Delta{DX: deltaX, DY: deltaY}}
+	o.(granio.Scrollable).Scrolled(e)
 }
 
 // Tap simulates a left mouse click on the specified object.
-func Tap(obj fyne.Tappable) {
-	TapAt(obj, fyne.NewPos(1, 1))
+func Tap(obj granio.Tappable) {
+	TapAt(obj, granio.NewPos(1, 1))
 }
 
 // TapAt simulates a left mouse click on the passed object at a specified place within it.
-func TapAt(obj fyne.Tappable, pos fyne.Position) {
+func TapAt(obj granio.Tappable, pos granio.Position) {
 	ev, c := prepareTap(obj, pos)
 	performTap(c, obj, ev)
 }
 
 // TapCanvas taps at an absolute position on the canvas.
-func TapCanvas(c fyne.Canvas, pos fyne.Position) {
+func TapCanvas(c granio.Canvas, pos granio.Position) {
 	if o, p := findTappable(c, pos); o != nil {
-		performTap(c, o.(fyne.Tappable), &fyne.PointEvent{AbsolutePosition: pos, Position: p})
+		performTap(c, o.(granio.Tappable), &granio.PointEvent{AbsolutePosition: pos, Position: p})
 	}
 }
 
 // TapSecondary simulates a right mouse click on the specified object.
-func TapSecondary(obj fyne.SecondaryTappable) {
-	TapSecondaryAt(obj, fyne.NewPos(1, 1))
+func TapSecondary(obj granio.SecondaryTappable) {
+	TapSecondaryAt(obj, granio.NewPos(1, 1))
 }
 
 // TapSecondaryAt simulates a right mouse click on the passed object at a specified place within it.
-func TapSecondaryAt(obj fyne.SecondaryTappable, pos fyne.Position) {
+func TapSecondaryAt(obj granio.SecondaryTappable, pos granio.Position) {
 	ev, c := prepareTap(obj, pos)
 	handleFocusOnTap(c, obj)
 	obj.TappedSecondary(ev)
@@ -168,7 +168,7 @@ func TapSecondaryAt(obj fyne.SecondaryTappable, pos fyne.Position) {
 // Type performs a series of key events to simulate typing of a value into the specified object.
 // The focusable object will be focused before typing begins.
 // The chars parameter will be input one rune at a time to the focused object.
-func Type(obj fyne.Focusable, chars string) {
+func Type(obj granio.Focusable, chars string) {
 	obj.FocusGained()
 
 	typeChars([]rune(chars), obj.TypedRune, obj.TypedKey)
@@ -176,32 +176,32 @@ func Type(obj fyne.Focusable, chars string) {
 
 // TypeOnCanvas is like the Type function but it passes the key events to the canvas object
 // rather than a focusable widget.
-func TypeOnCanvas(c fyne.Canvas, chars string) {
+func TypeOnCanvas(c granio.Canvas, chars string) {
 	typeChars([]rune(chars), c.OnTypedRune(), c.OnTypedKey())
 }
 
 // WidgetRenderer allows test scripts to gain access to the current renderer for a widget.
 // This can be used for verifying correctness of rendered components for a widget in unit tests.
-func WidgetRenderer(wid fyne.Widget) fyne.WidgetRenderer {
+func WidgetRenderer(wid granio.Widget) granio.WidgetRenderer {
 	return cache.Renderer(wid)
 }
 
-func findTappable(c fyne.Canvas, pos fyne.Position) (o fyne.CanvasObject, p fyne.Position) {
-	matches := func(object fyne.CanvasObject) bool {
-		_, ok := object.(fyne.Tappable)
+func findTappable(c granio.Canvas, pos granio.Position) (o granio.CanvasObject, p granio.Position) {
+	matches := func(object granio.CanvasObject) bool {
+		_, ok := object.(granio.Tappable)
 		return ok
 	}
 	o, p, _ = intdriver.FindObjectAtPositionMatching(pos, matches, c.Overlays().Top(), c.Content())
 	return o, p
 }
 
-func handleFocusOnTap(c fyne.Canvas, obj any) {
+func handleFocusOnTap(c granio.Canvas, obj any) {
 	if c == nil {
 		return
 	}
 
-	if focus, ok := obj.(fyne.Focusable); ok {
-		dis, ok := obj.(fyne.Disableable)
+	if focus, ok := obj.(granio.Focusable); ok {
+		dis, ok := obj.(granio.Disableable)
 		if (!ok || !dis.Disabled()) && focus == c.Focused() {
 			return
 		}
@@ -210,16 +210,16 @@ func handleFocusOnTap(c fyne.Canvas, obj any) {
 	c.Unfocus()
 }
 
-func layoutAndCollect(objects []fyne.CanvasObject, o fyne.CanvasObject, size fyne.Size) []fyne.CanvasObject {
+func layoutAndCollect(objects []granio.CanvasObject, o granio.CanvasObject, size granio.Size) []granio.CanvasObject {
 	objects = append(objects, o)
 	switch c := o.(type) {
-	case fyne.Widget:
+	case granio.Widget:
 		r := c.CreateRenderer()
 		r.Layout(size)
 		for _, child := range r.Objects() {
 			objects = layoutAndCollect(objects, child, child.Size())
 		}
-	case *fyne.Container:
+	case *granio.Container:
 		if c.Layout != nil {
 			c.Layout.Layout(c.Objects, size)
 		}
@@ -230,26 +230,26 @@ func layoutAndCollect(objects []fyne.CanvasObject, o fyne.CanvasObject, size fyn
 	return objects
 }
 
-func prepareTap(obj any, pos fyne.Position) (*fyne.PointEvent, fyne.Canvas) {
-	d := fyne.CurrentApp().Driver()
-	ev := &fyne.PointEvent{Position: pos}
-	var c fyne.Canvas
-	if co, ok := obj.(fyne.CanvasObject); ok {
+func prepareTap(obj any, pos granio.Position) (*granio.PointEvent, granio.Canvas) {
+	d := granio.CurrentApp().Driver()
+	ev := &granio.PointEvent{Position: pos}
+	var c granio.Canvas
+	if co, ok := obj.(granio.CanvasObject); ok {
 		c = d.CanvasForObject(co)
 		ev.AbsolutePosition = d.AbsolutePositionForObject(co).Add(pos)
 	}
 	return ev, c
 }
 
-func performTap(c fyne.Canvas, obj fyne.Tappable, ev *fyne.PointEvent) {
+func performTap(c granio.Canvas, obj granio.Tappable, ev *granio.PointEvent) {
 	handleFocusOnTap(c, obj)
 	obj.Tapped(ev)
 }
 
-func typeChars(chars []rune, typedRune func(rune), typedKey func(*fyne.KeyEvent)) {
+func typeChars(chars []rune, typedRune func(rune), typedKey func(*granio.KeyEvent)) {
 	for _, char := range chars {
 		if char == '\n' {
-			typedKey(&fyne.KeyEvent{Name: fyne.KeyReturn})
+			typedKey(&granio.KeyEvent{Name: granio.KeyReturn})
 			continue
 		}
 

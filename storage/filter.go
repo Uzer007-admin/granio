@@ -3,13 +3,13 @@ package storage
 import (
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/repository/mime"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/repository/mime"
 )
 
 // FileFilter is an interface that can be implemented to provide a filter to a file dialog.
 type FileFilter interface {
-	Matches(fyne.URI) bool
+	Matches(granio.URI) bool
 }
 
 // ExtensionFileFilter represents a file filter based on the ending of file names,
@@ -25,7 +25,7 @@ type MimeTypeFileFilter struct {
 }
 
 // Matches returns true if a file URI has one of the filtered extensions.
-func (e *ExtensionFileFilter) Matches(uri fyne.URI) bool {
+func (e *ExtensionFileFilter) Matches(uri granio.URI) bool {
 	extension := uri.Extension()
 	for _, ext := range e.Extensions {
 		if strings.EqualFold(extension, ext) {
@@ -42,7 +42,7 @@ func NewExtensionFileFilter(extensions []string) FileFilter {
 }
 
 // Matches returns true if a file URI has one of the filtered mimetypes.
-func (mt *MimeTypeFileFilter) Matches(uri fyne.URI) bool {
+func (mt *MimeTypeFileFilter) Matches(uri granio.URI) bool {
 	mimeType, mimeSubType := mime.Split(uri.MimeType())
 	for _, mimeTypeFull := range mt.MimeTypes {
 		mType, mSubType := mime.Split(mimeTypeFull)

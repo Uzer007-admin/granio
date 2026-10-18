@@ -1,11 +1,12 @@
 package glfw
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func (d *gLDriver) StartAnimation(a *fyne.Animation) {
+func (d *gLDriver) StartAnimation(a *granio.Animation) {
 	d.animation.Start(a)
+	wakeMainLoop()
 }
 
-func (d *gLDriver) StopAnimation(a *fyne.Animation) {
+func (d *gLDriver) StopAnimation(a *granio.Animation) {
 	d.animation.Stop(a)
 }

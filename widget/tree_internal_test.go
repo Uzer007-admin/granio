@@ -5,12 +5,12 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,7 +24,7 @@ func indentation() float32 {
 	return theme.IconInlineSize() + theme.Padding()
 }
 
-func assertTreeContentMinSize(t *testing.T, tree *Tree, expected fyne.Size) {
+func assertTreeContentMinSize(t *testing.T, tree *Tree, expected granio.Size) {
 	t.Helper()
 
 	// Tree.MinSize() will always be 32 x 32 as this is the Scroller's min size, instead check treeContent.MinSize()
@@ -74,10 +74,10 @@ func TestTree(t *testing.T) {
 			IsBranch: func(uid string) bool {
 				return uid == "" || uid == "c"
 			},
-			CreateNode: func(bool) fyne.CanvasObject {
+			CreateNode: func(bool) granio.CanvasObject {
 				return &Label{}
 			},
-			UpdateNode: func(uid string, _ bool, node fyne.CanvasObject) {
+			UpdateNode: func(uid string, _ bool, node granio.CanvasObject) {
 				node.(*Label).SetText(uid)
 			},
 		}
@@ -115,10 +115,10 @@ func TestTree(t *testing.T) {
 			func(uid string) bool {
 				return uid == "" || uid == "c"
 			},
-			func(bool) fyne.CanvasObject {
+			func(bool) granio.CanvasObject {
 				return &Label{}
 			},
-			func(uid string, _ bool, node fyne.CanvasObject) {
+			func(uid string, _ bool, node granio.CanvasObject) {
 				node.(*Label).SetText(uid)
 			},
 		)
@@ -172,7 +172,7 @@ func TestTree_Focus(t *testing.T) {
 	tree := NewTreeWithStrings(treeData)
 	window := test.NewWindow(tree)
 	defer window.Close()
-	window.Resize(tree.MinSize().Max(fyne.NewSize(150, 200)))
+	window.Resize(tree.MinSize().Max(granio.NewSize(150, 200)))
 
 	c := window.Canvas().(software.WindowlessCanvas)
 	assert.Nil(t, c.Focused())
@@ -181,19 +181,19 @@ func TestTree_Focus(t *testing.T) {
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "foo", c.Focused().(*Tree).currentHighlight)
 
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	assert.Equal(t, "bar", c.Focused().(*Tree).currentHighlight)
 
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyUp})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyUp})
 	assert.Equal(t, "foo", c.Focused().(*Tree).currentHighlight)
 
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	assert.Equal(t, "foobar", c.Focused().(*Tree).currentHighlight)
 
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	assert.Equal(t, "foo", c.Focused().(*Tree).currentHighlight)
 
-	c.Focused().TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	c.Focused().TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.Equal(t, "foo", tree.selected[0])
 
 	tree.Select("foobar")
@@ -223,7 +223,7 @@ func TestTree_Keyboard(t *testing.T) {
 	tree := NewTreeWithStrings(treeData)
 	window := test.NewWindow(tree)
 	defer window.Close()
-	window.Resize(tree.MinSize().Max(fyne.NewSize(250, 400)))
+	window.Resize(tree.MinSize().Max(granio.NewSize(250, 400)))
 
 	c := window.Canvas().(software.WindowlessCanvas)
 	assert.Nil(t, c.Focused())
@@ -242,7 +242,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.False(t, tree.IsBranchOpen("item_1_2"))
 
 	// Open the node "item_1"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1_1", c.Focused().(*Tree).currentHighlight)
@@ -252,7 +252,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.False(t, tree.IsBranchOpen("item_1_2"))
 
 	// Go to next node "item1_2"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1_2", c.Focused().(*Tree).currentHighlight)
@@ -262,7 +262,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.False(t, tree.IsBranchOpen("item_1_2"))
 
 	// Open the node "item_1_2"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyRight})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyRight})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1_2_1", c.Focused().(*Tree).currentHighlight)
@@ -272,7 +272,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.True(t, tree.IsBranchOpen("item_1_2"))
 
 	// Go to next node "item_1_2_2"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyDown})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyDown})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1_2_2", c.Focused().(*Tree).currentHighlight)
@@ -282,7 +282,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.True(t, tree.IsBranchOpen("item_1_2"))
 
 	// Press left on the non-branch node "item_1_2_2"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1_2", c.Focused().(*Tree).currentHighlight)
@@ -292,7 +292,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.True(t, tree.IsBranchOpen("item_1_2"))
 
 	// Press left on the open branch node "item_1_2"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1_2", c.Focused().(*Tree).currentHighlight)
@@ -302,7 +302,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.False(t, tree.IsBranchOpen("item_1_2"))
 
 	// Press left on the closed branch node "item_1_2"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1", c.Focused().(*Tree).currentHighlight)
@@ -312,7 +312,7 @@ func TestTree_Keyboard(t *testing.T) {
 	assert.False(t, tree.IsBranchOpen("item_1_2"))
 
 	// Press left on the open branch node "item_1"
-	tree.TypedKey(&fyne.KeyEvent{Name: fyne.KeyLeft})
+	tree.TypedKey(&granio.KeyEvent{Name: granio.KeyLeft})
 	// Validate the state
 	assert.NotNil(t, c.Focused())
 	assert.Equal(t, "item_1", c.Focused().(*Tree).currentHighlight)
@@ -325,7 +325,7 @@ func TestTree_Keyboard(t *testing.T) {
 func TestTree_Indentation(t *testing.T) {
 	data := make(map[string][]string)
 	tree := NewTreeWithStrings(data)
-	tree.Resize(fyne.NewSize(treeSize, treeSize))
+	tree.Resize(granio.NewSize(treeSize, treeSize))
 	assert.Equal(t, treeSize, tree.Size().Width)
 	assert.Equal(t, treeSize, tree.Size().Height)
 
@@ -345,7 +345,7 @@ func TestTree_Indentation(t *testing.T) {
 func TestTree_Resize(t *testing.T) {
 	data := make(map[string][]string)
 	tree := NewTreeWithStrings(data)
-	tree.Resize(fyne.NewSize(treeSize, treeSize))
+	tree.Resize(granio.NewSize(treeSize, treeSize))
 	assert.Equal(t, treeSize, tree.Size().Width)
 	assert.Equal(t, treeSize, tree.Size().Height)
 
@@ -357,7 +357,7 @@ func TestTree_Resize(t *testing.T) {
 
 	width := templateMinSize.Width + indentation() + theme.IconInlineSize() + theme.InnerPadding()
 	height := max(templateMinSize.Height, theme.IconInlineSize())*3 + separatorThickness*2
-	assertTreeContentMinSize(t, tree, fyne.NewSize(width, height))
+	assertTreeContentMinSize(t, tree, granio.NewSize(width, height))
 
 	a := getLeaf(t, tree, "A")
 	b := getBranch(t, tree, "B")
@@ -389,29 +389,29 @@ func TestTree_MinSize(t *testing.T) {
 	})
 	t.Run("Callback", func(t *testing.T) {
 		for name, tt := range map[string]struct {
-			leafSize        fyne.Size
-			branchSize      fyne.Size
-			expectedMinSize fyne.Size
+			leafSize        granio.Size
+			branchSize      granio.Size
+			expectedMinSize granio.Size
 		}{
 			"small": {
-				fyne.NewSize(1, 1),
-				fyne.NewSize(1, 1),
-				fyne.NewSize(max(1+2*theme.Padding()+theme.IconInlineSize(), float32(32)), float32(32)),
+				granio.NewSize(1, 1),
+				granio.NewSize(1, 1),
+				granio.NewSize(max(1+2*theme.Padding()+theme.IconInlineSize(), float32(32)), float32(32)),
 			},
 			"large-leaf": {
-				fyne.NewSize(100, 100),
-				fyne.NewSize(1, 1),
-				fyne.NewSize(100+2*theme.Padding()+theme.IconInlineSize(), 100),
+				granio.NewSize(100, 100),
+				granio.NewSize(1, 1),
+				granio.NewSize(100+2*theme.Padding()+theme.IconInlineSize(), 100),
 			},
 			"large-branch": {
-				fyne.NewSize(1, 1),
-				fyne.NewSize(100, 100),
-				fyne.NewSize(100+2*theme.Padding()+theme.IconInlineSize(), 100),
+				granio.NewSize(1, 1),
+				granio.NewSize(100, 100),
+				granio.NewSize(100+2*theme.Padding()+theme.IconInlineSize(), 100),
 			},
 		} {
 			t.Run(name, func(t *testing.T) {
 				assert.Equal(t, tt.expectedMinSize, (&Tree{
-					CreateNode: func(isBranch bool) fyne.CanvasObject {
+					CreateNode: func(isBranch bool) granio.CanvasObject {
 						r := canvas.NewRectangle(color.Black)
 						if isBranch {
 							r.SetMinSize(tt.branchSize)
@@ -430,7 +430,7 @@ func TestTree_MinSize(t *testing.T) {
 	for name, tt := range map[string]struct {
 		items  [][]string
 		opened []string
-		want   fyne.Size
+		want   granio.Size
 	}{
 		"single_item": {
 			items: [][]string{
@@ -438,7 +438,7 @@ func TestTree_MinSize(t *testing.T) {
 					"A", "11111",
 				},
 			},
-			want: fyne.NewSize(
+			want: granio.NewSize(
 				templateMinSize.Width+2*theme.Padding()+theme.IconInlineSize(),
 				max(templateMinSize.Height, theme.IconInlineSize()),
 			),
@@ -450,7 +450,7 @@ func TestTree_MinSize(t *testing.T) {
 				},
 			},
 			opened: []string{"A"},
-			want: fyne.NewSize(
+			want: granio.NewSize(
 				templateMinSize.Width+indentation()+2*theme.Padding()+theme.IconInlineSize(),
 				max(templateMinSize.Height, theme.IconInlineSize())*2+separatorThickness,
 			),
@@ -467,7 +467,7 @@ func TestTree_MinSize(t *testing.T) {
 					"B", "C", "333333333333333",
 				},
 			},
-			want: fyne.NewSize(
+			want: granio.NewSize(
 				templateMinSize.Width+2*theme.Padding()+theme.IconInlineSize(),
 				max(templateMinSize.Height, theme.IconInlineSize())*2+separatorThickness,
 			),
@@ -485,7 +485,7 @@ func TestTree_MinSize(t *testing.T) {
 				},
 			},
 			opened: []string{"A", "B", "C"},
-			want: fyne.NewSize(
+			want: granio.NewSize(
 				templateMinSize.Width+2*indentation()+theme.IconInlineSize()+2*theme.Padding(),
 				max(templateMinSize.Height, theme.IconInlineSize())*6+(5*separatorThickness),
 			),
@@ -587,7 +587,7 @@ func TestTree_ScrollTo(t *testing.T) {
 
 	// Resize tall enough to display two nodes and the separator between them
 	treeHeight := 2*minSize.Height + sep
-	w.Resize(fyne.Size{
+	w.Resize(granio.Size{
 		Width:  100,
 		Height: treeHeight + 2*theme.Padding(),
 	})
@@ -598,7 +598,7 @@ func TestTree_ScrollTo(t *testing.T) {
 	assert.Equal(t, want, tree.offset.Y)
 	assert.Equal(t, want, tree.scroller.Offset.Y)
 
-	tree.scroller.ScrollToOffset(fyne.NewPos(35, want))
+	tree.scroller.ScrollToOffset(granio.NewPos(35, want))
 	assert.Equal(t, float32(35), tree.scroller.Offset.X)
 	assert.Equal(t, want, tree.scroller.Offset.Y)
 	tree.ScrollTo("A")
@@ -678,7 +678,7 @@ func TestTree_ScrollToBottom(t *testing.T) {
 
 	// Resize tall enough to display two nodes and the separator between them
 	treeHeight := 2*minSize.Height + sep
-	w.Resize(fyne.Size{
+	w.Resize(granio.Size{
 		Width:  400,
 		Height: treeHeight + 2*theme.Padding(),
 	})
@@ -706,7 +706,7 @@ func TestTree_ScrollOffset(t *testing.T) {
 	w := test.NewWindow(tree)
 	defer w.Close()
 
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 	tree.ScrollToOffset(20)
 
 	assert.Equal(t, float32(20), tree.offset.Y)
@@ -730,7 +730,7 @@ func TestTree_ScrollToSelection(t *testing.T) {
 	separatorThickness := theme.Padding()
 
 	// Make tree tall enough to display two nodes
-	tree.Resize(fyne.NewSize(m.Width, m.Height*2+separatorThickness))
+	tree.Resize(granio.NewSize(m.Width, m.Height*2+separatorThickness))
 
 	// Above
 	tree.scroller.Offset.Y = m.Height*3 + separatorThickness*3 // Showing "D" & "E"
@@ -895,7 +895,7 @@ func TestTreeNode_Hovered(t *testing.T) {
 	data := make(map[string][]string)
 	addTreePath(data, "A", "B", "C")
 	tree := NewTreeWithStrings(data)
-	tree.Resize(fyne.NewSize(treeSize, treeSize))
+	tree.Resize(granio.NewSize(treeSize, treeSize))
 	tree.OpenAllBranches()
 	a := getBranch(t, tree, "A")
 	b := getBranch(t, tree, "B")
@@ -936,7 +936,7 @@ func TestTree_RefreshItem(t *testing.T) {
 
 	value := "Leaf"
 	tree := NewTreeWithStrings(data)
-	tree.UpdateNode = func(uid TreeNodeID, branch bool, node fyne.CanvasObject) {
+	tree.UpdateNode = func(uid TreeNodeID, branch bool, node granio.CanvasObject) {
 		if uid == "foobar1" || uid == "foobar2" || uid == "foobar3" {
 			node.(*Label).SetText(value)
 			assert.False(t, branch)
@@ -948,7 +948,7 @@ func TestTree_RefreshItem(t *testing.T) {
 	tree.OpenBranch("foo")
 
 	w := test.NewTempWindow(t, tree)
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 
 	r := test.TempWidgetRenderer(t, tree.scroller.Content.(*treeContent)).(*treeContentRenderer)
 
@@ -964,7 +964,7 @@ func TestTreeNodeRenderer_BackgroundColor(t *testing.T) {
 	data := make(map[string][]string)
 	addTreePath(data, "A", "B")
 	tree := NewTreeWithStrings(data)
-	tree.Resize(fyne.NewSize(treeSize, treeSize))
+	tree.Resize(granio.NewSize(treeSize, treeSize))
 	tree.OpenAllBranches()
 	t.Run("Branch", func(t *testing.T) {
 		a := getBranch(t, tree, "A")
@@ -984,7 +984,7 @@ func TestTreeNodeRenderer_BackgroundColor_Hovered(t *testing.T) {
 	data := make(map[string][]string)
 	addTreePath(data, "A", "B")
 	tree := NewTreeWithStrings(data)
-	tree.Resize(fyne.NewSize(treeSize, treeSize))
+	tree.Resize(granio.NewSize(treeSize, treeSize))
 	tree.OpenAllBranches()
 	t.Run("Branch", func(t *testing.T) {
 		a := getBranch(t, tree, "A")

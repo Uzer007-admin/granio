@@ -1,9 +1,9 @@
-package fyne_test
+package granio_test
 
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func BenchmarkPosition_Add(b *testing.B) {
@@ -27,20 +27,20 @@ func BenchmarkSize_Subtract(b *testing.B) {
 }
 
 var (
-	benchmarkSize fyne.Size
-	benchmarkPos  fyne.Position
+	benchmarkSize granio.Size
+	benchmarkPos  granio.Position
 )
 
 func benchmarkPositionAdd(b *testing.B) {
-	pos := fyne.NewPos(10, 10)
+	pos := granio.NewPos(10, 10)
 	for n := 0; n < b.N; n++ {
-		pos = pos.Add(fyne.NewPos(float32(n), float32(n)))
+		pos = pos.Add(granio.NewPos(float32(n), float32(n)))
 	}
 	benchmarkPos = pos
 }
 
 func benchmarkPositionAddXY(b *testing.B) {
-	pos := fyne.NewPos(10, 10)
+	pos := granio.NewPos(10, 10)
 	for n := 0; n < b.N; n++ {
 		pos = pos.AddXY(float32(n), float32(n))
 	}
@@ -48,15 +48,15 @@ func benchmarkPositionAddXY(b *testing.B) {
 }
 
 func benchmarkPositionSubtract(b *testing.B) {
-	pos := fyne.NewPos(10, 10)
+	pos := granio.NewPos(10, 10)
 	for n := 0; n < b.N; n++ {
-		pos = pos.Subtract(fyne.NewPos(float32(n), float32(n)))
+		pos = pos.Subtract(granio.NewPos(float32(n), float32(n)))
 	}
 	benchmarkPos = pos
 }
 
 func benchmarkPositionSubtractXY(b *testing.B) {
-	pos := fyne.NewPos(10, 10)
+	pos := granio.NewPos(10, 10)
 	for n := 0; n < b.N; n++ {
 		pos = pos.SubtractXY(float32(n), float32(n))
 	}
@@ -64,15 +64,15 @@ func benchmarkPositionSubtractXY(b *testing.B) {
 }
 
 func benchmarkSizeAdd(b *testing.B) {
-	size := fyne.NewSize(10, 10)
+	size := granio.NewSize(10, 10)
 	for n := 0; n < b.N; n++ {
-		size = size.Add(fyne.NewPos(float32(n), float32(n)))
+		size = size.Add(granio.NewPos(float32(n), float32(n)))
 	}
 	benchmarkSize = size
 }
 
 func benchmarkSizeAddWidthHeight(b *testing.B) {
-	size := fyne.NewSize(10, 10)
+	size := granio.NewSize(10, 10)
 	for n := 0; n < b.N; n++ {
 		size = size.AddWidthHeight(float32(n), float32(n))
 	}
@@ -80,15 +80,15 @@ func benchmarkSizeAddWidthHeight(b *testing.B) {
 }
 
 func benchmarkSizeSubtract(b *testing.B) {
-	size := fyne.NewSize(10, 10)
+	size := granio.NewSize(10, 10)
 	for n := 0; n < b.N; n++ {
-		size = size.Subtract(fyne.NewSize(float32(n), float32(n)))
+		size = size.Subtract(granio.NewSize(float32(n), float32(n)))
 	}
 	benchmarkSize = size
 }
 
 func benchmarkSizeSubtractWidthHeight(b *testing.B) {
-	size := fyne.NewSize(10, 10)
+	size := granio.NewSize(10, 10)
 	for n := 0; n < b.N; n++ {
 		size = size.SubtractWidthHeight(float32(n), float32(n))
 	}

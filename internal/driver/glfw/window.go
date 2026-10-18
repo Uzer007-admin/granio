@@ -2,23 +2,24 @@ package glfw
 
 import (
 	"context"
+	"fmt"
 	_ "image/png" // for the icon
 	"math"
 	"runtime"
 	"slices"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/internal/goos"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 )
 
 const (
@@ -50,7 +51,7 @@ func (w *window) minSizeOnScreen() (width, height int) {
 
 // screenSize computes the actual output size of the given content size in screen pixels.
 // The result is limited to a size that the graphics driver can allocate a framebuffer for.
-func (w *window) screenSize(canvasSize fyne.Size) (width, height int) {
+func (w *window) screenSize(canvasSize granio.Size) (width, height int) {
 	maxTexture := 0
 	if p := w.canvas.Painter(); p != nil {
 		maxTexture = p.MaxTextureSize()
@@ -65,7 +66,7 @@ func (w *window) screenSize(canvasSize fyne.Size) (width, height int) {
 
 func (w *window) warnSizeLimit() {
 	w.sizeLimitWarning.Do(func() {
-		fyne.LogError("Window content is wider or taller than the maximum supported size and has been clamped; consider wrapping, truncation, or scrolling", nil)
+		granio.LogError("Window content is wider or taller than the maximum supported size and has been clamped; consider wrapping, truncation, or scrolling", nil)
 	})
 }
 
@@ -85,7 +86,7 @@ func maxWindowSize(maxTextureSize int, texScale float32) int {
 	return limit
 }
 
-func (w *window) Resize(size fyne.Size) {
+func (w *window) Resize(size granio.Size) {
 	w.canvas.Resize(size)
 	// we cannot perform this until window is prepared as we don't know its scale!
 	bigEnough := internal.MaxSizes(size, w.canvas.canvasSize(w.canvas.Content().MinSize()))
@@ -128,19 +129,19 @@ func (w *window) SetPadded(padded bool) {
 	w.runOnMainWhenCreated(w.fitContent)
 }
 
-func (w *window) Icon() fyne.Resource {
+func (w *window) Icon() granio.Resource {
 	if w.icon == nil {
-		return fyne.CurrentApp().Icon()
+		return granio.CurrentApp().Icon()
 	}
 
 	return w.icon
 }
 
-func (w *window) MainMenu() *fyne.MainMenu {
+func (w *window) MainMenu() *granio.MainMenu {
 	return w.mainmenu
 }
 
-func (w *window) SetMainMenu(menu *fyne.MainMenu) {
+func (w *window) SetMainMenu(menu *granio.MainMenu) {
 	w.mainmenu = menu
 	w.runOnMainWhenCreated(func() {
 		w.canvas.buildMenu(w, menu)
@@ -156,18 +157,66 @@ func (w *window) SetCloseIntercept(callback func()) {
 }
 
 func (w *window) calculatedScale() float32 {
-	return calculateScale(userScale(), fyne.CurrentDevice().SystemScaleForWindow(w), w.detectScale())
+	return calculateScaleWithPolicy(w.scalePolicy, userScale(), granio.CurrentDevice().SystemScaleForWindow(w), w.detectScale())
+}
+
+func (w *window) SetScalePolicy(policy desktop.ScalePolicy) error {
+	if policy > desktop.ScaleExact {
+		return fmt.Errorf("unknown scale policy %d", policy)
+	}
+	if w.closing {
+		return fmt.Errorf("window is closed")
+	}
+	if w.scalePolicy == policy {
+		return nil
+	}
+	w.scalePolicy = policy
+	if w.viewport != nil {
+		w.canvas.scale = w.calculatedScale()
+		w.canvas.SetDirty()
+		w.RescaleContext()
+	}
+	return nil
+}
+
+func (w *window) ScaleInfo() desktop.WindowScaleInfo {
+	system := float32(1)
+	if w.viewport != nil {
+		system = granio.CurrentDevice().SystemScaleForWindow(w)
+		if system == scaleAuto {
+			system = w.detectScale()
+		}
+	}
+	if !validScale(system) {
+		system = 1
+	}
+	user := userScale()
+	if !validScale(user) {
+		user = 1
+	}
+	framebuffer := w.canvas.texScale
+	if !validScale(framebuffer) {
+		framebuffer = 1
+	}
+	return desktop.WindowScaleInfo{Policy: w.scalePolicy, SystemScale: system, UserScale: user,
+		EffectiveScale: calculateScaleWithPolicy(w.scalePolicy, user, system, system), FramebufferScale: framebuffer}
 }
 
 func (w *window) detectTextureScale() float32 {
 	view := w.view()
 	winWidth, _ := view.GetSize()
 	texWidth, _ := view.GetFramebufferSize()
+	if winWidth <= 0 || texWidth <= 0 {
+		return 1
+	}
 	return float32(texWidth) / float32(winWidth)
 }
 
 func (w *window) Show() {
 	async.EnsureMain(func() {
+		if w.visualsClosed() {
+			return
+		}
 		if w.view() != nil {
 			w.doShowAgain()
 			return
@@ -182,14 +231,17 @@ func (w *window) Show() {
 			return
 		}
 
-		w.visible = true
 		view := w.view()
 		view.SetTitle(w.title)
 
 		if !build.IsWayland && w.centered {
 			w.doCenterOnScreen() // lastly center if that was requested
 		}
+		if !w.prepareVisualFirstFrame() {
+			return
+		}
 		view.Show()
+		w.visible = true
 
 		// save coordinates
 		if !build.IsWayland {
@@ -205,7 +257,7 @@ func (w *window) Show() {
 		}
 
 		// show top canvas element
-		if content := w.canvas.Content(); content != nil {
+		if content := w.canvas.Content(); content != nil || w.visuals.active.Load() {
 			w.RunWithContext(func() {
 				w.driver.repaintWindow(w)
 			})
@@ -228,6 +280,15 @@ func (w *window) Hide() {
 
 func (w *window) Close() {
 	async.EnsureMain(func() {
+		visualsEnabled := w.closeWindowVisuals()
+		if w.viewport == nil && visualsEnabled {
+			w.closing = true
+			if fn := w.onClosed; fn != nil {
+				w.onClosed = nil
+				fn()
+			}
+			return
+		}
 		if w.isClosing() {
 			return
 		}
@@ -240,13 +301,26 @@ func (w *window) Close() {
 
 		// Clean up accessibility resources
 		w.cleanupAccessibilityForWindow()
+		w.cleanupDataDrop()
 
 		w.closing = true
+		w.cleanupIBus()
 		w.viewport.SetShouldClose(true)
 
-		cache.RangeTexturesFor(w.canvas, w.canvas.Painter().Free)
-		w.canvas.WalkTrees(nil, func(node *common.RenderCacheNode, _ fyne.Position) {
-			if wid, ok := node.Obj().(fyne.Widget); ok {
+		// Texture deletion requires this window's GL/WebGL context, including
+		// after Capture has restored or detached the caller's previous context.
+		func() {
+			// Public RunWithContext rejects a closing window; cleanup still owns
+			// the live native viewport until processWindowEvents destroys it.
+			restore := w.activateContext()
+			defer restore()
+			cache.RangeTexturesFor(w.canvas, w.canvas.Painter().Free)
+			if painter, ok := w.canvas.Painter().(interface{ ReleaseMaterials() }); ok {
+				painter.ReleaseMaterials()
+			}
+		}()
+		w.canvas.WalkTrees(nil, func(node *common.RenderCacheNode, _ granio.Position) {
+			if wid, ok := node.Obj().(granio.Widget); ok {
 				cache.DestroyRenderer(wid)
 			}
 		})
@@ -255,19 +329,19 @@ func (w *window) Close() {
 
 func (w *window) ShowAndRun() {
 	w.Show()
-	fyne.CurrentApp().Run()
+	granio.CurrentApp().Run()
 }
 
 // Clipboard returns the system clipboard
-func (*window) Clipboard() fyne.Clipboard {
+func (*window) Clipboard() granio.Clipboard {
 	return NewClipboard()
 }
 
-func (w *window) Content() fyne.CanvasObject {
+func (w *window) Content() granio.CanvasObject {
 	return w.canvas.Content()
 }
 
-func (w *window) SetContent(content fyne.CanvasObject) {
+func (w *window) SetContent(content granio.CanvasObject) {
 	w.canvas.SetContent(content)
 
 	async.EnsureMain(func() {
@@ -277,7 +351,7 @@ func (w *window) SetContent(content fyne.CanvasObject) {
 	})
 }
 
-func (w *window) Canvas() fyne.Canvas {
+func (w *window) Canvas() granio.Canvas {
 	return w.canvas
 }
 
@@ -363,13 +437,13 @@ func (w *window) processRefresh() {
 	refreshWindow(w)
 }
 
-func (*window) findObjectAtPositionMatching(c *glCanvas, mouse fyne.Position, matches func(object fyne.CanvasObject) bool) (fyne.CanvasObject, fyne.Position, int) {
+func (*window) findObjectAtPositionMatching(c *glCanvas, mouse granio.Position, matches func(object granio.CanvasObject) bool) (granio.CanvasObject, granio.Position, int) {
 	return driver.FindObjectAtPositionMatching(mouse, matches, c.Overlays().Top(), c.menu, c.Content())
 }
 
 func (w *window) processMouseMoved(xpos float64, ypos float64) {
 	previousPos := w.mousePos
-	w.mousePos = fyne.NewPos(scale.ToFyneCoordinate(w.canvas, int(xpos)), scale.ToFyneCoordinate(w.canvas, int(ypos)))
+	w.mousePos = granio.NewPos(scale.ToFyneCoordinate(w.canvas, int(xpos)), scale.ToFyneCoordinate(w.canvas, int(ypos)))
 	mousePos := w.mousePos
 	mouseButton := w.mouseButton
 	mouseDragPos := w.mouseDragPos
@@ -377,7 +451,7 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 
 	cursor := desktop.Cursor(desktop.DefaultCursor)
 
-	obj, pos, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object fyne.CanvasObject) bool {
+	obj, pos, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object granio.CanvasObject) bool {
 		if cursorable, ok := object.(desktop.Cursorable); ok {
 			cursor = cursorable.Cursor()
 		}
@@ -403,8 +477,8 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 	}
 
 	if w.mouseButton != 0 && w.mouseButton != desktop.MouseButtonSecondary && !w.mouseDragStarted {
-		obj, pos, _ := w.findObjectAtPositionMatching(w.canvas, previousPos, func(object fyne.CanvasObject) bool {
-			_, ok := object.(fyne.Draggable)
+		obj, pos, _ := w.findObjectAtPositionMatching(w.canvas, previousPos, func(object granio.CanvasObject) bool {
+			_, ok := object.(granio.Draggable)
 			return ok
 		})
 
@@ -412,7 +486,7 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 		deltaY := mousePos.Y - mouseDragPos.Y
 		overThreshold := math.Abs(float64(deltaX)) >= dragMoveThreshold || math.Abs(float64(deltaY)) >= dragMoveThreshold
 
-		if wid, ok := obj.(fyne.Draggable); ok && overThreshold {
+		if wid, ok := obj.(granio.Draggable); ok && overThreshold {
 			w.mouseDragged = wid
 			w.mouseDraggedOffset = previousPos.Subtract(pos)
 			w.mouseDraggedObjStart = obj.Position()
@@ -434,8 +508,8 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 			}
 		} else if mouseOver != nil {
 			isChild := false
-			driver.WalkCompleteObjectTree(mouseOver.(fyne.CanvasObject),
-				func(co fyne.CanvasObject, _, _ fyne.Position, _ fyne.Size) bool {
+			driver.WalkCompleteObjectTree(mouseOver.(granio.CanvasObject),
+				func(co granio.CanvasObject, _, _ granio.Position, _ granio.Size) bool {
 					if co == obj {
 						isChild = true
 						return true
@@ -454,11 +528,11 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 	mouseDragPos = w.mouseDragPos
 	if mouseDragged != nil && w.mouseButton != desktop.MouseButtonSecondary {
 		if w.mouseButton > 0 {
-			draggedObjDelta := w.mouseDraggedObjStart.Subtract(mouseDragged.(fyne.CanvasObject).Position())
-			ev := &fyne.DragEvent{}
+			draggedObjDelta := w.mouseDraggedObjStart.Subtract(mouseDragged.(granio.CanvasObject).Position())
+			ev := &granio.DragEvent{}
 			ev.AbsolutePosition = mousePos
 			ev.Position = mousePos.Subtract(w.mouseDraggedOffset).Add(draggedObjDelta)
-			ev.Dragged = fyne.NewDelta(mousePos.X-mouseDragPos.X, mousePos.Y-mouseDragPos.Y)
+			ev.Dragged = granio.NewDelta(mousePos.X-mouseDragPos.X, mousePos.Y-mouseDragPos.Y)
 			wd := mouseDragged
 			wd.Dragged(ev)
 		}
@@ -470,7 +544,7 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 
 func (w *window) objIsDragged(obj any) bool {
 	if w.mouseDragged != nil && obj != nil {
-		draggedObj, _ := obj.(fyne.Draggable)
+		draggedObj, _ := obj.(granio.Draggable)
 		return draggedObj == w.mouseDragged
 	}
 	return false
@@ -491,7 +565,7 @@ func (w *window) mouseOut() {
 	}
 }
 
-func (w *window) processMouseClicked(button desktop.MouseButton, action action, modifiers fyne.KeyModifier) {
+func (w *window) processMouseClicked(button desktop.MouseButton, action action, modifiers granio.KeyModifier) {
 	w.ensurePositionProcessed()
 
 	w.mouseDragPos = w.mousePos
@@ -499,15 +573,15 @@ func (w *window) processMouseClicked(button desktop.MouseButton, action action, 
 	mouseDragStarted := w.mouseDragStarted
 	if mousePos.IsZero() { // window may not be focused (darwin mostly) and so position callbacks not happening
 		xpos, ypos := w.view().GetCursorPos()
-		w.mousePos = fyne.NewPos(scale.ToFyneCoordinate(w.canvas, int(xpos)), scale.ToFyneCoordinate(w.canvas, int(ypos)))
+		w.mousePos = granio.NewPos(scale.ToFyneCoordinate(w.canvas, int(xpos)), scale.ToFyneCoordinate(w.canvas, int(ypos)))
 		mousePos = w.mousePos
 	}
 
-	co, pos, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object fyne.CanvasObject) bool {
+	co, pos, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object granio.CanvasObject) bool {
 		switch object.(type) {
-		case fyne.Tappable, fyne.SecondaryTappable, fyne.DoubleTappable, fyne.Focusable, desktop.Mouseable:
+		case granio.Tappable, granio.SecondaryTappable, granio.DoubleTappable, granio.Focusable, desktop.Mouseable:
 			return true
-		case fyne.Draggable:
+		case granio.Draggable:
 			if mouseDragStarted {
 				return true
 			}
@@ -515,7 +589,7 @@ func (w *window) processMouseClicked(button desktop.MouseButton, action action, 
 
 		return false
 	})
-	ev := &fyne.PointEvent{
+	ev := &granio.PointEvent{
 		Position:         pos,
 		AbsolutePosition: mousePos,
 	}
@@ -532,10 +606,10 @@ func (w *window) processMouseClicked(button desktop.MouseButton, action action, 
 	}
 
 	focused := w.canvas.Focused()
-	if wid, ok := co.(fyne.Focusable); !ok || wid != focused {
+	if wid, ok := co.(granio.Focusable); !ok || wid != focused {
 		ignore := false
-		if focusedObj, ok := focused.(fyne.CanvasObject); ok {
-			found, _, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object fyne.CanvasObject) bool {
+		if focusedObj, ok := focused.(granio.CanvasObject); ok {
+			found, _, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object granio.CanvasObject) bool {
 				return object == focusedObj
 			})
 			ignore = found != nil
@@ -570,8 +644,8 @@ func (w *window) processMouseClicked(button desktop.MouseButton, action action, 
 		w.mouseDragged = nil
 	}
 
-	_, tap := co.(fyne.Tappable)
-	secondary, altTap := co.(fyne.SecondaryTappable)
+	_, tap := co.(granio.Tappable)
+	secondary, altTap := co.(granio.SecondaryTappable)
 	if tap || altTap {
 		switch action {
 		case press:
@@ -584,12 +658,12 @@ func (w *window) processMouseClicked(button desktop.MouseButton, action action, 
 				// if the secondary tap dismissed an overlay (rather than opening a new
 				// one on top), forward the event to the widget underneath
 				if prevOverlay != nil && !slices.Contains(w.canvas.Overlays().List(), prevOverlay) {
-					co2, pos2, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object fyne.CanvasObject) bool {
-						_, ok := object.(fyne.SecondaryTappable)
+					co2, pos2, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object granio.CanvasObject) bool {
+						_, ok := object.(granio.SecondaryTappable)
 						return ok
 					})
-					if sec2, ok := co2.(fyne.SecondaryTappable); ok {
-						ev2 := &fyne.PointEvent{Position: pos2, AbsolutePosition: mousePos}
+					if sec2, ok := co2.(granio.SecondaryTappable); ok {
+						ev2 := &granio.PointEvent{Position: pos2, AbsolutePosition: mousePos}
 						sec2.TappedSecondary(ev2)
 					}
 				}
@@ -630,8 +704,8 @@ func (w *window) mouseClickedHandleMouseable(mev *desktop.MouseEvent, action act
 	}
 }
 
-func (w *window) mouseClickedHandleTapDoubleTap(co fyne.CanvasObject, ev *fyne.PointEvent) {
-	_, doubleTap := co.(fyne.DoubleTappable)
+func (w *window) mouseClickedHandleTapDoubleTap(co granio.CanvasObject, ev *granio.PointEvent) {
+	_, doubleTap := co.(granio.DoubleTappable)
 	if doubleTap {
 		w.mouseClickCount++
 		w.mouseLastClick = co
@@ -644,14 +718,14 @@ func (w *window) mouseClickedHandleTapDoubleTap(co fyne.CanvasObject, ev *fyne.P
 
 		go w.waitForDoubleTap(co, ev)
 	} else {
-		if wid, ok := co.(fyne.Tappable); ok && co == w.mousePressed {
+		if wid, ok := co.(granio.Tappable); ok && co == w.mousePressed {
 			wid.Tapped(ev)
 		}
 		w.mousePressed = nil
 	}
 }
 
-func (w *window) waitForDoubleTap(co fyne.CanvasObject, ev *fyne.PointEvent) {
+func (w *window) waitForDoubleTap(co granio.CanvasObject, ev *granio.PointEvent) {
 	ctx, mouseCancelFunc := context.WithDeadline(context.TODO(), time.Now().Add(w.driver.DoubleTapDelay()))
 	defer runOnMain(mouseCancelFunc)
 	runOnMain(func() {
@@ -665,13 +739,13 @@ func (w *window) waitForDoubleTap(co fyne.CanvasObject, ev *fyne.PointEvent) {
 	})
 }
 
-func (w *window) waitForDoubleTapEnded(co fyne.CanvasObject, ev *fyne.PointEvent) {
+func (w *window) waitForDoubleTapEnded(co granio.CanvasObject, ev *granio.PointEvent) {
 	if w.mouseClickCount == 2 && w.mouseLastClick == co {
-		if wid, ok := co.(fyne.DoubleTappable); ok {
+		if wid, ok := co.(granio.DoubleTappable); ok {
 			wid.DoubleTapped(ev)
 		}
 	} else if co == w.mousePressed {
-		if wid, ok := co.(fyne.Tappable); ok {
+		if wid, ok := co.(granio.Tappable); ok {
 			wid.Tapped(ev)
 		}
 	}
@@ -684,11 +758,11 @@ func (w *window) waitForDoubleTapEnded(co fyne.CanvasObject, ev *fyne.PointEvent
 
 func (w *window) processMouseScrolled(xoff float64, yoff float64) {
 	mousePos := w.mousePos
-	co, pos, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object fyne.CanvasObject) bool {
-		_, ok := object.(fyne.Scrollable)
+	co, pos, _ := w.findObjectAtPositionMatching(w.canvas, mousePos, func(object granio.CanvasObject) bool {
+		_, ok := object.(granio.Scrollable)
 		return ok
 	})
-	if wid, ok := co.(fyne.Scrollable); ok {
+	if wid, ok := co.(granio.Scrollable); ok {
 		if math.Abs(xoff) >= common.ScrollAccelerateCutoff {
 			xoff *= common.ScrollAccelerateRate
 		}
@@ -696,31 +770,36 @@ func (w *window) processMouseScrolled(xoff float64, yoff float64) {
 			yoff *= common.ScrollAccelerateRate
 		}
 
-		ev := &fyne.ScrollEvent{}
-		ev.Scrolled = fyne.NewDelta(float32(xoff)*common.ScrollSpeed, float32(yoff)*common.ScrollSpeed)
+		ev := &granio.ScrollEvent{}
+		ev.Scrolled = granio.NewDelta(float32(xoff)*common.ScrollSpeed, float32(yoff)*common.ScrollSpeed)
 		ev.Position = pos
 		ev.AbsolutePosition = mousePos
 		wid.Scrolled(ev)
 	}
 }
 
-func (w *window) capturesTab(modifier fyne.KeyModifier) bool {
-	if ent, ok := w.canvas.Focused().(fyne.Tabbable); ok && ent.AcceptsTab() {
+func (w *window) capturesTab(modifier granio.KeyModifier) bool {
+	if ent, ok := w.canvas.Focused().(granio.Tabbable); ok && ent.AcceptsTab() {
 		return true
 	}
 
 	switch modifier {
 	case 0:
 		w.canvas.FocusNext()
-	case fyne.KeyModifierShift:
+	case granio.KeyModifierShift:
 		w.canvas.FocusPrevious()
 	}
 
 	return false
 }
 
-func (w *window) processKeyPressed(keyName fyne.KeyName, keyASCII fyne.KeyName, scancode int, action action, keyDesktopModifier fyne.KeyModifier) {
-	keyEvent := &fyne.KeyEvent{Name: keyName, Physical: fyne.HardwareKey{ScanCode: scancode}, Repeat: action == repeat}
+func (w *window) processKeyPressed(keyName granio.KeyName, keyASCII granio.KeyName, scancode int, action action, keyDesktopModifier granio.KeyModifier) {
+	if input, ok := w.canvas.Focused().(desktop.TextInput); ok && input.CompositionActive() && action != release {
+		// The native input method owns candidate navigation and confirmation.
+		// Its commit/cancel callback decides when ordinary key handling resumes.
+		return
+	}
+	keyEvent := &granio.KeyEvent{Name: keyName, Physical: granio.HardwareKey{ScanCode: scancode}, Repeat: action == repeat}
 
 	pendingMenuToggle := w.menuTogglePending
 	w.menuTogglePending = desktop.KeyNone
@@ -751,10 +830,10 @@ func (w *window) processKeyPressed(keyName fyne.KeyName, keyASCII fyne.KeyName, 
 		switch keyName {
 		case desktop.KeyAltLeft, desktop.KeyAltRight:
 			// compensate for GLFW modifiers bug https://github.com/glfw/glfw/issues/1630
-			if (runtime.GOOS == goos.Linux && keyDesktopModifier == 0) || (runtime.GOOS != goos.Linux && keyDesktopModifier == fyne.KeyModifierAlt) {
+			if (runtime.GOOS == goos.Linux && keyDesktopModifier == 0) || (runtime.GOOS != goos.Linux && keyDesktopModifier == granio.KeyModifierAlt) {
 				w.menuTogglePending = keyName
 			}
-		case fyne.KeyEscape:
+		case granio.KeyEscape:
 			w.menuDeactivationPending = keyName
 		}
 		if focused := w.canvas.Focused(); focused != nil {
@@ -775,15 +854,28 @@ func (w *window) processKeyPressed(keyName fyne.KeyName, keyASCII fyne.KeyName, 
 		}
 	}
 
-	modifierOtherThanShift := (keyDesktopModifier & fyne.KeyModifierControl) |
-		(keyDesktopModifier & fyne.KeyModifierAlt) |
-		(keyDesktopModifier & fyne.KeyModifierSuper)
-	if (keyName == fyne.KeyTab && modifierOtherThanShift == 0 && !w.capturesTab(keyDesktopModifier)) ||
+	modifierOtherThanShift := (keyDesktopModifier & granio.KeyModifierControl) |
+		(keyDesktopModifier & granio.KeyModifierAlt) |
+		(keyDesktopModifier & granio.KeyModifierSuper)
+	if (keyName == granio.KeyTab && modifierOtherThanShift == 0 && !w.capturesTab(keyDesktopModifier)) ||
 		w.triggersShortcut(keyName, keyASCII, keyDesktopModifier) {
 		return
 	}
 
 	// No shortcut detected, pass down to TypedKey
+	if keyName == granio.KeyEscape && keyDesktopModifier == 0 {
+		if composing, ok := w.canvas.Focused().(interface {
+			CompositionActive() bool
+			CancelComposition()
+		}); ok && composing.CompositionActive() {
+			composing.CancelComposition()
+			return
+		}
+		if overlay, ok := w.canvas.Overlays().Top().(interface{ HandleEscape() bool }); ok && overlay.HandleEscape() {
+			w.menuDeactivationPending = desktop.KeyNone
+			return
+		}
+	}
 	if focused := w.canvas.Focused(); focused != nil {
 		focused.TypedKey(keyEvent)
 	} else if w.canvas.onTypedKey != nil {
@@ -804,9 +896,11 @@ func (w *window) processCharInput(char rune) {
 }
 
 func (w *window) processFocused(focus bool) {
+	defer w.updateInputMethod()
+	defer w.updateAccessibility()
 	if focus {
 		if curWindow == nil {
-			if f := fyne.CurrentApp().Lifecycle().(*app.Lifecycle).OnEnteredForeground(); f != nil {
+			if f := granio.CurrentApp().Lifecycle().(*app.Lifecycle).OnEnteredForeground(); f != nil {
 				f()
 			}
 		}
@@ -823,7 +917,7 @@ func (w *window) processFocused(focus bool) {
 		}
 	} else {
 		w.canvas.FocusLost()
-		w.mousePos = fyne.Position{}
+		w.mousePos = granio.Position{}
 		// Avoid triggering menu on Alt+Tab: glfw sends a fake "alt key released" event immediately after
 		// unfocusing the window, and it should be ignored.
 		w.menuTogglePending = desktop.KeyNone
@@ -835,72 +929,72 @@ func (w *window) processFocused(focus bool) {
 		}
 
 		curWindow = nil
-		if f := fyne.CurrentApp().Lifecycle().(*app.Lifecycle).OnExitedForeground(); f != nil {
+		if f := granio.CurrentApp().Lifecycle().(*app.Lifecycle).OnExitedForeground(); f != nil {
 			f()
 		}
 	}
 }
 
-func (w *window) triggersShortcut(localizedKeyName fyne.KeyName, key fyne.KeyName, modifier fyne.KeyModifier) bool {
-	ctrlMod := fyne.KeyModifierControl
+func (w *window) triggersShortcut(localizedKeyName granio.KeyName, key granio.KeyName, modifier granio.KeyModifier) bool {
+	ctrlMod := granio.KeyModifierControl
 	if isMacOSRuntime() {
-		ctrlMod = fyne.KeyModifierSuper
+		ctrlMod = granio.KeyModifierSuper
 	}
 	// User pressing physical keys Ctrl+V while using a Russian (or any non-ASCII) keyboard layout
-	// is reported as a fyne.KeyUnknown key with Control modifier. We should still consider this
+	// is reported as a granio.KeyUnknown key with Control modifier. We should still consider this
 	// as a "Paste" shortcut.
 	// See https://github.com/fyne-io/fyne/pull/2587 for discussion.
 	keyName := localizedKeyName
-	resemblesShortcut := (modifier&(fyne.KeyModifierControl|fyne.KeyModifierSuper) != 0)
-	if (localizedKeyName == fyne.KeyUnknown) && resemblesShortcut && key != fyne.KeyUnknown {
+	resemblesShortcut := (modifier&(granio.KeyModifierControl|granio.KeyModifierSuper) != 0)
+	if (localizedKeyName == granio.KeyUnknown) && resemblesShortcut && key != granio.KeyUnknown {
 		keyName = key
 	}
 
-	var shortcut fyne.Shortcut
+	var shortcut granio.Shortcut
 	if modifier == ctrlMod {
 		switch keyName {
-		case fyne.KeyZ: // detect undo shortcut
-			shortcut = &fyne.ShortcutUndo{}
-		case fyne.KeyY: // detect redo shortcut
-			shortcut = &fyne.ShortcutRedo{}
-		case fyne.KeyV: // detect paste shortcut
-			shortcut = &fyne.ShortcutPaste{
+		case granio.KeyZ: // detect undo shortcut
+			shortcut = &granio.ShortcutUndo{}
+		case granio.KeyY: // detect redo shortcut
+			shortcut = &granio.ShortcutRedo{}
+		case granio.KeyV: // detect paste shortcut
+			shortcut = &granio.ShortcutPaste{
 				Clipboard: NewClipboard(),
 			}
-		case fyne.KeyC: // detect copy shortcut
-			shortcut = &fyne.ShortcutCopy{
+		case granio.KeyC: // detect copy shortcut
+			shortcut = &granio.ShortcutCopy{
 				Clipboard: NewClipboard(),
 			}
-		case fyne.KeyInsert: // detect copy shortcut (alternative
-			shortcut = &fyne.ShortcutCopy{
+		case granio.KeyInsert: // detect copy shortcut (alternative
+			shortcut = &granio.ShortcutCopy{
 				Clipboard: NewClipboard(),
 				Secondary: true,
 			}
-		case fyne.KeyX: // detect cut shortcut
-			shortcut = &fyne.ShortcutCut{
+		case granio.KeyX: // detect cut shortcut
+			shortcut = &granio.ShortcutCut{
 				Clipboard: NewClipboard(),
 			}
-		case fyne.KeyA: // detect selectAll shortcut
-			shortcut = &fyne.ShortcutSelectAll{}
+		case granio.KeyA: // detect selectAll shortcut
+			shortcut = &granio.ShortcutSelectAll{}
 		}
 	}
 
-	if modifier == fyne.KeyModifierShift {
+	if modifier == granio.KeyModifierShift {
 		switch keyName {
-		case fyne.KeyInsert: // detect paste shortcut (alternative)
-			shortcut = &fyne.ShortcutPaste{
+		case granio.KeyInsert: // detect paste shortcut (alternative)
+			shortcut = &granio.ShortcutPaste{
 				Clipboard: NewClipboard(),
 				Secondary: true,
 			}
-		case fyne.KeyDelete: // detect cut shortcut (alternative)
-			shortcut = &fyne.ShortcutCut{
+		case granio.KeyDelete: // detect cut shortcut (alternative)
+			shortcut = &granio.ShortcutCut{
 				Clipboard: NewClipboard(),
 				Secondary: true,
 			}
 		}
 	}
 
-	if shortcut == nil && modifier != 0 && !isKeyModifier(keyName) && modifier != fyne.KeyModifierShift {
+	if shortcut == nil && modifier != 0 && !isKeyModifier(keyName) && modifier != granio.KeyModifierShift {
 		shortcut = &desktop.CustomShortcut{
 			KeyName:  keyName,
 			Modifier: modifier,
@@ -911,10 +1005,10 @@ func (w *window) triggersShortcut(localizedKeyName fyne.KeyName, key fyne.KeyNam
 		if w.triggerMainMenuShortcut(shortcut) {
 			return true
 		}
-		if focused, ok := w.canvas.Focused().(fyne.Shortcutable); ok {
+		if focused, ok := w.canvas.Focused().(granio.Shortcutable); ok {
 			shouldRunShortcut := true
 			type selectableText interface {
-				fyne.Disableable
+				granio.Disableable
 				SelectedText() string
 			}
 			if selectableTextWid, ok := focused.(selectableText); ok && selectableTextWid.Disabled() {
@@ -932,7 +1026,7 @@ func (w *window) triggersShortcut(localizedKeyName fyne.KeyName, key fyne.KeyNam
 	return false
 }
 
-func (w *window) triggerMenuShortcut(sh fyne.Shortcut, m *fyne.Menu) bool {
+func (w *window) triggerMenuShortcut(sh granio.Shortcut, m *granio.Menu) bool {
 	for _, i := range m.Items {
 		if i.Shortcut != nil && i.Shortcut.ShortcutName() == sh.ShortcutName() {
 			if f := i.Action; f != nil {
@@ -949,7 +1043,7 @@ func (w *window) triggerMenuShortcut(sh fyne.Shortcut, m *fyne.Menu) bool {
 	return false
 }
 
-func (w *window) triggerMainMenuShortcut(sh fyne.Shortcut) bool {
+func (w *window) triggerMainMenuShortcut(sh granio.Shortcut) bool {
 	if w.mainmenu == nil {
 		return false
 	}
@@ -967,11 +1061,9 @@ func (w *window) RunWithContext(f func()) {
 	if w.isClosing() {
 		return
 	}
-	w.view().MakeContextCurrent()
-
+	restore := w.activateContext()
+	defer restore()
 	f()
-
-	w.DetachCurrentContext()
 }
 
 func (*window) Context() any {
@@ -995,6 +1087,9 @@ func (w *window) doShowAgain() {
 	view := w.view()
 	if !build.IsWayland {
 		view.SetPos(w.xpos, w.ypos)
+	}
+	if !w.prepareVisualFirstFrame() {
+		return
 	}
 	view.Show()
 	w.visible = true
@@ -1024,7 +1119,7 @@ func (w *window) toggleVisible() {
 	}
 }
 
-func isKeyModifier(keyName fyne.KeyName) bool {
+func isKeyModifier(keyName granio.KeyName) bool {
 	return keyName == desktop.KeyShiftLeft || keyName == desktop.KeyShiftRight ||
 		keyName == desktop.KeyControlLeft || keyName == desktop.KeyControlRight ||
 		keyName == desktop.KeyAltLeft || keyName == desktop.KeyAltRight ||

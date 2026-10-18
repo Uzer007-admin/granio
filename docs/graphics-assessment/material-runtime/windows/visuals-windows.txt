@@ -1,0 +1,7 @@
+=== RUN   TestSurfaceMetricsMatchesNativeQueries
+--- PASS: TestSurfaceMetricsMatchesNativeQueries (0.64s)
+=== RUN   TestWindowVisualNativeLifecycle
+    visuals_integration_test.go:39: created surface: {OSBuild:26300 OSAttributes:15 Composition:true RemoteSession:false HighContrast:false HighContrastKnown:true TransparentFramebuffer:true PixelFormat:12 AlphaBits:8 Backdrop:0 BackdropKnown:true}
+--- PASS: TestWindowVisualNativeLifecycle (0.16s)
+PASS
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	2.078s

@@ -1,0 +1,11 @@
+ok  	github.com/Uzer007-admin/glow	(cached)
+ok  	github.com/Uzer007-admin/gl/material	(cached)
+ok  	github.com/Uzer007-admin/gl/capabilities	1.198s
+?   	github.com/Uzer007-admin/gl/capabilities/native	[no test files]
+ok  	github.com/Uzer007-admin/gl/v2.1/material	1.286s
+ok  	github.com/Uzer007-admin/gl/v2.1/fyne	1.246s
+ok  	github.com/Uzer007-admin/gl/v2.0/gles2	1.290s
+ok  	github.com/Uzer007-admin/dbus/v5/portal	1.204s
+ok  	github.com/Uzer007-admin/glfw/v3.3/glfw	1.204s
+ok  	github.com/Uzer007-admin/glfw/v3.4/glfw	1.217s
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	1.392s

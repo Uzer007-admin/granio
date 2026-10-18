@@ -6,13 +6,13 @@ import (
 	"net/url"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -51,10 +51,10 @@ func TestHyperlink_Cursor(t *testing.T) {
 }
 
 func TestHyperlink_Alignment(t *testing.T) {
-	hyperlink := &Hyperlink{Text: "Test", Alignment: fyne.TextAlignTrailing}
+	hyperlink := &Hyperlink{Text: "Test", Alignment: granio.TextAlignTrailing}
 	hyperlink.CreateRenderer()
 
-	assert.Equal(t, fyne.TextAlignTrailing, richTextRenderTexts(&hyperlink.provider)[0].Alignment)
+	assert.Equal(t, granio.TextAlignTrailing, richTextRenderTexts(&hyperlink.provider)[0].Alignment)
 }
 
 func TestHyperlink_Hide(t *testing.T) {
@@ -108,8 +108,8 @@ func TestHyperlink_TappedOutsideTextBoundary(t *testing.T) {
 		tapped++
 	}
 	link.syncSegments()
-	link.Tapped(&fyne.PointEvent{
-		Position: fyne.NewPos(50 /* past text boundary */, 2),
+	link.Tapped(&granio.PointEvent{
+		Position: granio.NewPos(50 /* past text boundary */, 2),
 	})
 	assert.Equal(t, 0, tapped)
 }
@@ -117,20 +117,20 @@ func TestHyperlink_TappedOutsideTextBoundary(t *testing.T) {
 func TestHyperlink_KeyboardOnTapped(t *testing.T) {
 	tapped := 0
 	link := &Hyperlink{Text: "Test"}
-	link.TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	link.TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.Equal(t, 0, tapped)
 
 	link.OnTapped = func() {
 		tapped++
 	}
-	link.TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	link.TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.Equal(t, 1, tapped)
 }
 
 func TestHyperlink_Resize(t *testing.T) {
 	hyperlink := &Hyperlink{Text: "Test"}
 	hyperlink.CreateRenderer()
-	size := fyne.NewSize(100, 20)
+	size := granio.NewSize(100, 20)
 	hyperlink.Resize(size)
 
 	assert.Equal(t, size, hyperlink.Size())
@@ -170,9 +170,9 @@ func TestHyperlink_ThemeOverride(t *testing.T) {
 
 	hyperlink := &Hyperlink{Text: "Test"}
 	bg := canvas.NewRectangle(color.Gray{Y: 0xc0})
-	w := test.NewWindow(&fyne.Container{
+	w := test.NewWindow(&granio.Container{
 		Layout:  layout.NewStackLayout(),
-		Objects: []fyne.CanvasObject{bg, hyperlink},
+		Objects: []granio.CanvasObject{bg, hyperlink},
 	})
 	defer w.Close()
 	w.SetPadded(false)
@@ -193,17 +193,17 @@ func TestHyperlink_ThemeOverride(t *testing.T) {
 func TestHyperlink_Truncate(t *testing.T) {
 	hyperlink := &Hyperlink{Text: "TestingWithLongText"}
 	hyperlink.CreateRenderer()
-	hyperlink.Resize(fyne.NewSize(100, 20))
+	hyperlink.Resize(granio.NewSize(100, 20))
 
 	texts := richTextRenderTexts(&hyperlink.provider)
 	assert.Equal(t, "TestingWithLongText", texts[0].Text)
 
-	hyperlink.Truncation = fyne.TextTruncateClip
+	hyperlink.Truncation = granio.TextTruncateClip
 	hyperlink.Refresh()
 	texts = richTextRenderTexts(&hyperlink.provider)
 	assert.Equal(t, "TestingWith", texts[0].Text)
 
-	hyperlink.Truncation = fyne.TextTruncateEllipsis
+	hyperlink.Truncation = granio.TextTruncateEllipsis
 	hyperlink.Refresh()
 	texts = richTextRenderTexts(&hyperlink.provider)
 	assert.Equal(t, "TestingWit…", texts[0].Text)
@@ -215,7 +215,7 @@ func TestHyperlink_CreateRendererDoesNotAffectSize(t *testing.T) {
 	link := NewHyperlink("Test", u)
 	link.Resize(link.MinSize())
 	size := link.Size()
-	assert.NotEqual(t, fyne.NewSize(0, 0), size)
+	assert.NotEqual(t, granio.NewSize(0, 0), size)
 	assert.Equal(t, size, link.MinSize())
 
 	r := link.CreateRenderer()

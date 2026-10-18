@@ -1,10 +1,10 @@
 package container
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	intWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	intWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // MultipleWindows is a container that handles multiple `InnerWindow` containers.
@@ -16,7 +16,7 @@ type MultipleWindows struct {
 
 	Windows []*InnerWindow
 
-	content *fyne.Container
+	content *granio.Container
 }
 
 // NewMultipleWindows creates a new `MultipleWindows` container to manage many inner windows.
@@ -37,14 +37,14 @@ func (m *MultipleWindows) Add(w *InnerWindow) {
 	m.refreshChildren()
 }
 
-// CreateRenderer implements the [fyne.Widget] interface.
-func (m *MultipleWindows) CreateRenderer() fyne.WidgetRenderer {
+// CreateRenderer implements the [granio.Widget] interface.
+func (m *MultipleWindows) CreateRenderer() granio.WidgetRenderer {
 	m.content = New(&multiWinLayout{})
 	m.refreshChildren()
 	return widget.NewSimpleRenderer(intWidget.NewScroll(m.content))
 }
 
-// Refresh implements the [fyne.CanvasObject] interface.
+// Refresh implements the [granio.CanvasObject] interface.
 func (m *MultipleWindows) Refresh() {
 	m.refreshChildren()
 	//	m.BaseWidget.Refresh()
@@ -87,7 +87,7 @@ func (m *MultipleWindows) refreshChildren() {
 		return
 	}
 
-	objs := make([]fyne.CanvasObject, len(m.Windows))
+	objs := make([]granio.CanvasObject, len(m.Windows))
 	for i, w := range m.Windows {
 		objs[i] = w
 
@@ -100,8 +100,8 @@ func (m *MultipleWindows) refreshChildren() {
 }
 
 func (m *MultipleWindows) setupChild(w *InnerWindow) {
-	w.OnDragged = func(ev *fyne.DragEvent) {
-		abs := fyne.CurrentApp().Driver().AbsolutePositionForObject(m)
+	w.OnDragged = func(ev *granio.DragEvent) {
+		abs := granio.CurrentApp().Driver().AbsolutePositionForObject(m)
 		rel := ev.AbsolutePosition.Subtract(abs)
 		if rel.X < 0 || rel.Y < 0 || rel.X > m.Size().Width || rel.Y > m.Size().Height {
 			return
@@ -109,7 +109,7 @@ func (m *MultipleWindows) setupChild(w *InnerWindow) {
 
 		w.Move(w.Position().Add(ev.Dragged))
 	}
-	w.OnResized = func(ev *fyne.DragEvent) {
+	w.OnResized = func(ev *granio.DragEvent) {
 		size := w.Size().Add(ev.Dragged)
 		w.Resize(internal.MaxSizes(size, w.MinSize()))
 	}
@@ -120,12 +120,12 @@ func (m *MultipleWindows) setupChild(w *InnerWindow) {
 
 type multiWinLayout struct{}
 
-func (*multiWinLayout) Layout(objects []fyne.CanvasObject, _ fyne.Size) {
+func (*multiWinLayout) Layout(objects []granio.CanvasObject, _ granio.Size) {
 	for _, w := range objects { // update the windows so they have real size
 		w.Resize(internal.MaxSizes(w.MinSize(), w.Size()))
 	}
 }
 
-func (*multiWinLayout) MinSize(_ []fyne.CanvasObject) fyne.Size {
-	return fyne.Size{}
+func (*multiWinLayout) MinSize(_ []granio.CanvasObject) granio.Size {
+	return granio.Size{}
 }

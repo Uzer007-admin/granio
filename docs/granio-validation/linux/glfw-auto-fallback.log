@@ -1,0 +1,4 @@
+=== RUN   TestAutoPlatformFallbackWithStaleWayland
+--- PASS: TestAutoPlatformFallbackWithStaleWayland (0.03s)
+PASS
+ok  	github.com/Uzer007-admin/glfw/v3.5/glfw	1.041s

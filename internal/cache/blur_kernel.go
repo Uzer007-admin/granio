@@ -3,7 +3,7 @@ package cache
 import (
 	"time"
 
-	"fyne.io/fyne/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 )
 
 var blurKernels async.Map[float32, *blurKernelInfo]
@@ -32,9 +32,9 @@ func SetBlurKernel(radius float32, values []float32) {
 
 // destroyExpiredBlurKernels removes blur kernel cache entries that have not been
 // used recently.
-func destroyExpiredBlurKernels(now time.Time) {
+func destroyExpiredBlurKernels(now time.Time, recentEpoch ...uint64) {
 	blurKernels.Range(func(radius float32, info *blurKernelInfo) bool {
-		if info.isExpired(now) {
+		if info.isExpired(now, recentEpoch...) {
 			blurKernels.Delete(radius)
 		}
 		return true

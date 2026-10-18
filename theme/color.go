@@ -3,8 +3,8 @@ package theme
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	internaltheme "fyne.io/fyne/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	internaltheme "github.com/Uzer007-admin/granio/v2/internal/theme"
 )
 
 // Keep in mind to add new constants to the tests at test/theme.go.
@@ -45,153 +45,157 @@ const (
 	// ColorNameBackground is the name of theme lookup for background color.
 	//
 	// Since: 2.0
-	ColorNameBackground fyne.ThemeColorName = "background"
+	ColorNameBackground granio.ThemeColorName = "background"
 
 	// ColorNameButton is the name of theme lookup for button color.
 	//
 	// Since: 2.0
-	ColorNameButton fyne.ThemeColorName = "button"
+	ColorNameButton granio.ThemeColorName = "button"
 
 	// ColorNameDisabledButton is the name of theme lookup for disabled button color.
 	//
 	// Since: 2.0
-	ColorNameDisabledButton fyne.ThemeColorName = "disabledButton"
+	ColorNameDisabledButton granio.ThemeColorName = "disabledButton"
 
 	// ColorNameDisabled is the name of theme lookup for disabled foreground color.
 	//
 	// Since: 2.0
-	ColorNameDisabled fyne.ThemeColorName = "disabled"
+	ColorNameDisabled granio.ThemeColorName = "disabled"
 
 	// ColorNameError is the name of theme lookup for error color.
 	//
 	// Since: 2.0
-	ColorNameError fyne.ThemeColorName = "error"
+	ColorNameError granio.ThemeColorName = "error"
 
 	// ColorNameFocus is the name of theme lookup for focus color.
 	//
 	// Since: 2.0
-	ColorNameFocus fyne.ThemeColorName = "focus"
+	ColorNameFocus granio.ThemeColorName = "focus"
 
 	// ColorNameForeground is the name of theme lookup for foreground color.
 	//
 	// Since: 2.0
-	ColorNameForeground fyne.ThemeColorName = "foreground"
+	ColorNameForeground granio.ThemeColorName = "foreground"
 
 	// ColorNameForegroundOnError is the name of theme lookup for a contrast color to the error color.
 	//
 	// Since: 2.5
-	ColorNameForegroundOnError fyne.ThemeColorName = "foregroundOnError"
+	ColorNameForegroundOnError granio.ThemeColorName = "foregroundOnError"
 
 	// ColorNameForegroundOnPrimary is the name of theme lookup for a contrast color to the primary color.
 	//
 	// Since: 2.5
-	ColorNameForegroundOnPrimary fyne.ThemeColorName = "foregroundOnPrimary"
+	ColorNameForegroundOnPrimary granio.ThemeColorName = "foregroundOnPrimary"
+
+	// ColorNameForegroundOnButton pairs with the button background. Optional
+	// system color themes use it for the user's high contrast ButtonText role.
+	ColorNameForegroundOnButton granio.ThemeColorName = "foregroundOnButton"
 
 	// ColorNameForegroundOnSuccess is the name of theme lookup for a contrast color to the success color.
 	//
 	// Since: 2.5
-	ColorNameForegroundOnSuccess fyne.ThemeColorName = "foregroundOnSuccess"
+	ColorNameForegroundOnSuccess granio.ThemeColorName = "foregroundOnSuccess"
 
 	// ColorNameForegroundOnWarning is the name of theme lookup for a contrast color to the warning color.
 	//
 	// Since: 2.5
-	ColorNameForegroundOnWarning fyne.ThemeColorName = "foregroundOnWarning"
+	ColorNameForegroundOnWarning granio.ThemeColorName = "foregroundOnWarning"
 
 	// ColorNameHeaderBackground is the name of theme lookup for background color of a collection header.
 	//
 	// Since: 2.4
-	ColorNameHeaderBackground fyne.ThemeColorName = "headerBackground"
+	ColorNameHeaderBackground granio.ThemeColorName = "headerBackground"
 
 	// ColorNameHover is the name of theme lookup for hover color.
 	//
 	// Since: 2.0
-	ColorNameHover fyne.ThemeColorName = "hover"
+	ColorNameHover granio.ThemeColorName = "hover"
 
 	// ColorNameHyperlink is the name of theme lookup for hyperlink color.
 	//
 	// Since: 2.4
-	ColorNameHyperlink fyne.ThemeColorName = "hyperlink"
+	ColorNameHyperlink granio.ThemeColorName = "hyperlink"
 
 	// ColorNameInnerWindowBorder is the name of theme lookup for background color of inner window borders.
 	//
 	// Since: 2.8
-	ColorNameInnerWindowBorder fyne.ThemeColorName = "innerWindowBorder"
+	ColorNameInnerWindowBorder granio.ThemeColorName = "innerWindowBorder"
 
 	// ColorNameInnerWindowBorderInactive is the name of theme lookup for background color of inner window borders
 	// when they are not the current window, defaults to the ColorNameInnerWindowBorder.
 	//
 	// Since: 2.8
-	ColorNameInnerWindowBorderInactive fyne.ThemeColorName = "innerWindowBorderInactive"
+	ColorNameInnerWindowBorderInactive granio.ThemeColorName = "innerWindowBorderInactive"
 
 	// ColorNameInputBackground is the name of theme lookup for background color of an input field.
 	//
 	// Since: 2.0
-	ColorNameInputBackground fyne.ThemeColorName = "inputBackground"
+	ColorNameInputBackground granio.ThemeColorName = "inputBackground"
 
 	// ColorNameInputBorder is the name of theme lookup for border color of an input field.
 	//
 	// Since: 2.3
-	ColorNameInputBorder fyne.ThemeColorName = "inputBorder"
+	ColorNameInputBorder granio.ThemeColorName = "inputBorder"
 
 	// ColorNameMenuBackground is the name of theme lookup for background color of menus.
 	//
 	// Since: 2.3
-	ColorNameMenuBackground fyne.ThemeColorName = "menuBackground"
+	ColorNameMenuBackground granio.ThemeColorName = "menuBackground"
 
 	// ColorNameOverlayBackground is the name of theme lookup for background color of overlays like dialogs.
 	//
 	// Since: 2.3
-	ColorNameOverlayBackground fyne.ThemeColorName = "overlayBackground"
+	ColorNameOverlayBackground granio.ThemeColorName = "overlayBackground"
 
 	// ColorNamePlaceHolder is the name of theme lookup for placeholder text color.
 	//
 	// Since: 2.0
-	ColorNamePlaceHolder fyne.ThemeColorName = "placeholder"
+	ColorNamePlaceHolder granio.ThemeColorName = "placeholder"
 
 	// ColorNamePressed is the name of theme lookup for the tap overlay color.
 	//
 	// Since: 2.0
-	ColorNamePressed fyne.ThemeColorName = "pressed"
+	ColorNamePressed granio.ThemeColorName = "pressed"
 
 	// ColorNamePrimary is the name of theme lookup for primary color.
 	//
 	// Since: 2.0
-	ColorNamePrimary fyne.ThemeColorName = "primary"
+	ColorNamePrimary granio.ThemeColorName = "primary"
 
 	// ColorNameScrollBar is the name of theme lookup for scrollbar color.
 	//
 	// Since: 2.0
-	ColorNameScrollBar fyne.ThemeColorName = "scrollBar"
+	ColorNameScrollBar granio.ThemeColorName = "scrollBar"
 
 	// ColorNameScrollBarBackground is the name of theme lookup for scrollbar background color.
 	//
 	// Since: 2.6
-	ColorNameScrollBarBackground fyne.ThemeColorName = "scrollBarBackground"
+	ColorNameScrollBarBackground granio.ThemeColorName = "scrollBarBackground"
 
 	// ColorNameSelection is the name of theme lookup for selection color.
 	//
 	// Since: 2.1
-	ColorNameSelection fyne.ThemeColorName = "selection"
+	ColorNameSelection granio.ThemeColorName = "selection"
 
 	// ColorNameSeparator is the name of theme lookup for separator bars.
 	//
 	// Since: 2.3
-	ColorNameSeparator fyne.ThemeColorName = "separator"
+	ColorNameSeparator granio.ThemeColorName = "separator"
 
 	// ColorNameShadow is the name of theme lookup for shadow color.
 	//
 	// Since: 2.0
-	ColorNameShadow fyne.ThemeColorName = "shadow"
+	ColorNameShadow granio.ThemeColorName = "shadow"
 
 	// ColorNameSuccess is the name of theme lookup for success color.
 	//
 	// Since: 2.3
-	ColorNameSuccess fyne.ThemeColorName = "success"
+	ColorNameSuccess granio.ThemeColorName = "success"
 
 	// ColorNameWarning is the name of theme lookup for warning color.
 	//
 	// Since: 2.3
-	ColorNameWarning fyne.ThemeColorName = "warning"
+	ColorNameWarning granio.ThemeColorName = "warning"
 )
 
 var (
@@ -281,7 +285,7 @@ func ButtonColor() color.Color {
 // Color looks up the named colour for current theme and variant.
 //
 // Since: 2.5
-func Color(name fyne.ThemeColorName) color.Color {
+func Color(name granio.ThemeColorName) color.Color {
 	return safeColorLookup(name, currentVariant())
 }
 
@@ -289,7 +293,7 @@ func Color(name fyne.ThemeColorName) color.Color {
 // If the widget theme has been overridden that theme will be used.
 //
 // Since: 2.5
-func ColorForWidget(name fyne.ThemeColorName, w fyne.Widget) color.Color {
+func ColorForWidget(name granio.ThemeColorName, w granio.Widget) color.Color {
 	return CurrentForWidget(w).Color(name, currentVariant())
 }
 
@@ -487,10 +491,10 @@ func WarningColor() color.Color {
 	return safeColorLookup(ColorNameWarning, currentVariant())
 }
 
-func safeColorLookup(n fyne.ThemeColorName, v fyne.ThemeVariant) color.Color {
+func safeColorLookup(n granio.ThemeColorName, v granio.ThemeVariant) color.Color {
 	col := Current().Color(n, v)
 	if col == nil {
-		fyne.LogError("Loaded theme returned nil color", nil)
+		granio.LogError("Loaded theme returned nil color", nil)
 		return fallbackColor
 	}
 	return col

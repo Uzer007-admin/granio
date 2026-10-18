@@ -4,26 +4,26 @@ import (
 	"os"
 	"syscall"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func driveMask() uint32 {
 	dll, err := syscall.LoadLibrary("kernel32.dll")
 	if err != nil {
-		fyne.LogError("Error loading kernel32.dll", err)
+		granio.LogError("Error loading kernel32.dll", err)
 		return 0
 	}
 	handle, err := syscall.GetProcAddress(dll, "GetLogicalDrives")
 	if err != nil {
-		fyne.LogError("Could not find GetLogicalDrives call", err)
+		granio.LogError("Could not find GetLogicalDrives call", err)
 		return 0
 	}
 
 	ret, _, err := syscall.SyscallN(uintptr(handle))
 	if err != syscall.Errno(0) { // for some reason Syscall returns something not nil on success
-		fyne.LogError("Error calling GetLogicalDrives", err)
+		granio.LogError("Error calling GetLogicalDrives", err)
 		return 0
 	}
 
@@ -60,20 +60,20 @@ func (f *fileDialog) getPlaces() []favoriteItem {
 	return places
 }
 
-func isHidden(file fyne.URI) bool {
-	if file.Scheme() != fyne.URISchemeFile {
-		fyne.LogError("Cannot check if non file is hidden", nil)
+func isHidden(file granio.URI) bool {
+	if file.Scheme() != granio.URISchemeFile {
+		granio.LogError("Cannot check if non file is hidden", nil)
 		return false
 	}
 
 	point, err := syscall.UTF16PtrFromString(file.Path())
 	if err != nil {
-		fyne.LogError("Error making string pointer", err)
+		granio.LogError("Error making string pointer", err)
 		return false
 	}
 	attr, err := syscall.GetFileAttributes(point)
 	if err != nil {
-		fyne.LogError("Error getting file attributes", err)
+		granio.LogError("Error getting file attributes", err)
 		return false
 	}
 
@@ -97,6 +97,6 @@ func fileSaveOSOverride(*FileDialog) bool {
 	return false
 }
 
-func getFavoriteLocation(homeURI fyne.URI, name string) (fyne.URI, error) {
+func getFavoriteLocation(homeURI granio.URI, name string) (granio.URI, error) {
 	return storage.Child(homeURI, name)
 }

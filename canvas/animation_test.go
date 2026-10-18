@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,35 +27,35 @@ func TestNewColorAnimation(t *testing.T) {
 }
 
 func TestNewPositionAnimation(t *testing.T) {
-	start := fyne.NewPos(110, 10)
-	stop := fyne.NewPos(10, 110)
+	start := granio.NewPos(110, 10)
+	stop := granio.NewPos(10, 110)
 
-	var current fyne.Position
-	anim := NewPositionAnimation(start, stop, time.Second, func(p fyne.Position) {
+	var current granio.Position
+	anim := NewPositionAnimation(start, stop, time.Second, func(p granio.Position) {
 		current = p
 	})
 
 	anim.Tick(0.0)
 	assert.Equal(t, start, current)
 	anim.Tick(0.5)
-	assert.Equal(t, fyne.NewPos(60, 60), current)
+	assert.Equal(t, granio.NewPos(60, 60), current)
 	anim.Tick(1.0)
 	assert.Equal(t, stop, current)
 }
 
 func TestNewSizeAnimation(t *testing.T) {
-	start := fyne.NewSize(110, 10)
-	stop := fyne.NewSize(10, 110)
+	start := granio.NewSize(110, 10)
+	stop := granio.NewSize(10, 110)
 
-	var current fyne.Size
-	anim := NewSizeAnimation(start, stop, time.Second, func(s fyne.Size) {
+	var current granio.Size
+	anim := NewSizeAnimation(start, stop, time.Second, func(s granio.Size) {
 		current = s
 	})
 
 	anim.Tick(0.0)
 	assert.Equal(t, start, current)
 	anim.Tick(0.5)
-	assert.Equal(t, fyne.NewSize(60, 60), current)
+	assert.Equal(t, granio.NewSize(60, 60), current)
 	anim.Tick(1.0)
 	assert.Equal(t, stop, current)
 }

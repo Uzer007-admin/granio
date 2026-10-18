@@ -1,14 +1,14 @@
 package container
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/build"
-	intTheme "fyne.io/fyne/v2/internal/theme"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	intTheme "github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 // TabItem represents a single view in a tab view.
@@ -17,8 +17,8 @@ import (
 // Since: 1.4
 type TabItem struct {
 	Text    string
-	Icon    fyne.Resource
-	Content fyne.CanvasObject
+	Icon    granio.Resource
+	Content granio.CanvasObject
 
 	button *tabButton
 
@@ -62,19 +62,19 @@ const (
 // NewTabItem creates a new item for a tabbed widget - each item specifies the content and a label for its tab.
 //
 // Since: 1.4
-func NewTabItem(text string, content fyne.CanvasObject) *TabItem {
+func NewTabItem(text string, content granio.CanvasObject) *TabItem {
 	return &TabItem{Text: text, Content: content}
 }
 
 // NewTabItemWithIcon creates a new item for a tabbed widget - each item specifies the content and a label with an icon for its tab.
 //
 // Since: 1.4
-func NewTabItemWithIcon(text string, icon fyne.Resource, content fyne.CanvasObject) *TabItem {
+func NewTabItemWithIcon(text string, icon granio.Resource, content granio.CanvasObject) *TabItem {
 	return &TabItem{Text: text, Icon: icon, Content: content}
 }
 
 type baseTabs interface {
-	fyne.Widget
+	granio.Widget
 
 	onUnselected() func(*TabItem)
 	onSelected() func(*TabItem)
@@ -92,7 +92,7 @@ type baseTabs interface {
 }
 
 func isMobile(b baseTabs) bool {
-	d := fyne.CurrentDevice()
+	d := granio.CurrentDevice()
 	mobile := intTheme.FeatureForWidget(intTheme.FeatureNameDeviceIsMobile, b)
 	if is, ok := mobile.(bool); ok {
 		return is
@@ -104,7 +104,7 @@ func isMobile(b baseTabs) bool {
 func tabsAdjustedLocation(l TabLocation, b baseTabs) TabLocation {
 	// Mobile has limited screen space, so don't put app tab bar on long edges
 	if isMobile(b) {
-		if o := fyne.CurrentDevice().Orientation(); fyne.IsVertical(o) {
+		if o := granio.CurrentDevice().Orientation(); granio.IsVertical(o) {
 			if l == TabLocationLeading {
 				return TabLocationTop
 			}
@@ -124,19 +124,19 @@ func tabsAdjustedLocation(l TabLocation, b baseTabs) TabLocation {
 	return l
 }
 
-func buildPopUpMenu(t baseTabs, button *widget.Button, items []*fyne.MenuItem) *widget.PopUpMenu {
-	d := fyne.CurrentApp().Driver()
+func buildPopUpMenu(t baseTabs, button *widget.Button, items []*granio.MenuItem) *widget.PopUpMenu {
+	d := granio.CurrentApp().Driver()
 	c := d.CanvasForObject(button)
 	if c == nil {
 		// Overflow button detached from its canvas; nothing to host the
 		// pop-up on (see fyne-io/fyne#5965).
 		return nil
 	}
-	popUpMenu := widget.NewPopUpMenu(fyne.NewMenu("", items...), c)
+	popUpMenu := widget.NewPopUpMenu(granio.NewMenu("", items...), c)
 	buttonPos := d.AbsolutePositionForObject(button)
 	buttonSize := button.Size()
 	popUpMin := popUpMenu.MinSize()
-	var popUpPos fyne.Position
+	var popUpPos granio.Position
 	switch t.tabLocation() {
 	case TabLocationLeading:
 		popUpPos.X = buttonPos.X + buttonSize.Width
@@ -303,14 +303,14 @@ func enableItem(t baseTabs, item *TabItem) {
 }
 
 type baseTabsRenderer struct {
-	positionAnimation, sizeAnimation *fyne.Animation
+	positionAnimation, sizeAnimation *granio.Animation
 
-	lastIndicatorPos    fyne.Position
-	lastIndicatorSize   fyne.Size
+	lastIndicatorPos    granio.Position
+	lastIndicatorSize   granio.Size
 	lastIndicatorHidden bool
 
 	action             *widget.Button
-	bar                *fyne.Container
+	bar                *granio.Container
 	divider, indicator *canvas.Rectangle
 
 	tabs baseTabs
@@ -324,7 +324,7 @@ func (r *baseTabsRenderer) applyTheme(t baseTabs) {
 		r.action.SetIcon(moreIcon(t))
 	}
 	th := theme.CurrentForWidget(t)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	r.divider.FillColor = th.Color(theme.ColorNameShadow, v)
 	r.indicator.FillColor = th.Color(theme.ColorNamePrimary, v)
@@ -335,10 +335,10 @@ func (r *baseTabsRenderer) applyTheme(t baseTabs) {
 	}
 }
 
-func (r *baseTabsRenderer) layout(t baseTabs, size fyne.Size) {
+func (r *baseTabsRenderer) layout(t baseTabs, size granio.Size) {
 	var (
-		barPos, dividerPos, contentPos    fyne.Position
-		barSize, dividerSize, contentSize fyne.Size
+		barPos, dividerPos, contentPos    granio.Position
+		barSize, dividerSize, contentSize granio.Size
 	)
 
 	barMin := r.bar.MinSize()
@@ -349,36 +349,36 @@ func (r *baseTabsRenderer) layout(t baseTabs, size fyne.Size) {
 	switch t.tabLocation() {
 	case TabLocationTop:
 		barHeight := barMin.Height
-		barPos = fyne.NewPos(0, 0)
-		barSize = fyne.NewSize(size.Width, barHeight)
-		dividerPos = fyne.NewPos(0, barHeight)
-		dividerSize = fyne.NewSize(size.Width, dividerWidth)
-		contentPos = fyne.NewPos(0, barHeight+padding)
-		contentSize = fyne.NewSize(size.Width, size.Height-barHeight-padding)
+		barPos = granio.NewPos(0, 0)
+		barSize = granio.NewSize(size.Width, barHeight)
+		dividerPos = granio.NewPos(0, barHeight)
+		dividerSize = granio.NewSize(size.Width, dividerWidth)
+		contentPos = granio.NewPos(0, barHeight+padding)
+		contentSize = granio.NewSize(size.Width, size.Height-barHeight-padding)
 	case TabLocationLeading:
 		barWidth := barMin.Width
-		barPos = fyne.NewPos(0, 0)
-		barSize = fyne.NewSize(barWidth, size.Height)
-		dividerPos = fyne.NewPos(barWidth, 0)
-		dividerSize = fyne.NewSize(dividerWidth, size.Height)
-		contentPos = fyne.NewPos(barWidth+padding, 0)
-		contentSize = fyne.NewSize(size.Width-barWidth-padding, size.Height)
+		barPos = granio.NewPos(0, 0)
+		barSize = granio.NewSize(barWidth, size.Height)
+		dividerPos = granio.NewPos(barWidth, 0)
+		dividerSize = granio.NewSize(dividerWidth, size.Height)
+		contentPos = granio.NewPos(barWidth+padding, 0)
+		contentSize = granio.NewSize(size.Width-barWidth-padding, size.Height)
 	case TabLocationBottom:
 		barHeight := barMin.Height
-		barPos = fyne.NewPos(0, size.Height-barHeight)
-		barSize = fyne.NewSize(size.Width, barHeight)
-		dividerPos = fyne.NewPos(0, size.Height-barHeight-padding)
-		dividerSize = fyne.NewSize(size.Width, dividerWidth)
-		contentPos = fyne.NewPos(0, 0)
-		contentSize = fyne.NewSize(size.Width, size.Height-barHeight-padding)
+		barPos = granio.NewPos(0, size.Height-barHeight)
+		barSize = granio.NewSize(size.Width, barHeight)
+		dividerPos = granio.NewPos(0, size.Height-barHeight-padding)
+		dividerSize = granio.NewSize(size.Width, dividerWidth)
+		contentPos = granio.NewPos(0, 0)
+		contentSize = granio.NewSize(size.Width, size.Height-barHeight-padding)
 	case TabLocationTrailing:
 		barWidth := barMin.Width
-		barPos = fyne.NewPos(size.Width-barWidth, 0)
-		barSize = fyne.NewSize(barWidth, size.Height)
-		dividerPos = fyne.NewPos(size.Width-barWidth-padding, 0)
-		dividerSize = fyne.NewSize(dividerWidth, size.Height)
-		contentPos = fyne.NewPos(0, 0)
-		contentSize = fyne.NewSize(size.Width-barWidth-padding, size.Height)
+		barPos = granio.NewPos(size.Width-barWidth, 0)
+		barSize = granio.NewSize(barWidth, size.Height)
+		dividerPos = granio.NewPos(size.Width-barWidth-padding, 0)
+		dividerSize = granio.NewSize(dividerWidth, size.Height)
+		contentPos = granio.NewPos(0, 0)
+		contentSize = granio.NewSize(size.Width-barWidth-padding, size.Height)
 	}
 
 	r.bar.Move(barPos)
@@ -397,7 +397,7 @@ func (r *baseTabsRenderer) layout(t baseTabs, size fyne.Size) {
 	}
 }
 
-func (r *baseTabsRenderer) minSize(t baseTabs) fyne.Size {
+func (r *baseTabsRenderer) minSize(t baseTabs) granio.Size {
 	th := theme.CurrentForWidget(t)
 	pad := th.Size(theme.SizeNamePadding)
 	buttonPad := pad
@@ -405,34 +405,34 @@ func (r *baseTabsRenderer) minSize(t baseTabs) fyne.Size {
 	tabsMin := r.bar.Objects[0].MinSize()
 	accessory := r.bar.Objects[1]
 	accessoryMin := accessory.MinSize()
-	if scroll, ok := r.bar.Objects[0].(*Scroll); ok && len(scroll.Content.(*fyne.Container).Objects) == 0 {
-		tabsMin = fyne.Size{} // scroller forces 32 where we don't need any space
+	if scroll, ok := r.bar.Objects[0].(*Scroll); ok && len(scroll.Content.(*granio.Container).Objects) == 0 {
+		tabsMin = granio.Size{} // scroller forces 32 where we don't need any space
 		buttonPad = 0
-	} else if group, ok := r.bar.Objects[0].(*fyne.Container); ok && len(group.Objects) > 0 {
+	} else if group, ok := r.bar.Objects[0].(*granio.Container); ok && len(group.Objects) > 0 {
 		tabsMin = group.Objects[0].MinSize()
 		buttonPad = 0
 	}
 	if !accessory.Visible() || accessoryMin.Width == 0 {
 		buttonPad = 0
-		accessoryMin = fyne.Size{}
+		accessoryMin = granio.Size{}
 	}
 
-	contentMin := fyne.NewSize(0, 0)
+	contentMin := granio.NewSize(0, 0)
 	for _, content := range t.items() {
 		contentMin = internal.MaxSizes(contentMin, content.Content.MinSize())
 	}
 
 	switch t.tabLocation() {
 	case TabLocationLeading, TabLocationTrailing:
-		return fyne.NewSize(barMin.Width+contentMin.Width+pad,
+		return granio.NewSize(barMin.Width+contentMin.Width+pad,
 			max(contentMin.Height, accessoryMin.Height+buttonPad+tabsMin.Height))
 	default:
-		return fyne.NewSize(max(contentMin.Width, accessoryMin.Width+buttonPad+tabsMin.Width),
+		return granio.NewSize(max(contentMin.Width, accessoryMin.Width+buttonPad+tabsMin.Width),
 			barMin.Height+contentMin.Height+pad)
 	}
 }
 
-func (r *baseTabsRenderer) moveIndicator(pos fyne.Position, siz fyne.Size, th fyne.Theme, animate bool) {
+func (r *baseTabsRenderer) moveIndicator(pos granio.Position, siz granio.Size, th granio.Theme, animate bool) {
 	isSameState := r.lastIndicatorPos == pos && r.lastIndicatorSize == siz &&
 		r.lastIndicatorHidden == r.indicator.Hidden
 	if isSameState {
@@ -448,7 +448,7 @@ func (r *baseTabsRenderer) moveIndicator(pos fyne.Position, siz fyne.Size, th fy
 		r.sizeAnimation = nil
 	}
 
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	r.indicator.FillColor = th.Color(theme.ColorNamePrimary, v)
 	if r.indicator.Position().IsZero() {
 		r.indicator.Move(pos)
@@ -461,8 +461,8 @@ func (r *baseTabsRenderer) moveIndicator(pos fyne.Position, siz fyne.Size, th fy
 	r.lastIndicatorSize = siz
 	r.lastIndicatorHidden = r.indicator.Hidden
 
-	if animate && fyne.CurrentApp().Settings().ShowAnimations() {
-		r.positionAnimation = canvas.NewPositionAnimation(r.indicator.Position(), pos, canvas.DurationShort, func(p fyne.Position) {
+	if animate && granio.CurrentApp().Settings().ShowAnimations() {
+		r.positionAnimation = canvas.NewPositionAnimation(r.indicator.Position(), pos, canvas.DurationShort, func(p granio.Position) {
 			r.indicator.Move(p)
 			r.indicator.Refresh()
 			if pos == p {
@@ -470,7 +470,7 @@ func (r *baseTabsRenderer) moveIndicator(pos fyne.Position, siz fyne.Size, th fy
 				r.positionAnimation = nil
 			}
 		})
-		r.sizeAnimation = canvas.NewSizeAnimation(r.indicator.Size(), siz, canvas.DurationShort, func(s fyne.Size) {
+		r.sizeAnimation = canvas.NewSizeAnimation(r.indicator.Size(), siz, canvas.DurationShort, func(s granio.Size) {
 			r.indicator.Resize(s)
 			r.indicator.Refresh()
 			if siz == s {
@@ -488,8 +488,8 @@ func (r *baseTabsRenderer) moveIndicator(pos fyne.Position, siz fyne.Size, th fy
 	}
 }
 
-func (r *baseTabsRenderer) objects(t baseTabs) []fyne.CanvasObject {
-	objects := []fyne.CanvasObject{r.bar, r.divider, r.indicator}
+func (r *baseTabsRenderer) objects(t baseTabs) []granio.CanvasObject {
+	objects := []granio.CanvasObject{r.bar, r.divider, r.indicator}
 	if i, is := t.getCurrent(), t.items(); i >= 0 && i < len(is) {
 		objects = append(objects, is[i].Content)
 	}
@@ -512,29 +512,29 @@ const (
 )
 
 var (
-	_ fyne.Widget       = (*tabButton)(nil)
-	_ fyne.Tappable     = (*tabButton)(nil)
+	_ granio.Widget     = (*tabButton)(nil)
+	_ granio.Tappable   = (*tabButton)(nil)
 	_ desktop.Hoverable = (*tabButton)(nil)
 )
 
 type tabButton struct {
 	widget.DisableableWidget
 	hovered       bool
-	icon          fyne.Resource
+	icon          granio.Resource
 	iconPosition  buttonIconPosition
 	importance    widget.Importance
 	onTapped      func()
 	onClosed      func()
 	text          string
-	textAlignment fyne.TextAlign
+	textAlignment granio.TextAlign
 
 	tabs baseTabs
 }
 
-func (b *tabButton) CreateRenderer() fyne.WidgetRenderer {
+func (b *tabButton) CreateRenderer() granio.WidgetRenderer {
 	b.ExtendBaseWidget(b)
 	th := b.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
@@ -558,7 +558,7 @@ func (b *tabButton) CreateRenderer() fyne.WidgetRenderer {
 	buttonClose.ExtendBaseWidget(buttonClose)
 	buttonClose.Hide()
 
-	objects := []fyne.CanvasObject{background, label, buttonClose, icon}
+	objects := []granio.CanvasObject{background, label, buttonClose, icon}
 	return &tabButtonRenderer{
 		button:     b,
 		background: background,
@@ -569,7 +569,7 @@ func (b *tabButton) CreateRenderer() fyne.WidgetRenderer {
 	}
 }
 
-func (b *tabButton) MinSize() fyne.Size {
+func (b *tabButton) MinSize() granio.Size {
 	b.ExtendBaseWidget(b)
 	return b.BaseWidget.MinSize()
 }
@@ -595,7 +595,7 @@ func (b *tabButton) MouseOut() {
 	b.Refresh()
 }
 
-func (b *tabButton) Tapped(*fyne.PointEvent) {
+func (b *tabButton) Tapped(*granio.PointEvent) {
 	if b.Disabled() {
 		return
 	}
@@ -609,53 +609,53 @@ type tabButtonRenderer struct {
 	icon       *canvas.Image
 	label      *canvas.Text
 	close      *tabCloseButton
-	objects    []fyne.CanvasObject
+	objects    []granio.CanvasObject
 }
 
 func (*tabButtonRenderer) Destroy() {
 }
 
-func (r *tabButtonRenderer) Layout(size fyne.Size) {
+func (r *tabButtonRenderer) Layout(size granio.Size) {
 	th := r.button.Theme()
 	pad := th.Size(theme.SizeNamePadding)
 	r.background.Resize(size)
 	padding := r.padding()
 	innerSize := size.Subtract(padding)
-	innerOffset := fyne.NewPos(padding.Width/2, padding.Height/2)
+	innerOffset := granio.NewPos(padding.Width/2, padding.Height/2)
 	labelShift := float32(0)
 	if r.icon.Visible() {
 		shiftPad := pad
 		iconSize := r.iconSize()
-		var iconOffset fyne.Position
+		var iconOffset granio.Position
 		if r.button.iconPosition == buttonIconTop {
-			iconOffset = fyne.NewPos((innerSize.Width-iconSize)/2, 0)
+			iconOffset = granio.NewPos((innerSize.Width-iconSize)/2, 0)
 			shiftPad = 0
 		} else {
-			iconOffset = fyne.NewPos(0, (innerSize.Height-iconSize)/2)
+			iconOffset = granio.NewPos(0, (innerSize.Height-iconSize)/2)
 		}
-		r.icon.Resize(fyne.NewSquareSize(iconSize))
+		r.icon.Resize(granio.NewSquareSize(iconSize))
 		r.icon.Move(innerOffset.Add(iconOffset))
 		labelShift = iconSize + shiftPad
 	}
 	if r.label.Text != "" {
-		var labelOffset fyne.Position
-		var labelSize fyne.Size
+		var labelOffset granio.Position
+		var labelSize granio.Size
 		if r.button.iconPosition == buttonIconTop {
-			labelOffset = fyne.NewPos(0, labelShift)
-			labelSize = fyne.NewSize(innerSize.Width, r.label.MinSize().Height)
+			labelOffset = granio.NewPos(0, labelShift)
+			labelSize = granio.NewSize(innerSize.Width, r.label.MinSize().Height)
 		} else {
-			labelOffset = fyne.NewPos(labelShift, 0)
-			labelSize = fyne.NewSize(innerSize.Width-labelShift, innerSize.Height)
+			labelOffset = granio.NewPos(labelShift, 0)
+			labelSize = granio.NewSize(innerSize.Width-labelShift, innerSize.Height)
 		}
 		r.label.Resize(labelSize)
 		r.label.Move(innerOffset.Add(labelOffset))
 	}
 	inlineIconSize := th.Size(theme.SizeNameInlineIcon)
-	r.close.Move(fyne.NewPos(size.Width-inlineIconSize-pad, (size.Height-inlineIconSize)/2))
-	r.close.Resize(fyne.NewSquareSize(inlineIconSize))
+	r.close.Move(granio.NewPos(size.Width-inlineIconSize-pad, (size.Height-inlineIconSize)/2))
+	r.close.Resize(granio.NewSquareSize(inlineIconSize))
 }
 
-func (r *tabButtonRenderer) MinSize() fyne.Size {
+func (r *tabButtonRenderer) MinSize() granio.Size {
 	th := r.button.Theme()
 	var contentWidth, contentHeight float32
 	textSize := r.label.MinSize()
@@ -686,16 +686,16 @@ func (r *tabButtonRenderer) MinSize() fyne.Size {
 		contentWidth += inlineIconSize + padding
 		contentHeight = max(contentHeight, inlineIconSize)
 	}
-	return fyne.NewSize(contentWidth, contentHeight).Add(r.padding())
+	return granio.NewSize(contentWidth, contentHeight).Add(r.padding())
 }
 
-func (r *tabButtonRenderer) Objects() []fyne.CanvasObject {
+func (r *tabButtonRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
 func (r *tabButtonRenderer) Refresh() {
 	th := r.button.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if r.button.hovered && !r.button.Disabled() {
 		r.background.FillColor = th.Color(theme.ColorNameHover, v)
@@ -764,17 +764,17 @@ func (r *tabButtonRenderer) iconSize() float32 {
 	return iconSize
 }
 
-func (r *tabButtonRenderer) padding() fyne.Size {
+func (r *tabButtonRenderer) padding() granio.Size {
 	padding := r.button.Theme().Size(theme.SizeNameInnerPadding)
 	if r.label.Text != "" && r.button.iconPosition == buttonIconInline {
-		return fyne.NewSquareSize(padding * 2)
+		return granio.NewSquareSize(padding * 2)
 	}
-	return fyne.NewSize(padding, padding)
+	return granio.NewSize(padding, padding)
 }
 
 var (
-	_ fyne.Widget       = (*tabCloseButton)(nil)
-	_ fyne.Tappable     = (*tabCloseButton)(nil)
+	_ granio.Widget     = (*tabCloseButton)(nil)
+	_ granio.Tappable   = (*tabCloseButton)(nil)
 	_ desktop.Hoverable = (*tabCloseButton)(nil)
 )
 
@@ -785,10 +785,10 @@ type tabCloseButton struct {
 	onTapped func()
 }
 
-func (b *tabCloseButton) CreateRenderer() fyne.WidgetRenderer {
+func (b *tabCloseButton) CreateRenderer() granio.WidgetRenderer {
 	b.ExtendBaseWidget(b)
 	th := b.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameHover, v))
 	background.CornerRadius = th.Size(theme.SizeNameSelectionRadius)
@@ -799,11 +799,11 @@ func (b *tabCloseButton) CreateRenderer() fyne.WidgetRenderer {
 		button:     b,
 		background: background,
 		icon:       icon,
-		objects:    []fyne.CanvasObject{background, icon},
+		objects:    []granio.CanvasObject{background, icon},
 	}
 }
 
-func (b *tabCloseButton) MinSize() fyne.Size {
+func (b *tabCloseButton) MinSize() granio.Size {
 	b.ExtendBaseWidget(b)
 	return b.BaseWidget.MinSize()
 }
@@ -821,7 +821,7 @@ func (b *tabCloseButton) MouseOut() {
 	b.parent.Refresh()
 }
 
-func (b *tabCloseButton) Tapped(*fyne.PointEvent) {
+func (b *tabCloseButton) Tapped(*granio.PointEvent) {
 	b.onTapped()
 }
 
@@ -829,28 +829,28 @@ type tabCloseButtonRenderer struct {
 	button     *tabCloseButton
 	background *canvas.Rectangle
 	icon       *canvas.Image
-	objects    []fyne.CanvasObject
+	objects    []granio.CanvasObject
 }
 
 func (*tabCloseButtonRenderer) Destroy() {
 }
 
-func (r *tabCloseButtonRenderer) Layout(size fyne.Size) {
+func (r *tabCloseButtonRenderer) Layout(size granio.Size) {
 	r.background.Resize(size)
 	r.icon.Resize(size)
 }
 
-func (r *tabCloseButtonRenderer) MinSize() fyne.Size {
-	return fyne.NewSquareSize(r.button.Theme().Size(theme.SizeNameInlineIcon))
+func (r *tabCloseButtonRenderer) MinSize() granio.Size {
+	return granio.NewSquareSize(r.button.Theme().Size(theme.SizeNameInlineIcon))
 }
 
-func (r *tabCloseButtonRenderer) Objects() []fyne.CanvasObject {
+func (r *tabCloseButtonRenderer) Objects() []granio.CanvasObject {
 	return r.objects
 }
 
 func (r *tabCloseButtonRenderer) Refresh() {
 	th := r.button.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	if r.button.hovered {
 		r.background.FillColor = th.Color(theme.ColorNameHover, v)
@@ -891,7 +891,7 @@ func mismatchedTabItems(items []*TabItem) bool {
 	return mismatch
 }
 
-func moreIcon(t baseTabs) fyne.Resource {
+func moreIcon(t baseTabs) granio.Resource {
 	if l := t.tabLocation(); l == TabLocationLeading || l == TabLocationTrailing {
 		return theme.MoreVerticalIcon()
 	}

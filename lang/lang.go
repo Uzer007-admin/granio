@@ -41,7 +41,7 @@ import (
 	"github.com/jeandeaual/go-locale"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 
 	"golang.org/x/text/language"
 )
@@ -65,8 +65,9 @@ var (
 	// More info available on the `LocalizePluralKey` function.
 	XN = LocalizePluralKey
 
-	bundle    *i18n.Bundle
-	localizer *i18n.Localizer
+	bundle         *i18n.Bundle
+	localizer      atomic.Pointer[i18n.Localizer]
+	localeOverride atomic.Pointer[granio.Locale]
 
 	setupOnce sync.Once
 	retryOnce sync.Once
@@ -98,7 +99,7 @@ func LocalizeKey(key, fallback string, data ...any) string {
 		d0 = data[0]
 	}
 
-	ret, err := localizer.Localize(&i18n.LocalizeConfig{
+	ret, err := localizer.Load().Localize(&i18n.LocalizeConfig{
 		DefaultMessage: &i18n.Message{
 			ID:    key,
 			Other: fallback,
@@ -106,7 +107,7 @@ func LocalizeKey(key, fallback string, data ...any) string {
 		TemplateData: d0,
 	})
 	if err != nil {
-		fyne.LogError("Translation failure", err)
+		granio.LogError("Translation failure", err)
 
 		// ret can still have a fallback string even if err is set
 		if ret == "" {
@@ -137,7 +138,7 @@ func LocalizePluralKey(key, fallback string, count int, data ...any) string {
 		d0 = data[0]
 	}
 
-	ret, err := localizer.Localize(&i18n.LocalizeConfig{
+	ret, err := localizer.Load().Localize(&i18n.LocalizeConfig{
 		DefaultMessage: &i18n.Message{
 			ID:    key,
 			Other: fallback,
@@ -146,7 +147,7 @@ func LocalizePluralKey(key, fallback string, count int, data ...any) string {
 		TemplateData: d0,
 	})
 	if err != nil {
-		fyne.LogError("Translation failure", err)
+		granio.LogError("Translation failure", err)
 
 		// ret can still have a fallback string even if err is set
 		if ret == "" {
@@ -160,14 +161,14 @@ func LocalizePluralKey(key, fallback string, count int, data ...any) string {
 // The language that this relates to will be inferred from the resource name, for example "fr.json".
 // The data should be in json format following the structure described in the
 // package documentation.
-func AddTranslations(r fyne.Resource) error {
+func AddTranslations(r granio.Resource) error {
 	defer updateLocalizer()
 	return addLanguage(r.Content(), r.Name())
 }
 
 // AddTranslationsForLocale allows an app to load a bundle of translations for a specified locale.
 // The data should be in json format.
-func AddTranslationsForLocale(data []byte, l fyne.Locale) error {
+func AddTranslationsForLocale(data []byte, l granio.Locale) error {
 	defer updateLocalizer()
 	return addLanguage(data, l.String()+".json")
 }
@@ -224,7 +225,7 @@ func init() {
 	translated = []language.Tag{language.Make(fallbackLang)} // the first item in this list will be the fallback if none match
 	err := AddTranslationsFS(translations, "translations")
 	if err != nil {
-		fyne.LogError("Error occurred loading built-in translations", err)
+		granio.LogError("Error occurred loading built-in translations", err)
 	}
 }
 
@@ -241,12 +242,29 @@ func fallbackWithData(key, fallback string, data any) string {
 
 // A utility for setting up languages - available to unit tests for overriding system
 func setupLang(lang string) {
-	localizer = i18n.NewLocalizer(bundle, lang)
+	localizer.Store(i18n.NewLocalizer(bundle, lang))
+}
+
+// SetLocale selects the language used for translations. An empty locale restores
+// the system language preferences. The selection is retained when translations
+// are added and applies to subsequent localization calls.
+func SetLocale(l granio.Locale) {
+	if l == "" {
+		localeOverride.Store(nil)
+	} else {
+		localeOverride.Store(&l)
+	}
+	updateLocalizer()
 }
 
 // updateLocalizer Finds the closest translation from the user's locale list and sets it up
 func updateLocalizer() {
 	setupOnce.Do(initRuntime)
+	if l := localeOverride.Load(); l != nil {
+		setupLang(closestSupportedLocale([]string{l.String()}).LanguageString())
+		localePending.Store(false)
+		return
+	}
 
 	if !runtimeReady() {
 		// Android package init runs before the JVM context is registered.
@@ -257,7 +275,7 @@ func updateLocalizer() {
 
 	all, err := locale.GetLocales()
 	if err != nil {
-		fyne.LogError("Failed to load user locales", err)
+		granio.LogError("Failed to load user locales", err)
 		all = []string{fallbackLang}
 	}
 	setupLang(closestSupportedLocale(all).LanguageString())

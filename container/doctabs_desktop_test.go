@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestDocTabs_ApplyTheme(t *testing.T) {
@@ -24,7 +24,7 @@ func TestDocTabs_ApplyTheme(t *testing.T) {
 	)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToImage(t, "doctabs/desktop/single_initial.png", c)
@@ -42,7 +42,7 @@ func TestDocTabs_ChangeItemContent(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/desktop/change_content_initial.xml", c)
@@ -65,7 +65,7 @@ func TestDocTabs_ChangeItemIcon(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/desktop/change_icon_initial.xml", c)
@@ -88,7 +88,7 @@ func TestDocTabs_ChangeItemText(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/desktop/change_label_initial.xml", c)
@@ -102,7 +102,7 @@ func TestDocTabs_ChangeItemText(t *testing.T) {
 	test.AssertRendersToMarkup(t, "doctabs/desktop/change_label_change_unselected.xml", c)
 
 	// use bigger window to have indicator be based on tab size
-	w.Resize(fyne.NewSize(500, 150))
+	w.Resize(granio.NewSize(500, 150))
 	item1.Text = "New longer text 1"
 	tabs.Refresh()
 	test.AssertRendersToMarkup(t, "doctabs/desktop/change_label_to_longer_text_selected.xml", c)
@@ -116,7 +116,7 @@ func TestDocTabs_DynamicTabs(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(300, 150))
+	w.Resize(granio.NewSize(300, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/desktop/dynamic_initial.xml", c)
@@ -171,27 +171,27 @@ func TestDocTabs_HoverButtons(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	c := w.Canvas()
 
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_none.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(10, 10))
+	test.MoveMouse(c, granio.NewPos(10, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_first.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(75, 10))
+	test.MoveMouse(c, granio.NewPos(75, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_first_close.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(90, 10))
+	test.MoveMouse(c, granio.NewPos(90, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_second.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(10, 10))
+	test.MoveMouse(c, granio.NewPos(10, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_first.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(136, 10))
+	test.MoveMouse(c, granio.NewPos(136, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_all_tabs.xml", c)
 
-	test.MoveMouse(c, fyne.NewPos(104, 10))
+	test.MoveMouse(c, granio.NewPos(104, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/hover_create_tab.xml", c)
 }
 
@@ -287,7 +287,7 @@ func TestDocTabs_Layout(t *testing.T) {
 			tabs := container.NewDocTabs(tt.item)
 			tabs.SetTabLocation(tt.location)
 			w.SetContent(tabs)
-			w.Resize(fyne.NewSize(150, 150))
+			w.Resize(granio.NewSize(150, 150))
 
 			test.AssertRendersToMarkup(t, tt.want, c)
 		})
@@ -339,28 +339,28 @@ func TestDocTabs_Tapped(t *testing.T) {
 	w := test.NewWindow(tabs)
 	defer w.Close()
 	w.SetPadded(false)
-	w.Resize(fyne.NewSize(300, 100))
+	w.Resize(granio.NewSize(300, 100))
 	c := w.Canvas()
 
 	require.Equal(t, 0, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/desktop/tapped_first_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(90, 10))
+	test.TapCanvas(c, granio.NewPos(90, 10))
 	assert.Equal(t, 1, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/desktop/tapped_second_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(180, 10))
+	test.TapCanvas(c, granio.NewPos(180, 10))
 	assert.Equal(t, 2, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/desktop/tapped_third_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(10, 10))
+	test.TapCanvas(c, granio.NewPos(10, 10))
 	require.Equal(t, 0, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/desktop/tapped_first_selected.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(254, 10))
+	test.TapCanvas(c, granio.NewPos(254, 10))
 	require.Equal(t, 3, tabs.SelectedIndex())
 	test.AssertRendersToMarkup(t, "doctabs/desktop/tapped_create_tab.xml", c)
 
-	test.TapCanvas(c, fyne.NewPos(286, 10))
+	test.TapCanvas(c, granio.NewPos(286, 10))
 	test.AssertRendersToMarkup(t, "doctabs/desktop/tapped_all_tabs.xml", c)
 }

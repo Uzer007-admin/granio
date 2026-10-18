@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/mouse"
-	"fyne.io/fyne/v2/internal/scale"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -31,7 +31,7 @@ func Test_driver_ScrollCanvas(t *testing.T) {
 	drv := &driver{}
 	w := drv.CreateWindow("main").(*window)
 	w.SetContent(scroll)
-	w.Resize(fyne.NewSize(40, 100))
+	w.Resize(granio.NewSize(40, 100))
 	assert.Equal(t, float32(0), scroll.Offset.Y)
 
 	// a wheel notch down moves the view on by the scroll speed
@@ -47,7 +47,7 @@ func Test_driver_ScrollCanvas_notScrollable(t *testing.T) {
 	drv := &driver{}
 	w := drv.CreateWindow("main").(*window)
 	w.SetContent(widget.NewLabel(strings.Repeat("Hi\n", 20)))
-	w.Resize(fyne.NewSize(40, 100))
+	w.Resize(granio.NewSize(40, 100))
 
 	// scrolling content that cannot be scrolled should do nothing at all
 	assert.NotPanics(t, func() {

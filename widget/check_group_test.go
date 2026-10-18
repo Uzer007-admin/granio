@@ -3,10 +3,10 @@ package widget_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +16,7 @@ func TestCheckGroup_FocusRendering(t *testing.T) {
 		check := widget.NewCheckGroup([]string{"Option A", "Option B", "Option C"}, nil)
 		window := test.NewWindow(check)
 		defer window.Close()
-		window.Resize(check.MinSize().Max(fyne.NewSize(150, 200)))
+		window.Resize(check.MinSize().Max(granio.NewSize(150, 200)))
 
 		canvas := window.Canvas().(software.WindowlessCanvas)
 		test.AssertRendersToMarkup(t, "check_group/focus_none_focused_none_selected.xml", canvas)
@@ -41,7 +41,7 @@ func TestCheckGroup_FocusRendering(t *testing.T) {
 		check := &widget.CheckGroup{Options: []string{"Option A", "Option B", "Option C"}}
 		window := test.NewWindow(check)
 		defer window.Close()
-		window.Resize(check.MinSize().Max(fyne.NewSize(150, 200)))
+		window.Resize(check.MinSize().Max(granio.NewSize(150, 200)))
 
 		canvas := window.Canvas().(software.WindowlessCanvas)
 		canvas.FocusNext()
@@ -55,7 +55,7 @@ func TestCheckGroup_FocusRendering(t *testing.T) {
 		check := &widget.CheckGroup{Options: []string{"Option A", "Option B"}}
 		window := test.NewWindow(check)
 		defer window.Close()
-		window.Resize(check.MinSize().Max(fyne.NewSize(150, 200)))
+		window.Resize(check.MinSize().Max(granio.NewSize(150, 200)))
 
 		canvas := window.Canvas().(software.WindowlessCanvas)
 		check.Disable()
@@ -156,7 +156,7 @@ func TestCheckGroup_Layout(t *testing.T) {
 			}
 
 			window := test.NewTempWindow(t, check)
-			window.Resize(check.MinSize().Max(fyne.NewSize(150, 200)))
+			window.Resize(check.MinSize().Max(granio.NewSize(150, 200)))
 
 			test.AssertRendersToMarkup(t, "check_group/layout_"+name+".xml", window.Canvas())
 		})

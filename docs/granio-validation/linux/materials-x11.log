@@ -1,0 +1,4 @@
+=== RUN   TestNativeCanvasAndPopupMaterials
+--- PASS: TestNativeCanvasAndPopupMaterials (0.34s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.576s

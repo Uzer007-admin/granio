@@ -13,10 +13,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestAssertImageMatches(t *testing.T) {
@@ -28,7 +28,7 @@ func TestAssertImageMatches(t *testing.T) {
 	face, err := font.ParseTTF(bytes.NewReader(theme.TextFont().Content()))
 	assert.Nil(t, err)
 
-	painter.DrawString(txtImg, "Hello!", color.Black, &test.FontMap{face}, 25, 1, fyne.TextStyle{TabWidth: 4})
+	painter.DrawString(txtImg, "Hello!", color.Black, &test.FontMap{face}, 25, 1, granio.TextStyle{TabWidth: 4})
 	draw.Draw(img, bounds, txtImg, image.Point{}, draw.Over)
 
 	tt := &testing.T{}
@@ -44,6 +44,12 @@ func TestAssertImageMatches(t *testing.T) {
 	assert.False(t, test.AssertImageMatches(tt, "diffing_master.png", img), "existing master should not equal given image")
 	assert.True(t, tt.Failed(), "test did not fail")
 	assert.Equal(t, img, readImage(t, "testdata/failed/diffing_master.png"), "image was written to disk")
+
+	tt = &testing.T{}
+	differentBounds := image.NewNRGBA(image.Rect(0, 0, 34, 100))
+	copy(differentBounds.Pix, img.Pix)
+	assert.False(t, test.AssertImageMatches(tt, "master.png", differentBounds), "equal pixel buffers with different geometry must not match")
+	assert.True(t, tt.Failed(), "geometry mismatch must fail")
 
 	if !t.Failed() {
 		os.RemoveAll("testdata/failed")

@@ -7,16 +7,16 @@ import (
 
 	"golang.org/x/sys/windows/registry"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/theme"
 )
 
 const themeRegKey = `SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize`
 
-// DefaultVariant returns the systems default fyne.ThemeVariant.
+// DefaultVariant returns the systems default granio.ThemeVariant.
 // Normally, you should not need this. It is extracted out of the root app package to give the
 // settings app access to it.
-func DefaultVariant() fyne.ThemeVariant {
+func DefaultVariant() granio.ThemeVariant {
 	if isDark() {
 		return theme.VariantDark
 	}

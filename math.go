@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // Min returns the smaller of the passed values.
 //

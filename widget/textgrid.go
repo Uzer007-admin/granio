@@ -5,13 +5,14 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/mattn/go-runewidth"
 )
@@ -45,7 +46,7 @@ type TextGridRow struct {
 
 // TextGridStyle defines a style that can be applied to a TextGrid cell.
 type TextGridStyle interface {
-	Style() fyne.TextStyle
+	Style() granio.TextStyle
 	TextColor() color.Color
 	BackgroundColor() color.Color
 }
@@ -53,7 +54,7 @@ type TextGridStyle interface {
 // CustomTextGridStyle is a utility type for those not wanting to define their own style types.
 type CustomTextGridStyle struct {
 	// Since: 2.5
-	TextStyle        fyne.TextStyle
+	TextStyle        granio.TextStyle
 	FGColor, BGColor color.Color
 }
 
@@ -68,7 +69,7 @@ func (c *CustomTextGridStyle) BackgroundColor() color.Color {
 }
 
 // Style is the text style a cell should use.
-func (c *CustomTextGridStyle) Style() fyne.TextStyle {
+func (c *CustomTextGridStyle) Style() granio.TextStyle {
 	return c.TextStyle
 }
 
@@ -83,12 +84,12 @@ type TextGrid struct {
 
 	ShowLineNumbers bool
 	ShowWhitespace  bool
-	TabWidth        int // If set to 0 the fyne.DefaultTabWidth is used
+	TabWidth        int // If set to 0 the granio.DefaultTabWidth is used
 
 	// Scroll can be used to turn off the scrolling of our TextGrid.
 	//
 	// Since: 2.6
-	Scroll fyne.ScrollDirection
+	Scroll granio.ScrollDirection
 }
 
 // Append will add new lines to the end of this TextGrid.
@@ -107,7 +108,7 @@ func (t *TextGrid) Append(text string) {
 // from the top left of the overall document.
 //
 // Since: 2.6
-func (t *TextGrid) CursorLocationForPosition(p fyne.Position) (row, col int) {
+func (t *TextGrid) CursorLocationForPosition(p granio.Position) (row, col int) {
 	y := p.Y
 	x := p.X
 
@@ -142,7 +143,7 @@ func (t *TextGrid) ScrollToBottom() {
 // refer to the requested location.
 //
 // Since: 2.6
-func (t *TextGrid) PositionForCursorLocation(row, col int) fyne.Position {
+func (t *TextGrid) PositionForCursorLocation(row, col int) granio.Position {
 	y := float32(row) * t.content.cellSize.Height
 	x := float32(col) * t.content.cellSize.Width
 
@@ -151,17 +152,17 @@ func (t *TextGrid) PositionForCursorLocation(row, col int) fyne.Position {
 		x -= t.scroller.Offset.X
 	}
 
-	return fyne.NewPos(x, y)
+	return granio.NewPos(x, y)
 }
 
 // MinSize returns the smallest size this widget can shrink to
-func (t *TextGrid) MinSize() fyne.Size {
+func (t *TextGrid) MinSize() granio.Size {
 	t.ExtendBaseWidget(t)
 	return t.BaseWidget.MinSize()
 }
 
 // Resize is called when this widget changes size. We should make sure that we refresh cells.
-func (t *TextGrid) Resize(size fyne.Size) {
+func (t *TextGrid) Resize(size granio.Size) {
 	t.BaseWidget.Resize(size)
 	t.Refresh()
 }
@@ -178,9 +179,9 @@ func (t *TextGrid) SetText(text string) {
 
 	// If we don't update the scroll offset when the text is shorter,
 	// we may end up with no text displayed or text appearing partially cut off
-	if t.scroller != nil && t.Scroll != fyne.ScrollNone && len(rows) < oldRowsLen && t.scroller.Content != nil {
+	if t.scroller != nil && t.Scroll != granio.ScrollNone && len(rows) < oldRowsLen && t.scroller.Content != nil {
 		offset := t.PositionForCursorLocation(len(rows), 0)
-		t.scroller.ScrollToOffset(fyne.NewPos(offset.X, t.scroller.Offset.Y))
+		t.scroller.ScrollToOffset(granio.NewPos(offset.X, t.scroller.Offset.Y))
 		t.scroller.Refresh()
 	}
 
@@ -362,17 +363,17 @@ func (t *TextGrid) SetStyleRange(startRow, startCol, endRow, endCol int, style T
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *TextGrid) CreateRenderer() fyne.WidgetRenderer {
+func (t *TextGrid) CreateRenderer() granio.WidgetRenderer {
 	t.ExtendBaseWidget(t)
 
 	th := t.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	TextGridStyleDefault = &CustomTextGridStyle{}
 	TextGridStyleWhitespace = &CustomTextGridStyle{FGColor: th.Color(theme.ColorNameDisabled, v)}
 
 	var scroll *widget.Scroll
 	content := newTextGridContent(t)
-	objs := make([]fyne.CanvasObject, 1)
+	objs := make([]granio.CanvasObject, 1)
 	if t.Scroll == widget.ScrollNone {
 		scroll = widget.NewScroll(nil)
 		objs[0] = content
@@ -413,7 +414,7 @@ func (t *TextGrid) parseRows(text string) []TextGridRow {
 				col = len(cells)
 				next = nextTab(col-1, t.tabWidth())
 			} else {
-				next = col - 1 + runewidth.StringWidth(string(r))
+				next = col - 1 + runewidth.RuneWidth(r)
 			}
 			for i := col; i < next; i++ {
 				cells = append(cells, TextGridCell{Rune: ' '})
@@ -458,11 +459,11 @@ type textGridRenderer struct {
 	scroll *widget.Scroll
 }
 
-func (t *textGridRenderer) Layout(s fyne.Size) {
+func (t *textGridRenderer) Layout(s granio.Size) {
 	t.Objects()[0].Resize(s)
 }
 
-func (t *textGridRenderer) MinSize() fyne.Size {
+func (t *textGridRenderer) MinSize() granio.Size {
 	if t.text.text.Scroll == widget.ScrollNone {
 		return t.text.MinSize()
 	}
@@ -479,14 +480,14 @@ func (t *textGridRenderer) Refresh() {
 		t.scroll.Hide()
 		t.scroll.Content = nil
 		content.Resize(t.text.Size())
-		t.SetObjects([]fyne.CanvasObject{t.text})
+		t.SetObjects([]granio.CanvasObject{t.text})
 	} else if (t.text.text.Scroll != widget.ScrollNone) && t.scroll.Content == nil {
 		t.scroll.Content = content
 		t.scroll.Show()
 
 		t.scroll.Resize(t.text.Size())
 		content.Resize(content.MinSize())
-		t.SetObjects([]fyne.CanvasObject{t.scroll})
+		t.SetObjects([]granio.CanvasObject{t.scroll})
 	}
 
 	canvas.Refresh(t.text.text.super())
@@ -498,9 +499,9 @@ type textGridContent struct {
 	text *TextGrid
 
 	rows     int
-	cellSize fyne.Size
+	cellSize granio.Size
 
-	visible []fyne.CanvasObject
+	visible []granio.CanvasObject
 }
 
 func newTextGridContent(t *TextGrid) *textGridContent {
@@ -514,11 +515,11 @@ func (t *textGridContent) lineNumberWidth() int {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *textGridContent) CreateRenderer() fyne.WidgetRenderer {
+func (t *textGridContent) CreateRenderer() granio.WidgetRenderer {
 	r := &textGridContentRenderer{text: t}
 
 	r.updateCellSize()
-	t.text.scroller.OnScrolled = func(_ fyne.Position) {
+	t.text.scroller.OnScrolled = func(_ granio.Position) {
 		r.addRowsIfRequired()
 		r.Layout(t.Size())
 	}
@@ -539,7 +540,7 @@ type textGridContentRenderer struct {
 	itemPool async.Pool[*textGridRow]
 }
 
-func (t *textGridContentRenderer) updateGridSize(size fyne.Size) {
+func (t *textGridContentRenderer) updateGridSize(size granio.Size) {
 	bufRows := len(t.text.text.Rows)
 	sizeRows := int(size.Height / t.text.cellSize.Height)
 
@@ -554,17 +555,17 @@ func (t *textGridContentRenderer) updateGridSize(size fyne.Size) {
 func (*textGridContentRenderer) Destroy() {
 }
 
-func (t *textGridContentRenderer) Layout(s fyne.Size) {
-	size := fyne.NewSize(s.Width, t.text.cellSize.Height)
+func (t *textGridContentRenderer) Layout(s granio.Size) {
+	size := granio.NewSize(s.Width, t.text.cellSize.Height)
 	t.updateGridSize(s)
 
 	for _, o := range t.text.visible {
-		o.Move(fyne.NewPos(0, float32(o.(*textGridRow).row)*t.text.cellSize.Height))
+		o.Move(granio.NewPos(0, float32(o.(*textGridRow).row)*t.text.cellSize.Height))
 		o.Resize(size)
 	}
 }
 
-func (t *textGridContentRenderer) MinSize() fyne.Size {
+func (t *textGridContentRenderer) MinSize() granio.Size {
 	longestRow := float32(0)
 	for _, row := range t.text.text.Rows {
 		longestRow = max(longestRow, float32(len(row.Cells)))
@@ -574,11 +575,11 @@ func (t *textGridContentRenderer) MinSize() fyne.Size {
 		longestRow += float32(t.text.lineNumberWidth()) + 1
 	}
 
-	return fyne.NewSize(t.text.cellSize.Width*longestRow,
+	return granio.NewSize(t.text.cellSize.Width*longestRow,
 		t.text.cellSize.Height*float32(len(t.text.text.Rows)))
 }
 
-func (t *textGridContentRenderer) Objects() []fyne.CanvasObject {
+func (t *textGridContentRenderer) Objects() []granio.CanvasObject {
 	return t.text.visible
 }
 
@@ -614,7 +615,7 @@ func (t *textGridContentRenderer) addRowsIfRequired() {
 	}
 	t.text.visible = remain
 
-	var newItems []fyne.CanvasObject
+	var newItems []granio.CanvasObject
 	for i := start; i <= end; i++ {
 		found := false
 		for _, row := range t.text.visible {
@@ -644,7 +645,7 @@ func (t *textGridContentRenderer) addRowsIfRequired() {
 
 func (t *textGridContentRenderer) updateCellSize() {
 	th := t.text.Theme()
-	size := fyne.MeasureText("M", th.Size(theme.SizeNameText), fyne.TextStyle{Monospace: true})
+	size := granio.MeasureText("M", th.Size(theme.SizeNameText), granio.TextStyle{Monospace: true})
 
 	// round it for seamless background
 	size.Width = float32(math.Round(float64(size.Width)))
@@ -657,7 +658,7 @@ type textGridRow struct {
 	BaseWidget
 	text *textGridContent
 
-	objects []fyne.CanvasObject
+	objects []granio.CanvasObject
 	row     int
 	cols    int
 
@@ -673,7 +674,7 @@ func newTextGridRow(t *textGridContent, row int) *textGridRow {
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (t *textGridRow) CreateRenderer() fyne.WidgetRenderer {
+func (t *textGridRow) CreateRenderer() granio.WidgetRenderer {
 	render := &textGridRowRenderer{obj: t}
 
 	render.Refresh() // populate
@@ -687,7 +688,7 @@ func (t *textGridRow) setRow(row int) {
 
 func (t *textGridRow) appendTextCell(str rune) {
 	th := t.text.text.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	text := canvas.NewText(string(str), th.Color(theme.ColorNameForeground, v))
 	text.TextStyle.Monospace = true
@@ -719,9 +720,10 @@ func (t *textGridRow) setCellRune(str rune, pos int, style, rowStyle TextGridSty
 	text, _ := t.objects[pos*2+1].(*canvas.Text)
 
 	fg := t.cachedFGColor
+	sizeChanged := text.TextSize != t.cachedTextSize
 	text.TextSize = t.cachedTextSize
 
-	textStyle := fyne.TextStyle{}
+	textStyle := granio.TextStyle{}
 	if style != nil {
 		textStyle = style.Style()
 	} else if rowStyle != nil {
@@ -735,9 +737,15 @@ func (t *textGridRow) setCellRune(str rune, pos int, style, rowStyle TextGridSty
 		fg = rowStyle.TextColor()
 	}
 
-	newStr := string(str)
-	if text.Text != newStr || text.Color != fg || textStyle != text.TextStyle {
-		text.Text = newStr
+	if !utf8.ValidRune(str) {
+		str = utf8.RuneError
+	}
+	existing, length := utf8.DecodeRuneInString(text.Text)
+	sameRune := existing == str && length == len(text.Text) && (existing != utf8.RuneError || length == 3)
+	if !sameRune || sizeChanged || text.Color != fg || textStyle != text.TextStyle {
+		if !sameRune {
+			text.Text = string(str)
+		}
 		text.Color = fg
 		text.TextStyle = textStyle
 		text.Refresh()
@@ -843,7 +851,7 @@ func (t *TextGrid) tabWidth() int {
 	return t.TabWidth
 }
 
-func (t *textGridRow) updateGridSize(size fyne.Size) {
+func (t *textGridRow) updateGridSize(size granio.Size) {
 	bufCols := int(size.Width / t.text.cellSize.Width)
 	for _, row := range t.text.text.Rows {
 		lenCells := len(row.Cells)
@@ -867,10 +875,10 @@ type textGridRowRenderer struct {
 	obj *textGridRow
 }
 
-func (t *textGridRowRenderer) Layout(size fyne.Size) {
+func (t *textGridRowRenderer) Layout(size granio.Size) {
 	t.obj.updateGridSize(size)
 
-	cellPos := fyne.NewPos(0, 0)
+	cellPos := granio.NewPos(0, 0)
 	off := 0
 	for x := 0; x < t.obj.cols; x++ {
 		// rect
@@ -885,12 +893,12 @@ func (t *textGridRowRenderer) Layout(size fyne.Size) {
 	}
 }
 
-func (t *textGridRowRenderer) MinSize() fyne.Size {
+func (t *textGridRowRenderer) MinSize() granio.Size {
 	if t.obj.row >= len(t.obj.text.text.Rows) {
-		return fyne.NewSize(0, 0)
+		return granio.NewSize(0, 0)
 	}
 
-	return fyne.NewSize(
+	return granio.NewSize(
 		t.obj.text.cellSize.Width*float32(len(t.obj.text.text.Rows[t.obj.row].Cells)),
 		t.obj.text.cellSize.Height,
 	)
@@ -898,7 +906,7 @@ func (t *textGridRowRenderer) MinSize() fyne.Size {
 
 func (t *textGridRowRenderer) Refresh() {
 	th := t.obj.text.text.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	t.obj.cachedFGColor = th.Color(theme.ColorNameForeground, v)
 	t.obj.cachedTextSize = th.Size(theme.SizeNameText)
 	TextGridStyleWhitespace = &CustomTextGridStyle{FGColor: th.Color(theme.ColorNameDisabled, v)}
@@ -909,7 +917,7 @@ func (t *textGridRowRenderer) Refresh() {
 func (*textGridRowRenderer) ApplyTheme() {
 }
 
-func (t *textGridRowRenderer) Objects() []fyne.CanvasObject {
+func (t *textGridRowRenderer) Objects() []granio.CanvasObject {
 	return t.obj.objects
 }
 

@@ -3,18 +3,18 @@ package widget
 import (
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 const scrollEndDelay = 500 * time.Millisecond
 
 // ScrollDirection represents the directions in which a Scroll can scroll its child content.
-type ScrollDirection = fyne.ScrollDirection
+type ScrollDirection = granio.ScrollDirection
 
 // Constants for valid values of ScrollDirection.
 const (
@@ -46,20 +46,20 @@ type scrollBarRenderer struct {
 	BaseRenderer
 	scrollBar  *scrollBar
 	background *canvas.Rectangle
-	minSize    fyne.Size
+	minSize    granio.Size
 }
 
-func (r *scrollBarRenderer) Layout(size fyne.Size) {
+func (r *scrollBarRenderer) Layout(size granio.Size) {
 	r.background.Resize(size)
 }
 
-func (r *scrollBarRenderer) MinSize() fyne.Size {
+func (r *scrollBarRenderer) MinSize() granio.Size {
 	return r.minSize
 }
 
 func (r *scrollBarRenderer) Refresh() {
 	th := theme.CurrentForWidget(r.scrollBar)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	r.background.FillColor = th.Color(theme.ColorNameScrollBar, v)
 	r.background.CornerRadius = th.Size(theme.SizeNameScrollBarRadius)
@@ -68,7 +68,7 @@ func (r *scrollBarRenderer) Refresh() {
 
 var (
 	_ desktop.Hoverable = (*scrollBar)(nil)
-	_ fyne.Draggable    = (*scrollBar)(nil)
+	_ granio.Draggable  = (*scrollBar)(nil)
 )
 
 type scrollBar struct {
@@ -79,9 +79,9 @@ type scrollBar struct {
 	orientation     scrollBarOrientation
 }
 
-func (b *scrollBar) CreateRenderer() fyne.WidgetRenderer {
+func (b *scrollBar) CreateRenderer() granio.WidgetRenderer {
 	th := theme.CurrentForWidget(b)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameScrollBar, v))
 	background.CornerRadius = th.Size(theme.SizeNameScrollBarRadius)
@@ -89,7 +89,7 @@ func (b *scrollBar) CreateRenderer() fyne.WidgetRenderer {
 		scrollBar:  b,
 		background: background,
 	}
-	r.SetObjects([]fyne.CanvasObject{background})
+	r.SetObjects([]granio.CanvasObject{background})
 	return r
 }
 
@@ -100,14 +100,14 @@ func (*scrollBar) Cursor() desktop.Cursor {
 func (b *scrollBar) DragEnd() {
 	b.area.isDragging = false
 
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		b.area.MouseOut()
 		return
 	}
 	b.area.Refresh()
 }
 
-func (b *scrollBar) Dragged(e *fyne.DragEvent) {
+func (b *scrollBar) Dragged(e *granio.DragEvent) {
 	if !b.area.isDragging {
 		b.area.isDragging = true
 		b.area.MouseIn(nil)
@@ -161,7 +161,7 @@ type scrollBarAreaRenderer struct {
 
 func newScrollBarAreaRenderer(area *scrollBarArea, bar *scrollBar, background *canvas.Rectangle) *scrollBarAreaRenderer {
 	r := &scrollBarAreaRenderer{
-		BaseRenderer: NewBaseRenderer([]fyne.CanvasObject{background, bar}),
+		BaseRenderer: NewBaseRenderer([]granio.CanvasObject{background, bar}),
 		area:         area,
 		bar:          bar,
 		background:   background,
@@ -176,11 +176,11 @@ func (r *scrollBarAreaRenderer) Destroy() {
 	unsubscribeScrollerStyle(r.subscriptionID)
 }
 
-func (r *scrollBarAreaRenderer) Layout(size fyne.Size) {
+func (r *scrollBarAreaRenderer) Layout(size granio.Size) {
 	r.layoutWithTheme(theme.CurrentForWidget(r.area), size)
 }
 
-func (r *scrollBarAreaRenderer) layoutWithTheme(th fyne.Theme, size fyne.Size) {
+func (r *scrollBarAreaRenderer) layoutWithTheme(th granio.Theme, size granio.Size) {
 	var barHeight, barWidth, barX, barY float32
 	var bkgHeight, bkgWidth, bkgX, bkgY float32
 	switch r.area.orientation {
@@ -195,13 +195,13 @@ func (r *scrollBarAreaRenderer) layoutWithTheme(th fyne.Theme, size fyne.Size) {
 		r.area.barTrailingEdge = barY + barHeight
 		bkgWidth, bkgHeight, bkgX, bkgY = barWidth, size.Height, barX, 0
 	}
-	r.bar.Move(fyne.NewPos(barX, barY))
-	r.bar.Resize(fyne.NewSize(barWidth, barHeight))
-	r.background.Move(fyne.NewPos(bkgX, bkgY))
-	r.background.Resize(fyne.NewSize(bkgWidth, bkgHeight))
+	r.bar.Move(granio.NewPos(barX, barY))
+	r.bar.Resize(granio.NewSize(barWidth, barHeight))
+	r.background.Move(granio.NewPos(bkgX, bkgY))
+	r.background.Resize(granio.NewSize(bkgWidth, bkgHeight))
 }
 
-func (r *scrollBarAreaRenderer) MinSize() fyne.Size {
+func (r *scrollBarAreaRenderer) MinSize() granio.Size {
 	th := theme.CurrentForWidget(r.area)
 
 	barSize := th.Size(theme.SizeNameScrollBar)
@@ -211,16 +211,16 @@ func (r *scrollBarAreaRenderer) MinSize() fyne.Size {
 	}
 	switch r.area.orientation {
 	case scrollBarOrientationHorizontal:
-		return fyne.NewSize(barSize, minBarWidth)
+		return granio.NewSize(barSize, minBarWidth)
 	default:
-		return fyne.NewSize(minBarWidth, barSize)
+		return granio.NewSize(minBarWidth, barSize)
 	}
 }
 
 func (r *scrollBarAreaRenderer) Refresh() {
 	th := theme.CurrentForWidget(r.area)
 	r.bar.Refresh()
-	r.background.FillColor = th.Color(theme.ColorNameScrollBarBackground, fyne.CurrentApp().Settings().ThemeVariant())
+	r.background.FillColor = th.Color(theme.ColorNameScrollBarBackground, granio.CurrentApp().Settings().ThemeVariant())
 	r.background.Hidden = !r.area.isLarge()
 	if !r.area.isLarge() && !scrollBarAlwaysVisible() && !r.area.scroll.scrolling {
 		r.bar.Hide()
@@ -232,7 +232,7 @@ func (r *scrollBarAreaRenderer) Refresh() {
 	canvas.Refresh(r.background)
 }
 
-func (r *scrollBarAreaRenderer) barSizeAndOffset(th fyne.Theme, contentOffset, contentLength, scrollLength float32) (length, width, lengthOffset, widthOffset float32) {
+func (r *scrollBarAreaRenderer) barSizeAndOffset(th granio.Theme, contentOffset, contentLength, scrollLength float32) (length, width, lengthOffset, widthOffset float32) {
 	scrollBarSize := th.Size(theme.SizeNameScrollBar)
 	if scrollLength < contentLength {
 		portion := scrollLength / contentLength
@@ -255,7 +255,7 @@ func (r *scrollBarAreaRenderer) barSizeAndOffset(th fyne.Theme, contentOffset, c
 
 var (
 	_ desktop.Hoverable = (*scrollBarArea)(nil)
-	_ fyne.Tappable     = (*scrollBarArea)(nil)
+	_ granio.Tappable   = (*scrollBarArea)(nil)
 )
 
 type scrollBarArea struct {
@@ -273,16 +273,16 @@ type scrollBarArea struct {
 	barTrailingEdge float32
 }
 
-func (a *scrollBarArea) CreateRenderer() fyne.WidgetRenderer {
+func (a *scrollBarArea) CreateRenderer() granio.WidgetRenderer {
 	th := theme.CurrentForWidget(a)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	a.bar = newScrollBar(a)
 	background := canvas.NewRectangle(th.Color(theme.ColorNameScrollBarBackground, v))
 	background.Hidden = !a.isLarge()
 	return newScrollBarAreaRenderer(a, a.bar, background)
 }
 
-func (a *scrollBarArea) Tapped(e *fyne.PointEvent) {
+func (a *scrollBarArea) Tapped(e *granio.PointEvent) {
 	if isScrollerPageOnTap() {
 		a.scrollFullPageOnTap(e)
 		return
@@ -302,7 +302,7 @@ func (a *scrollBarArea) Tapped(e *fyne.PointEvent) {
 	}
 }
 
-func (a *scrollBarArea) scrollFullPageOnTap(e *fyne.PointEvent) {
+func (a *scrollBarArea) scrollFullPageOnTap(e *granio.PointEvent) {
 	// when tapping above/below or left/right of the bar, scroll the content
 	// nearly a full page (pageScrollFraction) up/down or left/right, respectively
 	newOffset := a.scroll.Offset
@@ -350,7 +350,7 @@ func (a *scrollBarArea) MouseOut() {
 	a.scroll.refreshBars()
 }
 
-func (a *scrollBarArea) moveBar(offset float32, barSize fyne.Size) {
+func (a *scrollBarArea) moveBar(offset float32, barSize granio.Size) {
 	oldX := a.scroll.Offset.X
 	oldY := a.scroll.Offset.Y
 	switch a.orientation {
@@ -390,38 +390,38 @@ type scrollContainerRenderer struct {
 	horizArea               *scrollBarArea
 	leftShadow, rightShadow *Shadow
 	topShadow, bottomShadow *Shadow
-	oldMinSize              fyne.Size
+	oldMinSize              granio.Size
 }
 
-func (r *scrollContainerRenderer) layoutBars(size fyne.Size) {
+func (r *scrollContainerRenderer) layoutBars(size granio.Size) {
 	scrollerSize := r.scroll.Size()
 	if r.scroll.Direction == ScrollVerticalOnly || r.scroll.Direction == ScrollBoth {
-		r.vertArea.Resize(fyne.NewSize(r.vertArea.MinSize().Width, size.Height))
-		r.vertArea.Move(fyne.NewPos(scrollerSize.Width-r.vertArea.Size().Width, 0))
-		r.topShadow.Resize(fyne.NewSize(size.Width, 0))
-		r.bottomShadow.Resize(fyne.NewSize(size.Width, 0))
-		r.bottomShadow.Move(fyne.NewPos(0, scrollerSize.Height))
+		r.vertArea.Resize(granio.NewSize(r.vertArea.MinSize().Width, size.Height))
+		r.vertArea.Move(granio.NewPos(scrollerSize.Width-r.vertArea.Size().Width, 0))
+		r.topShadow.Resize(granio.NewSize(size.Width, 0))
+		r.bottomShadow.Resize(granio.NewSize(size.Width, 0))
+		r.bottomShadow.Move(granio.NewPos(0, scrollerSize.Height))
 	}
 
 	if r.scroll.Direction == ScrollHorizontalOnly || r.scroll.Direction == ScrollBoth {
-		r.horizArea.Resize(fyne.NewSize(size.Width, r.horizArea.MinSize().Height))
-		r.horizArea.Move(fyne.NewPos(0, scrollerSize.Height-r.horizArea.Size().Height))
-		r.leftShadow.Resize(fyne.NewSize(0, size.Height))
-		r.rightShadow.Resize(fyne.NewSize(0, size.Height))
-		r.rightShadow.Move(fyne.NewPos(scrollerSize.Width, 0))
+		r.horizArea.Resize(granio.NewSize(size.Width, r.horizArea.MinSize().Height))
+		r.horizArea.Move(granio.NewPos(0, scrollerSize.Height-r.horizArea.Size().Height))
+		r.leftShadow.Resize(granio.NewSize(0, size.Height))
+		r.rightShadow.Resize(granio.NewSize(0, size.Height))
+		r.rightShadow.Move(granio.NewPos(scrollerSize.Width, 0))
 	}
 
 	r.updatePosition()
 }
 
-func (r *scrollContainerRenderer) Layout(size fyne.Size) {
+func (r *scrollContainerRenderer) Layout(size granio.Size) {
 	c := r.scroll.Content
 	c.Resize(internal.MaxSizes(c.MinSize(), size))
 
 	r.layoutBars(size)
 }
 
-func (r *scrollContainerRenderer) MinSize() fyne.Size {
+func (r *scrollContainerRenderer) MinSize() granio.Size {
 	return r.scroll.MinSize()
 }
 
@@ -457,7 +457,7 @@ func (r *scrollContainerRenderer) handleAreaVisibility(contentSize, scrollSize f
 	}
 }
 
-func (r *scrollContainerRenderer) handleShadowVisibility(offset, contentSize, scrollSize float32, shadowStart fyne.CanvasObject, shadowEnd fyne.CanvasObject) {
+func (r *scrollContainerRenderer) handleShadowVisibility(offset, contentSize, scrollSize float32, shadowStart granio.CanvasObject, shadowEnd granio.CanvasObject) {
 	if !r.scroll.Visible() {
 		return
 	}
@@ -480,7 +480,7 @@ func (r *scrollContainerRenderer) updatePosition() {
 	scrollSize := r.scroll.Size()
 	contentSize := r.scroll.Content.Size()
 
-	r.scroll.Content.Move(fyne.NewPos(-r.scroll.Offset.X, -r.scroll.Offset.Y))
+	r.scroll.Content.Move(granio.NewPos(-r.scroll.Offset.X, -r.scroll.Offset.Y))
 
 	if r.scroll.Direction == ScrollVerticalOnly || r.scroll.Direction == ScrollBoth {
 		r.handleAreaVisibility(contentSize.Height, scrollSize.Height, r.vertArea)
@@ -512,24 +512,24 @@ func (r *scrollContainerRenderer) updatePosition() {
 // The Offset is used to determine the position of the child widgets within the container.
 type Scroll struct {
 	Base
-	minSize   fyne.Size
+	minSize   granio.Size
 	Direction ScrollDirection
-	Content   fyne.CanvasObject
-	Offset    fyne.Position
+	Content   granio.CanvasObject
+	Offset    granio.Position
 	// OnScrolled can be set to be notified when the Scroll has changed position.
 	// You should not update the Scroll.Offset from this method.
 	//
 	// Since: 2.0
-	OnScrolled func(fyne.Position) `json:"-"`
+	OnScrolled func(granio.Position) `json:"-"`
 
 	scrolling      bool
 	scrollEndTimer *time.Timer
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (s *Scroll) CreateRenderer() fyne.WidgetRenderer {
+func (s *Scroll) CreateRenderer() granio.WidgetRenderer {
 	scr := &scrollContainerRenderer{
-		BaseRenderer: NewBaseRenderer([]fyne.CanvasObject{s.Content}),
+		BaseRenderer: NewBaseRenderer([]granio.CanvasObject{s.Content}),
 		scroll:       s,
 	}
 	scr.vertArea = newScrollBarArea(s, scrollBarOrientationVertical)
@@ -553,12 +553,12 @@ func (s *Scroll) ScrollToBottom() {
 
 // ScrollToTop will scroll content to container top
 func (s *Scroll) ScrollToTop() {
-	s.ScrollToOffset(fyne.Position{})
+	s.ScrollToOffset(granio.Position{})
 }
 
 // MinSize returns the smallest size this widget can shrink to
-func (s *Scroll) MinSize() fyne.Size {
-	minSize := internal.MaxSizes(fyne.NewSize(scrollContainerMinSize, scrollContainerMinSize), s.minSize)
+func (s *Scroll) MinSize() granio.Size {
+	minSize := internal.MaxSizes(granio.NewSize(scrollContainerMinSize, scrollContainerMinSize), s.minSize)
 	switch s.Direction {
 	case ScrollHorizontalOnly:
 		minSize.Height = max(minSize.Height, s.Content.MinSize().Height)
@@ -573,7 +573,7 @@ func (s *Scroll) MinSize() fyne.Size {
 // SetMinSize specifies a minimum size for this scroll container.
 // If the specified size is larger than the content size then scrolling will not be enabled
 // This can be helpful to appear larger than default if the layout is collapsing this widget.
-func (s *Scroll) SetMinSize(size fyne.Size) {
+func (s *Scroll) SetMinSize(size granio.Size) {
 	s.minSize = size
 }
 
@@ -587,7 +587,7 @@ func (s *Scroll) Refresh() {
 }
 
 // Resize is called when this scroller should change size. We refresh to ensure the scroll bars are updated.
-func (s *Scroll) Resize(sz fyne.Size) {
+func (s *Scroll) Resize(sz granio.Size) {
 	if sz == s.Size() {
 		return
 	}
@@ -599,7 +599,7 @@ func (s *Scroll) Resize(sz fyne.Size) {
 // ScrollToOffset will update the location of the content of this scroll container.
 //
 // Since: 2.6
-func (s *Scroll) ScrollToOffset(p fyne.Position) {
+func (s *Scroll) ScrollToOffset(p granio.Position) {
 	if s.Offset == p {
 		return
 	}
@@ -613,7 +613,7 @@ func (s *Scroll) refreshWithoutOffsetUpdate() {
 }
 
 // Scrolled is called when an input device triggers a scroll event
-func (s *Scroll) Scrolled(ev *fyne.ScrollEvent) {
+func (s *Scroll) Scrolled(ev *granio.ScrollEvent) {
 	if s.Direction != ScrollNone {
 		s.scrollBy(ev.Scrolled.DX, ev.Scrolled.DY)
 	}
@@ -623,7 +623,7 @@ func (s *Scroll) Scrolled(ev *fyne.ScrollEvent) {
 			s.scrollEndTimer.Reset(scrollEndDelay)
 		} else {
 			s.scrollEndTimer = time.AfterFunc(scrollEndDelay, func() {
-				fyne.Do(func() {
+				granio.Do(func() {
 					s.scrolling = false
 					s.refreshBars()
 				})
@@ -684,23 +684,23 @@ func computeOffset(start, delta, outerWidth, innerWidth float32) float32 {
 
 // NewScroll creates a scrollable parent wrapping the specified content.
 // Note that this may cause the MinSize to be smaller than that of the passed object.
-func NewScroll(content fyne.CanvasObject) *Scroll {
+func NewScroll(content granio.CanvasObject) *Scroll {
 	return newScrollContainerWithDirection(ScrollBoth, content)
 }
 
 // NewHScroll create a scrollable parent wrapping the specified content.
 // Note that this may cause the MinSize.Width to be smaller than that of the passed object.
-func NewHScroll(content fyne.CanvasObject) *Scroll {
+func NewHScroll(content granio.CanvasObject) *Scroll {
 	return newScrollContainerWithDirection(ScrollHorizontalOnly, content)
 }
 
 // NewVScroll create a scrollable parent wrapping the specified content.
 // Note that this may cause the MinSize.Height to be smaller than that of the passed object.
-func NewVScroll(content fyne.CanvasObject) *Scroll {
+func NewVScroll(content granio.CanvasObject) *Scroll {
 	return newScrollContainerWithDirection(ScrollVerticalOnly, content)
 }
 
-func newScrollContainerWithDirection(direction ScrollDirection, content fyne.CanvasObject) *Scroll {
+func newScrollContainerWithDirection(direction ScrollDirection, content granio.CanvasObject) *Scroll {
 	s := &Scroll{
 		Direction: direction,
 		Content:   content,

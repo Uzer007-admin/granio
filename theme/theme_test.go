@@ -9,9 +9,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func Test_DefaultTheme_AllColorsDefined(t *testing.T) {
@@ -40,9 +40,9 @@ func Test_DefaultTheme_PrimaryForegroundColor(t *testing.T) {
 			testedColorNames = append(testedColorNames, name)
 		}
 		t.Run("primary foreground color "+name, func(t *testing.T) {
-			oldApp := fyne.CurrentApp()
-			defer fyne.SetCurrentApp(oldApp)
-			fyne.SetCurrentApp(&themedApp{theme: defaultTheme, primaryColor: name})
+			oldApp := granio.CurrentApp()
+			defer granio.SetCurrentApp(oldApp)
+			granio.SetCurrentApp(&themedApp{theme: defaultTheme, primaryColor: name})
 			t.Run("light variant", func(t *testing.T) {
 				assert.Equal(t, expectedColor, defaultTheme.Color(theme.ColorNameForegroundOnPrimary, theme.VariantLight))
 			})
@@ -71,45 +71,45 @@ func TestEmptyTheme(t *testing.T) {
 	// The following functions tested all log an error when returning nil
 	log.SetOutput(io.Discard)
 	t.Cleanup(func() { log.SetOutput(os.Stderr) })
-	fyne.CurrentApp().Settings().SetTheme(&emptyTheme{})
+	granio.CurrentApp().Settings().SetTheme(&emptyTheme{})
 	assert.NotNil(t, theme.ForegroundColor())
 	assert.NotNil(t, theme.TextFont())
 	assert.NotNil(t, theme.HelpIcon())
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 }
 
 func TestThemeChange(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	bg := theme.BackgroundColor()
 
-	fyne.CurrentApp().Settings().SetTheme(theme.LightTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.LightTheme())
 	assert.NotEqual(t, bg, theme.BackgroundColor())
 }
 
 func TestTheme_Bootstrapping(*testing.T) {
-	current := fyne.CurrentApp().Settings().Theme()
-	fyne.CurrentApp().Settings().SetTheme(nil)
+	current := granio.CurrentApp().Settings().Theme()
+	granio.CurrentApp().Settings().SetTheme(nil)
 
 	// this should not crash
 	theme.BackgroundColor()
 
-	fyne.CurrentApp().Settings().SetTheme(current)
+	granio.CurrentApp().Settings().SetTheme(current)
 }
 
 type emptyTheme struct{}
 
-func (*emptyTheme) Color(fyne.ThemeColorName, fyne.ThemeVariant) color.Color {
+func (*emptyTheme) Color(granio.ThemeColorName, granio.ThemeVariant) color.Color {
 	return nil
 }
 
-func (*emptyTheme) Font(fyne.TextStyle) fyne.Resource {
+func (*emptyTheme) Font(granio.TextStyle) granio.Resource {
 	return nil
 }
 
-func (*emptyTheme) Icon(fyne.ThemeIconName) fyne.Resource {
+func (*emptyTheme) Icon(granio.ThemeIconName) granio.Resource {
 	return nil
 }
 
-func (*emptyTheme) Size(fyne.ThemeSizeName) float32 {
+func (*emptyTheme) Size(granio.ThemeSizeName) float32 {
 	return 0
 }

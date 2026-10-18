@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // glDebug turns on periodic draw statistics: what a frame costs, what it is
@@ -94,7 +94,7 @@ func (p *painter) report(now time.Time) {
 }
 
 // countDraws attributes the n draw calls obj just made on its own.
-func (p *painter) countDraws(obj fyne.CanvasObject, n int) {
+func (p *painter) countDraws(obj granio.CanvasObject, n int) {
 	p.stats.lastDraw = time.Now()
 	if n > 0 {
 		count(&p.stats.byType, obj, n)
@@ -109,7 +109,7 @@ func (p *painter) countBatch(quads int) {
 }
 
 // count adds n to (*m)[type of o], making the map on first use.
-func count(m *map[reflect.Type]int, o fyne.CanvasObject, n int) {
+func count(m *map[reflect.Type]int, o granio.CanvasObject, n int) {
 	if *m == nil {
 		*m = make(map[reflect.Type]int)
 	}

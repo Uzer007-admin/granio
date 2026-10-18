@@ -1,0 +1,66 @@
+Date: 2026-10-13 MSK
+[15:42:20.068] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[15:42:20.068] Command line: weston --backend=headless-backend.so --use-pixman --scale=2 --width=1280 --height=720 --idle-time=0 --no-config --socket=background-fixture --modules=/tmp/fwv13-a1d4/native/background-test.so --log=/tmp/fwv13-a1d4/logs-backgrounds/weston-fixture.log
+[15:42:20.068] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[15:42:20.068] Flight recorder: enabled
+[15:42:20.068] Starting with no config file.
+[15:42:20.068] Output repaint window is 7 ms maximum.
+[15:42:20.068] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[15:42:20.068] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[15:42:20.068] Color manager: no-op
+[15:42:20.068] Output 'headless' using color profile: built-in default sRGB SDR profile
+[15:42:20.068] Output 'headless' enabled with head(s) headless
+[15:42:20.068] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[15:42:20.068] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[15:42:20.068] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[15:42:20.069] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[15:42:20.069] Loading module '/tmp/fwv13-a1d4/native/background-test.so'
+[15:42:20.069] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[15:49:04.744] caught signal 15
+[15:49:04.744] panel surface gone
+[15:49:04.745] background surface gone
+Date: 2026-10-13 MSK
+[16:15:35.657] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[16:15:35.657] Command line: weston --backend=headless-backend.so --use-pixman --scale=2 --width=1280 --height=720 --idle-time=0 --no-config --socket=background-fixture --modules=/tmp/fwv13-a1d4/native/background-test.so --log=/tmp/fwv13-a1d4/logs-backgrounds/weston-fixture.log
+[16:15:35.657] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[16:15:35.657] Flight recorder: enabled
+[16:15:35.657] Starting with no config file.
+[16:15:35.657] Output repaint window is 7 ms maximum.
+[16:15:35.657] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[16:15:35.657] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[16:15:35.657] Color manager: no-op
+[16:15:35.657] Output 'headless' using color profile: built-in default sRGB SDR profile
+[16:15:35.657] Output 'headless' enabled with head(s) headless
+[16:15:35.657] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[16:15:35.657] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[16:15:35.658] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[16:15:35.658] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[16:15:35.658] Loading module '/tmp/fwv13-a1d4/native/background-test.so'
+[16:15:35.658] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[16:17:16.336] caught signal 15
+[16:17:16.336] panel surface gone
+[16:17:16.336] background surface gone

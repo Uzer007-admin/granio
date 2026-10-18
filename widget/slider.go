@@ -5,20 +5,20 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/data/binding"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 var (
-	_ fyne.Draggable    = (*Slider)(nil)
-	_ fyne.Focusable    = (*Slider)(nil)
-	_ desktop.Hoverable = (*Slider)(nil)
-	_ fyne.Tappable     = (*Slider)(nil)
-	_ fyne.Disableable  = (*Slider)(nil)
+	_ granio.Draggable   = (*Slider)(nil)
+	_ granio.Focusable   = (*Slider)(nil)
+	_ desktop.Hoverable  = (*Slider)(nil)
+	_ granio.Tappable    = (*Slider)(nil)
+	_ granio.Disableable = (*Slider)(nil)
 )
 
 // Slider is a widget that can slide between two fixed values.
@@ -88,7 +88,7 @@ func (s *Slider) DragEnd() {
 }
 
 // Dragged is called when a drag event occurs.
-func (s *Slider) Dragged(e *fyne.DragEvent) {
+func (s *Slider) Dragged(e *granio.DragEvent) {
 	if s.disabled {
 		return
 	}
@@ -102,7 +102,7 @@ func (s *Slider) Dragged(e *fyne.DragEvent) {
 // Tapped is called when a pointer tapped event is captured.
 //
 // Since: 2.4
-func (s *Slider) Tapped(e *fyne.PointEvent) {
+func (s *Slider) Tapped(e *granio.PointEvent) {
 	if s.disabled {
 		return
 	}
@@ -191,22 +191,22 @@ func (s *Slider) MouseOut() {
 // TypedKey is called when this item receives a key event.
 //
 // Since: 2.4
-func (s *Slider) TypedKey(key *fyne.KeyEvent) {
+func (s *Slider) TypedKey(key *granio.KeyEvent) {
 	if s.disabled {
 		return
 	}
 	if s.Orientation == Vertical {
 		switch key.Name {
-		case fyne.KeyUp:
+		case granio.KeyUp:
 			s.SetValue(s.Value + s.Step)
-		case fyne.KeyDown:
+		case granio.KeyDown:
 			s.SetValue(s.Value - s.Step)
 		}
 	} else {
 		switch key.Name {
-		case fyne.KeyLeft:
+		case granio.KeyLeft:
 			s.SetValue(s.Value - s.Step)
-		case fyne.KeyRight:
+		case granio.KeyRight:
 			s.SetValue(s.Value + s.Step)
 		}
 	}
@@ -227,7 +227,7 @@ func (s *Slider) endOffset(inlineIconSize, innerPadding float32) float32 {
 	return s.buttonDiameter(inlineIconSize)/2 + innerPadding - 1.5 // align with radio icons
 }
 
-func (s *Slider) getRatio(e *fyne.PointEvent) float64 {
+func (s *Slider) getRatio(e *granio.PointEvent) float64 {
 	th := s.Theme()
 	pad := s.endOffset(th.Size(theme.SizeNameInlineIcon), th.Size(theme.SizeNameInnerPadding))
 
@@ -316,7 +316,7 @@ func (s *Slider) SetValue(value float64) {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (s *Slider) MinSize() fyne.Size {
+func (s *Slider) MinSize() granio.Size {
 	s.ExtendBaseWidget(s)
 	return s.BaseWidget.MinSize()
 }
@@ -349,17 +349,17 @@ func (s *Slider) Disabled() bool {
 }
 
 // CreateRenderer links this widget to its renderer.
-func (s *Slider) CreateRenderer() fyne.WidgetRenderer {
+func (s *Slider) CreateRenderer() granio.WidgetRenderer {
 	s.ExtendBaseWidget(s)
 	th := s.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	track := canvas.NewRectangle(th.Color(theme.ColorNameInputBackground, v))
 	active := canvas.NewRectangle(th.Color(theme.ColorNameForeground, v))
 	thumb := &canvas.Circle{FillColor: th.Color(theme.ColorNameForeground, v)}
 	focusIndicator := &canvas.Circle{FillColor: color.Transparent}
 
-	objects := []fyne.CanvasObject{track, active, thumb, focusIndicator}
+	objects := []granio.CanvasObject{track, active, thumb, focusIndicator}
 
 	slide := &sliderRenderer{widget.NewBaseRenderer(objects), track, active, thumb, focusIndicator, s}
 	slide.Refresh() // prepare for first draw
@@ -382,7 +382,7 @@ func (s *Slider) updateFromData(data binding.DataItem) {
 
 	val, err := floatSource.Get()
 	if err != nil {
-		fyne.LogError("Error getting current data value", err)
+		granio.LogError("Error getting current data value", err)
 		return
 	}
 	s.SetValue(val) // if val != s.Value, this will call updateFromData again, but only once
@@ -403,7 +403,7 @@ func (s *Slider) writeData(data binding.DataItem) {
 	if s.Value != currentValue {
 		err := floatTarget.Set(s.Value)
 		if err != nil {
-			fyne.LogError(fmt.Sprintf("Failed to set binding value to %f", s.Value), err)
+			granio.LogError(fmt.Sprintf("Failed to set binding value to %f", s.Value), err)
 		}
 	}
 }
@@ -431,7 +431,7 @@ type sliderRenderer struct {
 // Refresh updates the widget state for drawing.
 func (s *sliderRenderer) Refresh() {
 	th := s.slider.Theme()
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 
 	s.track.FillColor = th.Color(theme.ColorNameInputBackground, v)
 	if s.slider.disabled {
@@ -449,6 +449,7 @@ func (s *sliderRenderer) Refresh() {
 		s.focusIndicator.FillColor = color.Transparent
 	}
 
+	applySystemFocusCircle(s.focusIndicator, th, s.slider.focused && !s.slider.disabled)
 	s.focusIndicator.Refresh()
 
 	s.slider.clampValueToRange()
@@ -457,7 +458,7 @@ func (s *sliderRenderer) Refresh() {
 }
 
 // Layout the components of the widget.
-func (s *sliderRenderer) Layout(size fyne.Size) {
+func (s *sliderRenderer) Layout(size granio.Size) {
 	th := s.slider.Theme()
 
 	inputBorderSize := th.Size(theme.SizeNameInputBorder)
@@ -467,18 +468,18 @@ func (s *sliderRenderer) Layout(size fyne.Size) {
 	diameter := s.slider.buttonDiameter(inlineIconSize)
 	endPad := s.slider.endOffset(inlineIconSize, innerPadding)
 
-	var trackPos, activePos, thumbPos fyne.Position
-	var trackSize, activeSize fyne.Size
+	var trackPos, activePos, thumbPos granio.Position
+	var trackSize, activeSize granio.Size
 
 	// some calculations are relative to trackSize, so we must update that first
 	switch s.slider.Orientation {
 	case Vertical:
-		trackPos = fyne.NewPos(size.Width/2-inputBorderSize, endPad)
-		trackSize = fyne.NewSize(trackWidth, size.Height-endPad*2)
+		trackPos = granio.NewPos(size.Width/2-inputBorderSize, endPad)
+		trackSize = granio.NewSize(trackWidth, size.Height-endPad*2)
 
 	case Horizontal:
-		trackPos = fyne.NewPos(endPad, size.Height/2-inputBorderSize)
-		trackSize = fyne.NewSize(size.Width-endPad*2, trackWidth)
+		trackPos = granio.NewPos(endPad, size.Height/2-inputBorderSize)
+		trackSize = granio.NewSize(size.Width-endPad*2, trackWidth)
 	}
 	s.track.Move(trackPos)
 	s.track.Resize(trackSize)
@@ -486,17 +487,17 @@ func (s *sliderRenderer) Layout(size fyne.Size) {
 	activeOffset := s.getOffset(inlineIconSize, innerPadding) // TODO based on old size...0
 	switch s.slider.Orientation {
 	case Vertical:
-		activePos = fyne.NewPos(trackPos.X, activeOffset)
-		activeSize = fyne.NewSize(trackWidth, trackSize.Height-activeOffset+endPad)
+		activePos = granio.NewPos(trackPos.X, activeOffset)
+		activeSize = granio.NewSize(trackWidth, trackSize.Height-activeOffset+endPad)
 
-		thumbPos = fyne.NewPos(
+		thumbPos = granio.NewPos(
 			trackPos.X-(diameter-trackSize.Width)/2, activeOffset-(diameter/2),
 		)
 	case Horizontal:
 		activePos = trackPos
-		activeSize = fyne.NewSize(activeOffset-endPad, trackWidth)
+		activeSize = granio.NewSize(activeOffset-endPad, trackWidth)
 
-		thumbPos = fyne.NewPos(
+		thumbPos = granio.NewPos(
 			activeOffset-(diameter/2), trackPos.Y-(diameter-trackSize.Height)/2,
 		)
 	}
@@ -505,16 +506,16 @@ func (s *sliderRenderer) Layout(size fyne.Size) {
 	s.active.Resize(activeSize)
 
 	s.thumb.Move(thumbPos)
-	s.thumb.Resize(fyne.NewSize(diameter, diameter))
+	s.thumb.Resize(granio.NewSize(diameter, diameter))
 
-	focusIndicatorSize := fyne.NewSquareSize(inlineIconSize + innerPadding)
+	focusIndicatorSize := granio.NewSquareSize(inlineIconSize + innerPadding)
 	delta := (focusIndicatorSize.Width - diameter) / 2
 	s.focusIndicator.Resize(focusIndicatorSize)
 	s.focusIndicator.Move(thumbPos.SubtractXY(delta, delta))
 }
 
 // MinSize calculates the minimum size of a widget.
-func (s *sliderRenderer) MinSize() fyne.Size {
+func (s *sliderRenderer) MinSize() granio.Size {
 	th := s.slider.Theme()
 	pad := th.Size(theme.SizeNameInnerPadding)
 	tap := th.Size(theme.SizeNameInlineIcon)
@@ -523,9 +524,9 @@ func (s *sliderRenderer) MinSize() fyne.Size {
 
 	switch s.slider.Orientation {
 	case Vertical:
-		return fyne.NewSize(s2, s1)
+		return granio.NewSize(s2, s1)
 	default:
-		return fyne.NewSize(s1, s2)
+		return granio.NewSize(s1, s2)
 	}
 }
 

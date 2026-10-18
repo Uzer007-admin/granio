@@ -1,0 +1,6 @@
+# github.com/Uzer007-admin/granio-pixeledit/internal/ui [github.com/Uzer007-admin/granio-pixeledit/internal/ui.test]
+ecosystem\work\granio-pixeledit\internal\ui\editor_test.go:7:2: "os" imported and not used
+FAIL	github.com/Uzer007-admin/granio-pixeledit/internal/ui [build failed]
+ok  	github.com/Uzer007-admin/granio-tools/cmd/granio/internal/mobile/binres	1.766s
+ok  	github.com/Uzer007-admin/granio-terminal/cmd/fyneterm	6.164s
+FAIL

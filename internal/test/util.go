@@ -14,7 +14,7 @@ func pixCloseEnough(a, b []uint8) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	mismatches := 0
+	var mismatches int64
 
 	for i, v := range a {
 		w := b[i]
@@ -31,12 +31,12 @@ func pixCloseEnough(a, b []uint8) bool {
 			return false
 		}
 
-		mismatches += delta
+		mismatches += int64(delta)
 	}
 
 	// Allow an average of 1/2 bit difference per byte.
 	// This is should be more reliable for images than a percentage of mismatched bytes.
-	return float64(mismatches)/float64(len(a)) < 0.5
+	return mismatches*2 < int64(len(a))
 }
 
 // NewCheckedImage returns a new black/white checked image with the specified size

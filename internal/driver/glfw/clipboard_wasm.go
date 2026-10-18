@@ -3,14 +3,14 @@
 package glfw
 
 import (
-	"fyne.io/fyne/v2"
-	"github.com/fyne-io/glfw-js"
+	"github.com/Uzer007-admin/granio-glfw-js"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with Clipboard interface
-var _ fyne.Clipboard = clipboard{}
+var _ granio.Clipboard = clipboard{}
 
-func NewClipboard() fyne.Clipboard {
+func NewClipboard() granio.Clipboard {
 	return clipboard{}
 }
 

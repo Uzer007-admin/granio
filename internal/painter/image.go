@@ -7,21 +7,21 @@ import (
 
 	"golang.org/x/image/draw"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
 )
 
 // PaintImage renders a given fyne Image to a Go standard image
-// If a fyne.Canvas is given and the image’s fill mode is “fill original” the image’s min size has
+// If a granio.Canvas is given and the image’s fill mode is “fill original” the image’s min size has
 // to fit its original size. If it doesn’t, PaintImage does not paint the image but adjusts its min size.
 // The image will then be painted on the next frame because of the min size change.
-func PaintImage(img *canvas.Image, c fyne.Canvas, width, height int) image.Image {
+func PaintImage(img *canvas.Image, c granio.Canvas, width, height int) image.Image {
 	if width <= 0 || height <= 0 {
 		return nil
 	}
 
 	if img.Size().IsZero() && c == nil { // an image without size or canvas won't get rendered unless we setup
-		img.Resize(fyne.NewSize(float32(width), float32(height)))
+		img.Resize(granio.NewSize(float32(width), float32(height)))
 	}
 
 	dst := img.Image
@@ -55,7 +55,7 @@ func scaleImage(pixels image.Image, scaledW, scaledH int, scale canvas.ImageScal
 		draw.NearestNeighbor.Scale(tex, scaledBounds, pixels, bounds, draw.Over, nil)
 	default:
 		if scale != canvas.ImageScaleSmooth {
-			fyne.LogError("Invalid canvas.ImageScale value, using canvas.ImageScaleSmooth", nil)
+			granio.LogError("Invalid canvas.ImageScale value, using canvas.ImageScaleSmooth", nil)
 		}
 		draw.CatmullRom.Scale(tex, scaledBounds, pixels, bounds, draw.Over, nil)
 	}

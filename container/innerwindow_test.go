@@ -5,16 +5,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestInnerWindow_Alignment(t *testing.T) {
 	w := NewInnerWindow("Title", widget.NewLabel("Content"))
-	w.Resize(fyne.NewSize(150, 100))
+	w.Resize(granio.NewSize(150, 100))
 	assert.Equal(t, widget.ButtonAlignCenter, w.Alignment)
 	assert.NotEqual(t, widget.ButtonAlignCenter, w.buttonPosition())
 
@@ -36,9 +36,9 @@ func TestInnerWindow_Close(t *testing.T) {
 	outer.Resize(w.MinSize())
 	assert.True(t, w.Visible())
 
-	closePos := fyne.NewPos(10, 10)
+	closePos := granio.NewPos(10, 10)
 	if w.buttonPosition() == widget.ButtonAlignTrailing {
-		closePos = fyne.NewPos(w.Size().Width-10, 10)
+		closePos = granio.NewPos(w.Size().Width-10, 10)
 	}
 	test.TapCanvas(outer.Canvas(), closePos)
 	assert.False(t, w.Visible())
@@ -89,7 +89,7 @@ func TestInnerWindow_SetActive(t *testing.T) {
 func TestInnerWindow_SetContent(t *testing.T) {
 	w := NewInnerWindow("Title", widget.NewLabel("Content"))
 	r := cache.Renderer(w).(*innerWindowRenderer)
-	title := r.Objects()[3].(*fyne.Container)
+	title := r.Objects()[3].(*granio.Container)
 	assert.Equal(t, "Content", title.Objects[0].(*widget.Label).Text)
 
 	w.SetContent(widget.NewLabel("Content2"))
@@ -120,7 +120,7 @@ func TestInnerWindow_SetPadded(t *testing.T) {
 func TestInnerWindow_SetTitle(t *testing.T) {
 	w := NewInnerWindow("Title1", widget.NewLabel("Content"))
 	r := cache.Renderer(w).(*innerWindowRenderer)
-	title := r.bar.Objects[2].(*fyne.Container).Objects[0].(*draggableLabel)
+	title := r.bar.Objects[2].(*granio.Container).Objects[0].(*draggableLabel)
 	assert.Equal(t, "Title1", title.Text)
 
 	w.SetTitle("Title2")
@@ -132,10 +132,10 @@ func TestInnerWindow_Theme(t *testing.T) {
 	r := cache.Renderer(w).(*innerWindowRenderer)
 
 	assert.Equal(t, w.Theme().Size(theme.SizeNameInnerWindowRadius), r.bg.CornerRadius)
-	assert.Equal(t, w.Theme().Color(theme.ColorNameInnerWindowBorder, fyne.CurrentApp().Settings().ThemeVariant()), r.bg.FillColor)
+	assert.Equal(t, w.Theme().Color(theme.ColorNameInnerWindowBorder, granio.CurrentApp().Settings().ThemeVariant()), r.bg.FillColor)
 
 	w.SetActive(false)
-	assert.Equal(t, w.Theme().Color(theme.ColorNameInnerWindowBorderInactive, fyne.CurrentApp().Settings().ThemeVariant()), r.bg.FillColor)
+	assert.Equal(t, w.Theme().Color(theme.ColorNameInnerWindowBorderInactive, granio.CurrentApp().Settings().ThemeVariant()), r.bg.FillColor)
 	w.SetActive(true)
-	assert.Equal(t, w.Theme().Color(theme.ColorNameInnerWindowBorder, fyne.CurrentApp().Settings().ThemeVariant()), r.bg.FillColor)
+	assert.Equal(t, w.Theme().Color(theme.ColorNameInnerWindowBorder, granio.CurrentApp().Settings().ThemeVariant()), r.bg.FillColor)
 }

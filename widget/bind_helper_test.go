@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v2/data/binding"
 )
 
 func TestBasicBinder(t *testing.T) {

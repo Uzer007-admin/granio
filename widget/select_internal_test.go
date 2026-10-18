@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestSelect_SetOptions(t *testing.T) {
@@ -43,12 +43,12 @@ func TestSelectRenderer_TapAnimation(t *testing.T) {
 	sel := NewSelect([]string{"one"}, func(string) {})
 	w := test.NewWindow(sel)
 	defer w.Close()
-	w.Resize(sel.MinSize().Add(fyne.NewSize(10, 10)))
+	w.Resize(sel.MinSize().Add(granio.NewSize(10, 10)))
 	sel.Resize(sel.MinSize())
 	sel.Refresh()
 
 	path := "select/desktop/tap_animation.png"
-	if fyne.CurrentDevice().IsMobile() {
+	if granio.CurrentDevice().IsMobile() {
 		path = "select/mobile/tap_animation.png"
 	}
 

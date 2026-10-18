@@ -10,40 +10,40 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestAssertCanvasTappableAt(t *testing.T) {
 	c := test.NewCanvas()
 	b := widget.NewButton("foo", nil)
 	c.SetContent(b)
-	c.Resize(fyne.NewSize(300, 300))
-	b.Resize(fyne.NewSize(100, 100))
-	b.Move(fyne.NewPos(100, 100))
+	c.Resize(granio.NewSize(300, 300))
+	b.Resize(granio.NewSize(100, 100))
+	b.Move(granio.NewPos(100, 100))
 
 	tt := &testing.T{}
-	assert.True(t, test.AssertCanvasTappableAt(tt, c, fyne.NewPos(101, 101)), "tappable found")
+	assert.True(t, test.AssertCanvasTappableAt(tt, c, granio.NewPos(101, 101)), "tappable found")
 	assert.False(t, tt.Failed(), "test did not fail")
 
 	tt = &testing.T{}
-	assert.False(t, test.AssertCanvasTappableAt(tt, c, fyne.NewPos(99, 99)), "tappable not found")
+	assert.False(t, test.AssertCanvasTappableAt(tt, c, granio.NewPos(99, 99)), "tappable not found")
 	assert.True(t, tt.Failed(), "test failed")
 }
 
 func TestAssertObjectRendersToImage(t *testing.T) {
 	obj := canvas.NewCircle(color.Black)
-	obj.Resize(fyne.NewSize(20, 20))
+	obj.Resize(granio.NewSize(20, 20))
 
 	test.AssertObjectRendersToImage(t, "circle.png", obj)
 }
 
 func TestRenderObjectToMarkup(t *testing.T) {
 	obj := canvas.NewCircle(color.Black)
-	obj.Resize(fyne.NewSize(20, 20))
+	obj.Resize(granio.NewSize(20, 20))
 
 	want, err := os.ReadFile("testdata/circle.xml")
 	require.NoError(t, err)
@@ -55,7 +55,7 @@ func TestRenderObjectToMarkup(t *testing.T) {
 
 func TestAssertObjectRendersToMarkup(t *testing.T) {
 	obj := canvas.NewCircle(color.Black)
-	obj.Resize(fyne.NewSize(20, 20))
+	obj.Resize(granio.NewSize(20, 20))
 
 	assert.True(t, test.AssertObjectRendersToMarkup(t, "circle.xml", obj), "existing master is equal to rendered markup")
 }
@@ -63,7 +63,7 @@ func TestAssertObjectRendersToMarkup(t *testing.T) {
 func TestAssertRendersToImage(t *testing.T) {
 	c := test.NewCanvas() // no painter, would be cycle - images will be blank
 	c.SetContent(canvas.NewCircle(color.Black))
-	c.Resize(fyne.NewSize(10, 10))
+	c.Resize(granio.NewSize(10, 10))
 
 	t.Run("non-existing master", func(t *testing.T) {
 		tt := &testing.T{}
@@ -82,7 +82,7 @@ func TestAssertRendersToImage(t *testing.T) {
 	})
 
 	t.Run("diffing master", func(t *testing.T) {
-		c.Resize(fyne.NewSize(15, 15))
+		c.Resize(granio.NewSize(15, 15))
 
 		tt := &testing.T{}
 		assert.False(t, test.AssertRendersToImage(tt, "image_diffing_master.png", c), "existing master is not equal to rendered image")
@@ -148,18 +148,18 @@ func TestDrag(t *testing.T) {
 	c.SetPadded(false)
 	d := &draggable{}
 	c.SetContent(container.NewWithoutLayout(d))
-	c.Resize(fyne.NewSize(30, 30))
-	d.Resize(fyne.NewSize(20, 20))
-	d.Move(fyne.NewPos(10, 10))
+	c.Resize(granio.NewSize(30, 30))
+	d.Resize(granio.NewSize(20, 20))
+	d.Move(granio.NewPos(10, 10))
 
-	test.Drag(c, fyne.NewPos(5, 5), 10, 10)
+	test.Drag(c, granio.NewPos(5, 5), 10, 10)
 	assert.Nil(t, d.event, "nothing happens if no draggable was found at position")
 	assert.False(t, d.wasDragged)
 
-	test.Drag(c, fyne.NewPos(15, 15), 17, 42)
-	assert.Equal(t, &fyne.DragEvent{
-		PointEvent: fyne.PointEvent{Position: fyne.Position{X: 5, Y: 5}},
-		Dragged:    fyne.NewDelta(17, 42),
+	test.Drag(c, granio.NewPos(15, 15), 17, 42)
+	assert.Equal(t, &granio.DragEvent{
+		PointEvent: granio.PointEvent{Position: granio.Position{X: 5, Y: 5}},
+		Dragged:    granio.NewDelta(17, 42),
 	}, d.event)
 	assert.True(t, d.wasDragged)
 }
@@ -243,15 +243,15 @@ func TestScroll(t *testing.T) {
 	c.SetPadded(false)
 	s := &scrollable{}
 	c.SetContent(container.NewWithoutLayout(s))
-	c.Resize(fyne.NewSize(30, 30))
-	s.Resize(fyne.NewSize(20, 20))
-	s.Move(fyne.NewPos(10, 10))
+	c.Resize(granio.NewSize(30, 30))
+	s.Resize(granio.NewSize(20, 20))
+	s.Move(granio.NewPos(10, 10))
 
-	test.Scroll(c, fyne.NewPos(5, 5), 10, 10)
+	test.Scroll(c, granio.NewPos(5, 5), 10, 10)
 	assert.Nil(t, s.event, "nothing happens if no scrollable was found at position")
 
-	test.Scroll(c, fyne.NewPos(15, 15), 17, 42)
-	assert.Equal(t, &fyne.ScrollEvent{Scrolled: fyne.NewDelta(17, 42)}, s.event)
+	test.Scroll(c, granio.NewPos(15, 15), 17, 42)
+	assert.Equal(t, &granio.ScrollEvent{Scrolled: granio.NewDelta(17, 42)}, s.event)
 }
 
 func readMarkup(t *testing.T, path string) string {
@@ -260,11 +260,11 @@ func readMarkup(t *testing.T, path string) string {
 	return string(raw)
 }
 
-var _ fyne.Draggable = (*draggable)(nil)
+var _ granio.Draggable = (*draggable)(nil)
 
 type draggable struct {
 	widget.BaseWidget
-	event      *fyne.DragEvent
+	event      *granio.DragEvent
 	wasDragged bool
 }
 
@@ -272,11 +272,11 @@ func (d *draggable) DragEnd() {
 	d.wasDragged = true
 }
 
-func (d *draggable) Dragged(event *fyne.DragEvent) {
+func (d *draggable) Dragged(event *granio.DragEvent) {
 	d.event = event
 }
 
-var _ fyne.Focusable = (*focusable)(nil)
+var _ granio.Focusable = (*focusable)(nil)
 
 type focusable struct {
 	widget.BaseWidget
@@ -291,19 +291,19 @@ func (f *focusable) FocusLost() {
 	f.focused = false
 }
 
-func (*focusable) TypedKey(*fyne.KeyEvent) {
+func (*focusable) TypedKey(*granio.KeyEvent) {
 }
 
 func (*focusable) TypedRune(rune) {
 }
 
-var _ fyne.Scrollable = (*scrollable)(nil)
+var _ granio.Scrollable = (*scrollable)(nil)
 
 type scrollable struct {
 	widget.BaseWidget
-	event *fyne.ScrollEvent
+	event *granio.ScrollEvent
 }
 
-func (s *scrollable) Scrolled(event *fyne.ScrollEvent) {
+func (s *scrollable) Scrolled(event *granio.ScrollEvent) {
 	s.event = event
 }

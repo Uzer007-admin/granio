@@ -1,0 +1,8 @@
+{"event":"ready"}
+{"composition":false,"end":0,"event":"state","start":0,"text":""}
+{"composition":true,"end":0,"event":"state","start":0,"text":""}
+{"event":"commit","text":"日本語"}
+{"composition":false,"end":3,"event":"state","start":3,"text":"日本語"}
+{"event":"commit","text":""}
+{"event":"undo","text":""}
+{"composition":false,"end":0,"event":"state","start":0,"text":""}

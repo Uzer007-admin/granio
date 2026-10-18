@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-13",
+  "root_race_packages": {
+    "windows": 46,
+    "linux": 48
+  },
+  "native_cycles": 30,
+  "native_race_cgocheck2_checkptr2": true,
+  "winrt_mask": 27,
+  "win32_mask": 4,
+  "windows_gallery": [
+    "mica",
+    "mica-alt",
+    "acrylic"
+  ],
+  "linux_gallery": [
+    "x11",
+    "wayland-gles2"
+  ],
+  "wasm_build": true,
+  "macos_arm64_software_build": true,
+  "real_os_setting_changes_tested": false,
+  "full_tz_accepted": false
+}

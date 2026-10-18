@@ -1,12 +1,12 @@
 package embedded
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
 // TouchDownEvent is for indicating that an embedded device touch screen or pointing device was pressed.
 //
 // Since: 2.7
 type TouchDownEvent struct {
-	Position fyne.Position
+	Position granio.Position
 	ID       int
 }
 
@@ -16,7 +16,7 @@ func (*TouchDownEvent) isEvent() {}
 //
 // Since: 2.7
 type TouchMoveEvent struct {
-	Position fyne.Position
+	Position granio.Position
 	ID       int
 }
 
@@ -26,7 +26,7 @@ func (*TouchMoveEvent) isEvent() {}
 //
 // Since: 2.7
 type TouchUpEvent struct {
-	Position fyne.Position
+	Position granio.Position
 	ID       int
 }
 

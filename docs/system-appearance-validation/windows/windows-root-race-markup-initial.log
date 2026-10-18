@@ -1,0 +1,115 @@
+ok  	fyne.io/fyne/v2	(cached)
+ok  	fyne.io/fyne/v2/app	34.800s
+?   	fyne.io/fyne/v2/cache	[no test files]
+ok  	fyne.io/fyne/v2/canvas	7.428s
+?   	fyne.io/fyne/v2/cmd/fyne	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/commands	(cached)
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/commands	4.148s
+?   	fyne.io/fyne/v2/cmd/fyne/internal/mobile	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres	(cached)
+?   	fyne.io/fyne/v2/cmd/fyne/internal/templates	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/util	(cached)
+ok  	fyne.io/fyne/v2/cmd/fyne_demo	5.003s
+?   	fyne.io/fyne/v2/cmd/fyne_demo/data	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_demo/tutorials	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_gallery	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings	[no test files]
+?   	fyne.io/fyne/v2/cmd/fyne_settings/data	[no test files]
+ok  	fyne.io/fyne/v2/cmd/fyne_settings/settings	5.682s
+?   	fyne.io/fyne/v2/cmd/hello	[no test files]
+ok  	fyne.io/fyne/v2/container	7.409s
+ok  	fyne.io/fyne/v2/data/binding	2.316s
+ok  	fyne.io/fyne/v2/data/validation	(cached)
+ok  	fyne.io/fyne/v2/dialog	37.700s
+ok  	fyne.io/fyne/v2/driver	(cached)
+ok  	fyne.io/fyne/v2/driver/desktop	1.429s
+?   	fyne.io/fyne/v2/driver/embedded	[no test files]
+?   	fyne.io/fyne/v2/driver/mobile	[no test files]
+ok  	fyne.io/fyne/v2/driver/software	4.169s
+ok  	fyne.io/fyne/v2/internal	2.981s
+ok  	fyne.io/fyne/v2/internal/animation	(cached)
+ok  	fyne.io/fyne/v2/internal/app	1.496s
+ok  	fyne.io/fyne/v2/internal/async	(cached)
+?   	fyne.io/fyne/v2/internal/build	[no test files]
+ok  	fyne.io/fyne/v2/internal/cache	(cached)
+ok  	fyne.io/fyne/v2/internal/color	(cached)
+ok  	fyne.io/fyne/v2/internal/driver	3.640s
+ok  	fyne.io/fyne/v2/internal/driver/common	4.447s
+ok  	fyne.io/fyne/v2/internal/driver/embedded	3.298s
+ok  	fyne.io/fyne/v2/internal/driver/glfw	61.328s
+ok  	fyne.io/fyne/v2/internal/driver/mobile	9.070s
+?   	fyne.io/fyne/v2/internal/driver/mobile/app	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/key	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/mouse	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/paint	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/size	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/event/touch	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/gl	[no test files]
+?   	fyne.io/fyne/v2/internal/driver/mobile/mobileinit	[no test files]
+?   	fyne.io/fyne/v2/internal/goos	[no test files]
+ok  	fyne.io/fyne/v2/internal/metadata	(cached)
+ok  	fyne.io/fyne/v2/internal/painter	11.353s
+?   	fyne.io/fyne/v2/internal/painter/geom	[no test files]
+ok  	fyne.io/fyne/v2/internal/painter/gl	2.356s
+ok  	fyne.io/fyne/v2/internal/painter/software	11.973s
+ok  	fyne.io/fyne/v2/internal/repository	35.088s
+ok  	fyne.io/fyne/v2/internal/repository/mime	(cached)
+?   	fyne.io/fyne/v2/internal/scale	[no test files]
+ok  	fyne.io/fyne/v2/internal/scheduler	(cached)
+ok  	fyne.io/fyne/v2/internal/svg	(cached)
+ok  	fyne.io/fyne/v2/internal/test	(cached)
+ok  	fyne.io/fyne/v2/internal/theme	(cached)
+ok  	fyne.io/fyne/v2/internal/widget	1.923s
+ok  	fyne.io/fyne/v2/lang	(cached)
+ok  	fyne.io/fyne/v2/layout	2.878s
+ok  	fyne.io/fyne/v2/storage	1.782s
+ok  	fyne.io/fyne/v2/storage/repository	(cached)
+--- FAIL: Test_knownColor (0.00s)
+    markup_renderer_test.go:20: 
+        	Error Trace:	X:/fyne/test/markup_renderer_test.go:20
+        	Error:      	Should NOT be empty, but was 
+        	Test:       	Test_knownColor
+        	Messages:   	color name foregroundOnButton is not known
+2026/10/13 17:06:16 Fyne error:  
+2026/10/13 17:06:16   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:06:16   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:06:16 Fyne error:  
+2026/10/13 17:06:16   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:06:16   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:06:16 Fyne error:  Failed to load image
+2026/10/13 17:06:16   Cause: image: unknown format
+2026/10/13 17:06:16   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:06:16 Fyne error:  
+2026/10/13 17:06:16   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:06:16   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:06:16 Fyne error:  
+2026/10/13 17:06:16   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:06:16   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:06:16 Fyne error:  Failed to load image
+2026/10/13 17:06:16   Cause: image: unknown format
+2026/10/13 17:06:16   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:06:16 Fyne error:  
+2026/10/13 17:06:16   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:06:16   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:06:16 Fyne error:  
+2026/10/13 17:06:16   Cause: could not load SVG, falling back to static content: EOF
+2026/10/13 17:06:16   At: X:/fyne/theme/icons.go:1406
+2026/10/13 17:06:16 Fyne error:  Failed to load image
+2026/10/13 17:06:16   Cause: image: unknown format
+2026/10/13 17:06:16   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:06:16 Fyne error:  Failed to load image
+2026/10/13 17:06:16   Cause: image: unknown format
+2026/10/13 17:06:16   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:06:16 Fyne error:  Failed to load image
+2026/10/13 17:06:16   Cause: image: unknown format
+2026/10/13 17:06:16   At: X:/fyne/canvas/image.go:147
+2026/10/13 17:06:16 Fyne error:  Failed to load image
+2026/10/13 17:06:16   Cause: image: unknown format
+2026/10/13 17:06:16   At: X:/fyne/canvas/image.go:147
+FAIL
+FAIL	fyne.io/fyne/v2/test	3.103s
+ok  	fyne.io/fyne/v2/theme	2.034s
+ok  	fyne.io/fyne/v2/tools/playground	2.040s
+ok  	fyne.io/fyne/v2/widget	33.496s
+FAIL

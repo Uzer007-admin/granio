@@ -4,19 +4,19 @@ import (
 	"testing"
 	"time"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAssertNotificationSent(t *testing.T) {
-	n := fyne.NewNotification("Test Title", "Some content")
-	myApp := fyne.CurrentApp()
+	n := granio.NewNotification("Test Title", "Some content")
+	myApp := granio.CurrentApp()
 
 	AssertNotificationSent(t, n, func() {
-		fyne.CurrentApp().SendNotification(n)
+		granio.CurrentApp().SendNotification(n)
 	})
-	assert.Equal(t, myApp, fyne.CurrentApp())
+	assert.Equal(t, myApp, granio.CurrentApp())
 }
 
 func TestAssertNotificationSent_Nil(t *testing.T) {
@@ -28,32 +28,32 @@ func TestAssertNotificationSent_Nil(t *testing.T) {
 func TestAssertNotificationSent_NotSent(t *testing.T) {
 	tt := &testing.T{}
 
-	AssertNotificationSent(tt, &fyne.Notification{}, func() {
+	AssertNotificationSent(tt, &granio.Notification{}, func() {
 		// don't send anything
 	})
 	assert.True(t, tt.Failed(), "notification assert should fail if no notification was sent")
 }
 
 func TestAssertNotificationScheduled(t *testing.T) {
-	n := fyne.NewNotification("Reminder", "Take a break")
-	myApp := fyne.CurrentApp()
+	n := granio.NewNotification("Reminder", "Take a break")
+	myApp := granio.CurrentApp()
 
-	var scheduled *fyne.ScheduledNotification
+	var scheduled *granio.ScheduledNotification
 	AssertNotificationScheduled(t, n, func() {
-		s, err := fyne.CurrentApp().ScheduleNotification(n, time.Now().Add(time.Minute))
+		s, err := granio.CurrentApp().ScheduleNotification(n, time.Now().Add(time.Minute))
 		assert.NoError(t, err)
 		scheduled = s
 	})
 	assert.NotNil(t, scheduled)
 	assert.NotEmpty(t, scheduled.ID())
-	assert.Equal(t, myApp, fyne.CurrentApp())
+	assert.Equal(t, myApp, granio.CurrentApp())
 }
 
 func TestAssertNotificationScheduled_CancelClearsState(t *testing.T) {
-	n := fyne.NewNotification("Reminder", "Take a break")
-	s, err := fyne.CurrentApp().ScheduleNotification(n, time.Now().Add(time.Minute))
+	n := granio.NewNotification("Reminder", "Take a break")
+	s, err := granio.CurrentApp().ScheduleNotification(n, time.Now().Add(time.Minute))
 	assert.NoError(t, err)
 
-	err = fyne.CurrentApp().CancelScheduledNotification(s.ID())
+	err = granio.CurrentApp().CancelScheduledNotification(s.ID())
 	assert.NoError(t, err)
 }

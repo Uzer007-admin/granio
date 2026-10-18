@@ -1,0 +1,38 @@
+=== RUN   TestWindowVisualsLinuxPolicy
+=== RUN   TestWindowVisualsLinuxPolicy/supported
+=== RUN   TestWindowVisualsLinuxPolicy/compositor_off
+=== RUN   TestWindowVisualsLinuxPolicy/blur_off
+=== RUN   TestWindowVisualsLinuxPolicy/high_contrast
+=== RUN   TestWindowVisualsLinuxPolicy/transparency_off
+=== RUN   TestWindowVisualsLinuxPolicy/renderer
+=== RUN   TestWindowVisualsLinuxPolicy/format
+--- PASS: TestWindowVisualsLinuxPolicy (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/supported (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/compositor_off (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/blur_off (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/high_contrast (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/transparency_off (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/renderer (0.00s)
+    --- PASS: TestWindowVisualsLinuxPolicy/format (0.00s)
+=== RUN   TestNativeWindowVisualsLinuxPortable
+=== RUN   TestNativeWindowVisualsLinuxPortable/Transparent
+    window_visuals_linux_test.go:80: hidden: {RequestID:1 Phase:Ready Requested:Transparent Selected:Transparent Backend:4 SurfaceReady:true NativeAccepted:true Reason:None NativeCode:0 PreparedFrames:2 FirstFrameBeforeShow:true} caps={OSBackdrops:17 RendererBackdrops:63 OSKnown:true RendererKnown:true SurfaceKnown:true TransparentSurface:true AlphaSurface:true CompositorAvailable:true AlphaBits:8 CanChangeWithoutRecreate:true Generation:1 OSBuild:0 Backend:4}
+=== RUN   TestNativeWindowVisualsLinuxPortable/System_Blur
+    window_visuals_linux_test.go:80: hidden: {RequestID:1 Phase:Fallback Requested:System Blur Selected:Opaque Backend:4 SurfaceReady:true NativeAccepted:false Reason:BlurUnavailable NativeCode:0 PreparedFrames:2 FirstFrameBeforeShow:true} caps={OSBackdrops:17 RendererBackdrops:63 OSKnown:true RendererKnown:true SurfaceKnown:true TransparentSurface:true AlphaSurface:true CompositorAvailable:true AlphaBits:8 CanChangeWithoutRecreate:true Generation:1 OSBuild:0 Backend:4}
+--- PASS: TestNativeWindowVisualsLinuxPortable (4.41s)
+    --- PASS: TestNativeWindowVisualsLinuxPortable/Transparent (2.37s)
+    --- PASS: TestNativeWindowVisualsLinuxPortable/System_Blur (2.04s)
+=== RUN   TestNativeWindowVisualsLinuxCapabilityChanges
+    window_visuals_linux_test.go:151: owned compositor background fixture
+--- SKIP: TestNativeWindowVisualsLinuxCapabilityChanges (0.00s)
+=== RUN   TestNativeWindowVisualsLifecycleAndAlpha
+    window_visuals_native_test.go:161: first show: status={RequestID:1 Phase:Fallback Requested:Mica Selected:Opaque Backend:4 SurfaceReady:true NativeAccepted:false Reason:UnsupportedOS NativeCode:0 PreparedFrames:4 FirstFrameBeforeShow:true} capabilities={OSBackdrops:17 RendererBackdrops:63 OSKnown:true RendererKnown:true SurfaceKnown:true TransparentSurface:true AlphaSurface:true CompositorAvailable:true AlphaBits:8 CanChangeWithoutRecreate:true Generation:1 OSBuild:0 Backend:4}
+--- PASS: TestNativeWindowVisualsLifecycleAndAlpha (0.40s)
+=== RUN   TestNativeWindowVisualsFormatReservationAndPendingClose
+--- PASS: TestNativeWindowVisualsFormatReservationAndPendingClose (0.34s)
+=== RUN   TestNativeWindowVisualsRendererFailureStaysHidden
+--- PASS: TestNativeWindowVisualsRendererFailureStaysHidden (0.08s)
+=== RUN   TestNativeWindowVisualsMaterialSurfaceCache
+--- PASS: TestNativeWindowVisualsMaterialSurfaceCache (0.11s)
+PASS
+ok  	fyne.io/fyne/v2/internal/driver/glfw	6.622s

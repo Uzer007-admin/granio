@@ -3,8 +3,8 @@ package widget
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +21,7 @@ func newExtendedProgressBar() *extendedProgressBar {
 
 func TestProgressBarRenderer_Extended_Layout(t *testing.T) {
 	bar := newExtendedProgressBar()
-	bar.Resize(fyne.NewSize(100, 100))
+	bar.Resize(granio.NewSize(100, 100))
 	r := test.TempWidgetRenderer(t, bar).(*progressRenderer)
 
 	assert.Equal(t, 0.0, bar.Value)

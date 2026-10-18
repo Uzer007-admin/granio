@@ -7,12 +7,12 @@
 package app
 
 import (
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/lifecycle"
-	"fyne.io/fyne/v2/internal/driver/mobile/gl"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
 
 	// Initialize necessary mobile functionality, such as logging.
-	_ "fyne.io/fyne/v2/internal/driver/mobile/mobileinit"
+	_ "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit"
 )
 
 // App is how a GUI mobile application interacts with the OS.

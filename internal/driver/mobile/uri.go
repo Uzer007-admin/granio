@@ -3,14 +3,14 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
-func nativeURI(path string) fyne.URI {
+func nativeURI(path string) granio.URI {
 	uri, err := storage.ParseURI(path)
 	if err != nil {
-		fyne.LogError("Error on parsing uri", err)
+		granio.LogError("Error on parsing uri", err)
 	}
 	return uri
 }

@@ -1,0 +1,17 @@
+{
+  "sources.tar.gz": {
+    "sha256": "d2176c9b4d581d25510773c030c5de222c88a17a937738394ba89e9a974bd6c5",
+    "size": 18430764,
+    "file_count": 3423,
+    "unsafe_paths": [],
+    "credential_filename_candidates": []
+  },
+  "module-proxy.tar.gz": {
+    "sha256": "438ff4e847505e214faafaa0a237fe6242e5b7d9ebbd653428bfed2b7b1b609b",
+    "size": 136785076,
+    "file_count": 915,
+    "unsafe_paths": [],
+    "credential_filename_candidates": []
+  },
+  "scope": "Tracked sources of five public upstream repositories and explicitly added project test/build scripts; Go cache restricted to public module paths in go list -m all. No Git metadata, SSH data, home-directory files or environment files."
+}

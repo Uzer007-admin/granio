@@ -4,14 +4,14 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestArbitraryPolygon_NewAndDefaults(t *testing.T) {
-	points := []fyne.Position{
+	points := []granio.Position{
 		{X: 0, Y: 0},
 		{X: 100, Y: 0},
 		{X: 100, Y: 100},
@@ -37,13 +37,13 @@ func TestArbitraryPolygon_Properties(t *testing.T) {
 }
 
 func TestArbitraryPolygon_RendersToMarkup(t *testing.T) {
-	points := []fyne.Position{
+	points := []granio.Position{
 		{X: 0, Y: 0},
 		{X: 10, Y: 0},
 		{X: 10, Y: 10},
 	}
 	p := canvas.NewArbitraryPolygon(points, color.White)
-	p.Resize(fyne.NewSize(10, 10))
+	p.Resize(granio.NewSize(10, 10))
 
 	test.AssertObjectRendersToMarkup(t, "arbitrary_polygon.xml", p)
 }

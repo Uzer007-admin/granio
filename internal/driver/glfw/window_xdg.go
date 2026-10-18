@@ -2,8 +2,8 @@
 
 package glfw
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-func (w *window) platformResize(canvasSize fyne.Size) {
+func (w *window) platformResize(canvasSize granio.Size) {
 	w.canvas.Resize(canvasSize)
 }

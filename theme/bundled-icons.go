@@ -3,13 +3,13 @@ package theme
 import (
 	_ "embed"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 //go:embed icons/fyne.png
 var fyneLogo []byte
 
-var fynelogo = &fyne.StaticResource{
+var fynelogo = &granio.StaticResource{
 	StaticName:    "fyne.png",
 	StaticContent: fyneLogo,
 }
@@ -17,7 +17,7 @@ var fynelogo = &fyne.StaticResource{
 //go:embed icons/cancel.svg
 var cancelIcon []byte
 
-var cancelIconRes = &fyne.StaticResource{
+var cancelIconRes = &granio.StaticResource{
 	StaticName:    "cancel.svg",
 	StaticContent: cancelIcon,
 }
@@ -25,7 +25,7 @@ var cancelIconRes = &fyne.StaticResource{
 //go:embed icons/check.svg
 var checkIcon []byte
 
-var checkIconRes = &fyne.StaticResource{
+var checkIconRes = &granio.StaticResource{
 	StaticName:    "check.svg",
 	StaticContent: checkIcon,
 }
@@ -33,7 +33,7 @@ var checkIconRes = &fyne.StaticResource{
 //go:embed icons/delete.svg
 var deleteIcon []byte
 
-var deleteIconRes = &fyne.StaticResource{
+var deleteIconRes = &granio.StaticResource{
 	StaticName:    "delete.svg",
 	StaticContent: deleteIcon,
 }
@@ -41,7 +41,7 @@ var deleteIconRes = &fyne.StaticResource{
 //go:embed icons/search.svg
 var searchIcon []byte
 
-var searchIconRes = &fyne.StaticResource{
+var searchIconRes = &granio.StaticResource{
 	StaticName:    "search.svg",
 	StaticContent: searchIcon,
 }
@@ -49,7 +49,7 @@ var searchIconRes = &fyne.StaticResource{
 //go:embed icons/search-replace.svg
 var searchreplaceIcon []byte
 
-var searchreplaceIconRes = &fyne.StaticResource{
+var searchreplaceIconRes = &granio.StaticResource{
 	StaticName:    "search-replace.svg",
 	StaticContent: searchreplaceIcon,
 }
@@ -57,7 +57,7 @@ var searchreplaceIconRes = &fyne.StaticResource{
 //go:embed icons/menu.svg
 var menuIcon []byte
 
-var menuIconRes = &fyne.StaticResource{
+var menuIconRes = &granio.StaticResource{
 	StaticName:    "menu.svg",
 	StaticContent: menuIcon,
 }
@@ -65,7 +65,7 @@ var menuIconRes = &fyne.StaticResource{
 //go:embed icons/menu-expand.svg
 var menuexpandIcon []byte
 
-var menuexpandIconRes = &fyne.StaticResource{
+var menuexpandIconRes = &granio.StaticResource{
 	StaticName:    "menu-expand.svg",
 	StaticContent: menuexpandIcon,
 }
@@ -73,7 +73,7 @@ var menuexpandIconRes = &fyne.StaticResource{
 //go:embed icons/check-box.svg
 var checkboxIcon []byte
 
-var checkboxIconRes = &fyne.StaticResource{
+var checkboxIconRes = &granio.StaticResource{
 	StaticName:    "check-box.svg",
 	StaticContent: checkboxIcon,
 }
@@ -81,7 +81,7 @@ var checkboxIconRes = &fyne.StaticResource{
 //go:embed icons/check-box-checked.svg
 var checkboxcheckedIcon []byte
 
-var checkboxcheckedIconRes = &fyne.StaticResource{
+var checkboxcheckedIconRes = &granio.StaticResource{
 	StaticName:    "check-box-checked.svg",
 	StaticContent: checkboxcheckedIcon,
 }
@@ -89,7 +89,7 @@ var checkboxcheckedIconRes = &fyne.StaticResource{
 //go:embed icons/check-box-fill.svg
 var checkboxfillIcon []byte
 
-var checkboxfillIconRes = &fyne.StaticResource{
+var checkboxfillIconRes = &granio.StaticResource{
 	StaticName:    "check-box-fill.svg",
 	StaticContent: checkboxfillIcon,
 }
@@ -97,7 +97,7 @@ var checkboxfillIconRes = &fyne.StaticResource{
 //go:embed icons/check-box-partial.svg
 var checkboxpartialIcon []byte
 
-var checkboxpartialIconRes = &fyne.StaticResource{
+var checkboxpartialIconRes = &granio.StaticResource{
 	StaticName:    "check-box-partial.svg",
 	StaticContent: checkboxpartialIcon,
 }
@@ -105,7 +105,7 @@ var checkboxpartialIconRes = &fyne.StaticResource{
 //go:embed icons/radio-button.svg
 var radiobuttonIcon []byte
 
-var radiobuttonIconRes = &fyne.StaticResource{
+var radiobuttonIconRes = &granio.StaticResource{
 	StaticName:    "radio-button.svg",
 	StaticContent: radiobuttonIcon,
 }
@@ -113,7 +113,7 @@ var radiobuttonIconRes = &fyne.StaticResource{
 //go:embed icons/radio-button-checked.svg
 var radiobuttoncheckedIcon []byte
 
-var radiobuttoncheckedIconRes = &fyne.StaticResource{
+var radiobuttoncheckedIconRes = &granio.StaticResource{
 	StaticName:    "radio-button-checked.svg",
 	StaticContent: radiobuttoncheckedIcon,
 }
@@ -121,7 +121,7 @@ var radiobuttoncheckedIconRes = &fyne.StaticResource{
 //go:embed icons/radio-button-fill.svg
 var radiobuttonfillIcon []byte
 
-var radiobuttonfillIconRes = &fyne.StaticResource{
+var radiobuttonfillIconRes = &granio.StaticResource{
 	StaticName:    "radio-button-fill.svg",
 	StaticContent: radiobuttonfillIcon,
 }
@@ -129,7 +129,7 @@ var radiobuttonfillIconRes = &fyne.StaticResource{
 //go:embed icons/content-add.svg
 var contentaddIcon []byte
 
-var contentaddIconRes = &fyne.StaticResource{
+var contentaddIconRes = &granio.StaticResource{
 	StaticName:    "content-add.svg",
 	StaticContent: contentaddIcon,
 }
@@ -137,7 +137,7 @@ var contentaddIconRes = &fyne.StaticResource{
 //go:embed icons/content-remove.svg
 var contentremoveIcon []byte
 
-var contentremoveIconRes = &fyne.StaticResource{
+var contentremoveIconRes = &granio.StaticResource{
 	StaticName:    "content-remove.svg",
 	StaticContent: contentremoveIcon,
 }
@@ -145,7 +145,7 @@ var contentremoveIconRes = &fyne.StaticResource{
 //go:embed icons/content-cut.svg
 var contentcutIcon []byte
 
-var contentcutIconRes = &fyne.StaticResource{
+var contentcutIconRes = &granio.StaticResource{
 	StaticName:    "content-cut.svg",
 	StaticContent: contentcutIcon,
 }
@@ -153,7 +153,7 @@ var contentcutIconRes = &fyne.StaticResource{
 //go:embed icons/content-copy.svg
 var contentcopyIcon []byte
 
-var contentcopyIconRes = &fyne.StaticResource{
+var contentcopyIconRes = &granio.StaticResource{
 	StaticName:    "content-copy.svg",
 	StaticContent: contentcopyIcon,
 }
@@ -161,7 +161,7 @@ var contentcopyIconRes = &fyne.StaticResource{
 //go:embed icons/content-paste.svg
 var contentpasteIcon []byte
 
-var contentpasteIconRes = &fyne.StaticResource{
+var contentpasteIconRes = &granio.StaticResource{
 	StaticName:    "content-paste.svg",
 	StaticContent: contentpasteIcon,
 }
@@ -169,7 +169,7 @@ var contentpasteIconRes = &fyne.StaticResource{
 //go:embed icons/content-redo.svg
 var contentredoIcon []byte
 
-var contentredoIconRes = &fyne.StaticResource{
+var contentredoIconRes = &granio.StaticResource{
 	StaticName:    "content-redo.svg",
 	StaticContent: contentredoIcon,
 }
@@ -177,7 +177,7 @@ var contentredoIconRes = &fyne.StaticResource{
 //go:embed icons/content-undo.svg
 var contentundoIcon []byte
 
-var contentundoIconRes = &fyne.StaticResource{
+var contentundoIconRes = &granio.StaticResource{
 	StaticName:    "content-undo.svg",
 	StaticContent: contentundoIcon,
 }
@@ -185,7 +185,7 @@ var contentundoIconRes = &fyne.StaticResource{
 //go:embed icons/color-achromatic.svg
 var colorachromaticIcon []byte
 
-var colorachromaticIconRes = &fyne.StaticResource{
+var colorachromaticIconRes = &granio.StaticResource{
 	StaticName:    "color-achromatic.svg",
 	StaticContent: colorachromaticIcon,
 }
@@ -193,7 +193,7 @@ var colorachromaticIconRes = &fyne.StaticResource{
 //go:embed icons/color-chromatic.svg
 var colorchromaticIcon []byte
 
-var colorchromaticIconRes = &fyne.StaticResource{
+var colorchromaticIconRes = &granio.StaticResource{
 	StaticName:    "color-chromatic.svg",
 	StaticContent: colorchromaticIcon,
 }
@@ -201,7 +201,7 @@ var colorchromaticIconRes = &fyne.StaticResource{
 //go:embed icons/color-palette.svg
 var colorpaletteIcon []byte
 
-var colorpaletteIconRes = &fyne.StaticResource{
+var colorpaletteIconRes = &granio.StaticResource{
 	StaticName:    "color-palette.svg",
 	StaticContent: colorpaletteIcon,
 }
@@ -209,7 +209,7 @@ var colorpaletteIconRes = &fyne.StaticResource{
 //go:embed icons/document.svg
 var documentIcon []byte
 
-var documentIconRes = &fyne.StaticResource{
+var documentIconRes = &granio.StaticResource{
 	StaticName:    "document.svg",
 	StaticContent: documentIcon,
 }
@@ -217,7 +217,7 @@ var documentIconRes = &fyne.StaticResource{
 //go:embed icons/document-create.svg
 var documentcreateIcon []byte
 
-var documentcreateIconRes = &fyne.StaticResource{
+var documentcreateIconRes = &granio.StaticResource{
 	StaticName:    "document-create.svg",
 	StaticContent: documentcreateIcon,
 }
@@ -225,7 +225,7 @@ var documentcreateIconRes = &fyne.StaticResource{
 //go:embed icons/document-print.svg
 var documentprintIcon []byte
 
-var documentprintIconRes = &fyne.StaticResource{
+var documentprintIconRes = &granio.StaticResource{
 	StaticName:    "document-print.svg",
 	StaticContent: documentprintIcon,
 }
@@ -233,7 +233,7 @@ var documentprintIconRes = &fyne.StaticResource{
 //go:embed icons/document-save.svg
 var documentsaveIcon []byte
 
-var documentsaveIconRes = &fyne.StaticResource{
+var documentsaveIconRes = &granio.StaticResource{
 	StaticName:    "document-save.svg",
 	StaticContent: documentsaveIcon,
 }
@@ -241,7 +241,7 @@ var documentsaveIconRes = &fyne.StaticResource{
 //go:embed icons/drag-corner-indicator.svg
 var dragcornerindicatorIcon []byte
 
-var dragcornerindicatorIconRes = &fyne.StaticResource{
+var dragcornerindicatorIconRes = &granio.StaticResource{
 	StaticName:    "drag-corner-indicator.svg",
 	StaticContent: dragcornerindicatorIcon,
 }
@@ -249,7 +249,7 @@ var dragcornerindicatorIconRes = &fyne.StaticResource{
 //go:embed icons/more-horizontal.svg
 var morehorizontalIcon []byte
 
-var morehorizontalIconRes = &fyne.StaticResource{
+var morehorizontalIconRes = &granio.StaticResource{
 	StaticName:    "more-horizontal.svg",
 	StaticContent: morehorizontalIcon,
 }
@@ -257,7 +257,7 @@ var morehorizontalIconRes = &fyne.StaticResource{
 //go:embed icons/more-vertical.svg
 var moreverticalIcon []byte
 
-var moreverticalIconRes = &fyne.StaticResource{
+var moreverticalIconRes = &granio.StaticResource{
 	StaticName:    "more-vertical.svg",
 	StaticContent: moreverticalIcon,
 }
@@ -265,7 +265,7 @@ var moreverticalIconRes = &fyne.StaticResource{
 //go:embed icons/info.svg
 var infoIcon []byte
 
-var infoIconRes = &fyne.StaticResource{
+var infoIconRes = &granio.StaticResource{
 	StaticName:    "info.svg",
 	StaticContent: infoIcon,
 }
@@ -273,7 +273,7 @@ var infoIconRes = &fyne.StaticResource{
 //go:embed icons/question.svg
 var questionIcon []byte
 
-var questionIconRes = &fyne.StaticResource{
+var questionIconRes = &granio.StaticResource{
 	StaticName:    "question.svg",
 	StaticContent: questionIcon,
 }
@@ -281,7 +281,7 @@ var questionIconRes = &fyne.StaticResource{
 //go:embed icons/warning.svg
 var warningIcon []byte
 
-var warningIconRes = &fyne.StaticResource{
+var warningIconRes = &granio.StaticResource{
 	StaticName:    "warning.svg",
 	StaticContent: warningIcon,
 }
@@ -289,7 +289,7 @@ var warningIconRes = &fyne.StaticResource{
 //go:embed icons/error.svg
 var errorIcon []byte
 
-var errorIconRes = &fyne.StaticResource{
+var errorIconRes = &granio.StaticResource{
 	StaticName:    "error.svg",
 	StaticContent: errorIcon,
 }
@@ -297,7 +297,7 @@ var errorIconRes = &fyne.StaticResource{
 //go:embed icons/broken-image.svg
 var brokenimageIcon []byte
 
-var brokenimageIconRes = &fyne.StaticResource{
+var brokenimageIconRes = &granio.StaticResource{
 	StaticName:    "broken-image.svg",
 	StaticContent: brokenimageIcon,
 }
@@ -305,7 +305,7 @@ var brokenimageIconRes = &fyne.StaticResource{
 //go:embed icons/arrow-back.svg
 var arrowbackIcon []byte
 
-var arrowbackIconRes = &fyne.StaticResource{
+var arrowbackIconRes = &granio.StaticResource{
 	StaticName:    "arrow-back.svg",
 	StaticContent: arrowbackIcon,
 }
@@ -313,7 +313,7 @@ var arrowbackIconRes = &fyne.StaticResource{
 //go:embed icons/arrow-down.svg
 var arrowdownIcon []byte
 
-var arrowdownIconRes = &fyne.StaticResource{
+var arrowdownIconRes = &granio.StaticResource{
 	StaticName:    "arrow-down.svg",
 	StaticContent: arrowdownIcon,
 }
@@ -321,7 +321,7 @@ var arrowdownIconRes = &fyne.StaticResource{
 //go:embed icons/arrow-forward.svg
 var arrowforwardIcon []byte
 
-var arrowforwardIconRes = &fyne.StaticResource{
+var arrowforwardIconRes = &granio.StaticResource{
 	StaticName:    "arrow-forward.svg",
 	StaticContent: arrowforwardIcon,
 }
@@ -329,7 +329,7 @@ var arrowforwardIconRes = &fyne.StaticResource{
 //go:embed icons/arrow-up.svg
 var arrowupIcon []byte
 
-var arrowupIconRes = &fyne.StaticResource{
+var arrowupIconRes = &granio.StaticResource{
 	StaticName:    "arrow-up.svg",
 	StaticContent: arrowupIcon,
 }
@@ -337,7 +337,7 @@ var arrowupIconRes = &fyne.StaticResource{
 //go:embed icons/arrow-drop-down.svg
 var arrowdropdownIcon []byte
 
-var arrowdropdownIconRes = &fyne.StaticResource{
+var arrowdropdownIconRes = &granio.StaticResource{
 	StaticName:    "arrow-drop-down.svg",
 	StaticContent: arrowdropdownIcon,
 }
@@ -345,7 +345,7 @@ var arrowdropdownIconRes = &fyne.StaticResource{
 //go:embed icons/arrow-drop-up.svg
 var arrowdropupIcon []byte
 
-var arrowdropupIconRes = &fyne.StaticResource{
+var arrowdropupIconRes = &granio.StaticResource{
 	StaticName:    "arrow-drop-up.svg",
 	StaticContent: arrowdropupIcon,
 }
@@ -353,7 +353,7 @@ var arrowdropupIconRes = &fyne.StaticResource{
 //go:embed icons/file.svg
 var fileIcon []byte
 
-var fileIconRes = &fyne.StaticResource{
+var fileIconRes = &granio.StaticResource{
 	StaticName:    "file.svg",
 	StaticContent: fileIcon,
 }
@@ -361,7 +361,7 @@ var fileIconRes = &fyne.StaticResource{
 //go:embed icons/file-application.svg
 var fileapplicationIcon []byte
 
-var fileapplicationIconRes = &fyne.StaticResource{
+var fileapplicationIconRes = &granio.StaticResource{
 	StaticName:    "file-application.svg",
 	StaticContent: fileapplicationIcon,
 }
@@ -369,7 +369,7 @@ var fileapplicationIconRes = &fyne.StaticResource{
 //go:embed icons/file-audio.svg
 var fileaudioIcon []byte
 
-var fileaudioIconRes = &fyne.StaticResource{
+var fileaudioIconRes = &granio.StaticResource{
 	StaticName:    "file-audio.svg",
 	StaticContent: fileaudioIcon,
 }
@@ -377,7 +377,7 @@ var fileaudioIconRes = &fyne.StaticResource{
 //go:embed icons/file-image.svg
 var fileimageIcon []byte
 
-var fileimageIconRes = &fyne.StaticResource{
+var fileimageIconRes = &granio.StaticResource{
 	StaticName:    "file-image.svg",
 	StaticContent: fileimageIcon,
 }
@@ -385,7 +385,7 @@ var fileimageIconRes = &fyne.StaticResource{
 //go:embed icons/file-text.svg
 var filetextIcon []byte
 
-var filetextIconRes = &fyne.StaticResource{
+var filetextIconRes = &granio.StaticResource{
 	StaticName:    "file-text.svg",
 	StaticContent: filetextIcon,
 }
@@ -393,7 +393,7 @@ var filetextIconRes = &fyne.StaticResource{
 //go:embed icons/file-video.svg
 var filevideoIcon []byte
 
-var filevideoIconRes = &fyne.StaticResource{
+var filevideoIconRes = &granio.StaticResource{
 	StaticName:    "file-video.svg",
 	StaticContent: filevideoIcon,
 }
@@ -401,7 +401,7 @@ var filevideoIconRes = &fyne.StaticResource{
 //go:embed icons/folder.svg
 var folderIcon []byte
 
-var folderIconRes = &fyne.StaticResource{
+var folderIconRes = &granio.StaticResource{
 	StaticName:    "folder.svg",
 	StaticContent: folderIcon,
 }
@@ -409,7 +409,7 @@ var folderIconRes = &fyne.StaticResource{
 //go:embed icons/folder-new.svg
 var foldernewIcon []byte
 
-var foldernewIconRes = &fyne.StaticResource{
+var foldernewIconRes = &granio.StaticResource{
 	StaticName:    "folder-new.svg",
 	StaticContent: foldernewIcon,
 }
@@ -417,7 +417,7 @@ var foldernewIconRes = &fyne.StaticResource{
 //go:embed icons/folder-open.svg
 var folderopenIcon []byte
 
-var folderopenIconRes = &fyne.StaticResource{
+var folderopenIconRes = &granio.StaticResource{
 	StaticName:    "folder-open.svg",
 	StaticContent: folderopenIcon,
 }
@@ -425,7 +425,7 @@ var folderopenIconRes = &fyne.StaticResource{
 //go:embed icons/help.svg
 var helpIcon []byte
 
-var helpIconRes = &fyne.StaticResource{
+var helpIconRes = &granio.StaticResource{
 	StaticName:    "help.svg",
 	StaticContent: helpIcon,
 }
@@ -433,7 +433,7 @@ var helpIconRes = &fyne.StaticResource{
 //go:embed icons/history.svg
 var historyIcon []byte
 
-var historyIconRes = &fyne.StaticResource{
+var historyIconRes = &granio.StaticResource{
 	StaticName:    "history.svg",
 	StaticContent: historyIcon,
 }
@@ -441,7 +441,7 @@ var historyIconRes = &fyne.StaticResource{
 //go:embed icons/home.svg
 var homeIcon []byte
 
-var homeIconRes = &fyne.StaticResource{
+var homeIconRes = &granio.StaticResource{
 	StaticName:    "home.svg",
 	StaticContent: homeIcon,
 }
@@ -449,7 +449,7 @@ var homeIconRes = &fyne.StaticResource{
 //go:embed icons/settings.svg
 var settingsIcon []byte
 
-var settingsIconRes = &fyne.StaticResource{
+var settingsIconRes = &granio.StaticResource{
 	StaticName:    "settings.svg",
 	StaticContent: settingsIcon,
 }
@@ -457,7 +457,7 @@ var settingsIconRes = &fyne.StaticResource{
 //go:embed icons/mail-attachment.svg
 var mailattachmentIcon []byte
 
-var mailattachmentIconRes = &fyne.StaticResource{
+var mailattachmentIconRes = &granio.StaticResource{
 	StaticName:    "mail-attachment.svg",
 	StaticContent: mailattachmentIcon,
 }
@@ -465,7 +465,7 @@ var mailattachmentIconRes = &fyne.StaticResource{
 //go:embed icons/mail-compose.svg
 var mailcomposeIcon []byte
 
-var mailcomposeIconRes = &fyne.StaticResource{
+var mailcomposeIconRes = &granio.StaticResource{
 	StaticName:    "mail-compose.svg",
 	StaticContent: mailcomposeIcon,
 }
@@ -473,7 +473,7 @@ var mailcomposeIconRes = &fyne.StaticResource{
 //go:embed icons/mail-forward.svg
 var mailforwardIcon []byte
 
-var mailforwardIconRes = &fyne.StaticResource{
+var mailforwardIconRes = &granio.StaticResource{
 	StaticName:    "mail-forward.svg",
 	StaticContent: mailforwardIcon,
 }
@@ -481,7 +481,7 @@ var mailforwardIconRes = &fyne.StaticResource{
 //go:embed icons/mail-reply.svg
 var mailreplyIcon []byte
 
-var mailreplyIconRes = &fyne.StaticResource{
+var mailreplyIconRes = &granio.StaticResource{
 	StaticName:    "mail-reply.svg",
 	StaticContent: mailreplyIcon,
 }
@@ -489,7 +489,7 @@ var mailreplyIconRes = &fyne.StaticResource{
 //go:embed icons/mail-reply_all.svg
 var mailreplyallIcon []byte
 
-var mailreplyallIconRes = &fyne.StaticResource{
+var mailreplyallIconRes = &granio.StaticResource{
 	StaticName:    "mail-reply_all.svg",
 	StaticContent: mailreplyallIcon,
 }
@@ -497,7 +497,7 @@ var mailreplyallIconRes = &fyne.StaticResource{
 //go:embed icons/mail-send.svg
 var mailsendIcon []byte
 
-var mailsendIconRes = &fyne.StaticResource{
+var mailsendIconRes = &granio.StaticResource{
 	StaticName:    "mail-send.svg",
 	StaticContent: mailsendIcon,
 }
@@ -505,7 +505,7 @@ var mailsendIconRes = &fyne.StaticResource{
 //go:embed icons/media-music.svg
 var mediamusicIcon []byte
 
-var mediamusicIconRes = &fyne.StaticResource{
+var mediamusicIconRes = &granio.StaticResource{
 	StaticName:    "media-music.svg",
 	StaticContent: mediamusicIcon,
 }
@@ -513,7 +513,7 @@ var mediamusicIconRes = &fyne.StaticResource{
 //go:embed icons/media-photo.svg
 var mediaphotoIcon []byte
 
-var mediaphotoIconRes = &fyne.StaticResource{
+var mediaphotoIconRes = &granio.StaticResource{
 	StaticName:    "media-photo.svg",
 	StaticContent: mediaphotoIcon,
 }
@@ -521,7 +521,7 @@ var mediaphotoIconRes = &fyne.StaticResource{
 //go:embed icons/media-video.svg
 var mediavideoIcon []byte
 
-var mediavideoIconRes = &fyne.StaticResource{
+var mediavideoIconRes = &granio.StaticResource{
 	StaticName:    "media-video.svg",
 	StaticContent: mediavideoIcon,
 }
@@ -529,7 +529,7 @@ var mediavideoIconRes = &fyne.StaticResource{
 //go:embed icons/media-fast-forward.svg
 var mediafastforwardIcon []byte
 
-var mediafastforwardIconRes = &fyne.StaticResource{
+var mediafastforwardIconRes = &granio.StaticResource{
 	StaticName:    "media-fast-forward.svg",
 	StaticContent: mediafastforwardIcon,
 }
@@ -537,7 +537,7 @@ var mediafastforwardIconRes = &fyne.StaticResource{
 //go:embed icons/media-fast-rewind.svg
 var mediafastrewindIcon []byte
 
-var mediafastrewindIconRes = &fyne.StaticResource{
+var mediafastrewindIconRes = &granio.StaticResource{
 	StaticName:    "media-fast-rewind.svg",
 	StaticContent: mediafastrewindIcon,
 }
@@ -545,7 +545,7 @@ var mediafastrewindIconRes = &fyne.StaticResource{
 //go:embed icons/media-pause.svg
 var mediapauseIcon []byte
 
-var mediapauseIconRes = &fyne.StaticResource{
+var mediapauseIconRes = &granio.StaticResource{
 	StaticName:    "media-pause.svg",
 	StaticContent: mediapauseIcon,
 }
@@ -553,7 +553,7 @@ var mediapauseIconRes = &fyne.StaticResource{
 //go:embed icons/media-play.svg
 var mediaplayIcon []byte
 
-var mediaplayIconRes = &fyne.StaticResource{
+var mediaplayIconRes = &granio.StaticResource{
 	StaticName:    "media-play.svg",
 	StaticContent: mediaplayIcon,
 }
@@ -561,7 +561,7 @@ var mediaplayIconRes = &fyne.StaticResource{
 //go:embed icons/media-record.svg
 var mediarecordIcon []byte
 
-var mediarecordIconRes = &fyne.StaticResource{
+var mediarecordIconRes = &granio.StaticResource{
 	StaticName:    "media-record.svg",
 	StaticContent: mediarecordIcon,
 }
@@ -569,7 +569,7 @@ var mediarecordIconRes = &fyne.StaticResource{
 //go:embed icons/media-replay.svg
 var mediareplayIcon []byte
 
-var mediareplayIconRes = &fyne.StaticResource{
+var mediareplayIconRes = &granio.StaticResource{
 	StaticName:    "media-replay.svg",
 	StaticContent: mediareplayIcon,
 }
@@ -577,7 +577,7 @@ var mediareplayIconRes = &fyne.StaticResource{
 //go:embed icons/media-skip-next.svg
 var mediaskipnextIcon []byte
 
-var mediaskipnextIconRes = &fyne.StaticResource{
+var mediaskipnextIconRes = &granio.StaticResource{
 	StaticName:    "media-skip-next.svg",
 	StaticContent: mediaskipnextIcon,
 }
@@ -585,7 +585,7 @@ var mediaskipnextIconRes = &fyne.StaticResource{
 //go:embed icons/media-skip-previous.svg
 var mediaskippreviousIcon []byte
 
-var mediaskippreviousIconRes = &fyne.StaticResource{
+var mediaskippreviousIconRes = &granio.StaticResource{
 	StaticName:    "media-skip-previous.svg",
 	StaticContent: mediaskippreviousIcon,
 }
@@ -593,7 +593,7 @@ var mediaskippreviousIconRes = &fyne.StaticResource{
 //go:embed icons/media-stop.svg
 var mediastopIcon []byte
 
-var mediastopIconRes = &fyne.StaticResource{
+var mediastopIconRes = &granio.StaticResource{
 	StaticName:    "media-stop.svg",
 	StaticContent: mediastopIcon,
 }
@@ -601,7 +601,7 @@ var mediastopIconRes = &fyne.StaticResource{
 //go:embed icons/view-fullscreen.svg
 var viewfullscreenIcon []byte
 
-var viewfullscreenIconRes = &fyne.StaticResource{
+var viewfullscreenIconRes = &granio.StaticResource{
 	StaticName:    "view-fullscreen.svg",
 	StaticContent: viewfullscreenIcon,
 }
@@ -609,7 +609,7 @@ var viewfullscreenIconRes = &fyne.StaticResource{
 //go:embed icons/view-refresh.svg
 var viewrefreshIcon []byte
 
-var viewrefreshIconRes = &fyne.StaticResource{
+var viewrefreshIconRes = &granio.StaticResource{
 	StaticName:    "view-refresh.svg",
 	StaticContent: viewrefreshIcon,
 }
@@ -617,7 +617,7 @@ var viewrefreshIconRes = &fyne.StaticResource{
 //go:embed icons/view-zoom-fit.svg
 var viewzoomfitIcon []byte
 
-var viewzoomfitIconRes = &fyne.StaticResource{
+var viewzoomfitIconRes = &granio.StaticResource{
 	StaticName:    "view-zoom-fit.svg",
 	StaticContent: viewzoomfitIcon,
 }
@@ -625,7 +625,7 @@ var viewzoomfitIconRes = &fyne.StaticResource{
 //go:embed icons/view-zoom-in.svg
 var viewzoominIcon []byte
 
-var viewzoominIconRes = &fyne.StaticResource{
+var viewzoominIconRes = &granio.StaticResource{
 	StaticName:    "view-zoom-in.svg",
 	StaticContent: viewzoominIcon,
 }
@@ -633,7 +633,7 @@ var viewzoominIconRes = &fyne.StaticResource{
 //go:embed icons/view-zoom-out.svg
 var viewzoomoutIcon []byte
 
-var viewzoomoutIconRes = &fyne.StaticResource{
+var viewzoomoutIconRes = &granio.StaticResource{
 	StaticName:    "view-zoom-out.svg",
 	StaticContent: viewzoomoutIcon,
 }
@@ -641,7 +641,7 @@ var viewzoomoutIconRes = &fyne.StaticResource{
 //go:embed icons/volume-down.svg
 var volumedownIcon []byte
 
-var volumedownIconRes = &fyne.StaticResource{
+var volumedownIconRes = &granio.StaticResource{
 	StaticName:    "volume-down.svg",
 	StaticContent: volumedownIcon,
 }
@@ -649,7 +649,7 @@ var volumedownIconRes = &fyne.StaticResource{
 //go:embed icons/volume-mute.svg
 var volumemuteIcon []byte
 
-var volumemuteIconRes = &fyne.StaticResource{
+var volumemuteIconRes = &granio.StaticResource{
 	StaticName:    "volume-mute.svg",
 	StaticContent: volumemuteIcon,
 }
@@ -657,7 +657,7 @@ var volumemuteIconRes = &fyne.StaticResource{
 //go:embed icons/volume-up.svg
 var volumeupIcon []byte
 
-var volumeupIconRes = &fyne.StaticResource{
+var volumeupIconRes = &granio.StaticResource{
 	StaticName:    "volume-up.svg",
 	StaticContent: volumeupIcon,
 }
@@ -665,7 +665,7 @@ var volumeupIconRes = &fyne.StaticResource{
 //go:embed icons/visibility.svg
 var visibilityIcon []byte
 
-var visibilityIconRes = &fyne.StaticResource{
+var visibilityIconRes = &granio.StaticResource{
 	StaticName:    "visibility.svg",
 	StaticContent: visibilityIcon,
 }
@@ -673,7 +673,7 @@ var visibilityIconRes = &fyne.StaticResource{
 //go:embed icons/visibility-off.svg
 var visibilityoffIcon []byte
 
-var visibilityoffIconRes = &fyne.StaticResource{
+var visibilityoffIconRes = &granio.StaticResource{
 	StaticName:    "visibility-off.svg",
 	StaticContent: visibilityoffIcon,
 }
@@ -681,7 +681,7 @@ var visibilityoffIconRes = &fyne.StaticResource{
 //go:embed icons/download.svg
 var downloadIcon []byte
 
-var downloadIconRes = &fyne.StaticResource{
+var downloadIconRes = &granio.StaticResource{
 	StaticName:    "download.svg",
 	StaticContent: downloadIcon,
 }
@@ -689,7 +689,7 @@ var downloadIconRes = &fyne.StaticResource{
 //go:embed icons/computer.svg
 var computerIcon []byte
 
-var computerIconRes = &fyne.StaticResource{
+var computerIconRes = &granio.StaticResource{
 	StaticName:    "computer.svg",
 	StaticContent: computerIcon,
 }
@@ -697,7 +697,7 @@ var computerIconRes = &fyne.StaticResource{
 //go:embed icons/desktop.svg
 var desktopIcon []byte
 
-var desktopIconRes = &fyne.StaticResource{
+var desktopIconRes = &granio.StaticResource{
 	StaticName:    "desktop.svg",
 	StaticContent: desktopIcon,
 }
@@ -705,7 +705,7 @@ var desktopIconRes = &fyne.StaticResource{
 //go:embed icons/storage.svg
 var storageIcon []byte
 
-var storageIconRes = &fyne.StaticResource{
+var storageIconRes = &granio.StaticResource{
 	StaticName:    "storage.svg",
 	StaticContent: storageIcon,
 }
@@ -713,7 +713,7 @@ var storageIconRes = &fyne.StaticResource{
 //go:embed icons/upload.svg
 var uploadIcon []byte
 
-var uploadIconRes = &fyne.StaticResource{
+var uploadIconRes = &granio.StaticResource{
 	StaticName:    "upload.svg",
 	StaticContent: uploadIcon,
 }
@@ -721,7 +721,7 @@ var uploadIconRes = &fyne.StaticResource{
 //go:embed icons/account.svg
 var accountIcon []byte
 
-var accountIconRes = &fyne.StaticResource{
+var accountIconRes = &granio.StaticResource{
 	StaticName:    "account.svg",
 	StaticContent: accountIcon,
 }
@@ -729,7 +729,7 @@ var accountIconRes = &fyne.StaticResource{
 //go:embed icons/calendar.svg
 var calendarIcon []byte
 
-var calendarIconRes = &fyne.StaticResource{
+var calendarIconRes = &granio.StaticResource{
 	StaticName:    "calendar.svg",
 	StaticContent: calendarIcon,
 }
@@ -737,7 +737,7 @@ var calendarIconRes = &fyne.StaticResource{
 //go:embed icons/login.svg
 var loginIcon []byte
 
-var loginIconRes = &fyne.StaticResource{
+var loginIconRes = &granio.StaticResource{
 	StaticName:    "login.svg",
 	StaticContent: loginIcon,
 }
@@ -745,7 +745,7 @@ var loginIconRes = &fyne.StaticResource{
 //go:embed icons/logout.svg
 var logoutIcon []byte
 
-var logoutIconRes = &fyne.StaticResource{
+var logoutIconRes = &granio.StaticResource{
 	StaticName:    "logout.svg",
 	StaticContent: logoutIcon,
 }
@@ -753,7 +753,7 @@ var logoutIconRes = &fyne.StaticResource{
 //go:embed icons/list.svg
 var listIcon []byte
 
-var listIconRes = &fyne.StaticResource{
+var listIconRes = &granio.StaticResource{
 	StaticName:    "list.svg",
 	StaticContent: listIcon,
 }
@@ -761,7 +761,7 @@ var listIconRes = &fyne.StaticResource{
 //go:embed icons/grid.svg
 var gridIcon []byte
 
-var gridIconRes = &fyne.StaticResource{
+var gridIconRes = &granio.StaticResource{
 	StaticName:    "grid.svg",
 	StaticContent: gridIcon,
 }
@@ -769,7 +769,7 @@ var gridIconRes = &fyne.StaticResource{
 //go:embed icons/maximize.svg
 var maximizeIcon []byte
 
-var maximizeIconRes = &fyne.StaticResource{
+var maximizeIconRes = &granio.StaticResource{
 	StaticName:    "maximize.svg",
 	StaticContent: maximizeIcon,
 }
@@ -777,7 +777,7 @@ var maximizeIconRes = &fyne.StaticResource{
 //go:embed icons/minimize.svg
 var minimizeIcon []byte
 
-var minimizeIconRes = &fyne.StaticResource{
+var minimizeIconRes = &granio.StaticResource{
 	StaticName:    "minimize.svg",
 	StaticContent: minimizeIcon,
 }

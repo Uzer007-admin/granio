@@ -1,19 +1,19 @@
 package common
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
 )
 
 type deduplicatedObjectQueue struct {
 	queue *async.CanvasObjectQueue
-	dedup async.Map[fyne.CanvasObject, struct{}] //revive:disable-line:nested-structs -- The empty struct here is a common pattern to simulate a set via a map.
+	dedup async.Map[granio.CanvasObject, struct{}] //revive:disable-line:nested-structs -- The empty struct here is a common pattern to simulate a set via a map.
 }
 
 // In adds an object to the queue if it is not already present.
-func (q *deduplicatedObjectQueue) In(obj fyne.CanvasObject) {
+func (q *deduplicatedObjectQueue) In(obj granio.CanvasObject) {
 	_, exists := q.dedup.Load(obj)
 	if exists {
 		return
@@ -26,7 +26,7 @@ func (q *deduplicatedObjectQueue) In(obj fyne.CanvasObject) {
 // Out removes and returns the next object from the queue.
 // It assumes that the whole queue is drained and defers clearing
 // the deduplication map until it is empty.
-func (q *deduplicatedObjectQueue) Out() fyne.CanvasObject {
+func (q *deduplicatedObjectQueue) Out() granio.CanvasObject {
 	if q.queue.Len() == 0 {
 		q.dedup.Clear()
 		return nil
@@ -53,14 +53,14 @@ type RenderCacheNode struct {
 	// structural data
 	firstChild  *RenderCacheNode
 	nextSibling *RenderCacheNode
-	obj         fyne.CanvasObject
+	obj         granio.CanvasObject
 	parent      *RenderCacheNode
 	// cache data
-	minSize fyne.Size
+	minSize granio.Size
 }
 
 // Obj returns the node object.
-func (r *RenderCacheNode) Obj() fyne.CanvasObject {
+func (r *RenderCacheNode) Obj() granio.CanvasObject {
 	return r.obj
 }
 
@@ -70,7 +70,7 @@ type overlayStack struct {
 	renderCaches []*renderCacheTree
 }
 
-func (o *overlayStack) Add(overlay fyne.CanvasObject) {
+func (o *overlayStack) Add(overlay granio.CanvasObject) {
 	if overlay == nil {
 		return
 	}
@@ -79,7 +79,7 @@ func (o *overlayStack) Add(overlay fyne.CanvasObject) {
 	o.OverlayStack.Add(overlay)
 }
 
-func (o *overlayStack) Remove(overlay fyne.CanvasObject) {
+func (o *overlayStack) Remove(overlay granio.CanvasObject) {
 	if overlay == nil || len(o.List()) == 0 {
 		return
 	}

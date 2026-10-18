@@ -1,13 +1,13 @@
 package embedded
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type noosDevice struct{}
 
-func (*noosDevice) Orientation() fyne.DeviceOrientation {
-	return fyne.OrientationVertical
+func (*noosDevice) Orientation() granio.DeviceOrientation {
+	return granio.OrientationVertical
 }
 
 func (*noosDevice) IsMobile() bool {
@@ -22,10 +22,10 @@ func (*noosDevice) HasKeyboard() bool {
 	return true
 }
 
-func (*noosDevice) SystemScaleForWindow(fyne.Window) float32 {
+func (*noosDevice) SystemScaleForWindow(granio.Window) float32 {
 	return 1.0
 }
 
-func (*noosDevice) Locale() fyne.Locale {
+func (*noosDevice) Locale() granio.Locale {
 	return "en"
 }

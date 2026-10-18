@@ -1,0 +1,29 @@
+File: widget.test.exe
+Build ID: X:\fyne\.build-assessment-profile-6a5fe945b6f5438180f29aa3e0db11c1\go-build3123660735\b001\widget.test.exe2026-10-12 09:04:03.4266105 +0300 MSK
+Type: cpu
+Time: 2026-10-12 09:04:04 MSK
+Duration: 2.63s, Total samples = 3370ms (128.31%)
+Showing nodes accounting for 2080ms, 61.72% of 3370ms total
+Dropped 88 nodes (cum <= 16.85ms)
+Showing top 20 nodes out of 133
+      flat  flat%   sum%        cum   cum%
+     250ms  7.42%  7.42%      250ms  7.42%  internal/runtime/maps.memHashAES
+     240ms  7.12% 14.54%      270ms  8.01%  runtime.tryDeferToSpanScan
+     190ms  5.64% 20.18%      190ms  5.64%  internal/sync.(*Mutex).Lock (inline)
+     150ms  4.45% 24.63%      150ms  4.45%  internal/sync.(*Mutex).Unlock (inline)
+     150ms  4.45% 29.08%      150ms  4.45%  runtime.memclrNoHeapPointers
+     110ms  3.26% 32.34%     1780ms 52.82%  github.com/Uzer007-admin/granio/v2.MeasureText
+     100ms  2.97% 35.31%      100ms  2.97%  runtime.unlock2
+      90ms  2.67% 37.98%     1070ms 31.75%  github.com/Uzer007-admin/granio/v2/internal/cache.GetFontMetrics
+      90ms  2.67% 40.65%      700ms 20.77%  runtime.mapaccess2
+      80ms  2.37% 43.03%     2340ms 69.44%  github.com/Uzer007-admin/granio/v2/widget.wrapWordLines
+      80ms  2.37% 45.40%       90ms  2.67%  runtime.lock2
+      70ms  2.08% 47.48%       70ms  2.08%  internal/runtime/maps.ctrlGroup.matchH2 (inline)
+      70ms  2.08% 49.55%      170ms  5.04%  runtime.slicerunetostring
+      70ms  2.08% 51.63%      410ms 12.17%  type:.hash.SFK4M4K4M10K6S
+      60ms  1.78% 53.41%       60ms  1.78%  memeqbody
+      60ms  1.78% 55.19%       60ms  1.78%  runtime.memmove
+      60ms  1.78% 56.97%       60ms  1.78%  runtime.preemptM
+      60ms  1.78% 58.75%      310ms  9.20%  runtime.scanObject
+      50ms  1.48% 60.24%       50ms  1.48%  internal/runtime/maps.memHash32AES
+      50ms  1.48% 61.72%       60ms  1.78%  runtime.typePointers.next

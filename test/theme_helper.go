@@ -6,15 +6,15 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 	"github.com/stretchr/testify/assert"
 )
 
 // AssertAllColorNamesDefined asserts that all known color names are defined for the given theme.
-func AssertAllColorNamesDefined(t *testing.T, th fyne.Theme, themeName string) {
-	oldApp := fyne.CurrentApp()
-	defer fyne.SetCurrentApp(oldApp)
+func AssertAllColorNamesDefined(t *testing.T, th granio.Theme, themeName string) {
+	oldApp := granio.CurrentApp()
+	defer granio.SetCurrentApp(oldApp)
 
 	for _, primaryName := range theme.PrimaryColorNames() {
 		testApp := NewTempApp(t)

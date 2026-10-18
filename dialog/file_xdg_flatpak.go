@@ -5,17 +5,17 @@ package dialog
 import (
 	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/lang"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v2/storage"
 
-	"github.com/rymdport/portal"
-	"github.com/rymdport/portal/filechooser"
+	"github.com/Uzer007-admin/dbus/v5/desktopportal"
+	"github.com/Uzer007-admin/dbus/v5/desktopportal/filechooser"
 )
 
-func openFile(parentWindowHandle string, options *filechooser.OpenFileOptions) (fyne.URIReadCloser, error) {
+func openFile(parentWindowHandle string, options *filechooser.OpenFileOptions) (granio.URIReadCloser, error) {
 	title := lang.L("Open") + " " + lang.L("File")
 	uri, err := open(parentWindowHandle, title, options)
 	if err != nil || uri == nil {
@@ -25,7 +25,7 @@ func openFile(parentWindowHandle string, options *filechooser.OpenFileOptions) (
 	return storage.Reader(uri)
 }
 
-func openFolder(parentWindowHandle string, options *filechooser.OpenFileOptions) (fyne.ListableURI, error) {
+func openFolder(parentWindowHandle string, options *filechooser.OpenFileOptions) (granio.ListableURI, error) {
 	title := lang.L("Open") + " " + lang.L("Folder")
 	uri, err := open(parentWindowHandle, title, options)
 	if err != nil || uri == nil {
@@ -35,7 +35,7 @@ func openFolder(parentWindowHandle string, options *filechooser.OpenFileOptions)
 	return storage.ListerForURI(uri)
 }
 
-func open(parentWindowHandle, title string, options *filechooser.OpenFileOptions) (fyne.URI, error) {
+func open(parentWindowHandle, title string, options *filechooser.OpenFileOptions) (granio.URI, error) {
 	uris, err := filechooser.OpenFile(parentWindowHandle, title, options)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func open(parentWindowHandle, title string, options *filechooser.OpenFileOptions
 	return storage.ParseURI(uris[0])
 }
 
-func saveFile(parentWindowHandle string, options *filechooser.SaveFileOptions) (fyne.URIWriteCloser, error) {
+func saveFile(parentWindowHandle string, options *filechooser.SaveFileOptions) (granio.URIWriteCloser, error) {
 	title := lang.L("Save") + " " + lang.L("File")
 	uris, err := filechooser.SaveFile(parentWindowHandle, title, options)
 	if err != nil {
@@ -82,14 +82,14 @@ func fileOpenOSOverride(d *FileDialog) bool {
 	go func() {
 		if options.Directory {
 			folder, err := openFolder(windowHandle, options)
-			fyne.Do(func() {
-				folderCallback := d.callback.(func(fyne.ListableURI, error))
+			granio.Do(func() {
+				folderCallback := d.callback.(func(granio.ListableURI, error))
 				folderCallback(folder, err)
 			})
 		} else {
 			file, err := openFile(windowHandle, options)
-			fyne.Do(func() {
-				fileCallback := d.callback.(func(fyne.URIReadCloser, error))
+			granio.Do(func() {
+				fileCallback := d.callback.(func(granio.URIReadCloser, error))
 				fileCallback(file, err)
 			})
 		}
@@ -108,12 +108,12 @@ func fileSaveOSOverride(d *FileDialog) bool {
 	}
 	options.Filters, options.CurrentFilter = convertFilterForPortal(d.filter)
 
-	callback := d.callback.(func(fyne.URIWriteCloser, error))
+	callback := d.callback.(func(granio.URIWriteCloser, error))
 	windowHandle := windowHandleForPortal(d.parent)
 
 	go func() {
 		file, err := saveFile(windowHandle, options)
-		fyne.Do(func() {
+		granio.Do(func() {
 			callback(file, err)
 		})
 	}()
@@ -121,7 +121,7 @@ func fileSaveOSOverride(d *FileDialog) bool {
 	return true
 }
 
-func windowHandleForPortal(window fyne.Window) string {
+func windowHandleForPortal(window granio.Window) string {
 	windowHandle := ""
 	if !build.IsWayland {
 		window.(driver.NativeWindow).RunNative(func(context any) {

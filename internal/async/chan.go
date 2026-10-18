@@ -1,5 +1,7 @@
 package async
 
+import "sync"
+
 // The size of Func, Interface, and CanvasObject are all less than 16 bytes.
 // A CPU cache line (L2) is 256 bytes, thus it can hold 16 entity references.
 const maxEntitiesPerCPUCacheLine = 16
@@ -7,18 +9,27 @@ const maxEntitiesPerCPUCacheLine = 16
 // UnboundedChan is a channel with an unbounded buffer for caching
 // Func objects. A channel must be closed via Close method.
 type UnboundedChan[T any] struct {
-	in, out chan T
-	close   chan struct{}
-	q       []T
+	in, out   chan T
+	close     chan struct{}
+	q         []T
+	notify    func()
+	closeOnce sync.Once
 }
 
 // NewUnboundedChan returns a unbounded channel with unlimited capacity.
 func NewUnboundedChan[T any]() *UnboundedChan[T] {
+	return NewUnboundedChanWithNotify[T](nil)
+}
+
+// NewUnboundedChanWithNotify calls notify after publishing output. The callback
+// must not block; consumers can use it to wake a native event loop safely.
+func NewUnboundedChanWithNotify[T any](notify func()) *UnboundedChan[T] {
 	ch := &UnboundedChan[T]{
 		// We make the channels fit into CPU cache lines, which may reduce cache misses.
-		in:    make(chan T, maxEntitiesPerCPUCacheLine),
-		out:   make(chan T, maxEntitiesPerCPUCacheLine),
-		close: make(chan struct{}),
+		in:     make(chan T, maxEntitiesPerCPUCacheLine),
+		out:    make(chan T, maxEntitiesPerCPUCacheLine),
+		close:  make(chan struct{}),
+		notify: notify,
 	}
 	go ch.processing()
 	return ch
@@ -33,7 +44,7 @@ func (ch *UnboundedChan[T]) In() chan<- T { return ch.in }
 func (ch *UnboundedChan[T]) Out() <-chan T { return ch.out }
 
 // Close closes the channel.
-func (ch *UnboundedChan[T]) Close() { ch.close <- struct{}{} }
+func (ch *UnboundedChan[T]) Close() { ch.closeOnce.Do(func() { ch.close <- struct{}{} }) }
 
 func (ch *UnboundedChan[T]) processing() {
 	// This is a preallocation of the internal unbounded buffer.
@@ -61,6 +72,9 @@ func (ch *UnboundedChan[T]) processing() {
 			case ch.out <- ch.q[0]:
 				ch.q[0] = *new(T) // de-reference earlier to help GC (use clear() when Go 1.21 is base)
 				ch.q = ch.q[1:]
+				if ch.notify != nil {
+					ch.notify()
+				}
 			case e, ok := <-ch.in:
 				if !ok {
 					// We don't want the input channel be accidentally closed
@@ -88,12 +102,9 @@ func (ch *UnboundedChan[T]) closed() {
 		ch.q = append(ch.q, e)
 	}
 	for len(ch.q) > 0 {
-		select {
-		case ch.out <- ch.q[0]:
-			ch.q[0] = *new(T) // de-reference earlier to help GC (use clear() when Go 1.21 is base)
-			ch.q = ch.q[1:]
-		default:
-		}
+		ch.out <- ch.q[0]
+		ch.q[0] = *new(T)
+		ch.q = ch.q[1:]
 	}
 	close(ch.out)
 	close(ch.close)

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"reflect"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // DataMap is the base interface for all bindable data maps.
@@ -82,7 +82,7 @@ func BindStruct(i any) Struct {
 	t := reflect.TypeOf(i)
 	if t.Kind() != reflect.Pointer ||
 		(reflect.TypeOf(reflect.ValueOf(i).Elem()).Kind() != reflect.Struct) {
-		fyne.LogError("Invalid type passed to BindStruct, must be pointer to struct", nil)
+		granio.LogError("Invalid type passed to BindStruct, must be pointer to struct", nil)
 		return newExternalUntypedMap()
 	}
 
@@ -280,7 +280,7 @@ func (b *boundStruct) Reload() (retErr error) {
 		}
 		kind := f.Kind()
 		if kind == reflect.Slice || kind == reflect.Struct {
-			fyne.LogError("Data binding does not yet support slice or struct elements in a struct", nil)
+			granio.LogError("Data binding does not yet support slice or struct elements in a struct", nil)
 			continue
 		}
 

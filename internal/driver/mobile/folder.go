@@ -3,18 +3,18 @@ package mobile
 import (
 	"errors"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type lister struct {
-	fyne.URI
+	granio.URI
 }
 
-func (l *lister) List() ([]fyne.URI, error) {
+func (l *lister) List() ([]granio.URI, error) {
 	return listURI(l)
 }
 
-func listerForURI(uri fyne.URI) (fyne.ListableURI, error) {
+func listerForURI(uri granio.URI) (granio.ListableURI, error) {
 	if !canListURI(uri) {
 		return nil, errors.New("specified URI is not listable")
 	}

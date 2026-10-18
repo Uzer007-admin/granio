@@ -1,11 +1,11 @@
 package desktop
 
-import "fyne.io/fyne/v2"
+import "github.com/Uzer007-admin/granio/v2"
 
-// Canvas defines the desktop specific extensions to a fyne.Canvas.
+// Canvas defines the desktop specific extensions to a granio.Canvas.
 type Canvas interface {
-	OnKeyDown() func(*fyne.KeyEvent)
-	SetOnKeyDown(func(*fyne.KeyEvent))
-	OnKeyUp() func(*fyne.KeyEvent)
-	SetOnKeyUp(func(*fyne.KeyEvent))
+	OnKeyDown() func(*granio.KeyEvent)
+	SetOnKeyDown(func(*granio.KeyEvent))
+	OnKeyUp() func(*granio.KeyEvent)
+	SetOnKeyUp(func(*granio.KeyEvent))
 }

@@ -4,13 +4,13 @@ import (
 	"image/color"
 	"time"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	fynecolor "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	fynecolor "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-var _ fyne.Widget = (*Activity)(nil)
+var _ granio.Widget = (*Activity)(nil)
 
 // Activity is used to indicate that something is happening that should be waited for,
 // or is in the background (depending on usage).
@@ -31,8 +31,8 @@ func NewActivity() *Activity {
 	return a
 }
 
-// MinSize implements the [fyne.CanvasObject] interface.
-func (a *Activity) MinSize() fyne.Size {
+// MinSize implements the [granio.CanvasObject] interface.
+func (a *Activity) MinSize() granio.Size {
 	a.ExtendBaseWidget(a)
 	return a.BaseWidget.MinSize()
 }
@@ -59,17 +59,17 @@ func (a *Activity) Stop() {
 	a.Refresh()
 }
 
-// CreateRenderer implements the [fyne.Widget] interface.
-func (a *Activity) CreateRenderer() fyne.WidgetRenderer {
-	dots := make([]fyne.CanvasObject, 3)
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+// CreateRenderer implements the [granio.Widget] interface.
+func (a *Activity) CreateRenderer() granio.WidgetRenderer {
+	dots := make([]granio.CanvasObject, 3)
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	for i := range dots {
 		dots[i] = canvas.NewCircle(a.Theme().Color(theme.ColorNameForeground, v))
 	}
 	r := &activityRenderer{dots: dots, parent: a}
-	r.anim = &fyne.Animation{
+	r.anim = &granio.Animation{
 		Duration:    time.Second * 2,
-		RepeatCount: fyne.AnimationRepeatForever,
+		RepeatCount: granio.AnimationRepeatForever,
 		Tick:        r.animate,
 	}
 	r.updateColor()
@@ -81,14 +81,14 @@ func (a *Activity) CreateRenderer() fyne.WidgetRenderer {
 	return r
 }
 
-var _ fyne.WidgetRenderer = (*activityRenderer)(nil)
+var _ granio.WidgetRenderer = (*activityRenderer)(nil)
 
 type activityRenderer struct {
-	anim   *fyne.Animation
-	dots   []fyne.CanvasObject
+	anim   *granio.Animation
+	dots   []granio.CanvasObject
 	parent *Activity
 
-	bound      fyne.Size
+	bound      granio.Size
 	maxCol     color.NRGBA
 	maxRad     float32
 	wasStarted bool
@@ -99,20 +99,20 @@ func (a *activityRenderer) Destroy() {
 	a.stop()
 }
 
-func (a *activityRenderer) Layout(size fyne.Size) {
+func (a *activityRenderer) Layout(size granio.Size) {
 	a.maxRad = min(size.Width, size.Height) / 2
 	a.bound = size
 
-	if a.parent.started && !fyne.CurrentApp().Settings().ShowAnimations() {
+	if a.parent.started && !granio.CurrentApp().Settings().ShowAnimations() {
 		a.drawStaticEllipsis()
 	}
 }
 
-func (a *activityRenderer) MinSize() fyne.Size {
-	return fyne.NewSquareSize(a.parent.Theme().Size(theme.SizeNameInlineIcon))
+func (a *activityRenderer) MinSize() granio.Size {
+	return granio.NewSquareSize(a.parent.Theme().Size(theme.SizeNameInlineIcon))
 }
 
-func (a *activityRenderer) Objects() []fyne.CanvasObject {
+func (a *activityRenderer) Objects() []granio.CanvasObject {
 	return a.dots
 }
 
@@ -157,10 +157,10 @@ func (a *activityRenderer) animate(done float32) {
 
 func (a *activityRenderer) scaleDot(dot *canvas.Circle, off float32) {
 	rad := a.maxRad - a.maxRad*off/1.2 //revive:disable-line:add-constant
-	mid := fyne.NewPos(a.bound.Width/2, a.bound.Height/2)
+	mid := granio.NewPos(a.bound.Width/2, a.bound.Height/2)
 
-	dot.Move(mid.Subtract(fyne.NewSquareOffsetPos(rad)))
-	dot.Resize(fyne.NewSquareSize(rad * 2))
+	dot.Move(mid.Subtract(granio.NewSquareOffsetPos(rad)))
+	dot.Resize(granio.NewSquareSize(rad * 2))
 
 	alpha := uint8(float32(a.maxCol.A) * off)
 	dot.FillColor = color.NRGBA{R: a.maxCol.R, G: a.maxCol.G, B: a.maxCol.B, A: alpha}
@@ -169,7 +169,7 @@ func (a *activityRenderer) scaleDot(dot *canvas.Circle, off float32) {
 
 func (a *activityRenderer) start() {
 	a.wasStarted = true
-	if !fyne.CurrentApp().Settings().ShowAnimations() {
+	if !granio.CurrentApp().Settings().ShowAnimations() {
 		a.drawStaticEllipsis()
 		return
 	}
@@ -179,7 +179,7 @@ func (a *activityRenderer) start() {
 func (a *activityRenderer) stop() {
 	a.wasStarted = false
 	a.anim.Stop()
-	if !fyne.CurrentApp().Settings().ShowAnimations() {
+	if !granio.CurrentApp().Settings().ShowAnimations() {
 		a.hideDots()
 	}
 }
@@ -206,8 +206,8 @@ func (a *activityRenderer) drawStaticEllipsis() {
 	for i, obj := range a.dots {
 		dot, _ := obj.(*canvas.Circle)
 		cx := startX + radius + float32(i)*3*radius
-		dot.Move(fyne.NewPos(cx-radius, cy-radius))
-		dot.Resize(fyne.NewSquareSize(d))
+		dot.Move(granio.NewPos(cx-radius, cy-radius))
+		dot.Resize(granio.NewSquareSize(d))
 		dot.FillColor = fill
 		dot.Refresh()
 	}
@@ -216,13 +216,13 @@ func (a *activityRenderer) drawStaticEllipsis() {
 func (a *activityRenderer) hideDots() {
 	for _, obj := range a.dots {
 		dot, _ := obj.(*canvas.Circle)
-		dot.Resize(fyne.NewSquareSize(0))
+		dot.Resize(granio.NewSquareSize(0))
 		dot.Refresh()
 	}
 }
 
 func (a *activityRenderer) updateColor() {
-	v := fyne.CurrentApp().Settings().ThemeVariant()
+	v := granio.CurrentApp().Settings().ThemeVariant()
 	rr, gg, bb, aa := fynecolor.ToNRGBA(a.parent.Theme().Color(theme.ColorNameForeground, v))
 	a.maxCol = color.NRGBA{R: rr, G: gg, B: bb, A: aa}
 }

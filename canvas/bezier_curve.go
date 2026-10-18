@@ -3,11 +3,11 @@ package canvas
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*BezierCurve)(nil)
+var _ granio.CanvasObject = (*BezierCurve)(nil)
 
 // BezierCurve describes a colored bezier curve primitive in a Fyne canvas.
 // It supports linear (0 control point), quadratic (1 control point) and cubic (2 control points) bezier curves.
@@ -20,11 +20,11 @@ var _ fyne.CanvasObject = (*BezierCurve)(nil)
 type BezierCurve struct {
 	baseObject
 
-	StartPoint    fyne.Position   // Starting point of the bezier curve
-	EndPoint      fyne.Position   // Ending point of the bezier curve
-	ControlPoints []fyne.Position // Max 2 control points (0 for linear, 1 for quadratic, 2 for cubic)
-	StrokeColor   color.Color     // The bezier curve stroke color
-	StrokeWidth   float32         // The stroke width of the bezier curve
+	StartPoint    granio.Position   // Starting point of the bezier curve
+	EndPoint      granio.Position   // Ending point of the bezier curve
+	ControlPoints []granio.Position // Max 2 control points (0 for linear, 1 for quadratic, 2 for cubic)
+	StrokeColor   color.Color       // The bezier curve stroke color
+	StrokeWidth   float32           // The stroke width of the bezier curve
 }
 
 // Hide will set this bezier curve to not be visible
@@ -35,7 +35,7 @@ func (r *BezierCurve) Hide() {
 }
 
 // Move the bezier curve to a new position, relative to its parent / canvas
-func (r *BezierCurve) Move(pos fyne.Position) {
+func (r *BezierCurve) Move(pos granio.Position) {
 	if r.Position() == pos {
 		return
 	}
@@ -52,7 +52,7 @@ func (r *BezierCurve) Refresh() {
 
 // Resize on a bezier curve updates the new size of this object.
 // If it has a stroke width this will cause it to Refresh.
-func (r *BezierCurve) Resize(s fyne.Size) {
+func (r *BezierCurve) Resize(s granio.Size) {
 	if s == r.Size() {
 		return
 	}
@@ -63,33 +63,33 @@ func (r *BezierCurve) Resize(s fyne.Size) {
 }
 
 // NewLinearBezierCurve creates a linear bezier curve with 0 control points
-func NewLinearBezierCurve(startPoint, endPoint fyne.Position, c color.Color) *BezierCurve {
+func NewLinearBezierCurve(startPoint, endPoint granio.Position, c color.Color) *BezierCurve {
 	return &BezierCurve{
 		StartPoint:    startPoint,
 		EndPoint:      endPoint,
-		ControlPoints: []fyne.Position{},
+		ControlPoints: []granio.Position{},
 		StrokeColor:   c,
 		StrokeWidth:   1,
 	}
 }
 
 // NewQuadraticBezierCurve creates a quadratic bezier curve with 1 control points
-func NewQuadraticBezierCurve(startPoint, controlPoint, endPoint fyne.Position, c color.Color) *BezierCurve {
+func NewQuadraticBezierCurve(startPoint, controlPoint, endPoint granio.Position, c color.Color) *BezierCurve {
 	return &BezierCurve{
 		StartPoint:    startPoint,
 		EndPoint:      endPoint,
-		ControlPoints: []fyne.Position{controlPoint},
+		ControlPoints: []granio.Position{controlPoint},
 		StrokeColor:   c,
 		StrokeWidth:   1,
 	}
 }
 
 // NewCubicBezierCurve creates a cubic bezier curve with 2 control points
-func NewCubicBezierCurve(startPoint, controlPoint1, controlPoint2, endPoint fyne.Position, c color.Color) *BezierCurve {
+func NewCubicBezierCurve(startPoint, controlPoint1, controlPoint2, endPoint granio.Position, c color.Color) *BezierCurve {
 	return &BezierCurve{
 		StartPoint:    startPoint,
 		EndPoint:      endPoint,
-		ControlPoints: []fyne.Position{controlPoint1, controlPoint2},
+		ControlPoints: []granio.Position{controlPoint1, controlPoint2},
 		StrokeColor:   c,
 		StrokeWidth:   1,
 	}

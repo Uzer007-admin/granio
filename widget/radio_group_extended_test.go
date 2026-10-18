@@ -4,11 +4,11 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -147,8 +147,8 @@ func TestRadioGroup_Extended_Hovered(t *testing.T) {
 			assert.Equal(t, color.Transparent, render2.focusIndicator.FillColor)
 
 			item1.MouseIn(&desktop.MouseEvent{
-				PointEvent: fyne.PointEvent{
-					Position: fyne.NewPos(theme.Padding(), theme.Padding()),
+				PointEvent: granio.PointEvent{
+					Position: granio.NewPos(theme.Padding(), theme.Padding()),
 				},
 			})
 			assert.True(t, item1.hovered)
@@ -181,5 +181,5 @@ func extendedRadioGroupTestTapItem(t *testing.T, radio *extendedRadioGroup, item
 	t.Helper()
 	renderer := test.TempWidgetRenderer(t, radio)
 	radioItem := renderer.Objects()[item].(*radioItem)
-	radioItem.Tapped(&fyne.PointEvent{Position: fyne.NewPos(theme.Padding(), theme.Padding())})
+	radioItem.Tapped(&granio.PointEvent{Position: granio.NewPos(theme.Padding(), theme.Padding())})
 }

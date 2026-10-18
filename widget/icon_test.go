@@ -3,18 +3,18 @@ package widget_test
 import (
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestIcon_Layout(t *testing.T) {
 	test.NewTempApp(t)
 
 	for name, tt := range map[string]struct {
-		resource fyne.Resource
+		resource granio.Resource
 	}{
 		"empty": {},
 		"resource": {
@@ -26,8 +26,8 @@ func TestIcon_Layout(t *testing.T) {
 				Resource: tt.resource,
 			}
 
-			window := test.NewTempWindow(t, &fyne.Container{Layout: layout.NewCenterLayout(), Objects: []fyne.CanvasObject{icon}})
-			window.Resize(icon.MinSize().Max(fyne.NewSize(150, 200)))
+			window := test.NewTempWindow(t, &granio.Container{Layout: layout.NewCenterLayout(), Objects: []granio.CanvasObject{icon}})
+			window.Resize(icon.MinSize().Max(granio.NewSize(150, 200)))
 
 			test.AssertRendersToMarkup(t, "icon/layout_"+name+".xml", window.Canvas())
 		})

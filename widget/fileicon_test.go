@@ -7,12 +7,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestFileIcon_NewFileIcon_Rendered(t *testing.T) {
@@ -20,14 +20,14 @@ func TestFileIcon_NewFileIcon_Rendered(t *testing.T) {
 
 	workingDir, err := os.Getwd()
 	if err != nil {
-		fyne.LogError("Could not get current working directory", err)
+		granio.LogError("Could not get current working directory", err)
 		t.FailNow()
 	}
 
 	icon := widget.NewFileIcon(nil)
 
 	w := test.NewTempWindow(t, icon)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 
 	test.AssertImageMatches(t, "fileicon/fileicon_nil.png", w.Canvas().Capture())
 
@@ -35,28 +35,28 @@ func TestFileIcon_NewFileIcon_Rendered(t *testing.T) {
 	icon2 := widget.NewFileIcon(storage.NewFileURI(text))
 
 	w.SetContent(icon2)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	test.AssertImageMatches(t, "fileicon/fileicon_text.png", w.Canvas().Capture())
 
 	text += ".txt"
 	icon3 := widget.NewFileIcon(storage.NewFileURI(text))
 
 	w.SetContent(icon3)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	test.AssertImageMatches(t, "fileicon/fileicon_text_txt.png", w.Canvas().Capture())
 
 	bin := filepath.Join(workingDir, "testdata/bin")
 	icon4 := widget.NewFileIcon(storage.NewFileURI(bin))
 
 	w.SetContent(icon4)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	test.AssertImageMatches(t, "fileicon/fileicon_bin.png", w.Canvas().Capture())
 
 	dir := filepath.Join(workingDir, "testdata")
 	icon5 := widget.NewFileIcon(storage.NewFileURI(dir))
 
 	w.SetContent(icon5)
-	w.Resize(fyne.NewSize(150, 150))
+	w.Resize(granio.NewSize(150, 150))
 	test.AssertImageMatches(t, "fileicon/fileicon_folder.png", w.Canvas().Capture())
 }
 
@@ -74,13 +74,13 @@ func TestFileIcon_Icon(t *testing.T) {
 }
 
 type customURI struct {
-	fyne.URI
+	granio.URI
 
 	name string
-	icon fyne.Resource
+	icon granio.Resource
 }
 
-func (c *customURI) Icon() fyne.Resource {
+func (c *customURI) Icon() granio.Resource {
 	return c.icon
 }
 

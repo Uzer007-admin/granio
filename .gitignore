@@ -51,3 +51,16 @@ tags
 
 # Vendor
 /vendor
+
+### Local project workspace
+/bin/
+/.build-*/
+
+# Отдельные рабочие копии компонентов из реестра экосистемы.
+/ecosystem/work/
+
+# SVG-файл проверки метаданных не является swap-файлом редактора.
+!/internal/foldermeta/testdata/.background.svg
+
+# Локальные снимки до публикации исходников в отдельных репозиториях.
+/patches/

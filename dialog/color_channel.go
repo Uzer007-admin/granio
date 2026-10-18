@@ -3,15 +3,15 @@ package dialog
 import (
 	"strconv"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
-	internalwidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	internalwidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
-var _ fyne.Widget = (*colorChannel)(nil)
+var _ granio.Widget = (*colorChannel)(nil)
 
 // colorChannel controls a channel of a color and triggers the callback when changed.
 type colorChannel struct {
@@ -36,8 +36,8 @@ func newColorChannel(name string, minValue, maxValue, value int, onChanged func(
 }
 
 // CreateRenderer is a private method to Fyne which links this widget to its renderer
-func (c *colorChannel) CreateRenderer() fyne.WidgetRenderer {
-	label := widget.NewLabelWithStyle(c.name, fyne.TextAlignTrailing, fyne.TextStyle{Bold: true})
+func (c *colorChannel) CreateRenderer() granio.WidgetRenderer {
+	label := widget.NewLabelWithStyle(c.name, granio.TextAlignTrailing, granio.TextStyle{Bold: true})
 	entry := newColorChannelEntry(c)
 	slider := &widget.Slider{
 		Value:       0.0,
@@ -50,7 +50,7 @@ func (c *colorChannel) CreateRenderer() fyne.WidgetRenderer {
 		},
 	}
 	r := &colorChannelRenderer{
-		BaseRenderer: internalwidget.NewBaseRenderer([]fyne.CanvasObject{
+		BaseRenderer: internalwidget.NewBaseRenderer([]granio.CanvasObject{
 			label,
 			slider,
 			entry,
@@ -65,7 +65,7 @@ func (c *colorChannel) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // MinSize returns the size that this widget should not shrink below
-func (c *colorChannel) MinSize() fyne.Size {
+func (c *colorChannel) MinSize() granio.Size {
 	c.ExtendBaseWidget(c)
 	return c.BaseWidget.MinSize()
 }
@@ -91,22 +91,22 @@ type colorChannelRenderer struct {
 	slider  *widget.Slider
 }
 
-func (r *colorChannelRenderer) Layout(size fyne.Size) {
+func (r *colorChannelRenderer) Layout(size granio.Size) {
 	lMin := r.label.MinSize()
 	eMin := r.entry.MinSize()
-	r.label.Move(fyne.NewPos(0, (size.Height-lMin.Height)/2))
-	r.label.Resize(fyne.NewSize(lMin.Width, lMin.Height))
-	r.slider.Move(fyne.NewPos(lMin.Width, 0))
-	r.slider.Resize(fyne.NewSize(size.Width-lMin.Width-eMin.Width, size.Height))
-	r.entry.Move(fyne.NewPos(size.Width-eMin.Width, 0))
-	r.entry.Resize(fyne.NewSize(eMin.Width, size.Height))
+	r.label.Move(granio.NewPos(0, (size.Height-lMin.Height)/2))
+	r.label.Resize(granio.NewSize(lMin.Width, lMin.Height))
+	r.slider.Move(granio.NewPos(lMin.Width, 0))
+	r.slider.Resize(granio.NewSize(size.Width-lMin.Width-eMin.Width, size.Height))
+	r.entry.Move(granio.NewPos(size.Width-eMin.Width, 0))
+	r.entry.Resize(granio.NewSize(eMin.Width, size.Height))
 }
 
-func (r *colorChannelRenderer) MinSize() fyne.Size {
+func (r *colorChannelRenderer) MinSize() granio.Size {
 	lMin := r.label.MinSize()
 	sMin := r.slider.MinSize()
 	eMin := r.entry.MinSize()
-	return fyne.NewSize(
+	return granio.NewSize(
 		lMin.Width+sMin.Width+eMin.Width,
 		max(lMin.Height, sMin.Height, eMin.Height),
 	)
@@ -135,7 +135,7 @@ func newColorChannelEntry(c *colorChannel) *colorChannelEntry {
 	e.setOnChanged(func(text string) {
 		value, err := strconv.Atoi(text)
 		if err != nil {
-			fyne.LogError("Couldn't parse: "+text, err)
+			granio.LogError("Couldn't parse: "+text, err)
 			return
 		}
 		c.SetValue(value)
@@ -143,10 +143,10 @@ func newColorChannelEntry(c *colorChannel) *colorChannelEntry {
 	return e
 }
 
-func (e *colorChannelEntry) MinSize() fyne.Size {
+func (e *colorChannelEntry) MinSize() granio.Size {
 	// Ensure space for 3 digits
-	minSize := fyne.MeasureText("000", theme.TextSize(), fyne.TextStyle{})
-	minSize = minSize.Add(fyne.NewSize(theme.Padding()*6, theme.Padding()*4))
+	minSize := granio.MeasureText("000", theme.TextSize(), granio.TextStyle{})
+	minSize = minSize.Add(granio.NewSize(theme.Padding()*6, theme.Padding()*4))
 	return internal.MaxSizes(minSize, e.Entry.MinSize())
 }
 
@@ -182,7 +182,7 @@ func (e *userChangeEntry) TypedRune(r rune) {
 	e.Entry.TypedRune(r)
 }
 
-func (e *userChangeEntry) TypedKey(ev *fyne.KeyEvent) {
+func (e *userChangeEntry) TypedKey(ev *granio.KeyEvent) {
 	e.userTyped = true
 	e.Entry.TypedKey(ev)
 }

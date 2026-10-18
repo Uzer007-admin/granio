@@ -1,0 +1,10 @@
+go: downloading golang.org/x/mod v0.42.0
+go: downloading golang.org/x/tools v0.52.0
+go: downloading golang.org/x/sync v0.24.0
+ok  	github.com/Uzer007-admin/glow	1.049s
+ok  	github.com/Uzer007-admin/gl/capabilities	1.011s
+?   	github.com/Uzer007-admin/gl/capabilities/native	[no test files]
+ok  	github.com/Uzer007-admin/gl/v2.1/material	1.014s
+ok  	github.com/Uzer007-admin/gl/v2.1/fyne	1.011s
+ok  	github.com/Uzer007-admin/gl/v2.1/gl	1.013s
+ok  	github.com/Uzer007-admin/gl/v2.0/gles2	1.011s

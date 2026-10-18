@@ -1,0 +1,15 @@
+goos: linux
+goarch: amd64
+pkg: github.com/Uzer007-admin/gl/material
+cpu: Intel(R) Xeon(R) Gold 5320 CPU @ 2.20GHz
+BenchmarkAdaptiveCachedMaterial-4   	14703816	        79.87 ns/op	       0 B/op	       0 allocs/op
+BenchmarkAdaptiveCachedMaterial-4   	14919108	        79.85 ns/op	       0 B/op	       0 allocs/op
+BenchmarkAdaptiveCachedMaterial-4   	14936827	        80.28 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCachedMaterial-4           	34235986	        34.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCachedMaterial-4           	34320861	        34.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCachedMaterial-4           	34574854	        34.58 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRendererCachedMaterial-4   	18180816	        66.57 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRendererCachedMaterial-4   	18221124	        66.08 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRendererCachedMaterial-4   	18224601	        65.93 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/Uzer007-admin/gl/material	11.208s

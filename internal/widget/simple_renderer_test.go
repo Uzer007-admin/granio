@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestNewSimpleRenderer(t *testing.T) {
@@ -15,16 +15,16 @@ func TestNewSimpleRenderer(t *testing.T) {
 	o := &simpleWidget{obj: r}
 	o.ExtendBaseWidget(o)
 	w := test.NewTempWindow(t, o)
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 
 	test.AssertRendersToMarkup(t, "simple_renderer.xml", w.Canvas())
 }
 
 type simpleWidget struct {
 	widget.Base
-	obj fyne.CanvasObject
+	obj granio.CanvasObject
 }
 
-func (s *simpleWidget) CreateRenderer() fyne.WidgetRenderer {
+func (s *simpleWidget) CreateRenderer() granio.WidgetRenderer {
 	return widget.NewSimpleRenderer(s.obj)
 }

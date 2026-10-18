@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func Test_NewTheme(t *testing.T) {
@@ -26,7 +26,7 @@ func Test_Theme(t *testing.T) {
 
 type configurableThemeTestSuite struct {
 	suite.Suite
-	constructor func() fyne.Theme
+	constructor func() granio.Theme
 	name        string
 }
 
@@ -37,11 +37,11 @@ func (s *configurableThemeTestSuite) TestAllColorsDefined() {
 func (s *configurableThemeTestSuite) TestUniqueColorValues() {
 	t := s.T()
 	th := s.constructor()
-	seenByVariant := map[fyne.ThemeVariant]map[string]fyne.ThemeColorName{}
+	seenByVariant := map[granio.ThemeVariant]map[string]granio.ThemeColorName{}
 	for variantName, variant := range KnownThemeVariants() {
 		seen := seenByVariant[variant]
 		if seen == nil {
-			seen = map[string]fyne.ThemeColorName{}
+			seen = map[string]granio.ThemeColorName{}
 			seenByVariant[variant] = seen
 		}
 		for _, cn := range knownColorNames {

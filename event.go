@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // HardwareKey contains information associated with physical key events
 // Most applications should use [KeyName] for cross-platform compatibility.

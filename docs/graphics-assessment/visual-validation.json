@@ -1,0 +1,356 @@
+{
+  "date": "2026-10-12",
+  "go": "1.27.1",
+  "experiment": "cgocheck2",
+  "windows": {
+    "os_build": "10.0.26300",
+    "surface_benchmarks": {
+      "BenchmarkLegacySurfaceMetrics": {
+        "samples": [
+          {
+            "ns": 2082.0,
+            "bytes": 24,
+            "allocs": 3
+          },
+          {
+            "ns": 2098.0,
+            "bytes": 24,
+            "allocs": 3
+          },
+          {
+            "ns": 2718.0,
+            "bytes": 24,
+            "allocs": 3
+          }
+        ],
+        "median_ns": 2098.0
+      },
+      "BenchmarkSurfaceMetrics": {
+        "samples": [
+          {
+            "ns": 2078.0,
+            "bytes": 0,
+            "allocs": 0
+          },
+          {
+            "ns": 1692.0,
+            "bytes": 0,
+            "allocs": 0
+          },
+          {
+            "ns": 1826.0,
+            "bytes": 0,
+            "allocs": 0
+          }
+        ],
+        "median_ns": 1826.0
+      }
+    },
+    "probe": {
+      "Go": "go1.27.1-X:cgocheck2",
+      "OS": "windows",
+      "Backend": "auto",
+      "Renderer": "NVIDIA GeForce RTX 4080 SUPER/PCIe/SSE2",
+      "Platform": 393217,
+      "Alpha": {
+        "Width": 192,
+        "Height": 128,
+        "FramebufferWidth": 192,
+        "FramebufferHeight": 128,
+        "ContentScaleX": 1,
+        "ContentScaleY": 1,
+        "Focused": false,
+        "Iconified": false,
+        "Visible": true,
+        "Maximized": false,
+        "TransparentFramebuffer": true
+      },
+      "Opaque": {
+        "Width": 224,
+        "Height": 160,
+        "FramebufferWidth": 224,
+        "FramebufferHeight": 160,
+        "ContentScaleX": 1,
+        "ContentScaleY": 1,
+        "Focused": true,
+        "Iconified": false,
+        "Visible": true,
+        "Maximized": false,
+        "TransparentFramebuffer": false
+      },
+      "AlphaPixel": [
+        64,
+        0,
+        0,
+        127
+      ]
+    }
+  },
+  "linux": {
+    "compositor": "Weston 10.0.1 headless/pixman, scale=2",
+    "surface_benchmarks": {
+      "BenchmarkLegacySurfaceMetrics": {
+        "samples": [
+          {
+            "ns": 128413.0,
+            "bytes": 24,
+            "allocs": 3
+          },
+          {
+            "ns": 121651.0,
+            "bytes": 24,
+            "allocs": 3
+          },
+          {
+            "ns": 131231.0,
+            "bytes": 24,
+            "allocs": 3
+          }
+        ],
+        "median_ns": 128413.0
+      },
+      "BenchmarkSurfaceMetrics": {
+        "samples": [
+          {
+            "ns": 118301.0,
+            "bytes": 0,
+            "allocs": 0
+          },
+          {
+            "ns": 150555.0,
+            "bytes": 0,
+            "allocs": 0
+          },
+          {
+            "ns": 150649.0,
+            "bytes": 0,
+            "allocs": 0
+          }
+        ],
+        "median_ns": 150555.0
+      }
+    },
+    "x11": {
+      "Go": "go1.27.1-X:cgocheck2",
+      "OS": "linux",
+      "Backend": "x11",
+      "Renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "Platform": 393220,
+      "Alpha": {
+        "Width": 192,
+        "Height": 128,
+        "FramebufferWidth": 192,
+        "FramebufferHeight": 128,
+        "ContentScaleX": 1,
+        "ContentScaleY": 1,
+        "Focused": false,
+        "Iconified": false,
+        "Visible": true,
+        "Maximized": false,
+        "TransparentFramebuffer": false
+      },
+      "Opaque": {
+        "Width": 224,
+        "Height": 160,
+        "FramebufferWidth": 224,
+        "FramebufferHeight": 160,
+        "ContentScaleX": 1,
+        "ContentScaleY": 1,
+        "Focused": true,
+        "Iconified": false,
+        "Visible": true,
+        "Maximized": false,
+        "TransparentFramebuffer": false
+      },
+      "AlphaPixel": [
+        64,
+        0,
+        0,
+        128
+      ]
+    },
+    "wayland": {
+      "Go": "go1.27.1-X:cgocheck2",
+      "OS": "linux",
+      "Backend": "wayland",
+      "Renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "Platform": 393219,
+      "Alpha": {
+        "Width": 192,
+        "Height": 128,
+        "FramebufferWidth": 384,
+        "FramebufferHeight": 256,
+        "ContentScaleX": 2,
+        "ContentScaleY": 2,
+        "Focused": false,
+        "Iconified": false,
+        "Visible": true,
+        "Maximized": false,
+        "TransparentFramebuffer": true
+      },
+      "Opaque": {
+        "Width": 224,
+        "Height": 160,
+        "FramebufferWidth": 448,
+        "FramebufferHeight": 320,
+        "ContentScaleX": 2,
+        "ContentScaleY": 2,
+        "Focused": false,
+        "Iconified": false,
+        "Visible": true,
+        "Maximized": false,
+        "TransparentFramebuffer": false
+      },
+      "AlphaPixel": [
+        64,
+        0,
+        0,
+        128
+      ]
+    }
+  },
+  "verified_linux_sources": {
+    "deps/dbus/dbus.go": "4133f8f3b353d15c5102772593bc485da14882fc587dd2d6a7d050e621e35deb",
+    "deps/dbus/store_signature_test.go": "37a749502b7be3e0b66591d4a8dcae53ffa01c40a0f981d5afc2bdd1bc099ea3",
+    "deps/dbus/portal/settings.go": "956299ad20aefb6ce811d5291b662c778bd8811d0c5ed0b8596a349b20d71163",
+    "deps/dbus/portal/settings_integration_test.go": "571c343cbcc43264c59b6f17a3b8e0aa99bac08790ab10f22f55896c01ec24b1",
+    "deps/glow/manifest.go": "87a7861dc36a22878ce766091d6e71b0142faa8d62ad81a6fe9a385f729be9d5",
+    "deps/glow/manifest_test.go": "820729c8b54ad5cd2e75cc42887ab143a691505a94a871261d5a429def50eb21",
+    "deps/glow/regression_test.go": "7b516f1e3f422e78630f3aa6981c4307a8fdf28da92bdc86ae7697ce7370e63e",
+    "deps/glow/tmpl/package.tmpl": "8877bb02d72b79fff1f0dc824ee2db17a9db7b9358efd5b922e4acc84c0c3ba5",
+    "deps/glfw/v3.5/glfw/native_array.c": "4757e2dfdca61ed55ad59741de439e10b818d787a71df6d893fa98cfa0356c0f",
+    "deps/glfw/v3.5/glfw/surface.go": "8a545aa202aee4682874491c531ea96ab69f11517aa25237569cc9f04919524a",
+    "deps/gl/v2.1/fyne/package.go": "7cb45b625cf68e9e472d693c5cb3acaaf28133125927c031032fad1c8510f256",
+    "deps/gl/v2.0/gles2/package.go": "d26609d088ff7f0446d7a42a52d8f80413175d3215806412722c84e39817f01c",
+    "scripts/surface-probe/main.go": "4556f7be5d32b3a522d03138e20851b79df9413766e0e4b4c2a108f293901008"
+  },
+  "generated_profiles": {
+    "deps/gl/all-core/gl": {
+      "functions": 1663,
+      "enums": 2707,
+      "sha256": "3fcf34f6ab6ad2b4758a1465e45fd9e0403ac8543bf50e2daea8c24e9b4e3875"
+    },
+    "deps/gl/egl1.5/egl": {
+      "functions": 158,
+      "enums": 596,
+      "sha256": "f3037be746b5e8612ff5bf7d7eb6a73ed9a8edfdd507afca8cd3d9104c9f0653"
+    },
+    "deps/gl/v2.0/gles2": {
+      "functions": 142,
+      "enums": 301,
+      "sha256": "14bc07f77d6fc31d04e04df50561f65e4358de80e0b8e5d874a15aee06bbf5fc"
+    },
+    "deps/gl/v2.1/fyne": {
+      "functions": 50,
+      "enums": 40,
+      "sha256": "dfdde7040271ca9a5a2ef1d63d9ba305b5dcc22459ffe5a43d01eaca6ddfbb26"
+    },
+    "deps/gl/v2.1/gl": {
+      "functions": 2848,
+      "enums": 4877,
+      "sha256": "7c5897204cc64e6cebaad74d994f985261a5fb0fc40d7974a23b731d5082a4e1"
+    },
+    "deps/gl/v3.0/gles2": {
+      "functions": 812,
+      "enums": 2155,
+      "sha256": "9801479944144c77413644286900da5905c1efee5d328e732aa54f25e719abde"
+    },
+    "deps/gl/v3.1/gles2": {
+      "functions": 880,
+      "enums": 2327,
+      "sha256": "f804397d3df387ccff0ec51a991e82e1c63a6b380200b639a6ad494acda81c2b"
+    },
+    "deps/gl/v3.2/gles2": {
+      "functions": 908,
+      "enums": 2483,
+      "sha256": "6cc6a8de1f75724244030750f0617f2bc8d362d0d43e3648f8cd7f567e73935a"
+    },
+    "deps/gl/v3.2-compatibility/gl": {
+      "functions": 2991,
+      "enums": 5107,
+      "sha256": "3725a1186ffc1ad38418b0651a9fde1bf7f30e41f79f3f81efb62451232b7f0b"
+    },
+    "deps/gl/v3.2-core/gl": {
+      "functions": 1302,
+      "enums": 2237,
+      "sha256": "68cc477c3e102a27536ba6a3d87bb0dc5bfd532bf8d16e698479e3bc1018c497"
+    },
+    "deps/gl/v3.3-compatibility/gl": {
+      "functions": 2992,
+      "enums": 5108,
+      "sha256": "c55958cc75dc9782b040eaf3a9f3733bd2dece2b7a9dcdabcf896deb72941c83"
+    },
+    "deps/gl/v3.3-core/gl": {
+      "functions": 1303,
+      "enums": 2238,
+      "sha256": "57fb5dd0f8ab78b931c8b6468d2233ae448dce7a8ad3bf8aa5c4123cc42b92ee"
+    },
+    "deps/gl/v4.1-compatibility/gl": {
+      "functions": 2997,
+      "enums": 5117,
+      "sha256": "4adb104a5bc14cb89d53c97a4d33a94802a247838602c980362879892eaa21ca"
+    },
+    "deps/gl/v4.1-core/gl": {
+      "functions": 1308,
+      "enums": 2247,
+      "sha256": "ffa4d4dbe3515be18460cbea0e0c5f13b8c2cef1562a5d6e77b49a88fa3bc985"
+    },
+    "deps/gl/v4.2-compatibility/gl": {
+      "functions": 2997,
+      "enums": 5125,
+      "sha256": "0932122995fb6e5d221445b2cf2f1284d025c335cb92c1fb9c6ada6e4f84cedf"
+    },
+    "deps/gl/v4.2-core/gl": {
+      "functions": 1308,
+      "enums": 2255,
+      "sha256": "a5927280867b1baf38fdb1a7ff23aaf4e3250dcca83770fe0bd5b00444fc87b7"
+    },
+    "deps/gl/v4.3-compatibility/gl": {
+      "functions": 2997,
+      "enums": 5128,
+      "sha256": "ca0d80f853f52112ede80a0a376dbbdfc880649687dc66eb15fbe4499a36031d"
+    },
+    "deps/gl/v4.3-core/gl": {
+      "functions": 1308,
+      "enums": 2258,
+      "sha256": "5e8c4219aa1ddc4d05ca81d1ab43e2d4567773252214dd1e431762d7ecff6c78"
+    },
+    "deps/gl/v4.4-compatibility/gl": {
+      "functions": 2997,
+      "enums": 5131,
+      "sha256": "5527fde266d588544f38ed1bd312af5dce6d518e25fcabff2964127711e6869e"
+    },
+    "deps/gl/v4.4-core/gl": {
+      "functions": 1308,
+      "enums": 2261,
+      "sha256": "d611ca7bdbacc5dc57b7d25d7b8e842f26ae5853e5e517f5d019211439cad692"
+    },
+    "deps/gl/v4.5-compatibility/gl": {
+      "functions": 3012,
+      "enums": 5132,
+      "sha256": "5e39aae1df141d359365d9828d862caf7b958a6c87a81dd02a3a2a0c6f4852c4"
+    },
+    "deps/gl/v4.5-core/gl": {
+      "functions": 1311,
+      "enums": 2262,
+      "sha256": "94dae5c4e4cb612412d462373c54372f8f5e04c37351f626938d5ac2ccb0bf1b"
+    },
+    "deps/gl/v4.6-compatibility/gl": {
+      "functions": 3015,
+      "enums": 5149,
+      "sha256": "2d28105c988e252adae031bd9b8be27cb3f445de08116f8e85259c45195c7d16"
+    },
+    "deps/gl/v4.6-core/gl": {
+      "functions": 1314,
+      "enums": 2279,
+      "sha256": "f8610306bb6069444abee77fba81480c176acffec90dcca4a5623619d2fc5094"
+    }
+  },
+  "limits": [
+    "Three sequential benchmark runs per variant; no confidence intervals or frame performance claims.",
+    "X11/Xvfb latency did not improve in these samples; both platforms removed three Go allocations.",
+    "GL Init probes report repeated averages, not an equivalent benchmark series.",
+    "Wayland scale=2 is integer headless output scaling, not fractional-DPI hardware validation.",
+    "Portal service is a test export on a real bus daemon, not a desktop portal integration."
+  ]
+}

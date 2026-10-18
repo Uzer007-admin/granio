@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 type systemTrayDriver interface {
 	Driver
@@ -81,7 +81,7 @@ type MainMenu struct {
 	Items []*Menu
 }
 
-// NewMainMenu creates a top level menu structure used by fyne.Window for displaying a menubar
+// NewMainMenu creates a top level menu structure used by granio.Window for displaying a menubar
 // (or appropriate equivalent).
 func NewMainMenu(items ...*Menu) *MainMenu {
 	return &MainMenu{Items: items}

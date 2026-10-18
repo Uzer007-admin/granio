@@ -4,11 +4,11 @@ import (
 	"image"
 	"image/color"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal"
-	paint "fyne.io/fyne/v2/internal/painter"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // This file is the GL half of the glyph atlas in internal/painter's atlas.go.
@@ -135,12 +135,12 @@ func (p *painter) ensureAtlas() {
 
 // drawTextFromAtlas queues one quad per visible glyph of the run, reporting
 // false when the string has to go down the whole-run texture path instead.
-func (p *painter) drawTextFromAtlas(text *canvas.Text, pos fyne.Position, frame fyne.Size, clip *internal.ClipItem) bool {
+func (p *painter) drawTextFromAtlas(text *canvas.Text, pos granio.Position, frame granio.Size, clip *internal.ClipItem) bool {
 	if !glyphAtlasSupported {
 		return false
 	}
 	p.ensureAtlas()
-	clipPos, clipSize := fyne.Position{}, frame
+	clipPos, clipSize := granio.Position{}, frame
 	if clip != nil {
 		clipPos, clipSize = clip.Rect()
 	}
@@ -170,7 +170,7 @@ func (p *painter) drawTextFromAtlas(text *canvas.Text, pos fyne.Position, frame 
 // no antialiasing, which a quad on the same pixels reproduces. A nonzero stroke
 // always goes to the shader, which draws the rim in the stroke colour even when
 // that colour is transparent. Reports false when the shader is needed.
-func (p *painter) pushSolidRect(r *canvas.Rectangle, pos fyne.Position, frame fyne.Size) bool {
+func (p *painter) pushSolidRect(r *canvas.Rectangle, pos granio.Position, frame granio.Size) bool {
 	if !glyphAtlasSupported || r.Aspect != 0 || r.StrokeWidth != 0 || paint.IsShadowVisible(r.Shadow) {
 		return false
 	}

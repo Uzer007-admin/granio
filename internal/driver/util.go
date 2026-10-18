@@ -3,15 +3,15 @@ package driver
 import (
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
 )
 
 // AbsolutePositionForObject returns the absolute position of an object in a set of object trees.
 // If the object is not part of any of the trees, the position (0,0) is returned.
-func AbsolutePositionForObject(object fyne.CanvasObject, trees []fyne.CanvasObject) fyne.Position {
-	var pos fyne.Position
-	findPos := func(o fyne.CanvasObject, p fyne.Position, _ fyne.Position, _ fyne.Size) bool {
+func AbsolutePositionForObject(object granio.CanvasObject, trees []granio.CanvasObject) granio.Position {
+	var pos granio.Position
+	findPos := func(o granio.CanvasObject, p granio.Position, _ granio.Position, _ granio.Size) bool {
 		if o == object {
 			pos = p
 			return true
@@ -29,11 +29,11 @@ func AbsolutePositionForObject(object fyne.CanvasObject, trees []fyne.CanvasObje
 // FindObjectAtPositionMatching is used to find an object in a canvas at the specified position.
 // The matches function determines of the type of object that is found at this position is of a suitable type.
 // The various canvas roots and overlays that can be searched are also passed in.
-func FindObjectAtPositionMatching(mouse fyne.Position, matches func(object fyne.CanvasObject) bool, overlay fyne.CanvasObject, roots ...fyne.CanvasObject) (fyne.CanvasObject, fyne.Position, int) {
-	var found fyne.CanvasObject
-	var foundPos fyne.Position
+func FindObjectAtPositionMatching(mouse granio.Position, matches func(object granio.CanvasObject) bool, overlay granio.CanvasObject, roots ...granio.CanvasObject) (granio.CanvasObject, granio.Position, int) {
+	var found granio.CanvasObject
+	var foundPos granio.Position
 
-	findFunc := func(walked fyne.CanvasObject, pos fyne.Position, clipPos fyne.Position, clipSize fyne.Size) bool {
+	findFunc := func(walked granio.CanvasObject, pos granio.Position, clipPos granio.Position, clipSize granio.Size) bool {
 		if !walked.Visible() {
 			return false
 		}
@@ -56,7 +56,7 @@ func FindObjectAtPositionMatching(mouse fyne.Position, matches func(object fyne.
 
 		if matches(walked) {
 			found = walked
-			foundPos = fyne.NewPos(mouse.X-pos.X, mouse.Y-pos.Y)
+			foundPos = granio.NewPos(mouse.X-pos.X, mouse.Y-pos.Y)
 		}
 		return false
 	}
@@ -90,12 +90,12 @@ func FindObjectAtPositionMatching(mouse fyne.Position, matches func(object fyne.
 //     will not be called for the obj where the walk stopped, however, it will be called for all its
 //     parents
 func ReverseWalkVisibleObjectTree(
-	obj fyne.CanvasObject,
-	beforeChildren func(fyne.CanvasObject, fyne.Position, fyne.Position, fyne.Size) bool,
-	afterChildren func(fyne.CanvasObject, fyne.Position, fyne.CanvasObject),
+	obj granio.CanvasObject,
+	beforeChildren func(granio.CanvasObject, granio.Position, granio.Position, granio.Size) bool,
+	afterChildren func(granio.CanvasObject, granio.Position, granio.CanvasObject),
 ) bool {
-	clipSize := fyne.NewSize(math.MaxInt32, math.MaxInt32)
-	return walkObjectTree(obj, true, nil, fyne.NewPos(0, 0), fyne.NewPos(0, 0), clipSize, beforeChildren, afterChildren, true)
+	clipSize := granio.NewSize(math.MaxInt32, math.MaxInt32)
+	return walkObjectTree(obj, true, nil, granio.NewPos(0, 0), granio.NewPos(0, 0), clipSize, beforeChildren, afterChildren, true)
 }
 
 // WalkCompleteObjectTree will walk an object tree for all objects (ignoring visible state) executing the passed
@@ -108,12 +108,12 @@ func ReverseWalkVisibleObjectTree(
 //     will not be called for the obj where the walk stopped, however, it will be called for all its
 //     parents
 func WalkCompleteObjectTree(
-	obj fyne.CanvasObject,
-	beforeChildren func(fyne.CanvasObject, fyne.Position, fyne.Position, fyne.Size) bool,
-	afterChildren func(fyne.CanvasObject, fyne.Position, fyne.CanvasObject),
+	obj granio.CanvasObject,
+	beforeChildren func(granio.CanvasObject, granio.Position, granio.Position, granio.Size) bool,
+	afterChildren func(granio.CanvasObject, granio.Position, granio.CanvasObject),
 ) bool {
-	clipSize := fyne.NewSize(math.MaxInt32, math.MaxInt32)
-	return walkObjectTree(obj, false, nil, fyne.NewPos(0, 0), fyne.NewPos(0, 0), clipSize, beforeChildren, afterChildren, false)
+	clipSize := granio.NewSize(math.MaxInt32, math.MaxInt32)
+	return walkObjectTree(obj, false, nil, granio.NewPos(0, 0), granio.NewPos(0, 0), clipSize, beforeChildren, afterChildren, false)
 }
 
 // WalkVisibleObjectTree will walk an object tree for all visible objects executing the passed functions following
@@ -126,22 +126,22 @@ func WalkCompleteObjectTree(
 //     will not be called for the obj where the walk stopped, however, it will be called for all its
 //     parents
 func WalkVisibleObjectTree(
-	obj fyne.CanvasObject,
-	beforeChildren func(fyne.CanvasObject, fyne.Position, fyne.Position, fyne.Size) bool,
-	afterChildren func(fyne.CanvasObject, fyne.Position, fyne.CanvasObject),
+	obj granio.CanvasObject,
+	beforeChildren func(granio.CanvasObject, granio.Position, granio.Position, granio.Size) bool,
+	afterChildren func(granio.CanvasObject, granio.Position, granio.CanvasObject),
 ) bool {
-	clipSize := fyne.NewSize(math.MaxInt32, math.MaxInt32)
-	return walkObjectTree(obj, false, nil, fyne.NewPos(0, 0), fyne.NewPos(0, 0), clipSize, beforeChildren, afterChildren, true)
+	clipSize := granio.NewSize(math.MaxInt32, math.MaxInt32)
+	return walkObjectTree(obj, false, nil, granio.NewPos(0, 0), granio.NewPos(0, 0), clipSize, beforeChildren, afterChildren, true)
 }
 
 func walkObjectTree(
-	obj fyne.CanvasObject,
+	obj granio.CanvasObject,
 	reverse bool,
-	parent fyne.CanvasObject,
-	offset, clipPos fyne.Position,
-	clipSize fyne.Size,
-	beforeChildren func(fyne.CanvasObject, fyne.Position, fyne.Position, fyne.Size) bool,
-	afterChildren func(fyne.CanvasObject, fyne.Position, fyne.CanvasObject),
+	parent granio.CanvasObject,
+	offset, clipPos granio.Position,
+	clipSize granio.Size,
+	beforeChildren func(granio.CanvasObject, granio.Position, granio.Position, granio.Size) bool,
+	afterChildren func(granio.CanvasObject, granio.Position, granio.CanvasObject),
 	requireVisible bool,
 ) bool {
 	if obj == nil {
@@ -155,12 +155,12 @@ func walkObjectTree(
 	// The renderer lookup is a cache map hit per node per walk, and a walk runs
 	// several times per frame - so look it up once here and hand it to the clip
 	// check rather than letting IsClip repeat it.
-	var children []fyne.CanvasObject
-	var renderer fyne.WidgetRenderer
+	var children []granio.CanvasObject
+	var renderer granio.WidgetRenderer
 	switch co := obj.(type) {
-	case *fyne.Container:
+	case *granio.Container:
 		children = co.Objects
-	case fyne.Widget:
+	case granio.Widget:
 		if requireVisible || cache.IsRendered(co) {
 			renderer = cache.Renderer(co)
 			children = renderer.Objects()
@@ -179,7 +179,7 @@ func walkObjectTree(
 	}
 
 	cancelled := false
-	followChild := func(child fyne.CanvasObject) bool {
+	followChild := func(child granio.CanvasObject) bool {
 		if walkObjectTree(child, reverse, obj, pos, clipPos, clipSize, beforeChildren, afterChildren, requireVisible) {
 			cancelled = true
 			return true
@@ -206,12 +206,12 @@ func walkObjectTree(
 	return cancelled
 }
 
-func IsClip(o fyne.CanvasObject) bool {
-	if _, scroll := o.(fyne.Scrollable); scroll {
+func IsClip(o granio.CanvasObject) bool {
+	if _, scroll := o.(granio.Scrollable); scroll {
 		return true
 	}
 
-	wid, isWid := o.(fyne.Widget)
+	wid, isWid := o.(granio.Widget)
 	if !isWid {
 		return false
 	}
@@ -226,8 +226,8 @@ func IsClip(o fyne.CanvasObject) bool {
 
 // isClipWithRenderer is IsClip for a caller that already holds the object's
 // renderer (nil if it has none), saving the repeated cache lookup.
-func isClipWithRenderer(o fyne.CanvasObject, r fyne.WidgetRenderer) bool {
-	if _, scroll := o.(fyne.Scrollable); scroll {
+func isClipWithRenderer(o granio.CanvasObject, r granio.WidgetRenderer) bool {
+	if _, scroll := o.(granio.Scrollable); scroll {
 		return true
 	}
 	if r == nil {

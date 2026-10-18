@@ -1,0 +1,8 @@
+{"event":"ready"}
+{"composition":false,"end":0,"event":"state","start":0,"text":""}
+{"event":"commit","text":"你好"}
+{"composition":false,"end":2,"event":"state","start":2,"text":"你好"}
+{"event":"commit","text":"你好中国"}
+{"composition":false,"end":4,"event":"state","start":4,"text":"你好中国"}
+{"event":"commit","text":"你好中国 "}
+{"composition":false,"end":5,"event":"state","start":5,"text":"你好中国 "}

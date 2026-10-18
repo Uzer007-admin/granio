@@ -8,16 +8,16 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func init() {
-	fyne.SetCurrentApp(&themedApp{})
+	granio.SetCurrentApp(&themedApp{})
 }
 
-func helperNewStaticResource() *fyne.StaticResource {
-	return &fyne.StaticResource{
+func helperNewStaticResource() *granio.StaticResource {
+	return &granio.StaticResource{
 		StaticName: "content-remove.svg",
 		StaticContent: []byte{
 			60, 115, 118, 103, 32, 120, 109, 108, 110, 115, 61, 34, 104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 119, 51, 46, 111, 114, 103, 47, 50, 48, 48, 48, 47, 115, 118, 103, 34, 32, 119, 105, 100, 116, 104, 61, 34, 50, 52, 34, 32, 104, 101, 105, 103, 104, 116, 61, 34, 50, 52, 34, 32, 118, 105, 101, 119, 66, 111, 120, 61, 34, 48, 32, 48, 32, 50, 52, 32, 50, 52, 34, 62, 60, 112, 97, 116, 104, 32, 102, 105, 108, 108, 61, 34, 35, 102, 102, 102, 102, 102, 102, 34, 32, 100, 61, 34, 77, 49, 57, 32, 49, 51, 72, 53, 118, 45, 50, 104, 49, 52, 118, 50, 122, 34, 47, 62, 60, 112, 97, 116, 104, 32, 100, 61, 34, 77, 48, 32, 48, 104, 50, 52, 118, 50, 52, 72, 48, 122, 34, 32, 102, 105, 108, 108, 61, 34, 110, 111, 110, 101, 34, 47, 62, 60, 47, 115, 118, 103, 62,
@@ -25,9 +25,9 @@ func helperNewStaticResource() *fyne.StaticResource {
 	}
 }
 
-func helperLoadRes(t *testing.T, name string) fyne.Resource {
+func helperLoadRes(t *testing.T, name string) granio.Resource {
 	path := filepath.Join("testdata", name) // pathObj relative to this file
-	res, err := fyne.LoadResourceFromPath(path)
+	res, err := granio.LoadResourceFromPath(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,25 +35,25 @@ func helperLoadRes(t *testing.T, name string) fyne.Resource {
 }
 
 func TestIconThemeChangeDoesNotChangeName(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	cancel := theme.CancelIcon()
 	name := cancel.Name()
 
-	fyne.CurrentApp().Settings().SetTheme(theme.LightTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.LightTheme())
 	assert.Equal(t, name, cancel.Name())
 }
 
 func TestIconThemeChangeContent(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	cancel := theme.CancelIcon()
 	content := cancel.Content()
 
-	fyne.CurrentApp().Settings().SetTheme(theme.LightTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.LightTheme())
 	assert.NotEqual(t, content, cancel.Content())
 }
 
 func TestIconThemeResourceWithViewboxOnly(t *testing.T) {
-	r1 := &fyne.StaticResource{
+	r1 := &granio.StaticResource{
 		StaticName:    "unsplash.svg",
 		StaticContent: []byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 6.75V0h9v6.75h-9zm9 3.75H24V24H0V10.5h7.5v6.75h9V10.5z"></path></svg>`),
 	}
@@ -65,18 +65,18 @@ func TestIconThemeResourceWithViewboxOnly(t *testing.T) {
 }
 
 func TestNewThemedResource_StaticResourceSupport(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	custom := theme.NewThemedResource(helperNewStaticResource())
 	content := custom.Content()
 	name := custom.Name()
 
-	fyne.CurrentApp().Settings().SetTheme(theme.LightTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.LightTheme())
 	assert.NotEqual(t, content, custom.Content())
 	assert.Equal(t, name, custom.Name())
 }
 
 func TestNewColoredResource(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	source := helperNewStaticResource()
 	custom := theme.NewColoredResource(source, theme.ColorNameSuccess)
 
@@ -88,7 +88,7 @@ func TestNewColoredResource(t *testing.T) {
 }
 
 func TestNewDisabledResource(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	source := helperNewStaticResource()
 	custom := theme.NewDisabledResource(source)
 	name := custom.Name()
@@ -109,28 +109,28 @@ func TestThemedResource_Name(t *testing.T) {
 }
 
 func TestThemedResource_Content_NoGroupsFile(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	staticResource := helperLoadRes(t, "cancel_Paths.svg")
 	themedResource := theme.NewThemedResource(staticResource)
 	assert.NotEqual(t, staticResource.Content(), themedResource.Content())
 }
 
 func TestThemedResource_Content_GroupPathFile(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	staticResource := helperLoadRes(t, "check_GroupPaths.svg")
 	themedResource := theme.NewThemedResource(staticResource)
 	assert.NotEqual(t, staticResource.Content(), themedResource.Content())
 }
 
 func TestThemedResource_Content_GroupRectFile(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	staticResource := helperLoadRes(t, "info_GroupRects.svg")
 	themedResource := theme.NewThemedResource(staticResource)
 	assert.NotEqual(t, staticResource.Content(), themedResource.Content())
 }
 
 func TestThemedResource_Content_GroupPolygonsFile(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	staticResource := helperLoadRes(t, "warning_GroupPolygons.svg")
 	themedResource := theme.NewThemedResource(staticResource)
 	assert.NotEqual(t, staticResource.Content(), themedResource.Content())
@@ -138,14 +138,14 @@ func TestThemedResource_Content_GroupPolygonsFile(t *testing.T) {
 
 // a black svg object omits the fill tag, this checks if it still properly updated
 func TestThemedResource_Content_BlackFillIsUpdated(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	staticResource := helperLoadRes(t, "cancel_PathsBlackFill.svg")
 	themedResource := theme.NewThemedResource(staticResource)
 	assert.NotEqual(t, staticResource.Content(), themedResource.Content())
 }
 
 func TestThemedResource_Error(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	source := helperNewStaticResource()
 	custom := theme.NewThemedResource(source)
 	custom.ColorName = theme.ColorNameError
@@ -156,7 +156,7 @@ func TestThemedResource_Error(t *testing.T) {
 }
 
 func TestThemedResource_Success(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	source := helperNewStaticResource()
 	custom := theme.NewThemedResource(source)
 	custom.ColorName = theme.ColorNameSuccess
@@ -168,7 +168,7 @@ func TestThemedResource_Success(t *testing.T) {
 }
 
 func TestThemedResource_Warning(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	source := helperNewStaticResource()
 	custom := theme.NewThemedResource(source)
 	custom.ColorName = theme.ColorNameWarning
@@ -185,7 +185,7 @@ func TestDisabledResource_Name(t *testing.T) {
 }
 
 func TestDisabledResource_Content_NoGroupsFile(t *testing.T) {
-	fyne.CurrentApp().Settings().SetTheme(theme.DarkTheme())
+	granio.CurrentApp().Settings().SetTheme(theme.DarkTheme())
 	staticResource := helperLoadRes(t, "cancel_Paths.svg")
 	disabledResource := theme.NewDisabledResource(staticResource)
 	assert.NotEqual(t, staticResource.Content(), disabledResource.Content())

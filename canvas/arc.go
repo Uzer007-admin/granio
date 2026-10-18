@@ -3,11 +3,11 @@ package canvas
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*Arc)(nil)
+var _ granio.CanvasObject = (*Arc)(nil)
 
 // Arc represents a filled arc or annular sector primitive that can be drawn on a Fyne canvas.
 // It allows for the creation of circular, ring-shaped or pie-shaped segment, with configurable cutout ratio
@@ -38,7 +38,7 @@ func (a *Arc) Hide() {
 
 // Move the arc to a new position, relative to its parent / canvas.
 // The position specifies the **center** of the arc.
-func (a *Arc) Move(pos fyne.Position) {
+func (a *Arc) Move(pos granio.Position) {
 	if a.Position() == pos {
 		return
 	}
@@ -54,7 +54,7 @@ func (a *Arc) Refresh() {
 
 // Resize updates the logical size of the arc.
 // The arc is always drawn centered on its Position().
-func (a *Arc) Resize(s fyne.Size) {
+func (a *Arc) Resize(s granio.Size) {
 	if s == a.Size() {
 		return
 	}

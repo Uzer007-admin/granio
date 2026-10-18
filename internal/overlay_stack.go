@@ -1,21 +1,21 @@
 package internal
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
 )
 
 // OverlayStack allows stacking overlays on top of each other.
 // Removing an overlay will also remove all overlays above it.
 type OverlayStack struct {
 	OnChange      func()
-	Canvas        fyne.Canvas
+	Canvas        granio.Canvas
 	focusManagers []*app.FocusManager
-	overlays      []fyne.CanvasObject
+	overlays      []granio.CanvasObject
 }
 
 // Add puts an overlay on the stack.
-func (s *OverlayStack) Add(overlay fyne.CanvasObject) {
+func (s *OverlayStack) Add(overlay granio.CanvasObject) {
 	if overlay == nil {
 		return
 	}
@@ -37,7 +37,7 @@ func (s *OverlayStack) Add(overlay fyne.CanvasObject) {
 }
 
 // List returns all overlays on the stack from bottom to top.
-func (s *OverlayStack) List() []fyne.CanvasObject {
+func (s *OverlayStack) List() []granio.CanvasObject {
 	return s.overlays
 }
 
@@ -47,7 +47,7 @@ func (s *OverlayStack) ListFocusManagers() []*app.FocusManager {
 }
 
 // Remove deletes an overlay and all overlays above it from the stack.
-func (s *OverlayStack) Remove(overlay fyne.CanvasObject) {
+func (s *OverlayStack) Remove(overlay granio.CanvasObject) {
 	if s.OnChange != nil {
 		defer s.OnChange()
 	}
@@ -70,7 +70,7 @@ func (s *OverlayStack) Remove(overlay fyne.CanvasObject) {
 }
 
 // Top returns the top-most overlay of the stack.
-func (s *OverlayStack) Top() fyne.CanvasObject {
+func (s *OverlayStack) Top() granio.CanvasObject {
 	if len(s.overlays) == 0 {
 		return nil
 	}

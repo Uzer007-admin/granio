@@ -5,9 +5,9 @@ import (
 	"image/color"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
 
 	"github.com/srwiley/rasterx"
 	"golang.org/x/image/math/fixed"
@@ -36,7 +36,7 @@ func DrawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, vectorPad float32, s
 		return raw
 	}
 
-	clampPoint := func(p fyne.Position) (float32, float32) {
+	clampPoint := func(p granio.Position) (float32, float32) {
 		return min(max(p.X, 0), max(size.Width, 0)), min(max(p.Y, 0), max(size.Height, 0))
 	}
 
@@ -44,14 +44,14 @@ func DrawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, vectorPad float32, s
 	yScaled := make([]float64, numPoints)
 	cornerRadii := make([]float32, numPoints)
 
-	fixedPoints := make([]fyne.Position, numPoints)
+	fixedPoints := make([]granio.Position, numPoints)
 	for i := 0; i < numPoints; i++ {
 		px, py := vertices[i].X, vertices[i].Y
 		if polygon.NormalizedPoints {
 			px, py = px*size.Width, py*size.Height
 		}
-		px, py = clampPoint(fyne.NewPos(px, py))
-		fixedPoints[i] = fyne.NewPos(px, py)
+		px, py = clampPoint(granio.NewPos(px, py))
+		fixedPoints[i] = granio.NewPos(px, py)
 		xScaled[i] = float64(scale(px + vectorPad))
 		yScaled[i] = float64(scale(py + vectorPad))
 
@@ -317,15 +317,15 @@ func GetCornerRadius(perCornerRadius, baseCornerRadius float32) float32 {
 // and adjusting the radius proportionally if necessary. The function returns a slice of adjusted corner radii that fit within the geometry of the polygon.
 //
 // This is typically used for drawing arbitrary polygons with rounded corners, ensuring that the corners do not overlap and the shape remains visually consistent.
-func GetMaximumCornerRadii(points []fyne.Position, radii []float32) []float32 {
+func GetMaximumCornerRadii(points []granio.Position, radii []float32) []float32 {
 	n := len(points)
 	if n < 3 || len(radii) != n {
 		return radii
 	}
 
-	calculateInteriorAngle := func(p1, p2, p3 fyne.Position) float64 {
-		v1 := fyne.Position{X: p1.X - p2.X, Y: p1.Y - p2.Y}
-		v2 := fyne.Position{X: p3.X - p2.X, Y: p3.Y - p2.Y}
+	calculateInteriorAngle := func(p1, p2, p3 granio.Position) float64 {
+		v1 := granio.Position{X: p1.X - p2.X, Y: p1.Y - p2.Y}
+		v2 := granio.Position{X: p3.X - p2.X, Y: p3.Y - p2.Y}
 
 		angle1 := math.Atan2(float64(v1.Y), float64(v1.X))
 		angle2 := math.Atan2(float64(v2.Y), float64(v2.X))
@@ -387,7 +387,7 @@ func GetMaximumCornerRadii(points []fyne.Position, radii []float32) []float32 {
 // so this corner can grow up to double the maximum radius of the smaller dimension (width or height) without causing overlaps.
 //
 // This is typically used for drawing circular corners in rectangles or squares with different corner radii.
-func GetMaximumCornerRadius(radius, adjacentWidthRadius, adjacentHeightRadius float32, size fyne.Size) float32 {
+func GetMaximumCornerRadius(radius, adjacentWidthRadius, adjacentHeightRadius float32, size granio.Size) float32 {
 	maxWidthRadius := size.Width / 2
 	maxHeightRadius := size.Height / 2
 	// fast path: corner radius fits within both per-axis maxima
@@ -404,10 +404,10 @@ func GetMaximumCornerRadius(radius, adjacentWidthRadius, adjacentHeightRadius fl
 }
 
 // GetMaximumRadius returns the maximum possible corner radius that fits within the given size.
-// It calculates half of the smaller dimension (width or height) of the provided fyne.Size.
+// It calculates half of the smaller dimension (width or height) of the provided granio.Size.
 //
 // This is typically used for drawing circular corners in rectangles, circles or squares with the same radius for all corners.
-func GetMaximumRadius(size fyne.Size) float32 {
+func GetMaximumRadius(size granio.Size) float32 {
 	return min(size.Height, size.Width) / 2
 }
 
@@ -422,7 +422,7 @@ func GetMaximumRadiusArc(outerRadius, innerRadius, sweepAngle float32) float32 {
 	//revive:disable-next-line:add-constant
 	length := 1.5 * float64(outerRadius) * span / (1 + span) // no division-by-zero risk
 
-	return GetMaximumRadius(fyne.NewSize(
+	return GetMaximumRadius(granio.NewSize(
 		thickness, float32(length),
 	))
 }
@@ -476,19 +476,19 @@ func NormalizeArcAngles(startAngle, endAngle float32) (normalizedStartAngle, nor
 // It returns the normalized start and end positions, and a filtered slice of control points
 // that are not coincident with the start or end points. If two control points are provided
 // and they are identical, only one is added if it is not coincident with the start or end.
-func NormalizeBezierCurvePoints(startPoint, endPoint fyne.Position, controlPoints []fyne.Position, size fyne.Size, offset float32) (normalizedStart, normalizedEnd fyne.Position, control []fyne.Position) {
-	clampPoint := func(p fyne.Position) (float32, float32) {
+func NormalizeBezierCurvePoints(startPoint, endPoint granio.Position, controlPoints []granio.Position, size granio.Size, offset float32) (normalizedStart, normalizedEnd granio.Position, control []granio.Position) {
+	clampPoint := func(p granio.Position) (float32, float32) {
 		return min(max(p.X, offset), max(size.Width-offset, 0)), min(max(p.Y, offset), max(size.Height-offset, 0))
 	}
 	p1x, p1y := clampPoint(startPoint)
 	p2x, p2y := clampPoint(endPoint)
-	cp := make([]fyne.Position, 0, 2)
+	cp := make([]granio.Position, 0, 2)
 
 	if len(controlPoints) == 1 {
 		cpX, cpY := clampPoint(controlPoints[0])
 		if (cpX != p1x || cpY != p1y) && (cpX != p2x || cpY != p2y) {
 			// only add the control point if it is not the same as start and end point
-			cp = append(cp, fyne.NewPos(cpX, cpY))
+			cp = append(cp, granio.NewPos(cpX, cpY))
 		}
 	} else if len(controlPoints) >= 2 {
 		cp1x, cp1y := clampPoint(controlPoints[0])
@@ -498,21 +498,21 @@ func NormalizeBezierCurvePoints(startPoint, endPoint fyne.Position, controlPoint
 			// if both control points are the same, only add one if it is not the same as start and end point
 			if (cp1x != p1x || cp1y != p1y) && (cp1x != p2x || cp1y != p2y) {
 				// only add the control point if it is not the same as start and end point
-				cp = append(cp, fyne.NewPos(cp1x, cp1y))
+				cp = append(cp, granio.NewPos(cp1x, cp1y))
 			}
 		} else {
 			if cp1x != p1x || cp1y != p1y {
 				// only add the control point if it is not the same as start point
-				cp = append(cp, fyne.NewPos(cp1x, cp1y))
+				cp = append(cp, granio.NewPos(cp1x, cp1y))
 			}
 			if cp2x != p2x || cp2y != p2y {
 				// only add the control point if it is not the same as end point
-				cp = append(cp, fyne.NewPos(cp2x, cp2y))
+				cp = append(cp, granio.NewPos(cp2x, cp2y))
 			}
 		}
 	}
 
-	return fyne.NewPos(p1x, p1y), fyne.NewPos(p2x, p2y), cp
+	return granio.NewPos(p1x, p1y), granio.NewPos(p2x, p2y), cp
 }
 
 func drawArbitraryPolygonUsingAdder(xs, ys, radii []float64, p rasterx.Adder) {
@@ -609,7 +609,7 @@ func drawArbitraryPolygonUsingAdder(xs, ys, radii []float64, p rasterx.Adder) {
 
 func drawOblong(fill, strokeCol color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, rWidth, rHeight, vectorPad float32, scale func(float32) float32) *image.RGBA {
 	// The maximum possible corner radii for a circular shape
-	size := fyne.NewSize(rWidth, rHeight)
+	size := granio.NewSize(rWidth, rHeight)
 	topRightRadius = GetMaximumCornerRadius(topRightRadius, topLeftRadius, bottomRightRadius, size)
 	topLeftRadius = GetMaximumCornerRadius(topLeftRadius, topRightRadius, bottomLeftRadius, size)
 	bottomRightRadius = GetMaximumCornerRadius(bottomRightRadius, bottomLeftRadius, topRightRadius, size)

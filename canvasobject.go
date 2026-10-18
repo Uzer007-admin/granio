@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // CanvasObject describes any graphical object that can be added to a canvas.
 // Objects have a size and position that can be controlled through this API.

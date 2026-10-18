@@ -7,10 +7,10 @@ import (
 	"os"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	intRepo "fyne.io/fyne/v2/internal/repository"
-	"fyne.io/fyne/v2/internal/theme"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -35,7 +35,7 @@ func TestFromJSON(t *testing.T) {
 	assert.Equal(t, color.NRGBA{R: 0xc0, G: 0xc0, B: 0xc0, A: 0xff}, th.Color(ColorNameBackground, VariantLight))
 	assert.Equal(t, color.NRGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff}, th.Color(ColorNameForeground, VariantLight))
 	assert.Equal(t, float32(5), th.Size(SizeNameInlineIcon))
-	assert.Equal(t, "NotoMono-Regular.ttf", th.Font(fyne.TextStyle{Monospace: true}).Name())
+	assert.Equal(t, "NotoMono-Regular.ttf", th.Font(granio.TextStyle{Monospace: true}).Name())
 	assert.Equal(t, "cancel_Paths.svg", th.Icon(IconNameCancel).Name())
 
 	th, _ = FromJSON("{\"Colors\":{\"foreground\":\"\xb1\"}}")
@@ -44,7 +44,7 @@ func TestFromJSON(t *testing.T) {
 }
 
 func TestFromTOML_Resource(t *testing.T) {
-	r, err := fyne.LoadResourceFromPath("./testdata/theme.json")
+	r, err := granio.LoadResourceFromPath("./testdata/theme.json")
 	assert.NoError(t, err)
 	th, err := FromJSON(string(r.Content()))
 

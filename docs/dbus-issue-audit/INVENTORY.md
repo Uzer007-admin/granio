@@ -1,0 +1,44 @@
+# Открытые issues godbus/dbus
+
+Снимок public GitHub API: 2026-10-12T09:05:13.009592+00:00. Все 36 открытых issues и 67 комментариев; PR исключены. Полные исходные тексты: [open-issues.json](open-issues.json).
+
+Статусы описывают этот локальный fork 5.3.0. Issue не закрывались на GitHub. Исправление смежной ошибки или успешный integration test не объявляется исправлением неподтверждённого сценария.
+
+| Issue | Приоритет | Статус | Решение / граница проверки |
+| --- | --- | --- | --- |
+| [#440](https://github.com/godbus/dbus/issues/440) Panics within encoding/decoding might be swallowed | P1 | Исправлено | Кодек перехватывает только собственный codecError; foreign error/non-error panic сохраняются. Regression tests. |
+| [#404](https://github.com/godbus/dbus/issues/404) No discovery for session bus via X11 | P2 | Частично | Добавлен XDG_RUNTIME_DIR; X11 selection/property discovery на FreeBSD не реализована и не проверена. |
+| [#400](https://github.com/godbus/dbus/issues/400) Type handling issue when using gonetworkmanager | P2 | Не воспроизведено | Проверять точный nested a{sa{sv}} body и Variant/Store types на NetworkManager fixture; typed round trips проходят. |
+| [#388](https://github.com/godbus/dbus/issues/388) Tuple support in ParseVariant. | P2 | Расширение | Tuple grammar текстового ParseVariant остаётся отдельной функцией; binary structs поддерживаются. |
+| [#383](https://github.com/godbus/dbus/issues/383) [Bug]:A goroutine memory leak | P2 | Исправлены tests | TestSessionBus/TestSystemBus закрывают повторные подключения. Это не доказательство общей production goroutine leak. |
+| [#377](https://github.com/godbus/dbus/issues/377) dbus: wire format error: invalid value for boolean | P1 | Fixture не воспроизведён | Golden wire tests обоих byte orders проходят. bool alignment покрыта. Attachment и Firefox/Telegram сценарий отдельно не выполнены. |
+| [#374](https://github.com/godbus/dbus/issues/374) Propagate the connection context to exported methods. | P2 | Расширение | Context propagation в exported handlers требует отдельного отражения/invocation API и tests. |
+| [#373](https://github.com/godbus/dbus/issues/373) Suggest Adoption of Scorecard GitHub Action | P3 | CI предложение | Permissions и актуальные actions проверены; Scorecard deployment отдельно не включён. |
+| [#372](https://github.com/godbus/dbus/issues/372) Use the default fallback path for the session bus | P1 | Исправлено | Поиск bus socket учитывает абсолютный XDG_RUNTIME_DIR до /run/user/<uid>; regression с настоящим Unix socket. |
+| [#370](https://github.com/godbus/dbus/issues/370) Error org.freedesktop.DBus.Error.UnknownMethod: Unknown / invalid method 'Notify' | P2 | Не воспроизведено | Проверить RequestName/Export сигнатуру Notify, destination и interface через introspection. |
+| [#338](https://github.com/godbus/dbus/issues/338) Unable to set up new connection: Failed to read an SELinux context from connection | P2 | Окружение | SELinux/TCP policy конкретного host не воспроизведена; normal/no_tcp integration проходит. |
+| [#321](https://github.com/godbus/dbus/issues/321) runc create hung when apply systemd cgroup config when use godbus | P1 | Не воспроизведено | Нужны runc/systemd нагрузка, goroutine dumps и deadline/cancellation stress; codec benchmark не доказывает устранение hang. |
+| [#317](https://github.com/godbus/dbus/issues/317) Type `dbus.Error` is not comparable. | P3 | API предложение | dbus.Error содержит slice; использовать *Error/errors.As или явное сравнение Name/Body. Minor fork не меняет representation. |
+| [#306](https://github.com/godbus/dbus/issues/306) Can't marshal a Variant value as JSON | P3 | Расширение | JSON encoding Variant не часть wire protocol; явная сериализация Signature().String()/Value() сохраняет тип. |
+| [#283](https://github.com/godbus/dbus/issues/283) Error connecting bus on windows | P1 | Частично | Windows compile regression исправлена. Реальный Windows daemon/autolaunch IPC не проверен. |
+| [#276](https://github.com/godbus/dbus/issues/276) No examples of decoding into structures. | P3 | Документация | Store/struct conversion уже доступны; примеры конкретных signatures полезны без изменения wire API. |
+| [#253](https://github.com/godbus/dbus/issues/253) Eavesdrop is deprecated | P3 | Документация | Eavesdrop и BecomeMonitor имеют разные permissions; миграция мониторинга требует отдельного API/daemon tests. |
+| [#252](https://github.com/godbus/dbus/issues/252) Object type and BusObject interface | P3 | API предложение | BusObject interface сохранён, чтобы не ломать существующие реализации; context helpers работают с ним. |
+| [#248](https://github.com/godbus/dbus/issues/248) Method Caller PID and disconnection from session dbus | P3 | API предложение | PID запрашивается стандартным GetConnectionUnixProcessID; disconnect/liveness не гарантируют неизменность PID. |
+| [#245](https://github.com/godbus/dbus/issues/245) Properties.Get() SIGSEGV(segment violation) | P1 | Не воспроизведено | Нужен fixture свойств NetworkManager и nil/interface values; prop race suite с daemon проходит. |
+| [#226](https://github.com/godbus/dbus/issues/226) Troubles with multi subscription to d-bus data  | P2 | Модель подписок | Match rules и локальная маршрутизация каналов различаются; автоматическое разделение существующих shared subscribers не введено. |
+| [#221](https://github.com/godbus/dbus/issues/221) dbus hang when call godbus client in kubelet | P1 | Не воспроизведено | Старые kubelet goroutine dumps не доказывают текущий hang; нужен concurrent Call/cancel/Close load. |
+| [#201](https://github.com/godbus/dbus/issues/201) Feature Request: Add helper method to parse PropertiesChanged | P3 | Расширение | Helper разбора PropertiesChanged допустим как добавочный API; в 5.3.0 не включён. |
+| [#200](https://github.com/godbus/dbus/issues/200) Feature Request: interface isAvailable bool | P3 | Расширение | Availability discovery через Introspect/standard calls; единый bool не различает unavailable, permissions и transport failures. |
+| [#195](https://github.com/godbus/dbus/issues/195) specifying context to GetProperty and SetProperty | P1 | Реализовано | Get/Store/SetPropertyWithContext как свободные функции и методы Object, без расширения BusObject. ctx/cancel tests. |
+| [#184](https://github.com/godbus/dbus/issues/184) Cannot seem to get Export to work. | P2 | Не воспроизведено | Нужно проверить object path, Export interface/method shape и ownership имени на daemon fixture. |
+| [#179](https://github.com/godbus/dbus/issues/179) proposal: remove shared connections | P3 | Совместимость | Shared SessionBus/SystemBus сохранены. Для независимого lifecycle использовать ConnectSessionBus/ConnectSystemBus. |
+| [#136](https://github.com/godbus/dbus/issues/136) BusObject interface add method Conn() ? | P3 | API предложение | Обязательный Conn() у BusObject ломал бы реализации; в этой minor версии интерфейс не менялся. |
+| [#113](https://github.com/godbus/dbus/issues/113) memory leak for serialUsed | P1 | Требует stress fixture | Нужны serial tracker tests для no-reply/send failures/cancellation. Общая IPC race suite не доказывает отсутствие всех leaks. |
+| [#101](https://github.com/godbus/dbus/issues/101) No way to create a non-readable writable property | P2 | Расширение | Write-only properties требуют согласования Get/GetAll/introspection/Set; отдельная contract матрица. |
+| [#69](https://github.com/godbus/dbus/issues/69) Bytestrings (ay) | P2 | Семантика сохранена | ay остаётся точным массивом байтов; fork не добавляет и не удаляет NUL. Bulk path проверен с 0/128/255 и empty array. |
+| [#68](https://github.com/godbus/dbus/issues/68) Calls to os/user should be guarded with runtime.LockOSThread() | P2 | Зависимость от OS | os/user и setuid/thread credentials требуют отдельной OS/cgo проверки; произвольный LockOSThread не добавлен. |
+| [#57](https://github.com/godbus/dbus/issues/57) ObjectManager support | P2 | Расширение | ObjectManager helpers/registry требуют lifecycle и InterfacesAdded/Removed tests; не объявлены реализованными. |
+| [#14](https://github.com/godbus/dbus/issues/14) Introspection doesn't work for paths below the one passed to conn.Export | P2 | Не воспроизведено | Нужны child-path hierarchy и Introspect fixture; отдельная XML/tree маршрутизация. |
+| [#9](https://github.com/godbus/dbus/issues/9) Names require service files to call methods | P3 | Usage | Client call не требует собственного service-файла; проверить Hello/destination/name ownership и remote application readiness. |
+| [#8](https://github.com/godbus/dbus/issues/8) Contention between Signal and MethodReply Messages | P1 | Требует load fixture | Default signal handling и custom handlers имеют разные backpressure contracts. Не утверждается, что любой slow subscriber больше не блокирует calls. |

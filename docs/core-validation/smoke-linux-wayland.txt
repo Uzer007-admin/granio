@@ -1,0 +1,7 @@
+dbus-daemon[2219312]: [session uid=0 pid=2219312] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=0 pid=2219347 comm="/tmp/fyne-core.ujM6nFkr/.offline/go-build-cache/e4")
+dbus-daemon[2219312]: [session uid=0 pid=2219312] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2219381]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2219347 comm="/tmp/fyne-core.ujM6nFkr/.offline/go-build-cache/e4")
+dbus-daemon[2219381]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+native capture: 167x123
+graceful shutdown: PASS

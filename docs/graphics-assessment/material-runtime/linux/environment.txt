@@ -1,0 +1,2 @@
+go version go1.27.1 linux/amd64
+Linux test-bench 6.12.60-1-amd64 #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12) x86_64 Intel(R) Xeon(R) Gold 5320 CPU @ 2.20GHz GenuineIntel GNU/Linux

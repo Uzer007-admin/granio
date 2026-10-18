@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"image"
+	"image/draw"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -41,15 +42,16 @@ func AssertImageMatches(t *testing.T, masterFilename string, img image.Image, ms
 	masterPix := pixelsForImage(t, raw) // let's just compare the pixels directly
 	capturePix := pixelsForImage(t, img)
 
-	// On darwin/arm64, there are slight differences in the rendering.
-	// Use a slower, more lenient comparison. If that fails,
-	// fall back to the strict comparison for a more detailed error message.
-	if runtime.GOOS == "darwin" && runtime.GOARCH == "arm64" && pixCloseEnough(masterPix, capturePix) {
-		return true
-	}
-
-	if bytes.Equal(masterPix, capturePix) {
-		return true
+	if raw.Bounds() == img.Bounds() {
+		if bytes.Equal(masterPix, capturePix) {
+			return true
+		}
+		// Fused floating-point operations in optimized amd64 and arm64 builds
+		// can change rasterization rounding. Keep the established delta limits.
+		if (runtime.GOARCH == "amd64" || (runtime.GOOS == "darwin" && runtime.GOARCH == "arm64")) &&
+			pixCloseEnough(masterPix, capturePix) {
+			return true
+		}
 	}
 
 	var msg string
@@ -66,7 +68,15 @@ func pixelsForImage(t *testing.T, img image.Image) []uint8 {
 	if data, ok := img.(*image.RGBA); ok {
 		pix = data.Pix
 	} else if data, ok := img.(*image.NRGBA); ok {
-		pix = data.Pix
+		if data.Opaque() {
+			pix = data.Pix
+		} else {
+			// Compare premultiplied colors so transparent pixels do not magnify
+			// tiny alpha rounding differences into large straight-color deltas.
+			rgba := image.NewRGBA(data.Bounds())
+			draw.Draw(rgba, rgba.Bounds(), data, data.Bounds().Min, draw.Src)
+			pix = rgba.Pix
+		}
 	}
 	if pix == nil {
 		t.Error("Master image is unsupported type")

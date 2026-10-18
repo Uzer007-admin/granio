@@ -6,42 +6,42 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func Test_mobileDriver_AbsolutePositionForObject(t *testing.T) {
 	for name, tt := range map[string]struct {
-		want          fyne.Position
+		want          granio.Position
 		windowIsChild bool
 		windowPadded  bool
 	}{
 		"for an unpadded primary (non-child) window it is (0,0)": {
-			want:          fyne.NewPos(0, 0),
+			want:          granio.NewPos(0, 0),
 			windowIsChild: false,
 			windowPadded:  false,
 		},
 		"for a padded primary (non-child) window it is (padding,padding)": {
-			want:          fyne.NewPos(4, 4),
+			want:          granio.NewPos(4, 4),
 			windowIsChild: false,
 			windowPadded:  true,
 		},
 		"for an unpadded child window it is (0,0)": {
-			want:          fyne.NewPos(0, 0),
+			want:          granio.NewPos(0, 0),
 			windowIsChild: true,
 			windowPadded:  false,
 		},
 		"for a padded child window it is (padding,padding)": {
-			want:          fyne.NewPos(4, 4),
+			want:          granio.NewPos(4, 4),
 			windowIsChild: true,
 			windowPadded:  true,
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			var o fyne.CanvasObject
-			size := fyne.NewSize(100, 100)
+			var o granio.CanvasObject
+			size := granio.NewSize(100, 100)
 			d := &driver{}
 			w := d.CreateWindow("main")
 			w.SetPadded(tt.windowPadded)
@@ -63,7 +63,7 @@ func Test_mobileDriver_AbsolutePositionForObject(t *testing.T) {
 			w.Resize(size)
 			w = d.CreateWindow("child3")
 			r := fynecanvas.NewRectangle(color.White)
-			r.SetMinSize(fyne.NewSize(42, 17))
+			r.SetMinSize(granio.NewSize(42, 17))
 			w.SetPadded(tt.windowPadded)
 			w.SetContent(container.NewVBox(r))
 			if tt.windowIsChild {

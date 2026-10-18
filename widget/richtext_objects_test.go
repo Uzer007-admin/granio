@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/storage"
-	"fyne.io/fyne/v2/test"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v2/test"
 )
 
 func TestRichText_Image(t *testing.T) {
@@ -20,15 +20,15 @@ func TestRichText_Image(t *testing.T) {
 	texts := test.TempWidgetRenderer(t, text).Objects()
 	drawn := texts[0].(*richImage).img
 
-	text.Resize(fyne.NewSize(200, 200))
+	text.Resize(granio.NewSize(200, 200))
 	assert.Equal(t, float32(0), drawn.Position().X)
 
-	img.Alignment = fyne.TextAlignCenter
+	img.Alignment = granio.TextAlignCenter
 	text.Refresh()
 	assert.Less(t, float32(0), drawn.Position().X)
 	assert.Less(t, drawn.Position().X, text.Size().Width/2)
 
-	img.Alignment = fyne.TextAlignTrailing
+	img.Alignment = granio.TextAlignTrailing
 	text.Refresh()
 	assert.Greater(t, float32(200), drawn.Position().X)
 	assert.Greater(t, drawn.Position().X, text.Size().Width/2)
@@ -41,7 +41,7 @@ func TestRichText_HyperLink(t *testing.T) {
 	}})
 	texts := test.TempWidgetRenderer(t, text).Objects()
 	assert.Equal(t, "Text", texts[0].(*canvas.Text).Text)
-	richLink := test.TempWidgetRenderer(t, texts[1].(*fyne.Container).Objects[0].(*Hyperlink)).Objects()[0].(fyne.Widget)
+	richLink := test.TempWidgetRenderer(t, texts[1].(*granio.Container).Objects[0].(*Hyperlink)).Objects()[0].(granio.Widget)
 	linkText := test.TempWidgetRenderer(t, richLink).Objects()[0].(*canvas.Text)
 	assert.Equal(t, "Link", linkText.Text)
 
@@ -77,15 +77,15 @@ func TestRichText_HyperLink_WrappedHoverSynced(t *testing.T) {
 	u, _ := url.Parse("https://fyne.io")
 	seg := &HyperlinkSegment{Text: "this is a long hyperlink that wraps", URL: u}
 	rt := NewRichText(seg)
-	rt.Wrapping = fyne.TextWrapWord
+	rt.Wrapping = granio.TextWrapWord
 	// Render narrow enough to force wrapping into at least 2 rows.
-	rt.Resize(fyne.NewSize(100, 200))
+	rt.Resize(granio.NewSize(100, 200))
 
 	objs := test.TempWidgetRenderer(t, rt).Objects()
 	// Collect all Hyperlink visuals for the segment (one per wrapped row).
 	var links []*Hyperlink
 	for _, obj := range objs {
-		if c, ok := obj.(*fyne.Container); ok {
+		if c, ok := obj.(*granio.Container); ok {
 			if hl, ok := c.Objects[0].(*Hyperlink); ok {
 				links = append(links, hl)
 			}
@@ -94,8 +94,8 @@ func TestRichText_HyperLink_WrappedHoverSynced(t *testing.T) {
 	assert.GreaterOrEqual(t, len(links), 2, "expected hyperlink to wrap into multiple segments")
 
 	// MouseIn on the first segment — choose a position inside the hyperlink's bounds.
-	center := fyne.NewPos(links[0].Size().Width/2, links[0].Size().Height/2)
-	inside := &desktop.MouseEvent{PointEvent: fyne.PointEvent{Position: center}}
+	center := granio.NewPos(links[0].Size().Width/2, links[0].Size().Height/2)
+	inside := &desktop.MouseEvent{PointEvent: granio.PointEvent{Position: center}}
 	links[0].MouseIn(inside)
 	for i, hl := range links {
 		assert.True(t, hl.hovered, "expected link[%d] to be hovered after MouseIn on link[0]", i)
@@ -137,8 +137,8 @@ func TestRichText_List_WrappedIndent(t *testing.T) {
 	text := NewRichText(&ListSegment{Items: []RichTextSegment{
 		&TextSegment{Text: "A very long line that will wrap around and test the indentation of the second line"},
 	}})
-	text.Wrapping = fyne.TextWrapWord
-	text.Resize(fyne.NewSize(100, 200))
+	text.Wrapping = granio.TextWrapWord
+	text.Resize(granio.NewSize(100, 200))
 
 	objs := test.TempWidgetRenderer(t, text).Objects()
 	assert.GreaterOrEqual(t, len(objs), 3, "expected text to wrap into multiple segments")

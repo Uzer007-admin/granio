@@ -5,11 +5,11 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -31,26 +31,26 @@ func TestTextGrid_Append(t *testing.T) {
 func TestTextGrid_CursorLocationForPosition(t *testing.T) {
 	grid := NewTextGridFromString("Position\nTest")
 
-	row, col := grid.CursorLocationForPosition(fyne.NewPos(2, 2))
+	row, col := grid.CursorLocationForPosition(granio.NewPos(2, 2))
 	assert.Equal(t, 0, row)
 	assert.Equal(t, 0, col)
 
-	row, col = grid.CursorLocationForPosition(fyne.NewPos(12, 12))
+	row, col = grid.CursorLocationForPosition(granio.NewPos(12, 12))
 	assert.Equal(t, 0, row)
 	assert.Equal(t, 1, col)
 
-	row, col = grid.CursorLocationForPosition(fyne.NewPos(20, 20))
+	row, col = grid.CursorLocationForPosition(granio.NewPos(20, 20))
 	assert.Equal(t, 1, row)
 	assert.Equal(t, 2, col)
 
 	grid.Scroll = widget.ScrollBoth
 	grid.SetText("Really Long Really Long Really Long Really Long Really Long")
-	row, col = grid.CursorLocationForPosition(fyne.NewPos(20, 20))
+	row, col = grid.CursorLocationForPosition(granio.NewPos(20, 20))
 	assert.Equal(t, 1, row)
 	assert.Equal(t, 2, col)
 
-	grid.scroller.ScrollToOffset(fyne.NewPos(20, 0))
-	row, col = grid.CursorLocationForPosition(fyne.NewPos(0, 20))
+	grid.scroller.ScrollToOffset(granio.NewPos(20, 0))
+	row, col = grid.CursorLocationForPosition(granio.NewPos(0, 20))
 	assert.Equal(t, 1, row)
 	assert.Equal(t, 2, col)
 }
@@ -73,37 +73,37 @@ func TestTextGrid_PositionForCursorLocation(t *testing.T) {
 
 func TestTextGrid_Scroll(t *testing.T) {
 	grid := NewTextGridFromString("Something\nElse")
-	grid.Resize(fyne.NewSize(50, 20))
+	grid.Resize(granio.NewSize(50, 20))
 	test.AssertObjectRendersToMarkup(t, "textgrid/basic.xml", grid)
 
 	scrolling := NewTextGridFromString("Something\nElse")
 	scrolling.Scroll = widget.ScrollBoth
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.Refresh()
 	scrolling.scroller.ScrollToTop()
 	test.AssertObjectRendersToMarkup(t, "textgrid/scroll.xml", scrolling)
 
 	scrolling = NewTextGrid()
 	scrolling.Scroll = widget.ScrollBoth
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.SetText("Something\nElse")
 	scrolling.scroller.ScrollToTop()
 	test.AssertObjectRendersToMarkup(t, "textgrid/scroll.xml", scrolling)
 
 	scrolling.Scroll = widget.ScrollNone
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.Refresh()
 	test.AssertObjectRendersToMarkup(t, "textgrid/basic.xml", grid)
 }
 
 func TestTextGrid_ScrollToTop(t *testing.T) {
 	grid := NewTextGridFromString("Something\nElse")
-	grid.Resize(fyne.NewSize(50, 20))
+	grid.Resize(granio.NewSize(50, 20))
 	test.AssertObjectRendersToMarkup(t, "textgrid/basic.xml", grid)
 
 	scrolling := NewTextGridFromString("Something\nElse")
 	scrolling.Scroll = widget.ScrollBoth
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.Refresh()
 	scrolling.scroller.ScrollToBottom()
 	scrolling.ScrollToTop()
@@ -111,7 +111,7 @@ func TestTextGrid_ScrollToTop(t *testing.T) {
 
 	scrolling = NewTextGrid()
 	scrolling.Scroll = widget.ScrollBoth
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.SetText("Something\nElse")
 	scrolling.scroller.ScrollToBottom()
 	scrolling.ScrollToTop()
@@ -120,12 +120,12 @@ func TestTextGrid_ScrollToTop(t *testing.T) {
 
 func TestTextGrid_ScrollToBottom(t *testing.T) {
 	grid := NewTextGridFromString("Something\nElse")
-	grid.Resize(fyne.NewSize(50, 20))
+	grid.Resize(granio.NewSize(50, 20))
 	test.AssertObjectRendersToMarkup(t, "textgrid/basic.xml", grid)
 
 	scrolling := NewTextGridFromString("Something\nElse")
 	scrolling.Scroll = widget.ScrollBoth
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.Refresh()
 	scrolling.ScrollToBottom()
 	scrolling.scroller.ScrollToTop()
@@ -133,7 +133,7 @@ func TestTextGrid_ScrollToBottom(t *testing.T) {
 
 	scrolling = NewTextGrid()
 	scrolling.Scroll = widget.ScrollBoth
-	scrolling.Resize(fyne.NewSize(50, 20))
+	scrolling.Resize(granio.NewSize(50, 20))
 	scrolling.SetText("Something\nElse")
 	scrolling.ScrollToBottom()
 	scrolling.scroller.ScrollToTop()
@@ -142,7 +142,7 @@ func TestTextGrid_ScrollToBottom(t *testing.T) {
 
 func TestTextGrid_CreateRendererRows(t *testing.T) {
 	grid := NewTextGrid()
-	grid.Resize(fyne.NewSize(52, 22))
+	grid.Resize(granio.NewSize(52, 22))
 	wrap := test.TempWidgetRenderer(t, grid).(*textGridRenderer).text
 	row := wrap.visible[0].(*textGridRow)
 	assert.Len(t, row.objects, 12)
@@ -175,7 +175,7 @@ func TestTextGrid_RowText(t *testing.T) {
 
 func TestTextGrid_SetText(t *testing.T) {
 	grid := NewTextGrid()
-	grid.Resize(fyne.NewSize(20, 20))
+	grid.Resize(granio.NewSize(20, 20))
 	text := "\n\n\n\n\n\n\n\n\n\n\n\n"
 	grid.SetText(text) // goes beyond the current view size - don't crash
 
@@ -292,7 +292,7 @@ func TestTextGridRenderer_Resize(t *testing.T) {
 	renderer := test.TempWidgetRenderer(t, grid)
 	minSize := renderer.MinSize()
 
-	grid.Resize(fyne.NewSize(100, 250))
+	grid.Resize(granio.NewSize(100, 250))
 	assert.Equal(t, minSize, renderer.MinSize())
 }
 
@@ -302,29 +302,29 @@ func TestTextGridRenderer_MinSize(t *testing.T) {
 	renderer := test.TempWidgetRenderer(t, grid)
 
 	grid.Refresh()
-	assert.Equal(t, fyne.NewSize(24, 16), renderer.MinSize())
+	assert.Equal(t, granio.NewSize(24, 16), renderer.MinSize())
 
 	grid.ShowLineNumbers = true
 	grid.Refresh()
-	assert.Equal(t, fyne.NewSize(40, 16), renderer.MinSize())
+	assert.Equal(t, granio.NewSize(40, 16), renderer.MinSize())
 
 	grid.SetCell(8, 0, TextGridCell{Rune: 'A'})
 	grid.Refresh()
-	assert.Equal(t, fyne.NewSize(40, 144), renderer.MinSize())
+	assert.Equal(t, granio.NewSize(40, 144), renderer.MinSize())
 
 	grid.SetCell(10, 0, TextGridCell{Rune: 'B'})
 	grid.Refresh()
-	assert.Equal(t, fyne.NewSize(48, 176), renderer.MinSize())
+	assert.Equal(t, granio.NewSize(48, 176), renderer.MinSize())
 
 	grid.SetCell(5, 20, TextGridCell{Rune: 'C'})
 	grid.Refresh()
-	assert.Equal(t, fyne.NewSize(192, 176), renderer.MinSize())
+	assert.Equal(t, granio.NewSize(192, 176), renderer.MinSize())
 }
 
 func TestTextGridRenderer_ShowLineNumbers(t *testing.T) {
 	grid := NewTextGridFromString("1\n2\n3\n4\n5\n6\n7\n8\n9\n10")
 	grid.ShowLineNumbers = true
-	grid.Resize(fyne.NewSize(100, 250))
+	grid.Resize(granio.NewSize(100, 250))
 
 	assertGridContent(t, grid, ` 1|1
  2|
@@ -341,7 +341,7 @@ func TestTextGridRenderer_ShowLineNumbers(t *testing.T) {
 
 func TestTextGridRender_Size(t *testing.T) {
 	grid := NewTextGrid()
-	grid.Resize(fyne.NewSize(30, 42)) // causes refresh
+	grid.Resize(granio.NewSize(30, 42)) // causes refresh
 	wrap := test.TempWidgetRenderer(t, grid).(*textGridRenderer).text
 	rend := test.TempWidgetRenderer(t, wrap).(*textGridContentRenderer)
 
@@ -354,7 +354,7 @@ func TestTextGridRender_Size(t *testing.T) {
 func TestTextGridRender_Whitespace(t *testing.T) {
 	grid := NewTextGridFromString("A b\nc")
 	grid.ShowWhitespace = true
-	grid.Resize(fyne.NewSize(56, 42)) // causes refresh
+	grid.Resize(granio.NewSize(56, 42)) // causes refresh
 
 	assertGridContent(t, grid, `A·b↵
 c`)
@@ -363,7 +363,7 @@ c`)
 func TestTextGridRender_WhitespaceTab(t *testing.T) {
 	grid := NewTextGridFromString("A\n\tb")
 	grid.ShowWhitespace = true
-	grid.Resize(fyne.NewSize(56, 42)) // causes refresh
+	grid.Resize(granio.NewSize(56, 42)) // causes refresh
 
 	assertGridContent(t, grid, `A↵
 →···b`)
@@ -375,21 +375,21 @@ func TestTextGridRender_RowColor(t *testing.T) {
 	customStyle := &CustomTextGridStyle{FGColor: color.Black}
 	grid.Rows[0].Style = customStyle
 	grid.ShowWhitespace = true
-	grid.Resize(fyne.NewSize(56, 22)) // causes refresh
+	grid.Resize(granio.NewSize(56, 22)) // causes refresh
 
 	assertGridStyle(t, grid, "112", map[string]TextGridStyle{"1": customStyle, "2": TextGridStyleWhitespace})
 }
 
 func TestTextGridRender_Style(t *testing.T) {
 	grid := NewTextGridFromString("Abcd ")
-	boldStyle := &CustomTextGridStyle{TextStyle: fyne.TextStyle{Bold: true}}
-	italicStyle := &CustomTextGridStyle{TextStyle: fyne.TextStyle{Italic: true}}
-	boldItalicStyle := &CustomTextGridStyle{TextStyle: fyne.TextStyle{Bold: true, Italic: true}}
+	boldStyle := &CustomTextGridStyle{TextStyle: granio.TextStyle{Bold: true}}
+	italicStyle := &CustomTextGridStyle{TextStyle: granio.TextStyle{Italic: true}}
+	boldItalicStyle := &CustomTextGridStyle{TextStyle: granio.TextStyle{Bold: true, Italic: true}}
 	grid.Rows[0].Cells[1].Style = boldStyle
 	grid.Rows[0].Cells[2].Style = italicStyle
 	grid.Rows[0].Cells[3].Style = boldItalicStyle
 	grid.ShowWhitespace = true
-	grid.Resize(fyne.NewSize(56, 22)) // causes refresh
+	grid.Resize(granio.NewSize(56, 22)) // causes refresh
 
 	assertGridStyle(t, grid, "0123", map[string]TextGridStyle{"1": boldStyle, "2": italicStyle, "3": boldItalicStyle})
 }
@@ -399,7 +399,7 @@ func TestTextGridRender_TextColor(t *testing.T) {
 	customStyle := &CustomTextGridStyle{FGColor: color.Black}
 	grid.Rows[0].Cells[1].Style = customStyle
 	grid.ShowWhitespace = true
-	grid.Resize(fyne.NewSize(56, 22)) // causes refresh
+	grid.Resize(granio.NewSize(56, 22)) // causes refresh
 
 	currentTextColor := TextGridStyleWhitespace.TextColor()
 	assertGridStyle(t, grid, " 12", map[string]TextGridStyle{"1": customStyle, "2": TextGridStyleWhitespace})
@@ -420,7 +420,7 @@ func BenchmarkTextGrid_Refresh(b *testing.B) {
 		builder.WriteString("\n")
 	}
 	grid := NewTextGridFromString(builder.String())
-	grid.Scroll = fyne.ScrollBoth
+	grid.Scroll = granio.ScrollBoth
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		grid.Refresh()
@@ -434,7 +434,7 @@ func assertGridContent(t *testing.T, g *TextGrid, expected string) {
 	for y, line := range lines {
 		x := 0 // rune count - using index below would be offset into string bytes
 		for _, r := range line {
-			row := wrap.visible[y].(fyne.Widget)
+			row := wrap.visible[y].(granio.Widget)
 			rend2 := test.TempWidgetRenderer(t, row).(*textGridRowRenderer)
 
 			_, fg := rendererCell(rend2, x)
@@ -451,7 +451,7 @@ func assertGridStyle(t *testing.T, g *TextGrid, content string, expectedStyles m
 	for y, line := range lines {
 		x := 0 // rune count - using index below would be offset into string bytes
 
-		row := wrap.visible[y].(fyne.Widget)
+		row := wrap.visible[y].(granio.Widget)
 		rend2 := test.TempWidgetRenderer(t, row).(*textGridRowRenderer)
 
 		for _, r := range line {
@@ -475,7 +475,7 @@ func assertGridStyle(t *testing.T, g *TextGrid, content string, expectedStyles m
 				}
 			}
 
-			style := fyne.TextStyle{}
+			style := granio.TextStyle{}
 			if expected != nil {
 				style = expected.Style()
 			}

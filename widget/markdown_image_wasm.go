@@ -6,8 +6,8 @@ import (
 	"strings"
 	"syscall/js"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 	"github.com/yuin/goldmark/ast"
 )
 
@@ -21,9 +21,9 @@ func parseMarkdownImage(t *ast.Image) []RichTextSegment {
 		origin := js.Global().Get("location").Get("origin").String()
 		u, err = storage.ParseURI(origin + dest)
 		if err != nil {
-			fyne.LogError("Can't load image in markdown", err)
+			granio.LogError("Can't load image in markdown", err)
 			return []RichTextSegment{}
 		}
 	}
-	return []RichTextSegment{&ImageSegment{Source: u, Title: string(t.Title), Alignment: fyne.TextAlignCenter}}
+	return []RichTextSegment{&ImageSegment{Source: u, Title: string(t.Title), Alignment: granio.TextAlignCenter}}
 }

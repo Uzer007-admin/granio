@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 var oldTheme = &legacyTheme{}
@@ -26,10 +26,10 @@ func TestLegacyWrapper_Color(t *testing.T) {
 
 func TestLegacyWrapper_Font(t *testing.T) {
 	newTheme := FromLegacy(oldTheme)
-	assert.Equal(t, oldTheme.TextFont(), newTheme.Font(fyne.TextStyle{}))
-	assert.Equal(t, oldTheme.TextBoldFont(), newTheme.Font(fyne.TextStyle{Bold: true}))
-	assert.Equal(t, oldTheme.TextItalicFont(), newTheme.Font(fyne.TextStyle{Italic: true}))
-	assert.Equal(t, oldTheme.TextMonospaceFont(), newTheme.Font(fyne.TextStyle{Monospace: true}))
+	assert.Equal(t, oldTheme.TextFont(), newTheme.Font(granio.TextStyle{}))
+	assert.Equal(t, oldTheme.TextBoldFont(), newTheme.Font(granio.TextStyle{Bold: true}))
+	assert.Equal(t, oldTheme.TextItalicFont(), newTheme.Font(granio.TextStyle{Italic: true}))
+	assert.Equal(t, oldTheme.TextMonospaceFont(), newTheme.Font(granio.TextStyle{Monospace: true}))
 }
 
 func TestLegacyWrapper_Size(t *testing.T) {
@@ -39,7 +39,7 @@ func TestLegacyWrapper_Size(t *testing.T) {
 	assert.Equal(t, oldTheme.TextSize(), int(newTheme.Size(SizeNameText)))
 }
 
-var _ fyne.LegacyTheme = (*legacyTheme)(nil)
+var _ granio.LegacyTheme = (*legacyTheme)(nil)
 
 type legacyTheme struct{}
 
@@ -91,23 +91,23 @@ func (*legacyTheme) TextSize() int {
 	return int(TextSize())
 }
 
-func (*legacyTheme) TextFont() fyne.Resource {
+func (*legacyTheme) TextFont() granio.Resource {
 	return TextFont()
 }
 
-func (*legacyTheme) TextBoldFont() fyne.Resource {
+func (*legacyTheme) TextBoldFont() granio.Resource {
 	return TextBoldFont()
 }
 
-func (*legacyTheme) TextItalicFont() fyne.Resource {
+func (*legacyTheme) TextItalicFont() granio.Resource {
 	return TextItalicFont()
 }
 
-func (*legacyTheme) TextBoldItalicFont() fyne.Resource {
+func (*legacyTheme) TextBoldItalicFont() granio.Resource {
 	return TextBoldItalicFont()
 }
 
-func (*legacyTheme) TextMonospaceFont() fyne.Resource {
+func (*legacyTheme) TextMonospaceFont() granio.Resource {
 	return TextMonospaceFont()
 }
 

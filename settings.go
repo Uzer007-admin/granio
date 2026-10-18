@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // BuildType defines different modes that an application can be built using.
 type BuildType int

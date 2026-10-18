@@ -13,9 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	"fyne.io/fyne/v2"
-	internalapp "fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/scheduler"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/scheduler"
 )
 
 const notificationTemplate = `$title = %q
@@ -64,7 +63,7 @@ func (a *fyneApp) OpenURL(url *url.URL) error {
 
 var scriptNum = 0
 
-func (a *fyneApp) SendNotification(n *fyne.Notification) {
+func (a *fyneApp) SendNotification(n *granio.Notification) {
 	title := n.Title
 	content := n.Content
 	iconFilePath := a.cachedIconPath()
@@ -74,7 +73,7 @@ func (a *fyneApp) SendNotification(n *fyne.Notification) {
 	go runScript("notify", script)
 }
 
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	if !when.After(time.Now()) {
 		return nil, errors.New("scheduled delivery time must be in the future")
 	}
@@ -92,7 +91,7 @@ func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*f
 
 	script := fmt.Sprintf(scheduledNotificationTemplate, title, content, iconFilePath, id, delivery, appID)
 	go runScript("schedule", script)
-	return fyne.NewScheduledNotification(id, n, when), nil
+	return granio.NewScheduledNotification(id, n, when), nil
 }
 
 func (a *fyneApp) CancelScheduledNotification(id string) error {
@@ -112,31 +111,31 @@ func (a *fyneApp) notificationAppID() string {
 
 // SetSystemTrayMenu creates a system tray item and attaches the specified menu.
 // By default, this will use the application icon.
-func (a *fyneApp) SetSystemTrayMenu(menu *fyne.Menu) {
+func (a *fyneApp) SetSystemTrayMenu(menu *granio.Menu) {
 	a.Driver().(systrayDriver).SetSystemTrayMenu(menu)
 }
 
 // SetSystemTrayIcon sets a custom image for the system tray icon.
 // You should have previously called `SetSystemTrayMenu` to initialise the menu icon.
-func (a *fyneApp) SetSystemTrayIcon(icon fyne.Resource) {
+func (a *fyneApp) SetSystemTrayIcon(icon granio.Resource) {
 	a.Driver().(systrayDriver).SetSystemTrayIcon(icon)
 }
 
 // SetSystemTrayWindow assigns a window to be shown with the system tray menu is tapped.
 // You should have previously called `SetSystemTrayMenu` to initialise the menu icon.
-func (a *fyneApp) SetSystemTrayWindow(w fyne.Window) {
+func (a *fyneApp) SetSystemTrayWindow(w granio.Window) {
 	a.Driver().(systrayDriver).SetSystemTrayWindow(w)
 }
 
 func runScript(name, script string) {
 	scriptNum++
-	appID := fyne.CurrentApp().UniqueID()
+	appID := granio.CurrentApp().UniqueID()
 	fileName := fmt.Sprintf("fyne-%s-%s-%d.ps1", appID, name, scriptNum)
 
 	tmpFilePath := filepath.Join(os.TempDir(), fileName)
 	err := os.WriteFile(tmpFilePath, []byte(script), 0o600)
 	if err != nil {
-		fyne.LogError("Could not write script to show notification", err)
+		granio.LogError("Could not write script to show notification", err)
 		return
 	}
 	defer os.Remove(tmpFilePath)
@@ -146,14 +145,13 @@ func runScript(name, script string) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	err = cmd.Run()
 	if err != nil {
-		fyne.LogError("Failed to launch windows notify script", err)
+		granio.LogError("Failed to launch windows notify script", err)
 	}
 }
 
 func watchTheme(s *settings) {
-	go internalapp.WatchTheme(func() {
-		fyne.Do(s.setupTheme)
-	})
+	// The shared provider owns theme events and cancellation with other settings.
+	s.startSystemAppearance()
 }
 
 func (a *fyneApp) registerRepositories() {

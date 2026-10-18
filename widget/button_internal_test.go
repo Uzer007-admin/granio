@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/internal/cache"
-	col "fyne.io/fyne/v2/internal/color"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -148,7 +148,7 @@ func TestButton_Focus(t *testing.T) {
 	render.Refresh() // force update without waiting
 
 	assert.Equal(t, blendColor(theme.Color(theme.ColorNameButton), theme.Color(theme.ColorNameFocus)), render.background.FillColor)
-	button.TypedKey(&fyne.KeyEvent{Name: fyne.KeySpace})
+	button.TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
 	assert.True(t, tapped)
 
 	button.FocusLost()
@@ -168,7 +168,7 @@ func TestButtonRenderer_Layout(t *testing.T) {
 
 func TestButtonRenderer_Layout_Stretch(t *testing.T) {
 	button := NewButtonWithIcon("Test", theme.CancelIcon(), nil)
-	button.Resize(button.MinSize().Add(fyne.NewSize(100, 100)))
+	button.Resize(button.MinSize().Add(granio.NewSize(100, 100)))
 	render := test.TempWidgetRenderer(t, button).(*buttonRenderer)
 
 	textHeight := render.label.MinSize().Height
@@ -185,7 +185,7 @@ func TestButtonRenderer_Layout_NoText(t *testing.T) {
 	button := NewButtonWithIcon("", theme.CancelIcon(), nil)
 	render := test.TempWidgetRenderer(t, button).(*buttonRenderer)
 
-	button.Resize(fyne.NewSize(100, 100))
+	button.Resize(granio.NewSize(100, 100))
 
 	assert.Equal(t, 50-theme.IconInlineSize()/2, render.icon.Position().X)
 	assert.Equal(t, 50-theme.IconInlineSize()/2, render.icon.Position().Y)
@@ -213,8 +213,8 @@ func TestButtonRenderer_TapAnimation(t *testing.T) {
 	button := NewButton("Hi", func() {})
 	w := test.NewWindow(button)
 	defer w.Close()
-	w.Resize(fyne.NewSize(50, 50).Add(fyne.NewSize(20, 20)))
-	button.Resize(fyne.NewSize(50, 50))
+	w.Resize(granio.NewSize(50, 50).Add(granio.NewSize(20, 20)))
+	button.Resize(granio.NewSize(50, 50))
 
 	render1 := test.TempWidgetRenderer(t, button).(*buttonRenderer)
 	test.Tap(button)

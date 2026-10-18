@@ -1,12 +1,12 @@
 package layout
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal"
 )
 
 // Declare conformity with Layout interface
-var _ fyne.Layout = (*CustomPaddedLayout)(nil)
+var _ granio.Layout = (*CustomPaddedLayout)(nil)
 
 // CustomPaddedLayout is a layout similar to PaddedLayout, but uses
 // custom values for padding on each side, rather than the theme padding value.
@@ -23,7 +23,7 @@ type CustomPaddedLayout struct {
 // with the specified paddings.
 //
 // Since: 2.5
-func NewCustomPaddedLayout(padTop, padBottom, padLeft, padRight float32) fyne.Layout {
+func NewCustomPaddedLayout(padTop, padBottom, padLeft, padRight float32) granio.Layout {
 	return CustomPaddedLayout{
 		TopPadding:    padTop,
 		BottomPadding: padBottom,
@@ -34,9 +34,9 @@ func NewCustomPaddedLayout(padTop, padBottom, padLeft, padRight float32) fyne.La
 
 // Layout is called to pack all child objects into a specified size.
 // For CustomPaddedLayout this sets all children to the full size passed minus the given paddings all around.
-func (c CustomPaddedLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
-	pos := fyne.NewPos(c.LeftPadding, c.TopPadding)
-	siz := fyne.Size{
+func (c CustomPaddedLayout) Layout(objects []granio.CanvasObject, size granio.Size) {
+	pos := granio.NewPos(c.LeftPadding, c.TopPadding)
+	siz := granio.Size{
 		Width:  size.Width - c.LeftPadding - c.RightPadding,
 		Height: size.Height - c.TopPadding - c.BottomPadding,
 	}
@@ -48,7 +48,7 @@ func (c CustomPaddedLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) 
 
 // MinSize finds the smallest size that satisfies all the child objects.
 // For CustomPaddedLayout this is determined simply as the MinSize of the largest child plus the given paddings all around.
-func (c CustomPaddedLayout) MinSize(objects []fyne.CanvasObject) (minSize fyne.Size) {
+func (c CustomPaddedLayout) MinSize(objects []granio.CanvasObject) (minSize granio.Size) {
 	for _, child := range objects {
 		if !child.Visible() {
 			continue

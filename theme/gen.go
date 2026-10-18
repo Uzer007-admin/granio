@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 		'❖',
 	})
 	if err != nil {
-		fyne.LogError("symbol font creation failed", err)
+		granio.LogError("symbol font creation failed", err)
 		os.Exit(1)
 	}
 }

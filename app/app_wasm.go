@@ -9,12 +9,12 @@ import (
 	"syscall/js"
 	"time"
 
-	"fyne.io/fyne/v2"
-	intRepo "fyne.io/fyne/v2/internal/repository"
-	"fyne.io/fyne/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2/storage/repository"
 )
 
-func (a *fyneApp) ScheduleNotification(n *fyne.Notification, when time.Time) (*fyne.ScheduledNotification, error) {
+func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {
 	return a.scheduleViaScheduler(n, when)
 }
 
@@ -22,10 +22,10 @@ func (a *fyneApp) CancelScheduledNotification(id string) error {
 	return a.cancelViaScheduler(id)
 }
 
-func (a *fyneApp) SendNotification(n *fyne.Notification) {
+func (a *fyneApp) SendNotification(n *granio.Notification) {
 	notification := js.Global().Get("window").Get("Notification")
 	if notification.IsUndefined() {
-		fyne.LogError("Current browser does not support notifications.", nil)
+		granio.LogError("Current browser does not support notifications.", nil)
 		return
 	}
 
@@ -35,7 +35,7 @@ func (a *fyneApp) SendNotification(n *fyne.Notification) {
 			if len(args) > 0 && args[0].Type() == js.TypeString && args[0].String() == "granted" {
 				a.showNotification(n, &notification)
 			} else {
-				fyne.LogError("User rejected the request for notifications.", nil)
+				granio.LogError("User rejected the request for notifications.", nil)
 			}
 			return nil
 		})
@@ -47,7 +47,7 @@ func (a *fyneApp) SendNotification(n *fyne.Notification) {
 	a.showNotification(n, &notification)
 }
 
-func (a *fyneApp) showNotification(data *fyne.Notification, notification *js.Value) {
+func (a *fyneApp) showNotification(data *granio.Notification, notification *js.Value) {
 	icon := a.icon.Content()
 	base64Str := base64.StdEncoding.EncodeToString(icon)
 	mimeType := http.DetectContentType(icon)
@@ -60,7 +60,7 @@ func (a *fyneApp) showNotification(data *fyne.Notification, notification *js.Val
 
 var themeChanged = js.FuncOf(func(this js.Value, args []js.Value) any {
 	if len(args) > 0 && args[0].Type() == js.TypeObject {
-		fyne.CurrentApp().Settings().(*settings).setupTheme()
+		granio.CurrentApp().Settings().(*settings).setupTheme()
 	}
 	return nil
 })
@@ -76,7 +76,7 @@ func stopWatchingTheme() {
 func (a *fyneApp) registerRepositories() {
 	repo, err := intRepo.NewIndexDBRepository()
 	if err != nil {
-		fyne.LogError("failed to create repository: %v", err)
+		granio.LogError("failed to create repository: %v", err)
 		return
 	}
 

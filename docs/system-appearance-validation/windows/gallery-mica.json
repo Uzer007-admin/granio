@@ -1,0 +1,197 @@
+{
+  "at_capture": {
+    "Generation": 1,
+    "Available": true,
+    "ColorScheme": {
+      "Value": 1,
+      "Available": true
+    },
+    "HighContrast": {
+      "Value": false,
+      "Available": true
+    },
+    "ReducedMotion": {
+      "Value": false,
+      "Available": true
+    },
+    "Accent": {
+      "Value": {
+        "R": 0,
+        "G": 99,
+        "B": 177,
+        "A": 255
+      },
+      "Available": true
+    },
+    "TextScale": {
+      "Value": 1,
+      "Available": true
+    },
+    "Transparency": {
+      "Value": true,
+      "Available": true
+    },
+    "Colors": {
+      "Value": {
+        "Window": {
+          "R": 255,
+          "G": 255,
+          "B": 255,
+          "A": 255
+        },
+        "WindowText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 255
+        },
+        "ButtonFace": {
+          "R": 240,
+          "G": 240,
+          "B": 240,
+          "A": 255
+        },
+        "ButtonText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 255
+        },
+        "Highlight": {
+          "R": 0,
+          "G": 120,
+          "B": 215,
+          "A": 255
+        },
+        "HighlightText": {
+          "R": 255,
+          "G": 255,
+          "B": 255,
+          "A": 255
+        },
+        "GrayText": {
+          "R": 109,
+          "G": 109,
+          "B": 109,
+          "A": 255
+        },
+        "Hotlight": {
+          "R": 0,
+          "G": 102,
+          "B": 204,
+          "A": 255
+        }
+      },
+      "Available": true
+    },
+    "UnavailableReason": ""
+  },
+  "before_driver_loop": {
+    "Generation": 1,
+    "Available": true,
+    "ColorScheme": {
+      "Value": 1,
+      "Available": true
+    },
+    "HighContrast": {
+      "Value": false,
+      "Available": true
+    },
+    "ReducedMotion": {
+      "Value": false,
+      "Available": true
+    },
+    "Accent": {
+      "Value": {
+        "R": 0,
+        "G": 99,
+        "B": 177,
+        "A": 255
+      },
+      "Available": true
+    },
+    "TextScale": {
+      "Value": 1,
+      "Available": true
+    },
+    "Transparency": {
+      "Value": true,
+      "Available": true
+    },
+    "Colors": {
+      "Value": {
+        "Window": {
+          "R": 255,
+          "G": 255,
+          "B": 255,
+          "A": 255
+        },
+        "WindowText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 255
+        },
+        "ButtonFace": {
+          "R": 240,
+          "G": 240,
+          "B": 240,
+          "A": 255
+        },
+        "ButtonText": {
+          "R": 0,
+          "G": 0,
+          "B": 0,
+          "A": 255
+        },
+        "Highlight": {
+          "R": 0,
+          "G": 120,
+          "B": 215,
+          "A": 255
+        },
+        "HighlightText": {
+          "R": 255,
+          "G": 255,
+          "B": 255,
+          "A": 255
+        },
+        "GrayText": {
+          "R": 109,
+          "G": 109,
+          "B": 109,
+          "A": 255
+        },
+        "Hotlight": {
+          "R": 0,
+          "G": 102,
+          "B": 204,
+          "A": 255
+        }
+      },
+      "Available": true
+    },
+    "UnavailableReason": ""
+  },
+  "theme_icon_size": 20,
+  "theme_primary": {
+    "R": 0,
+    "G": 99,
+    "B": 177,
+    "A": 255
+  },
+  "theme_text_size": 14,
+  "visuals": {
+    "RequestID": 1,
+    "Phase": 1,
+    "Requested": 1,
+    "Selected": 1,
+    "Backend": 2,
+    "SurfaceReady": true,
+    "NativeAccepted": true,
+    "Reason": 0,
+    "NativeCode": 0,
+    "PreparedFrames": 6,
+    "FirstFrameBeforeShow": true
+  }
+}

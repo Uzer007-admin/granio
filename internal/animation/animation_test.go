@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func tick(run *Runner) {
@@ -20,7 +20,7 @@ func tick(run *Runner) {
 func TestGLDriver_StartAnimation(t *testing.T) {
 	done := make(chan float32)
 	run := &Runner{}
-	a := &fyne.Animation{
+	a := &granio.Animation{
 		Duration: time.Millisecond * 100,
 		Tick: func(d float32) {
 			done <- d
@@ -40,7 +40,7 @@ func TestGLDriver_StartAnimation(t *testing.T) {
 func TestGLDriver_StopAnimation(t *testing.T) {
 	done := make(chan float32)
 	run := &Runner{}
-	a := &fyne.Animation{
+	a := &granio.Animation{
 		Duration: time.Second * 10,
 		Tick: func(d float32) {
 			done <- d
@@ -64,9 +64,9 @@ func TestGLDriver_StopAnimation(t *testing.T) {
 func TestRunner_DurationIncreasedMidAnimation(t *testing.T) {
 	progress := make(chan float32, 8)
 	run := &Runner{}
-	a := &fyne.Animation{
+	a := &granio.Animation{
 		Duration: time.Second,
-		Curve:    fyne.AnimationLinear,
+		Curve:    granio.AnimationLinear,
 		Tick: func(d float32) {
 			progress <- d
 		},
@@ -110,9 +110,9 @@ func TestRunner_DurationIncreasedMidAnimation(t *testing.T) {
 func TestRunner_DurationDecreasedMidAnimation(t *testing.T) {
 	progress := make(chan float32, 8)
 	run := &Runner{}
-	a := &fyne.Animation{
+	a := &granio.Animation{
 		Duration: time.Second,
-		Curve:    fyne.AnimationLinear,
+		Curve:    granio.AnimationLinear,
 		Tick: func(d float32) {
 			progress <- d
 		},
@@ -153,9 +153,9 @@ func TestRunner_DurationDecreasedMidAnimation(t *testing.T) {
 func TestRunner_DurationShortenedBelowElapsed(t *testing.T) {
 	progress := make(chan float32, 4)
 	run := &Runner{}
-	a := &fyne.Animation{
+	a := &granio.Animation{
 		Duration: time.Second,
-		Curve:    fyne.AnimationLinear,
+		Curve:    granio.AnimationLinear,
 		Tick: func(d float32) {
 			progress <- d
 		},
@@ -188,7 +188,7 @@ func TestGLDriver_StopAnimationImmediatelyAndInsideTick(t *testing.T) {
 
 	// stopping an animation immediately after start, should be effectively removed
 	// from the internal animation list (first one is added directly to animation list)
-	a := &fyne.Animation{
+	a := &granio.Animation{
 		Duration: time.Second,
 		Tick:     func(float32) {},
 	}
@@ -202,8 +202,8 @@ func TestGLDriver_StopAnimationImmediatelyAndInsideTick(t *testing.T) {
 	// stopping animation inside tick function
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
-		var b *fyne.Animation
-		b = &fyne.Animation{
+		var b *granio.Animation
+		b = &granio.Animation{
 			Duration: time.Second,
 			Tick: func(float32) {
 				run.Stop(b)
@@ -218,7 +218,7 @@ func TestGLDriver_StopAnimationImmediatelyAndInsideTick(t *testing.T) {
 
 	// Similar to first part, but in this time this animation should be added and then removed
 	// from pendingAnimation slice.
-	c := &fyne.Animation{
+	c := &granio.Animation{
 		Duration: time.Second,
 		Tick:     func(float32) {},
 	}

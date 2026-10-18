@@ -1,29 +1,29 @@
 package glfw
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/driver/desktop"
-	"fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
-var _ fyne.Widget = (*MenuBar)(nil)
+var _ granio.Widget = (*MenuBar)(nil)
 
-// MenuBar is a widget for displaying a fyne.MainMenu in a bar.
+// MenuBar is a widget for displaying a granio.MainMenu in a bar.
 type MenuBar struct {
 	widget.Base
-	Items []fyne.CanvasObject
+	Items []granio.CanvasObject
 
 	active     bool
 	activeItem *menuBarItem
-	canvas     fyne.Canvas
+	canvas     granio.Canvas
 }
 
 // NewMenuBar creates a menu bar populated with items from the passed main menu structure.
-func NewMenuBar(mainMenu *fyne.MainMenu, c fyne.Canvas) *MenuBar {
-	items := make([]fyne.CanvasObject, len(mainMenu.Items))
+func NewMenuBar(mainMenu *granio.MainMenu, c granio.Canvas) *MenuBar {
+	items := make([]granio.CanvasObject, len(mainMenu.Items))
 	b := &MenuBar{Items: items, canvas: c}
 	b.ExtendBaseWidget(b)
 	for i, menu := range mainMenu.Items {
@@ -35,13 +35,13 @@ func NewMenuBar(mainMenu *fyne.MainMenu, c fyne.Canvas) *MenuBar {
 }
 
 // CreateRenderer returns a new renderer for the menu bar.
-func (b *MenuBar) CreateRenderer() fyne.WidgetRenderer {
+func (b *MenuBar) CreateRenderer() granio.WidgetRenderer {
 	cont := container.NewHBox(b.Items...)
 	background := canvas.NewRectangle(theme.Color(theme.ColorNameBackground))
 	widget.ApplyShadowForLevel(&background.Shadow, widget.MenuBarLevel, theme.Color(theme.ColorNameShadow))
 	underlay := &menuBarUnderlay{action: b.deactivate}
 	underlay.ExtendBaseWidget(underlay)
-	objects := []fyne.CanvasObject{underlay, background, cont}
+	objects := []granio.CanvasObject{underlay, background, cont}
 	for _, item := range b.Items {
 		objects = append(objects, item.(*menuBarItem).Child())
 	}
@@ -123,37 +123,37 @@ type menuBarRenderer struct {
 	b          *MenuBar
 	background *canvas.Rectangle
 	underlay   *menuBarUnderlay
-	cont       *fyne.Container
+	cont       *granio.Container
 }
 
-func (r *menuBarRenderer) Layout(size fyne.Size) {
+func (r *menuBarRenderer) Layout(size granio.Size) {
 	minSize := r.MinSize()
 	if size.Height != minSize.Height || size.Width < minSize.Width {
-		r.b.Resize(fyne.NewSize(max(size.Width, minSize.Width), minSize.Height))
+		r.b.Resize(granio.NewSize(max(size.Width, minSize.Width), minSize.Height))
 		return
 	}
 
 	if r.b.active {
 		r.underlay.Resize(r.b.canvas.Size())
 	} else {
-		r.underlay.Resize(fyne.NewSize(0, 0))
+		r.underlay.Resize(granio.NewSize(0, 0))
 	}
 	innerPadding := theme.InnerPadding()
-	r.cont.Resize(fyne.NewSize(size.Width-2*innerPadding, size.Height))
-	r.cont.Move(fyne.NewPos(innerPadding, 0))
+	r.cont.Resize(granio.NewSize(size.Width-2*innerPadding, size.Height))
+	r.cont.Move(granio.NewPos(innerPadding, 0))
 	if item := r.b.activeItem; item != nil {
 		if item.Child().Size().IsZero() {
 			item.Child().Resize(item.Child().MinSize())
 		}
-		item.Child().Move(fyne.NewPos(item.Position().X+innerPadding, item.Size().Height))
+		item.Child().Move(granio.NewPos(item.Position().X+innerPadding, item.Size().Height))
 	}
 
-	r.background.Move(fyne.NewPos(0, 0))
+	r.background.Move(granio.NewPos(0, 0))
 	r.background.Resize(size)
 }
 
-func (r *menuBarRenderer) MinSize() fyne.Size {
-	return r.cont.MinSize().Add(fyne.NewSize(theme.InnerPadding()*2, 0))
+func (r *menuBarRenderer) MinSize() granio.Size {
+	return r.cont.MinSize().Add(granio.NewSize(theme.InnerPadding()*2, 0))
 }
 
 func (r *menuBarRenderer) Refresh() {
@@ -172,12 +172,12 @@ type menuBarUnderlay struct {
 }
 
 var (
-	_ fyne.Widget       = (*menuBarUnderlay)(nil)
-	_ fyne.Tappable     = (*menuBarUnderlay)(nil) // deactivate menu on click outside
+	_ granio.Widget     = (*menuBarUnderlay)(nil)
+	_ granio.Tappable   = (*menuBarUnderlay)(nil) // deactivate menu on click outside
 	_ desktop.Hoverable = (*menuBarUnderlay)(nil) // block hover events on main content
 )
 
-func (*menuBarUnderlay) CreateRenderer() fyne.WidgetRenderer {
+func (*menuBarUnderlay) CreateRenderer() granio.WidgetRenderer {
 	return &menuUnderlayRenderer{}
 }
 
@@ -190,7 +190,7 @@ func (*menuBarUnderlay) MouseOut() {
 func (*menuBarUnderlay) MouseMoved(*desktop.MouseEvent) {
 }
 
-func (u *menuBarUnderlay) Tapped(*fyne.PointEvent) {
+func (u *menuBarUnderlay) Tapped(*granio.PointEvent) {
 	u.action()
 }
 
@@ -198,13 +198,13 @@ type menuUnderlayRenderer struct {
 	widget.BaseRenderer
 }
 
-var _ fyne.WidgetRenderer = (*menuUnderlayRenderer)(nil)
+var _ granio.WidgetRenderer = (*menuUnderlayRenderer)(nil)
 
-func (*menuUnderlayRenderer) Layout(fyne.Size) {
+func (*menuUnderlayRenderer) Layout(granio.Size) {
 }
 
-func (*menuUnderlayRenderer) MinSize() fyne.Size {
-	return fyne.NewSize(0, 0)
+func (*menuUnderlayRenderer) MinSize() granio.Size {
+	return granio.NewSize(0, 0)
 }
 
 func (*menuUnderlayRenderer) Refresh() {

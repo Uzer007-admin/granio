@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/embedded"
-	intNoos "fyne.io/fyne/v2/internal/driver/embedded"
-	_ "fyne.io/fyne/v2/test" // for test app initialization
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/embedded"
+	intNoos "github.com/Uzer007-admin/granio/v2/internal/driver/embedded"
+	_ "github.com/Uzer007-admin/granio/v2/test" // for test app initialization
 )
 
 func TestNoOSDriver(t *testing.T) {
@@ -19,8 +19,8 @@ func TestNoOSDriver(t *testing.T) {
 		count++
 	}
 	queue := make(chan embedded.Event, 1)
-	size := func() fyne.Size {
-		return fyne.NewSquareSize(100)
+	size := func() granio.Size {
+		return granio.NewSquareSize(100)
 	}
 	d := intNoos.NewNoOSDriver(render, func(f func()) { f() }, queue, size)
 
@@ -46,7 +46,7 @@ func TestNoOSDriver(t *testing.T) {
 	d = intNoos.NewNoOSDriver(render, func(f func()) { f() }, queue, size)
 	w := d.CreateWindow("Test")
 	keyed := make(chan bool)
-	w.Canvas().SetOnTypedKey(func(*fyne.KeyEvent) {
+	w.Canvas().SetOnTypedKey(func(*granio.KeyEvent) {
 		keyed <- true
 	})
 	go func() {
@@ -54,7 +54,7 @@ func TestNoOSDriver(t *testing.T) {
 			Rune: 'a',
 		}
 		queue <- &embedded.KeyEvent{
-			Name: fyne.KeyEscape,
+			Name: granio.KeyEscape,
 		}
 		<-keyed
 		close(queue)

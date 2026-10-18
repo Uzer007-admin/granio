@@ -7,17 +7,17 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/driver/software"
-	"fyne.io/fyne/v2/internal/test"
-	_ "fyne.io/fyne/v2/test" // for test app initialization
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v2/internal/test"
+	_ "github.com/Uzer007-admin/granio/v2/test" // for test app initialization
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 func TestRender(t *testing.T) {
 	obj := canvas.NewRectangle(color.Black)
-	obj.SetMinSize(fyne.NewSquareSize(10))
+	obj.SetMinSize(granio.NewSquareSize(10))
 
 	img := software.Render(obj, test.DarkTheme(theme.DefaultTheme()))
 	assert.NotNil(t, img)

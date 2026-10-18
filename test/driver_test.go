@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
 )
 
 func Test_driver_AbsolutePositionForObject(t *testing.T) {
@@ -15,16 +15,16 @@ func Test_driver_AbsolutePositionForObject(t *testing.T) {
 	w := d.CreateWindow("Test Window")
 	o := fynecanvas.NewRectangle(color.Black)
 	w.SetContent(o)
-	w.Resize(fyne.NewSize(320, 200))
+	w.Resize(granio.NewSize(320, 200))
 
 	t.Run("for padded window", func(t *testing.T) {
 		w.SetPadded(true)
-		assert.Equal(t, fyne.NewPos(4, 4), d.AbsolutePositionForObject(o), "safe area offset (2,3) is subtracted")
+		assert.Equal(t, granio.NewPos(4, 4), d.AbsolutePositionForObject(o), "safe area offset (2,3) is subtracted")
 	})
 
 	t.Run("for non-padded window", func(t *testing.T) {
 		w.SetPadded(false)
-		assert.Equal(t, fyne.NewPos(0, 0), d.AbsolutePositionForObject(o), "safe area offset (2,3) is subtracted")
+		assert.Equal(t, granio.NewPos(0, 0), d.AbsolutePositionForObject(o), "safe area offset (2,3) is subtracted")
 	})
 }
 

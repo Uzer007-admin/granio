@@ -1,0 +1,25 @@
+dbus-daemon[2888744]: [session uid=0 pid=2888744] Activating service name='org.freedesktop.portal.IBus' requested by ':1.0' (uid=0 pid=2888770 comm="ibus-daemon --address=unix:path=/tmp/fa11y-d4DB3py")
+Not connected to the ibus bus
+dbus-daemon[2888744]: [session uid=0 pid=2888744] Activated service 'org.freedesktop.portal.IBus' failed: Process org.freedesktop.portal.IBus exited with status 1
+dbus-daemon[2888744]: [session uid=0 pid=2888744] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=0 pid=2888777 comm="/usr/libexec/ibus-extension-gtk3")
+dbus-daemon[2888744]: [session uid=0 pid=2888744] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[2888790]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=0 pid=2888777 comm="/usr/libexec/ibus-extension-gtk3")
+dbus-daemon[2888790]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+<stdin>:4: DeprecationWarning: IBus.Bus.is_global_engine_enabled is deprecated
+IBus engine anthy enabled True context /org/freedesktop/IBus/InputContext_3
+{"event":"ready"}
+{"composition":false,"end":0,"event":"state","start":0,"text":""}
+{"composition":true,"end":0,"event":"state","start":0,"text":""}
+{"event":"commit","text":"日本語"}
+{"composition":false,"end":3,"event":"state","start":3,"text":"日本語"}
+{"event":"commit","text":""}
+{"event":"undo","text":""}
+{"composition":false,"end":0,"event":"state","start":0,"text":""}
+real IBus Anthy Japanese commit: PASS
+FYNE-XIM: callback context enabled
+=== RUN   TestIBusNativePasswordAndLifecycle
+FYNE-XIM: callback context enabled
+--- PASS: TestIBusNativePasswordAndLifecycle (0.36s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.582s

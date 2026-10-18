@@ -1,0 +1,2 @@
+ok  	github.com/Uzer007-admin/granio/v2/internal/app	1.562s
+ok  	github.com/Uzer007-admin/granio/v2/app	18.606s

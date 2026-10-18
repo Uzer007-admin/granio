@@ -5,18 +5,18 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 type dummyCanvas struct {
-	fyne.Canvas
+	granio.Canvas
 }
 
 func TestOverlayContainer_Tapped_Dismiss(t *testing.T) {
 	dismissed := false
 	o := NewOverlayContainer(nil, &dummyCanvas{}, func() { dismissed = true })
 
-	o.Tapped(&fyne.PointEvent{})
+	o.Tapped(&granio.PointEvent{})
 	assert.True(t, dismissed)
 }
 
@@ -24,7 +24,7 @@ func TestOverlayContainer_TappedSecondary_Dismiss(t *testing.T) {
 	dismissed := false
 	o := NewOverlayContainer(nil, &dummyCanvas{}, func() { dismissed = true })
 
-	o.TappedSecondary(&fyne.PointEvent{})
+	o.TappedSecondary(&granio.PointEvent{})
 	assert.True(t, dismissed)
 }
 
@@ -32,7 +32,7 @@ func TestOverlayContainer_Tapped_NilDismiss(t *testing.T) {
 	o := NewOverlayContainer(nil, &dummyCanvas{}, nil)
 
 	assert.NotPanics(t, func() {
-		o.Tapped(&fyne.PointEvent{})
+		o.Tapped(&granio.PointEvent{})
 	})
 }
 
@@ -40,6 +40,6 @@ func TestOverlayContainer_TappedSecondary_NilDismiss(t *testing.T) {
 	o := NewOverlayContainer(nil, &dummyCanvas{}, nil)
 
 	assert.NotPanics(t, func() {
-		o.TappedSecondary(&fyne.PointEvent{})
+		o.TappedSecondary(&granio.PointEvent{})
 	})
 }

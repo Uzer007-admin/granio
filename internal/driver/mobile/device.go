@@ -1,11 +1,11 @@
 package mobile
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/driver/mobile"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/internal/driver/mobile/event/size"
-	"fyne.io/fyne/v2/lang"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/mobile"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v2/lang"
 )
 
 type device struct {
@@ -22,20 +22,20 @@ var (
 
 // Declare conformity with Device
 var (
-	_ fyne.Device   = (*device)(nil)
+	_ granio.Device = (*device)(nil)
 	_ mobile.Device = (*device)(nil)
 )
 
-func (*device) Locale() fyne.Locale {
+func (*device) Locale() granio.Locale {
 	return lang.SystemLocale()
 }
 
-func (*device) Orientation() fyne.DeviceOrientation {
+func (*device) Orientation() granio.DeviceOrientation {
 	switch currentOrientation {
 	case size.OrientationLandscape:
-		return fyne.OrientationHorizontalLeft
+		return granio.OrientationHorizontalLeft
 	default:
-		return fyne.OrientationVertical
+		return granio.OrientationVertical
 	}
 }
 
@@ -56,9 +56,9 @@ func (d *device) ShowVirtualKeyboard() {
 }
 
 func (d *device) ShowVirtualKeyboardType(keyboard mobile.KeyboardType) {
-	if drv, ok := fyne.CurrentApp().Driver().(*driver); ok {
+	if drv, ok := granio.CurrentApp().Driver().(*driver); ok {
 		if drv.app == nil { // not yet running
-			fyne.LogError("Cannot show keyboard before app is running", nil)
+			granio.LogError("Cannot show keyboard before app is running", nil)
 			return
 		}
 
@@ -68,7 +68,7 @@ func (d *device) ShowVirtualKeyboardType(keyboard mobile.KeyboardType) {
 }
 
 func (d *device) HideVirtualKeyboard() {
-	if drv, ok := fyne.CurrentApp().Driver().(*driver); ok {
+	if drv, ok := granio.CurrentApp().Driver().(*driver); ok {
 		if drv.app == nil { // not yet running
 			return
 		}
@@ -78,9 +78,9 @@ func (d *device) HideVirtualKeyboard() {
 	}
 }
 
-func (d *device) handleKeyboard(obj fyne.Focusable) {
+func (d *device) handleKeyboard(obj granio.Focusable) {
 	isDisabled := false
-	if disWid, ok := obj.(fyne.Disableable); ok {
+	if disWid, ok := obj.(granio.Disableable); ok {
 		isDisabled = disWid.Disabled()
 	}
 	if obj != nil && !isDisabled {

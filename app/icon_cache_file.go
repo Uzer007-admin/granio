@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/repository"
 )
 
 var once sync.Once
@@ -31,13 +31,13 @@ func (a *fyneApp) cachedIconPath() string {
 func (a *fyneApp) saveIconToCache(dirPath, filePath string) error {
 	err := os.MkdirAll(dirPath, repository.PermUserReadWriteExec)
 	if err != nil {
-		fyne.LogError("Unable to create application cache directory", err)
+		granio.LogError("Unable to create application cache directory", err)
 		return err
 	}
 
 	file, err := os.Create(filePath)
 	if err != nil {
-		fyne.LogError("Unable to create icon file", err)
+		granio.LogError("Unable to create icon file", err)
 		return err
 	}
 
@@ -46,7 +46,7 @@ func (a *fyneApp) saveIconToCache(dirPath, filePath string) error {
 	if icon := a.Icon(); icon != nil {
 		_, err = file.Write(icon.Content())
 		if err != nil {
-			fyne.LogError("Unable to write icon contents", err)
+			granio.LogError("Unable to write icon contents", err)
 			return err
 		}
 	}

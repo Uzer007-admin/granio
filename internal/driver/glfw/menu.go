@@ -1,12 +1,12 @@
 package glfw
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
-func buildMenuOverlay(menus *fyne.MainMenu, w *window) fyne.CanvasObject {
+func buildMenuOverlay(menus *granio.MainMenu, w *window) granio.CanvasObject {
 	if len(menus.Items) == 0 {
-		fyne.LogError("Main menu must have at least one child menu", nil)
+		granio.LogError("Main menu must have at least one child menu", nil)
 		return nil
 	}
 

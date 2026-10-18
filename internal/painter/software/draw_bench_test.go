@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
 
 	"golang.org/x/image/draw"
 )
@@ -14,14 +14,14 @@ import (
 // benchCanvas implements only Scale; drawOblong does not call other Canvas
 // methods for the opaque, unrounded, unstroked rectangle path exercised here.
 type benchCanvas struct {
-	fyne.Canvas
+	granio.Canvas
 }
 
 func (benchCanvas) Scale() float32 { return 1 }
 
-func setupRectangleBench(w, h int, fill color.Color) (fyne.Canvas, *canvas.Rectangle, *image.NRGBA, image.Rectangle) {
+func setupRectangleBench(w, h int, fill color.Color) (granio.Canvas, *canvas.Rectangle, *image.NRGBA, image.Rectangle) {
 	rect := canvas.NewRectangle(fill)
-	rect.Resize(fyne.NewSize(float32(w), float32(h)))
+	rect.Resize(granio.NewSize(float32(w), float32(h)))
 	base := image.NewNRGBA(image.Rect(0, 0, w, h))
 	clip := base.Rect
 	return benchCanvas{}, rect, base, clip
@@ -32,7 +32,7 @@ func benchmarkOpaque(b *testing.B, w, h int) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		drawRectangle(c, rect, fyne.NewPos(0, 0), base, clip)
+		drawRectangle(c, rect, granio.NewPos(0, 0), base, clip)
 	}
 }
 

@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
 )
 
 type extendedSlider struct {
@@ -23,7 +23,7 @@ func newExtendedSlider() *extendedSlider {
 
 func TestSlider_Extended_Value(t *testing.T) {
 	slider := newExtendedSlider()
-	slider.Resize(slider.MinSize().Add(fyne.NewSize(20, 0)))
+	slider.Resize(slider.MinSize().Add(granio.NewSize(20, 0)))
 	objs := cache.Renderer(slider).Objects()
 	assert.Len(t, objs, 4)
 	thumb := objs[2]
@@ -42,7 +42,7 @@ func TestSlider_Extended_Drag(t *testing.T) {
 	thumb := objs[2]
 	thumbPos := thumb.Position()
 
-	drag := &fyne.DragEvent{Dragged: fyne.NewDelta(10, 2)}
+	drag := &granio.DragEvent{Dragged: granio.NewDelta(10, 2)}
 	slider.Dragged(drag)
 	assert.Greater(t, thumbPos.X, thumb.Position().X)
 	assert.Equal(t, thumbPos.Y, thumb.Position().Y)

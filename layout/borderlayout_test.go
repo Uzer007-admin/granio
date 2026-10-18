@@ -4,27 +4,27 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	_ "fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	_ "github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewBorderContainer(t *testing.T) {
 	top := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
-	top.SetMinSize(fyne.NewSize(10, 10))
+	top.SetMinSize(granio.NewSize(10, 10))
 	right := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
-	right.SetMinSize(fyne.NewSize(10, 10))
+	right.SetMinSize(granio.NewSize(10, 10))
 	middle := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 
 	c := container.NewBorder(top, nil, nil, right, middle)
 	assert.Len(t, c.Objects, 3)
 
-	c.Resize(fyne.NewSize(100, 100))
+	c.Resize(granio.NewSize(100, 100))
 	assert.Equal(t, float32(0), top.Position().X)
 	assert.Equal(t, float32(0), top.Position().Y)
 	assert.Equal(t, float32(90), right.Position().X)
@@ -36,11 +36,11 @@ func TestNewBorderContainer(t *testing.T) {
 }
 
 func TestBorderLayout_Size_Empty(t *testing.T) {
-	size := fyne.NewSize(100, 100)
+	size := granio.NewSize(100, 100)
 
 	obj := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
-	c := &fyne.Container{
-		Objects: []fyne.CanvasObject{obj},
+	c := &granio.Container{
+		Objects: []granio.CanvasObject{obj},
 	}
 	c.Resize(size)
 
@@ -50,45 +50,45 @@ func TestBorderLayout_Size_Empty(t *testing.T) {
 }
 
 func TestBorderLayout_Size_TopBottom(t *testing.T) {
-	size := fyne.NewSize(100, 100)
+	size := granio.NewSize(100, 100)
 
 	obj1 := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	obj2 := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	obj3 := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 
-	c := &fyne.Container{
-		Objects: []fyne.CanvasObject{obj1, obj2, obj3},
+	c := &granio.Container{
+		Objects: []granio.CanvasObject{obj1, obj2, obj3},
 	}
 	c.Resize(size)
 
 	layout.NewBorderLayout(obj1, obj2, nil, nil).Layout(c.Objects, size)
 
-	innerSize := fyne.NewSize(size.Width, size.Height-obj1.Size().Height-obj2.Size().Height-theme.Padding()*2)
+	innerSize := granio.NewSize(size.Width, size.Height-obj1.Size().Height-obj2.Size().Height-theme.Padding()*2)
 	assert.Equal(t, innerSize, obj3.Size())
-	assert.Equal(t, fyne.NewPos(0, 0), obj1.Position())
-	assert.Equal(t, fyne.NewPos(0, size.Height-obj2.Size().Height), obj2.Position())
-	assert.Equal(t, fyne.NewPos(0, obj1.Size().Height+theme.Padding()), obj3.Position())
+	assert.Equal(t, granio.NewPos(0, 0), obj1.Position())
+	assert.Equal(t, granio.NewPos(0, size.Height-obj2.Size().Height), obj2.Position())
+	assert.Equal(t, granio.NewPos(0, obj1.Size().Height+theme.Padding()), obj3.Position())
 }
 
 func TestBorderLayout_Size_LeftRight(t *testing.T) {
-	size := fyne.NewSize(100, 100)
+	size := granio.NewSize(100, 100)
 
 	obj1 := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	obj2 := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 	obj3 := canvas.NewRectangle(color.NRGBA{0, 0, 0, 0})
 
-	c := &fyne.Container{
-		Objects: []fyne.CanvasObject{obj1, obj2, obj3},
+	c := &granio.Container{
+		Objects: []granio.CanvasObject{obj1, obj2, obj3},
 	}
 	c.Resize(size)
 
 	layout.NewBorderLayout(nil, nil, obj1, obj2).Layout(c.Objects, size)
 
-	innerSize := fyne.NewSize(size.Width-obj1.Size().Width-obj2.Size().Width-theme.Padding()*2, size.Height)
+	innerSize := granio.NewSize(size.Width-obj1.Size().Width-obj2.Size().Width-theme.Padding()*2, size.Height)
 	assert.Equal(t, innerSize, obj3.Size())
-	assert.Equal(t, fyne.NewPos(0, 0), obj1.Position())
-	assert.Equal(t, fyne.NewPos(size.Width-obj2.Size().Width, 0), obj2.Position())
-	assert.Equal(t, fyne.NewPos(obj1.Size().Width+theme.Padding(), 0), obj3.Position())
+	assert.Equal(t, granio.NewPos(0, 0), obj1.Position())
+	assert.Equal(t, granio.NewPos(size.Width-obj2.Size().Width, 0), obj2.Position())
+	assert.Equal(t, granio.NewPos(obj1.Size().Width+theme.Padding(), 0), obj3.Position())
 }
 
 func TestBorderLayout_MinSize_Center(t *testing.T) {
@@ -105,7 +105,7 @@ func TestBorderLayout_MinSize_TopBottom(t *testing.T) {
 	text1 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
 	text2 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
 	text3 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
-	minSize := fyne.NewSize(text3.MinSize().Width, text1.MinSize().Height+text2.MinSize().Height+text3.MinSize().Height+theme.Padding()*2)
+	minSize := granio.NewSize(text3.MinSize().Width, text1.MinSize().Height+text2.MinSize().Height+text3.MinSize().Height+theme.Padding()*2)
 
 	c := container.NewWithoutLayout(text1, text2, text3)
 	layoutMin := layout.NewBorderLayout(text1, text2, nil, nil).MinSize(c.Objects)
@@ -128,7 +128,7 @@ func TestBorderLayout_MinSize_TopBottomHidden(t *testing.T) {
 
 func TestBorderLayout_MinSize_TopOnly(t *testing.T) {
 	text1 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
-	minSize := fyne.NewSize(text1.MinSize().Width, text1.MinSize().Height+theme.Padding())
+	minSize := granio.NewSize(text1.MinSize().Width, text1.MinSize().Height+theme.Padding())
 
 	c := container.NewWithoutLayout(text1)
 	layoutMin := layout.NewBorderLayout(text1, nil, nil, nil).MinSize(c.Objects)
@@ -140,7 +140,7 @@ func TestBorderLayout_MinSize_LeftRight(t *testing.T) {
 	text1 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
 	text2 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
 	text3 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
-	minSize := fyne.NewSize(text1.MinSize().Width+text2.MinSize().Width+text3.MinSize().Width+theme.Padding()*2, text3.MinSize().Height)
+	minSize := granio.NewSize(text1.MinSize().Width+text2.MinSize().Width+text3.MinSize().Width+theme.Padding()*2, text3.MinSize().Height)
 
 	c := container.NewWithoutLayout(text1, text2, text3)
 	layoutMin := layout.NewBorderLayout(nil, nil, text1, text2).MinSize(c.Objects)
@@ -163,7 +163,7 @@ func TestBorderLayout_MinSize_LeftRightHidden(t *testing.T) {
 
 func TestBorderLayout_MinSize_LeftOnly(t *testing.T) {
 	text1 := canvas.NewText("Padding", color.NRGBA{0, 0xff, 0, 0})
-	minSize := fyne.NewSize(text1.MinSize().Width+theme.Padding(), text1.MinSize().Height)
+	minSize := granio.NewSize(text1.MinSize().Width+theme.Padding(), text1.MinSize().Height)
 
 	c := container.NewWithoutLayout(text1)
 	layoutMin := layout.NewBorderLayout(nil, nil, text1, nil).MinSize(c.Objects)

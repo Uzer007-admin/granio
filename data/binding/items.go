@@ -3,8 +3,8 @@ package binding
 import (
 	"bytes"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 )
 
 // Item supports binding any type T generically.
@@ -196,28 +196,28 @@ func BindString(v *string) ExternalString {
 	return bindExternalComparable(v)
 }
 
-// URI supports binding a fyne.URI value.
+// URI supports binding a granio.URI value.
 //
 // Since: 2.1
-type URI = Item[fyne.URI]
+type URI = Item[granio.URI]
 
-// ExternalURI supports binding a fyne.URI value to an external value.
+// ExternalURI supports binding a granio.URI value to an external value.
 //
 // Since: 2.1
-type ExternalURI = ExternalItem[fyne.URI]
+type ExternalURI = ExternalItem[granio.URI]
 
-// NewURI returns a bindable fyne.URI value that is managed internally.
+// NewURI returns a bindable granio.URI value that is managed internally.
 //
 // Since: 2.1
 func NewURI() URI {
 	return NewItem(storage.EqualURI)
 }
 
-// BindURI returns a new bindable value that controls the contents of the provided fyne.URI variable.
+// BindURI returns a new bindable value that controls the contents of the provided granio.URI variable.
 // If your code changes the content of the variable this refers to you should call Reload() to inform the bindings.
 //
 // Since: 2.1
-func BindURI(v *fyne.URI) ExternalURI {
+func BindURI(v *granio.URI) ExternalURI {
 	return BindItem(v, storage.EqualURI)
 }
 

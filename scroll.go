@@ -1,4 +1,4 @@
-package fyne
+package granio
 
 // ScrollDirection represents the directions in which a scrollable container or widget can scroll its child content.
 //

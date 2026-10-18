@@ -12,7 +12,7 @@ void watchScrollerStyle();
 import "C"
 
 import (
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func isScrollerPageOnTap() bool {
@@ -50,7 +50,7 @@ func unsubscribeScrollerStyle(id uint64) {
 
 //export scrollerStyleChanged
 func scrollerStyleChanged() {
-	fyne.Do(func() {
+	granio.Do(func() {
 		for _, fn := range scrollerStyleSubscribers {
 			fn()
 		}

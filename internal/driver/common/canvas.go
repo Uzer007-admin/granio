@@ -3,30 +3,31 @@ package common
 import (
 	"image/color"
 	"reflect"
+	"sync/atomic"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/internal/cache"
-	"fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/painter/gl"
-	"fyne.io/fyne/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v2/internal/theme"
 )
 
 // SizeableCanvas defines a canvas with size related functions.
 type SizeableCanvas interface {
-	fyne.Canvas
-	Resize(fyne.Size)
-	MinSize() fyne.Size
+	granio.Canvas
+	Resize(granio.Size)
+	MinSize() granio.Size
 }
 
 // Canvas defines common canvas implementation.
 type Canvas struct {
-	OnFocus   func(obj fyne.Focusable)
+	OnFocus   func(obj granio.Focusable)
 	OnUnfocus func()
 
 	impl SizeableCanvas
@@ -35,7 +36,7 @@ type Canvas struct {
 	menuFocusMgr    *app.FocusManager
 	overlays        overlayStack
 
-	shortcut fyne.ShortcutHandler
+	shortcut granio.ShortcutHandler
 
 	painter gl.Painter
 
@@ -46,22 +47,22 @@ type Canvas struct {
 	// If an object failed to ender the refresh queue, the object may
 	// disappear or blink from the view at any frames. As of this reason,
 	// the refreshQueue is an unbounded queue which is able to cache
-	// arbitrary number of fyne.CanvasObject for the rendering.
+	// arbitrary number of granio.CanvasObject for the rendering.
 	refreshQueue deduplicatedObjectQueue
-	dirty        bool
+	dirty        atomic.Bool
 
 	mWindowHeadTree, contentTree, menuTree *renderCacheTree
 }
 
 // AddShortcut adds a shortcut to the canvas.
-func (c *Canvas) AddShortcut(shortcut fyne.Shortcut, handler func(shortcut fyne.Shortcut)) {
+func (c *Canvas) AddShortcut(shortcut granio.Shortcut, handler func(shortcut granio.Shortcut)) {
 	c.shortcut.AddShortcut(shortcut, handler)
 }
 
-func (c *Canvas) DrawDebugOverlay(obj fyne.CanvasObject, pos fyne.Position, size fyne.Size, clip *internal.ClipItem) {
+func (c *Canvas) DrawDebugOverlay(obj granio.CanvasObject, pos granio.Position, size granio.Size, clip *internal.ClipItem) {
 	//revive:disable:add-constant
 	switch obj.(type) {
-	case fyne.Widget:
+	case granio.Widget:
 		r := canvas.NewRectangle(color.Transparent)
 		r.StrokeColor = color.NRGBA{R: 0xcc, G: 0x33, B: 0x33, A: 0xff}
 		r.StrokeWidth = 1
@@ -71,7 +72,7 @@ func (c *Canvas) DrawDebugOverlay(obj fyne.CanvasObject, pos fyne.Position, size
 		t := canvas.NewText(reflect.ValueOf(obj).Elem().Type().Name(), r.StrokeColor)
 		t.TextSize = 10
 		c.Painter().Paint(t, pos.AddXY(2, 2), size, clip)
-	case *fyne.Container:
+	case *granio.Container:
 		r := canvas.NewRectangle(color.Transparent)
 		r.StrokeColor = color.NRGBA{R: 0x33, G: 0x33, B: 0xcc, A: 0xff}
 		r.StrokeWidth = 1
@@ -94,7 +95,7 @@ func (c *Canvas) EnsureMinSize() bool {
 
 	var parentNeedingUpdate *RenderCacheNode
 
-	setup := func(node *RenderCacheNode, _ fyne.Position) {
+	setup := func(node *RenderCacheNode, _ granio.Position) {
 		if !node.obj.Visible() {
 			return
 		}
@@ -102,7 +103,7 @@ func (c *Canvas) EnsureMinSize() bool {
 			theme.PushRenderingTheme(th.Theme)
 		}
 	}
-	ensureMinSize := func(node *RenderCacheNode, _ fyne.Position) {
+	ensureMinSize := func(node *RenderCacheNode, _ granio.Position) {
 		obj := node.obj
 		cache.SetCanvasForObject(obj, c.impl, func() {
 			if img, ok := obj.(*canvas.Image); ok {
@@ -151,7 +152,7 @@ func (c *Canvas) EnsureMinSize() bool {
 }
 
 // Focus makes the provided item focused.
-func (c *Canvas) Focus(obj fyne.Focusable) {
+func (c *Canvas) Focus(obj granio.Focusable) {
 	focusMgr := c.focusManager()
 	if focusMgr != nil && focusMgr.Focus(obj) { // fast path – probably >99.9% of all cases
 		if c.OnFocus != nil {
@@ -174,11 +175,11 @@ func (c *Canvas) Focus(obj fyne.Focusable) {
 		}
 	}
 
-	fyne.LogError("Failed to focus object which is not part of the canvas’ content, menu or overlays.", nil)
+	granio.LogError("Failed to focus object which is not part of the canvas’ content, menu or overlays.", nil)
 }
 
 // Focused returns the current focused object.
-func (c *Canvas) Focused() fyne.Focusable {
+func (c *Canvas) Focused() granio.Focusable {
 	mgr := c.focusManager()
 	if mgr == nil {
 		return nil
@@ -252,15 +253,15 @@ func (c *Canvas) Initialize(impl SizeableCanvas, onOverlayChanged func()) {
 // ObjectTrees return canvas object trees.
 //
 // This function uses lock.
-func (c *Canvas) ObjectTrees() []fyne.CanvasObject {
-	var content, menu fyne.CanvasObject
+func (c *Canvas) ObjectTrees() []granio.CanvasObject {
+	var content, menu granio.CanvasObject
 	if c.contentTree != nil && c.contentTree.root != nil {
 		content = c.contentTree.root.obj
 	}
 	if c.menuTree != nil && c.menuTree.root != nil {
 		menu = c.menuTree.root.obj
 	}
-	trees := make([]fyne.CanvasObject, 0, len(c.Overlays().List())+2)
+	trees := make([]granio.CanvasObject, 0, len(c.Overlays().List())+2)
 	trees = append(trees, content)
 	if menu != nil {
 		trees = append(trees, menu)
@@ -270,7 +271,7 @@ func (c *Canvas) ObjectTrees() []fyne.CanvasObject {
 }
 
 // Overlays returns the overlay stack.
-func (c *Canvas) Overlays() fyne.OverlayStack {
+func (c *Canvas) Overlays() granio.OverlayStack {
 	return &c.overlays
 }
 
@@ -280,7 +281,7 @@ func (c *Canvas) Painter() gl.Painter {
 }
 
 // Refresh refreshes a canvas object.
-func (c *Canvas) Refresh(obj fyne.CanvasObject) {
+func (c *Canvas) Refresh(obj granio.CanvasObject) {
 	c.refreshQueue.In(obj)
 	// EnsureMain's own check, done here because handing it the c.SetDirty
 	// method value allocates, and this runs for every refreshed object.
@@ -292,14 +293,14 @@ func (c *Canvas) Refresh(obj fyne.CanvasObject) {
 }
 
 // RemoveShortcut removes a shortcut from the canvas.
-func (c *Canvas) RemoveShortcut(shortcut fyne.Shortcut) {
+func (c *Canvas) RemoveShortcut(shortcut granio.Shortcut) {
 	c.shortcut.RemoveShortcut(shortcut)
 }
 
 // SetContentTreeAndFocusMgr sets content tree and focus manager.
 //
 // This function does not use the canvas lock.
-func (c *Canvas) SetContentTreeAndFocusMgr(content fyne.CanvasObject) {
+func (c *Canvas) SetContentTreeAndFocusMgr(content granio.CanvasObject) {
 	c.contentTree = &renderCacheTree{root: &RenderCacheNode{obj: content}}
 
 	newFocusMgr := app.NewFocusManager(content)
@@ -315,20 +316,21 @@ func (c *Canvas) SetContentTreeAndFocusMgr(content fyne.CanvasObject) {
 // CheckDirtyAndClear returns true if the canvas is dirty and
 // clears the dirty state atomically.
 func (c *Canvas) CheckDirtyAndClear() bool {
-	wasDirty := c.dirty
-	c.dirty = false
-	return wasDirty
+	return c.dirty.Swap(false)
 }
 
 // SetDirty sets canvas dirty flag atomically.
 func (c *Canvas) SetDirty() {
-	c.dirty = true
+	c.dirty.Store(true)
 }
+
+// HasDirty reports pending paint work without clearing it.
+func (c *Canvas) HasDirty() bool { return c.dirty.Load() }
 
 // SetMenuTreeAndFocusMgr sets menu tree and focus manager.
 //
 // This function does not use the canvas lock.
-func (c *Canvas) SetMenuTreeAndFocusMgr(menu fyne.CanvasObject) {
+func (c *Canvas) SetMenuTreeAndFocusMgr(menu granio.CanvasObject) {
 	c.menuTree = &renderCacheTree{root: &RenderCacheNode{obj: menu}}
 	if menu != nil {
 		c.menuFocusMgr = app.NewFocusManager(menu)
@@ -340,7 +342,7 @@ func (c *Canvas) SetMenuTreeAndFocusMgr(menu fyne.CanvasObject) {
 // SetMobileWindowHeadTree sets window head tree.
 //
 // This function does not use the canvas lock.
-func (c *Canvas) SetMobileWindowHeadTree(head fyne.CanvasObject) {
+func (c *Canvas) SetMobileWindowHeadTree(head granio.CanvasObject) {
 	c.mWindowHeadTree = &renderCacheTree{root: &RenderCacheNode{obj: head}}
 }
 
@@ -350,7 +352,7 @@ func (c *Canvas) SetPainter(p gl.Painter) {
 }
 
 // TypedShortcut handle the registered shortcut.
-func (c *Canvas) TypedShortcut(shortcut fyne.Shortcut) {
+func (c *Canvas) TypedShortcut(shortcut granio.Shortcut) {
 	c.shortcut.TypedShortcut(shortcut)
 }
 
@@ -367,8 +369,8 @@ func (c *Canvas) Unfocus() {
 
 // WalkTrees walks over the trees.
 func (c *Canvas) WalkTrees(
-	beforeChildren func(*RenderCacheNode, fyne.Position),
-	afterChildren func(*RenderCacheNode, fyne.Position),
+	beforeChildren func(*RenderCacheNode, granio.Position),
+	afterChildren func(*RenderCacheNode, granio.Position),
 ) {
 	c.walkTree(c.contentTree, beforeChildren, afterChildren)
 	if c.mWindowHeadTree != nil && c.mWindowHeadTree.root.obj != nil {
@@ -394,7 +396,7 @@ func (c *Canvas) focusManager() *app.FocusManager {
 	return c.contentFocusMgr
 }
 
-func (c *Canvas) freeObject(object fyne.CanvasObject) {
+func (c *Canvas) freeObject(object granio.CanvasObject) {
 	// Image.Refresh will trigger a refresh specific to the object,
 	// while recursing on parent widget would just lead to a double texture upload.
 	if img, ok := object.(*canvas.Image); ok {
@@ -402,7 +404,7 @@ func (c *Canvas) freeObject(object fyne.CanvasObject) {
 		return
 	}
 
-	driver.WalkCompleteObjectTree(object, func(obj fyne.CanvasObject, _ fyne.Position, _ fyne.Position, _ fyne.Size) bool {
+	driver.WalkCompleteObjectTree(object, func(obj granio.CanvasObject, _ granio.Position, _ granio.Position, _ granio.Size) bool {
 		if _, ok := obj.(*canvas.Image); !ok { // No image refresh while recursing to avoid double texture upload.
 			c.painter.Free(obj)
 		}
@@ -423,13 +425,13 @@ func (c *Canvas) isMenuActive() bool {
 
 func (*Canvas) walkTree(
 	tree *renderCacheTree,
-	beforeChildren func(*RenderCacheNode, fyne.Position),
-	afterChildren func(*RenderCacheNode, fyne.Position),
+	beforeChildren func(*RenderCacheNode, granio.Position),
+	afterChildren func(*RenderCacheNode, granio.Position),
 ) {
 	var node, parent, prev *RenderCacheNode
 	node = tree.root
 
-	bc := func(obj fyne.CanvasObject, pos fyne.Position, _ fyne.Position, _ fyne.Size) bool {
+	bc := func(obj granio.CanvasObject, pos granio.Position, _ granio.Position, _ granio.Size) bool {
 		if node != nil && node.obj != obj {
 			if parent.firstChild == node {
 				parent.firstChild = nil
@@ -456,7 +458,7 @@ func (*Canvas) walkTree(
 		node = parent.firstChild
 		return false
 	}
-	ac := func(_ fyne.CanvasObject, pos fyne.Position, _ fyne.CanvasObject) {
+	ac := func(_ granio.CanvasObject, pos granio.Position, _ granio.CanvasObject) {
 		node = parent
 		parent = node.parent
 		if prev != nil && prev.parent != parent {
@@ -477,15 +479,15 @@ type activatableMenu interface {
 	IsActive() bool
 }
 
-func (*Canvas) updateLayout(objToLayout fyne.CanvasObject) {
+func (*Canvas) updateLayout(objToLayout granio.CanvasObject) {
 	switch cont := objToLayout.(type) {
-	case *fyne.Container:
+	case *granio.Container:
 		if cont.Layout != nil {
 			layout := cont.Layout
 			objects := cont.Objects
 			layout.Layout(objects, cont.Size())
 		}
-	case fyne.Widget:
+	case granio.Widget:
 		renderer := cache.Renderer(cont)
 		renderer.Layout(cont.Size())
 	}

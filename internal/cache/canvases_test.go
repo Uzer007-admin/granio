@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 func TestSetCanvasForObject(t *testing.T) {
@@ -52,14 +52,14 @@ func TestSetCanvasForObject_keepsAlive(t *testing.T) {
 	assert.Equal(t, 1, canvases.Len())
 }
 
-func canvasForObject(obj fyne.CanvasObject) fyne.Canvas {
+func canvasForObject(obj granio.CanvasObject) granio.Canvas {
 	cinfo, _ := canvases.Load(obj)
 	return cinfo.canvas
 }
 
 // setCanvasForObjectLoadOrStore is the implementation SetCanvasForObject replaced.
 // It is kept here only so the benchmark below can show the difference.
-func setCanvasForObjectLoadOrStore(obj fyne.CanvasObject, c fyne.Canvas, setup func()) {
+func setCanvasForObjectLoadOrStore(obj granio.CanvasObject, c granio.Canvas, setup func()) {
 	cinfo := &canvasInfo{canvas: c}
 	cinfo.setAlive()
 
@@ -75,12 +75,12 @@ func setCanvasForObjectLoadOrStore(obj fyne.CanvasObject, c fyne.Canvas, setup f
 func BenchmarkSetCanvasForObject(b *testing.B) {
 	const objectCount = 200
 
-	run := func(b *testing.B, set func(fyne.CanvasObject, fyne.Canvas, func())) {
+	run := func(b *testing.B, set func(granio.CanvasObject, granio.Canvas, func())) {
 		testClearAll()
 		defer testClearAll()
 
 		c := &dummyCanvas{}
-		objects := make([]fyne.CanvasObject, objectCount)
+		objects := make([]granio.CanvasObject, objectCount)
 		for i := range objects {
 			objects[i] = &dummyWidget{}
 			set(objects[i], c, nil) // first frame attaches, the rest are re-visits
@@ -110,7 +110,7 @@ func BenchmarkSetCanvasForObjectRepaints(b *testing.B) {
 		frameTime   = time.Second / 60
 	)
 
-	run := func(b *testing.B, set func(fyne.CanvasObject, fyne.Canvas, func())) {
+	run := func(b *testing.B, set func(granio.CanvasObject, granio.Canvas, func())) {
 		testClearAll()
 		validDuration := ValidDuration
 		ValidDuration = time.Second / 2 // expire twice per benchmarked second
@@ -123,7 +123,7 @@ func BenchmarkSetCanvasForObjectRepaints(b *testing.B) {
 		tm.setTime(0, 0)
 
 		c := &dummyCanvas{}
-		objects := make([]fyne.CanvasObject, objectCount)
+		objects := make([]granio.CanvasObject, objectCount)
 		for i := range objects {
 			objects[i] = &dummyWidget{}
 		}

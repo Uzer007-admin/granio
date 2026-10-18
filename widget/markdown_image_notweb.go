@@ -3,8 +3,8 @@
 package widget
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/storage"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/storage"
 	"github.com/yuin/goldmark/ast"
 )
 
@@ -14,5 +14,5 @@ func parseMarkdownImage(t *ast.Image) []RichTextSegment {
 	if err != nil {
 		u = storage.NewFileURI(dest)
 	}
-	return []RichTextSegment{&ImageSegment{Source: u, Title: string(t.Title), Alignment: fyne.TextAlignCenter}}
+	return []RichTextSegment{&ImageSegment{Source: u, Title: string(t.Title), Alignment: granio.TextAlignCenter}}
 }

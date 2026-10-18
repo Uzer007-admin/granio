@@ -10,14 +10,14 @@ import (
 	"os"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal/async"
-	"fyne.io/fyne/v2/internal/build"
-	internalTest "fyne.io/fyne/v2/internal/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -27,28 +27,28 @@ func TestGlCanvas_ChildMinSizeChangeAffectsAncestorsUpToRoot(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
 	leftObj1 := canvas.NewRectangle(color.Black)
-	leftObj1.SetMinSize(fyne.NewSize(100, 50))
+	leftObj1.SetMinSize(granio.NewSize(100, 50))
 	leftObj2 := canvas.NewRectangle(color.Black)
-	leftObj2.SetMinSize(fyne.NewSize(100, 50))
+	leftObj2.SetMinSize(granio.NewSize(100, 50))
 	leftCol := container.NewVBox(leftObj1, leftObj2)
 	rightObj1 := canvas.NewRectangle(color.Black)
-	rightObj1.SetMinSize(fyne.NewSize(100, 50))
+	rightObj1.SetMinSize(granio.NewSize(100, 50))
 	rightObj2 := canvas.NewRectangle(color.Black)
-	rightObj2.SetMinSize(fyne.NewSize(100, 50))
+	rightObj2.SetMinSize(granio.NewSize(100, 50))
 	rightCol := container.NewVBox(rightObj1, rightObj2)
 	content := container.NewHBox(leftCol, rightCol)
 
 	w.SetContent(content)
 	repaintWindow(w)
 
-	oldCanvasSize := fyne.NewSize(200+3*theme.Padding(), 100+3*theme.Padding())
+	oldCanvasSize := granio.NewSize(200+3*theme.Padding(), 100+3*theme.Padding())
 	assert.Equal(t, oldCanvasSize, c.Size())
 
-	leftObj1.SetMinSize(fyne.NewSize(110, 60))
+	leftObj1.SetMinSize(granio.NewSize(110, 60))
 	c.Refresh(leftObj1)
 	repaintWindow(w)
 
-	expectedCanvasSize := oldCanvasSize.Add(fyne.NewSize(10, 10))
+	expectedCanvasSize := oldCanvasSize.Add(granio.NewSize(10, 10))
 	assert.Equal(t, expectedCanvasSize, c.Size())
 }
 
@@ -56,20 +56,20 @@ func TestGlCanvas_ChildMinSizeChangeAffectsAncestorsUpToScroll(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
 	leftObj1 := canvas.NewRectangle(color.Black)
-	leftObj1.SetMinSize(fyne.NewSize(50, 50))
+	leftObj1.SetMinSize(granio.NewSize(50, 50))
 	leftObj2 := canvas.NewRectangle(color.Black)
-	leftObj2.SetMinSize(fyne.NewSize(50, 50))
+	leftObj2.SetMinSize(granio.NewSize(50, 50))
 	leftCol := container.NewVBox(leftObj1, leftObj2)
 	rightObj1 := canvas.NewRectangle(color.Black)
-	rightObj1.SetMinSize(fyne.NewSize(50, 50))
+	rightObj1.SetMinSize(granio.NewSize(50, 50))
 	rightObj2 := canvas.NewRectangle(color.Black)
-	rightObj2.SetMinSize(fyne.NewSize(50, 50))
+	rightObj2.SetMinSize(granio.NewSize(50, 50))
 	rightCol := container.NewVBox(rightObj1, rightObj2)
 	rightColScroll := container.NewScroll(rightCol)
 	content := container.NewHBox(leftCol, rightColScroll)
 
 	w.SetContent(content)
-	oldCanvasSize := fyne.NewSize(200+3*theme.Padding(), 100+3*theme.Padding())
+	oldCanvasSize := granio.NewSize(200+3*theme.Padding(), 100+3*theme.Padding())
 	w.Resize(oldCanvasSize)
 	repaintWindow(w)
 
@@ -77,13 +77,13 @@ func TestGlCanvas_ChildMinSizeChangeAffectsAncestorsUpToScroll(t *testing.T) {
 	oldCanvasSize = c.Size()
 	oldRightScrollSize := rightColScroll.Size()
 	oldRightColSize := rightCol.Size()
-	rightObj1.SetMinSize(fyne.NewSize(50, 100))
+	rightObj1.SetMinSize(granio.NewSize(50, 100))
 	c.Refresh(rightObj1)
 	repaintWindow(w)
 
 	assert.Equal(t, oldCanvasSize, c.Size())
 	assert.Equal(t, oldRightScrollSize, rightColScroll.Size())
-	expectedRightColSize := oldRightColSize.Add(fyne.NewSize(0, 50))
+	expectedRightColSize := oldRightColSize.Add(granio.NewSize(0, 50))
 	assert.Equal(t, expectedRightColSize, rightCol.Size())
 }
 
@@ -91,35 +91,35 @@ func TestGlCanvas_ChildMinSizeChangesInDifferentScrollAffectAncestorsUpToScroll(
 	w := createWindow("Test")
 	c := w.Canvas()
 	leftObj1 := canvas.NewRectangle(color.Black)
-	leftObj1.SetMinSize(fyne.NewSize(50, 50))
+	leftObj1.SetMinSize(granio.NewSize(50, 50))
 	leftObj2 := canvas.NewRectangle(color.Black)
-	leftObj2.SetMinSize(fyne.NewSize(50, 50))
+	leftObj2.SetMinSize(granio.NewSize(50, 50))
 	leftCol := container.NewVBox(leftObj1, leftObj2)
 	leftColScroll := container.NewScroll(leftCol)
 	rightObj1 := canvas.NewRectangle(color.Black)
-	rightObj1.SetMinSize(fyne.NewSize(50, 50))
+	rightObj1.SetMinSize(granio.NewSize(50, 50))
 	rightObj2 := canvas.NewRectangle(color.Black)
-	rightObj2.SetMinSize(fyne.NewSize(50, 50))
+	rightObj2.SetMinSize(granio.NewSize(50, 50))
 	rightCol := container.NewVBox(rightObj1, rightObj2)
 	rightColScroll := container.NewScroll(rightCol)
 	content := container.NewHBox(leftColScroll, rightColScroll)
 	w.SetContent(content)
 
-	oldCanvasSize := fyne.NewSize(
+	oldCanvasSize := granio.NewSize(
 		2*leftColScroll.MinSize().Width+3*theme.Padding(),
 		leftColScroll.MinSize().Height+2*theme.Padding(),
 	)
 	w.Resize(oldCanvasSize)
 	repaintWindow(w)
 
-	var oldLeftColSize, oldLeftScrollSize, oldRightColSize, oldRightScrollSize fyne.Size
+	var oldLeftColSize, oldLeftScrollSize, oldRightColSize, oldRightScrollSize granio.Size
 	runOnMain(func() {
 		oldLeftColSize = leftCol.Size()
 		oldLeftScrollSize = leftColScroll.Size()
 		oldRightColSize = rightCol.Size()
 		oldRightScrollSize = rightColScroll.Size()
-		leftObj2.SetMinSize(fyne.NewSize(50, 100))
-		rightObj2.SetMinSize(fyne.NewSize(50, 200))
+		leftObj2.SetMinSize(granio.NewSize(50, 100))
+		rightObj2.SetMinSize(granio.NewSize(50, 200))
 	})
 	c.Refresh(leftObj2)
 	c.Refresh(rightObj2)
@@ -129,9 +129,9 @@ func TestGlCanvas_ChildMinSizeChangesInDifferentScrollAffectAncestorsUpToScroll(
 		assert.Equal(t, oldCanvasSize, c.Size())
 		assert.Equal(t, oldLeftScrollSize, leftColScroll.Size())
 		assert.Equal(t, oldRightScrollSize, rightColScroll.Size())
-		expectedLeftColSize := oldLeftColSize.Add(fyne.NewSize(0, 50))
+		expectedLeftColSize := oldLeftColSize.Add(granio.NewSize(0, 50))
 		assert.Equal(t, expectedLeftColSize, leftCol.Size())
-		expectedRightColSize := oldRightColSize.Add(fyne.NewSize(0, 150))
+		expectedRightColSize := oldRightColSize.Add(granio.NewSize(0, 150))
 		assert.Equal(t, expectedRightColSize, rightCol.Size())
 	})
 }
@@ -148,14 +148,14 @@ func TestGlCanvas_ContentChangeWithoutMinSizeChangeDoesNotLayout(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
 	leftObj1 := canvas.NewRectangle(color.Black)
-	leftObj1.SetMinSize(fyne.NewSize(50, 50))
+	leftObj1.SetMinSize(granio.NewSize(50, 50))
 	leftObj2 := canvas.NewRectangle(color.Black)
-	leftObj2.SetMinSize(fyne.NewSize(50, 50))
+	leftObj2.SetMinSize(granio.NewSize(50, 50))
 	leftCol := container.NewVBox(leftObj1, leftObj2)
 	rightObj1 := canvas.NewRectangle(color.Black)
-	rightObj1.SetMinSize(fyne.NewSize(50, 50))
+	rightObj1.SetMinSize(granio.NewSize(50, 50))
 	rightObj2 := canvas.NewRectangle(color.Black)
-	rightObj2.SetMinSize(fyne.NewSize(50, 50))
+	rightObj2.SetMinSize(granio.NewSize(50, 50))
 	rightCol := container.NewVBox(rightObj1, rightObj2)
 	content := container.NewWithoutLayout(leftCol, rightCol)
 	layout := &recordingLayout{}
@@ -275,7 +275,7 @@ func TestGlCanvas_FocusHandlingWhenAddingAndRemovingOverlays(t *testing.T) {
 	assert.Equal(t, ce2, c.Focused())
 	assert.True(t, ce2.focused)
 
-	var overs fyne.OverlayStack
+	var overs granio.OverlayStack
 	runOnMain(func() {
 		overs = c.Overlays()
 	})
@@ -331,21 +331,21 @@ func TestGlCanvas_FocusHandlingWhenAddingAndRemovingOverlays(t *testing.T) {
 func TestGlCanvas_InsufficientSizeDoesntTriggerResizeIfSizeIsAlreadyMaxedOut(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
-	canvasSize := fyne.NewSize(200, 100)
+	canvasSize := granio.NewSize(200, 100)
 	w.Resize(canvasSize)
 	require.Equal(t, canvasSize, w.Canvas().Size())
 	popUpContent := canvas.NewRectangle(color.Black)
-	popUpContent.SetMinSize(fyne.NewSize(1000, 10))
+	popUpContent.SetMinSize(granio.NewSize(1000, 10))
 	popUp := widget.NewPopUp(popUpContent, c)
 	popUp.Show()
 
-	assert.Equal(t, fyne.NewSize(200, 10), popUpContent.Size())
-	assert.Equal(t, fyne.NewSize(1000, 10), popUp.MinSize())
+	assert.Equal(t, granio.NewSize(200, 10), popUpContent.Size())
+	assert.Equal(t, granio.NewSize(1000, 10), popUp.MinSize())
 	assert.Equal(t, canvasSize, c.Overlays().Top().Size())
 
 	repaintWindow(w)
 
-	assert.Equal(t, fyne.NewSize(200, 10), popUpContent.Size())
+	assert.Equal(t, granio.NewSize(200, 10), popUpContent.Size())
 	assert.Equal(t, canvasSize, c.Overlays().Top().Size())
 }
 
@@ -353,30 +353,30 @@ func TestGlCanvas_MinSizeShrinkTriggersLayout(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
 	leftObj1 := canvas.NewRectangle(color.Black)
-	leftObj1.SetMinSize(fyne.NewSize(100, 50))
+	leftObj1.SetMinSize(granio.NewSize(100, 50))
 	leftObj2 := canvas.NewRectangle(color.Black)
-	leftObj2.SetMinSize(fyne.NewSize(100, 50))
+	leftObj2.SetMinSize(granio.NewSize(100, 50))
 	leftCol := container.NewVBox(leftObj1, leftObj2)
 	rightObj1 := canvas.NewRectangle(color.Black)
-	rightObj1.SetMinSize(fyne.NewSize(100, 50))
+	rightObj1.SetMinSize(granio.NewSize(100, 50))
 	rightObj2 := canvas.NewRectangle(color.Black)
-	rightObj2.SetMinSize(fyne.NewSize(100, 50))
+	rightObj2.SetMinSize(granio.NewSize(100, 50))
 	rightCol := container.NewVBox(rightObj1, rightObj2)
 	content := container.NewHBox(leftCol, rightCol)
 	w.SetContent(content)
 
-	oldCanvasSize := fyne.NewSize(200+3*theme.Padding(), 100+3*theme.Padding())
+	oldCanvasSize := granio.NewSize(200+3*theme.Padding(), 100+3*theme.Padding())
 	runOnMain(func() {
 		assert.Equal(t, oldCanvasSize, c.Size())
 	})
 	repaintWindow(w)
 
-	var oldRightColSize fyne.Size
+	var oldRightColSize granio.Size
 	runOnMain(func() {
 		oldRightColSize = rightCol.Size()
-		leftObj1.SetMinSize(fyne.NewSize(90, 40))
-		rightObj1.SetMinSize(fyne.NewSize(80, 30))
-		rightObj2.SetMinSize(fyne.NewSize(80, 20))
+		leftObj1.SetMinSize(granio.NewSize(90, 40))
+		rightObj1.SetMinSize(granio.NewSize(80, 30))
+		rightObj2.SetMinSize(granio.NewSize(80, 20))
 		c.Refresh(leftObj1)
 		c.Refresh(rightObj1)
 		c.Refresh(rightObj2)
@@ -384,13 +384,13 @@ func TestGlCanvas_MinSizeShrinkTriggersLayout(t *testing.T) {
 	repaintWindow(w)
 
 	assert.Equal(t, oldCanvasSize, c.Size())
-	expectedRightColSize := oldRightColSize.Subtract(fyne.NewSize(20, 0))
+	expectedRightColSize := oldRightColSize.Subtract(granio.NewSize(20, 0))
 
 	runOnMain(func() {
 		assert.Equal(t, expectedRightColSize, rightCol.Size())
-		assert.Equal(t, fyne.NewSize(100, 40), leftObj1.Size())
-		assert.Equal(t, fyne.NewSize(80, 30), rightObj1.Size())
-		assert.Equal(t, fyne.NewSize(80, 20), rightObj2.Size())
+		assert.Equal(t, granio.NewSize(100, 40), leftObj1.Size())
+		assert.Equal(t, granio.NewSize(80, 30), rightObj1.Size())
+		assert.Equal(t, granio.NewSize(80, 20), rightObj2.Size())
 	})
 }
 
@@ -404,7 +404,7 @@ func TestGlCanvas_PixelCoordinateAtPosition(t *testing.T) {
 	w := createWindow("Test")
 	c := w.Canvas()
 
-	pos := fyne.NewPos(4, 4)
+	pos := granio.NewPos(4, 4)
 	c.SetScale(2.5)
 	x, y := c.PixelCoordinateForPosition(pos)
 	assert.Equal(t, int(10*c.TexScale()), x)
@@ -427,9 +427,9 @@ func TestGlCanvas_ResizeWithOtherOverlay(t *testing.T) {
 	runOnMain(func() {
 		c.Overlays().Add(over)
 	})
-	ensureCanvasSize(t, w, fyne.NewSize(69, 36))
+	ensureCanvasSize(t, w, granio.NewSize(69, 36))
 
-	size := fyne.NewSize(200, 100)
+	size := granio.NewSize(200, 100)
 	runOnMain(func() {
 		assert.NotEqual(t, size, content.Size())
 	})
@@ -458,9 +458,9 @@ func TestGlCanvas_ResizeWithOverlays(t *testing.T) {
 		overs.Add(o2)
 		overs.Add(o3)
 	})
-	ensureCanvasSize(t, w, fyne.NewSize(69, 36))
+	ensureCanvasSize(t, w, granio.NewSize(69, 36))
 
-	size := fyne.NewSize(200, 100)
+	size := granio.NewSize(200, 100)
 	assert.NotEqual(t, size, content.Size())
 	assert.NotEqual(t, size, o1.Size())
 	assert.NotEqual(t, size, o2.Size())
@@ -484,9 +484,9 @@ func TestGlCanvas_ResizeWithPopUpOverlay(t *testing.T) {
 	runOnMain(func() {
 		pop.Show()
 	})
-	ensureCanvasSize(t, w, fyne.NewSize(69, 36))
+	ensureCanvasSize(t, w, granio.NewSize(69, 36))
 
-	size := fyne.NewSize(200, 100)
+	size := granio.NewSize(200, 100)
 	overContentSize := pop.Size()
 	assert.NotZero(t, overContentSize)
 	assert.NotEqual(t, size, content.Size())
@@ -509,14 +509,14 @@ func TestGlCanvas_ResizeWithModalPopUpOverlay(t *testing.T) {
 	w.SetContent(content)
 
 	popup := widget.NewModalPopUp(widget.NewLabel("PopUp"), w.Canvas())
-	popupBgSize := fyne.NewSize(975, 575)
+	popupBgSize := granio.NewSize(975, 575)
 	runOnMain(func() {
 		popup.Show()
 		popup.Resize(popupBgSize)
 	})
-	ensureCanvasSize(t, w, fyne.NewSize(69, 36))
+	ensureCanvasSize(t, w, granio.NewSize(69, 36))
 
-	winSize := fyne.NewSize(1000, 600)
+	winSize := granio.NewSize(1000, 600)
 	w.Resize(winSize)
 	require.Equal(t, winSize, w.Canvas().Size())
 
@@ -535,14 +535,14 @@ func TestGlCanvas_Scale(t *testing.T) {
 
 func TestGlCanvas_SetContent(t *testing.T) {
 	runOnMain(func() {
-		fyne.CurrentApp().Settings().SetTheme(internalTest.DarkTheme(theme.DefaultTheme()))
+		granio.CurrentApp().Settings().SetTheme(internalTest.DarkTheme(theme.DefaultTheme()))
 	})
 	var menuHeight float32
 	if build.HasNativeMenu {
 		menuHeight = 0
 	} else {
 		runOnMain(func() {
-			menuHeight = NewMenuBar(fyne.NewMainMenu(fyne.NewMenu("Test", fyne.NewMenuItem("Empty", func() {}))), nil).MinSize().Height
+			menuHeight = NewMenuBar(granio.NewMainMenu(granio.NewMenu("Test", granio.NewMenuItem("Empty", func() {}))), nil).MinSize().Height
 		})
 	}
 	tests := []struct {
@@ -563,45 +563,45 @@ func TestGlCanvas_SetContent(t *testing.T) {
 			w.SetPadded(tt.padding)
 			if tt.menu {
 				runOnMain(func() {
-					w.SetMainMenu(fyne.NewMainMenu(fyne.NewMenu("Test", fyne.NewMenuItem("Test", func() {}))))
+					w.SetMainMenu(granio.NewMainMenu(granio.NewMenu("Test", granio.NewMenuItem("Test", func() {}))))
 				})
 			}
-			ensureCanvasSize(t, w, fyne.NewSize(69, 37))
+			ensureCanvasSize(t, w, granio.NewSize(69, 37))
 			content := canvas.NewCircle(color.Black)
 			canvasSize := float32(200)
 			w.SetContent(content)
-			w.Resize(fyne.NewSize(canvasSize, canvasSize))
-			require.Equal(t, fyne.NewSize(canvasSize, canvasSize), w.Canvas().Size())
+			w.Resize(granio.NewSize(canvasSize, canvasSize))
+			require.Equal(t, granio.NewSize(canvasSize, canvasSize), w.Canvas().Size())
 
 			newContent := canvas.NewCircle(color.White)
-			assert.Equal(t, fyne.NewPos(0, 0), newContent.Position())
-			assert.Equal(t, fyne.NewSize(0, 0), newContent.Size())
+			assert.Equal(t, granio.NewPos(0, 0), newContent.Position())
+			assert.Equal(t, granio.NewSize(0, 0), newContent.Size())
 			w.SetContent(newContent)
 
-			var newSize fyne.Size
-			var newPos fyne.Position
+			var newSize granio.Size
+			var newPos granio.Position
 			runOnMain(func() {
 				newSize = newContent.Size()
 				newPos = newContent.Position()
 			})
-			assert.Equal(t, fyne.NewPos(tt.expectedPad, tt.expectedPad+tt.expectedMenuHeight), newPos)
-			assert.Equal(t, fyne.NewSize(canvasSize-2*tt.expectedPad, canvasSize-2*tt.expectedPad-tt.expectedMenuHeight), newSize)
+			assert.Equal(t, granio.NewPos(tt.expectedPad, tt.expectedPad+tt.expectedMenuHeight), newPos)
+			assert.Equal(t, granio.NewSize(canvasSize-2*tt.expectedPad, canvasSize-2*tt.expectedPad-tt.expectedMenuHeight), newSize)
 		})
 	}
 }
 
-var _ fyne.Layout = (*recordingLayout)(nil)
+var _ granio.Layout = (*recordingLayout)(nil)
 
 type recordingLayout struct {
 	layoutEvents []any
 }
 
-func (l *recordingLayout) Layout(_ []fyne.CanvasObject, size fyne.Size) {
+func (l *recordingLayout) Layout(_ []granio.CanvasObject, size granio.Size) {
 	l.layoutEvents = append(l.layoutEvents, size)
 }
 
-func (*recordingLayout) MinSize([]fyne.CanvasObject) fyne.Size {
-	return fyne.NewSize(6, 9)
+func (*recordingLayout) MinSize([]granio.CanvasObject) granio.Size {
+	return granio.NewSize(6, 9)
 }
 
 func (l *recordingLayout) popLayoutEvent() (e any) {
@@ -629,7 +629,7 @@ func (s *safeCanvas) DismissMenu() (ret bool) {
 	return ret
 }
 
-func (s *safeCanvas) Focus(o fyne.Focusable) {
+func (s *safeCanvas) Focus(o granio.Focusable) {
 	runOnMain(func() {
 		s.glCanvas.Focus(o)
 	})
@@ -643,7 +643,7 @@ func (s *safeCanvas) FocusPrevious() {
 	runOnMain(s.glCanvas.FocusPrevious)
 }
 
-func (s *safeCanvas) Focused() (ret fyne.Focusable) {
+func (s *safeCanvas) Focused() (ret granio.Focusable) {
 	runOnMain(func() {
 		ret = s.glCanvas.Focused()
 	})
@@ -651,7 +651,7 @@ func (s *safeCanvas) Focused() (ret fyne.Focusable) {
 	return ret
 }
 
-func (s *safeCanvas) setMenuOverlay(o fyne.CanvasObject) {
+func (s *safeCanvas) setMenuOverlay(o granio.CanvasObject) {
 	runOnMain(func() {
 		s.glCanvas.setMenuOverlay(o)
 	})
@@ -665,7 +665,7 @@ func (s *safeCanvas) Padded() (ret bool) {
 	return ret
 }
 
-func (s *safeCanvas) Resize(size fyne.Size) {
+func (s *safeCanvas) Resize(size granio.Size) {
 	runOnMain(func() {
 		s.glCanvas.Resize(size)
 	})
@@ -689,7 +689,7 @@ func (s *safeCanvas) SetTexScale(scale float32) {
 	})
 }
 
-func (s *safeCanvas) Size() (ret fyne.Size) {
+func (s *safeCanvas) Size() (ret granio.Size) {
 	if async.IsMainGoroutine() {
 		ret = s.glCanvas.Size()
 	} else {

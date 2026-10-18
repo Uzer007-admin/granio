@@ -1,0 +1,11 @@
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/extensions/XTest.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+// Operates only on the private Xvfb display used for the nested compositor.
+int main(void){Display*d=XOpenDisplay(NULL);if(!d)return 1;Window root=DefaultRootWindow(d);int w=DisplayWidth(d,DefaultScreen(d)),h=DisplayHeight(d,DefaultScreen(d));XImage*image=XGetImage(d,root,0,0,w,h,AllPlanes,ZPixmap);if(!image)return 2;long sx=0,sy=0,tx=0,ty=0,ns=0,nt=0;for(int y=0;y<h;y+=4)for(int x=0;x<w;x+=4){unsigned long pixel=XGetPixel(image,x,y)&0xffffff;if(pixel==0xeb2142){sx+=x;sy+=y;ns++;}if(pixel==0x1f5082){tx+=x;ty+=y;nt++;}}XDestroyImage(image);if(!ns||!nt){fprintf(stderr,"source=%ld target=%ld\n",ns,nt);return 3;}sx/=ns;sy/=ns;tx/=nt;ty/=nt;printf("real compositor gesture: %ld,%ld -> %ld,%ld\n",sx,sy,tx,ty);const char*socketPath=getenv("FYNE_WESTON_INPUT_SOCKET");if(socketPath){int fd=socket(AF_UNIX,SOCK_DGRAM,0);struct sockaddr_un address={.sun_family=AF_UNIX};if(fd<0||strlen(socketPath)>=sizeof(address.sun_path))return 4;strcpy(address.sun_path,socketPath);char message[100];snprintf(message,sizeof(message),"motion %ld %ld",sx,sy);sendto(fd,message,strlen(message),0,(struct sockaddr*)&address,sizeof(address));usleep(300000);sendto(fd,"button 1",8,0,(struct sockaddr*)&address,sizeof(address));usleep(300000);for(int i=1;i<=12;i++){snprintf(message,sizeof(message),"motion %ld %ld",sx+(tx-sx)*i/12,sy+(ty-sy)*i/12);sendto(fd,message,strlen(message),0,(struct sockaddr*)&address,sizeof(address));usleep(30000);}usleep(300000);sendto(fd,"button 0",8,0,(struct sockaddr*)&address,sizeof(address));close(fd);XCloseDisplay(d);return 0;}XTestFakeMotionEvent(d,-1,sx,sy,CurrentTime);XFlush(d);usleep(200000);Window focusRoot,focusChild;int rx,ry,wx,wy;unsigned int mask;XQueryPointer(d,root,&focusRoot,&focusChild,&rx,&ry,&wx,&wy,&mask);if(focusChild)XSetInputFocus(d,focusChild,RevertToParent,CurrentTime);XFlush(d);usleep(300000);XTestFakeButtonEvent(d,1,True,CurrentTime);XFlush(d);usleep(300000);for(int i=1;i<=12;i++){XTestFakeMotionEvent(d,-1,sx+(tx-sx)*i/12,sy+(ty-sy)*i/12,CurrentTime);XFlush(d);usleep(30000);}usleep(300000);XTestFakeButtonEvent(d,1,False,CurrentTime);XFlush(d);XCloseDisplay(d);return 0;}

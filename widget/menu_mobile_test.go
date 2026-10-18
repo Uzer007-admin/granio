@@ -6,12 +6,12 @@ import (
 	"image/color"
 	"testing"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	internalWidget "fyne.io/fyne/v2/internal/widget"
-	"fyne.io/fyne/v2/test"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func TestMenu_Layout(t *testing.T) {
@@ -22,92 +22,92 @@ func TestMenu_Layout(t *testing.T) {
 	w.SetPadded(false)
 	c := w.Canvas()
 
-	item1 := fyne.NewMenuItem("A", nil)
-	item2 := fyne.NewMenuItem("B (long)", nil)
-	sep := fyne.NewMenuItemSeparator()
-	item3 := fyne.NewMenuItem("C", nil)
-	subItem1 := fyne.NewMenuItem("subitem A", nil)
+	item1 := granio.NewMenuItem("A", nil)
+	item2 := granio.NewMenuItem("B (long)", nil)
+	sep := granio.NewMenuItemSeparator()
+	item3 := granio.NewMenuItem("C", nil)
+	subItem1 := granio.NewMenuItem("subitem A", nil)
 	subItem1.Checked = true
-	subItem2 := fyne.NewMenuItem("subitem B", nil)
+	subItem2 := granio.NewMenuItem("subitem B", nil)
 	subItem2.Checked = true
 	subItem2.Icon = theme.InfoIcon()
-	subItem3 := fyne.NewMenuItem("subitem C (long)", nil)
+	subItem3 := granio.NewMenuItem("subitem C (long)", nil)
 	subItem3.Icon = theme.MenuIcon()
-	subsubItem1 := fyne.NewMenuItem("subsubitem A (long)", nil)
+	subsubItem1 := granio.NewMenuItem("subsubitem A (long)", nil)
 	subsubItem1.Icon = theme.FileIcon()
-	subsubItem2 := fyne.NewMenuItem("subsubitem B", nil)
-	subItem3.ChildMenu = fyne.NewMenu("", subsubItem1, subsubItem2)
-	item3.ChildMenu = fyne.NewMenu("", subItem1, subItem2, subItem3)
-	menu := fyne.NewMenu("", item1, sep, item2, item3)
+	subsubItem2 := granio.NewMenuItem("subsubitem B", nil)
+	subItem3.ChildMenu = granio.NewMenu("", subsubItem1, subsubItem2)
+	item3.ChildMenu = granio.NewMenu("", subItem1, subItem2, subItem3)
+	menu := granio.NewMenu("", item1, sep, item2, item3)
 
 	for name, tt := range map[string]struct {
-		windowSize   fyne.Size
-		menuPos      fyne.Position
-		tapPositions []fyne.Position
+		windowSize   granio.Size
+		menuPos      granio.Position
+		tapPositions []granio.Position
 		useTestTheme bool
 		want         string
 	}{
 		"normal": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(10, 10),
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(10, 10),
 			want:       "menu/mobile/layout_normal.xml",
 		},
 		"normal with submenus": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(10, 10),
-			tapPositions: []fyne.Position{
-				fyne.NewPos(32, 103),
-				fyne.NewPos(102, 173),
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(10, 10),
+			tapPositions: []granio.Position{
+				granio.NewPos(32, 103),
+				granio.NewPos(102, 173),
 			},
 			want: "menu/mobile/layout_normal_with_submenus.xml",
 		},
 		"background of active submenu parents resets if sibling is hovered": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(10, 10),
-			tapPositions: []fyne.Position{
-				fyne.NewPos(30, 100),  // open submenu
-				fyne.NewPos(100, 170), // open subsubmenu
-				fyne.NewPos(300, 170), // hover subsubmenu item
-				fyne.NewPos(30, 60),   // hover sibling of submenu parent
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(10, 10),
+			tapPositions: []granio.Position{
+				granio.NewPos(30, 100),  // open submenu
+				granio.NewPos(100, 170), // open subsubmenu
+				granio.NewPos(300, 170), // hover subsubmenu item
+				granio.NewPos(30, 60),   // hover sibling of submenu parent
 			},
 			want: "menu/mobile/layout_background_reset.xml",
 		},
 		"no space on right side for submenu": {
-			windowSize: fyne.NewSize(500, 300),
-			menuPos:    fyne.NewPos(410, 10),
-			tapPositions: []fyne.Position{
-				fyne.NewPos(432, 103), // open submenu
-				fyne.NewPos(302, 173), // open subsubmenu
+			windowSize: granio.NewSize(500, 300),
+			menuPos:    granio.NewPos(410, 10),
+			tapPositions: []granio.Position{
+				granio.NewPos(432, 103), // open submenu
+				granio.NewPos(302, 173), // open subsubmenu
 			},
 			want: "menu/mobile/layout_no_space_on_right.xml",
 		},
 		"no space on left & right side for submenu": {
-			windowSize: fyne.NewSize(200, 300),
-			menuPos:    fyne.NewPos(10, 10),
-			tapPositions: []fyne.Position{
-				fyne.NewPos(32, 103),  // open submenu
-				fyne.NewPos(102, 173), // open subsubmenu
+			windowSize: granio.NewSize(200, 300),
+			menuPos:    granio.NewPos(10, 10),
+			tapPositions: []granio.Position{
+				granio.NewPos(32, 103),  // open submenu
+				granio.NewPos(102, 173), // open subsubmenu
 			},
 			want: "menu/mobile/layout_no_space_on_both_sides.xml",
 		},
 		"window too short for submenu": {
-			windowSize: fyne.NewSize(500, 150),
-			menuPos:    fyne.NewPos(10, 10),
-			tapPositions: []fyne.Position{
-				fyne.NewPos(30, 100),  // open submenu
-				fyne.NewPos(100, 130), // open subsubmenu
+			windowSize: granio.NewSize(500, 150),
+			menuPos:    granio.NewPos(10, 10),
+			tapPositions: []granio.Position{
+				granio.NewPos(30, 100),  // open submenu
+				granio.NewPos(100, 130), // open subsubmenu
 			},
 			want: "menu/mobile/layout_window_too_short_for_submenu.xml",
 		},
 		"theme change": {
-			windowSize:   fyne.NewSize(500, 300),
-			menuPos:      fyne.NewPos(10, 10),
+			windowSize:   granio.NewSize(500, 300),
+			menuPos:      granio.NewPos(10, 10),
 			useTestTheme: true,
 			want:         "menu/mobile/layout_theme_changed.xml",
 		},
 		"window too short for menu": {
-			windowSize: fyne.NewSize(100, 50),
-			menuPos:    fyne.NewPos(10, 10),
+			windowSize: granio.NewSize(100, 50),
+			menuPos:    granio.NewPos(10, 10),
 			want:       "menu/mobile/layout_window_too_short.xml",
 		},
 	} {
@@ -141,35 +141,35 @@ func TestMenu_Dragging(t *testing.T) {
 	w.SetPadded(false)
 	c := w.Canvas()
 
-	menu := fyne.NewMenu(
+	menu := granio.NewMenu(
 		"",
-		fyne.NewMenuItem("A", nil),
-		fyne.NewMenuItem("B", nil),
-		fyne.NewMenuItem("C", nil),
-		fyne.NewMenuItem("D", nil),
-		fyne.NewMenuItem("E", nil),
-		fyne.NewMenuItem("F", nil),
+		granio.NewMenuItem("A", nil),
+		granio.NewMenuItem("B", nil),
+		granio.NewMenuItem("C", nil),
+		granio.NewMenuItem("D", nil),
+		granio.NewMenuItem("E", nil),
+		granio.NewMenuItem("F", nil),
 	)
 
-	w.Resize(fyne.NewSize(100, 100))
+	w.Resize(granio.NewSize(100, 100))
 	m := widget.NewMenu(menu)
 	o := internalWidget.NewOverlayContainer(m, c, nil)
 	c.Overlays().Add(o)
 	defer c.Overlays().Remove(o)
-	m.Move(fyne.NewPos(10, 10))
+	m.Move(granio.NewPos(10, 10))
 	m.Resize(m.MinSize())
 	maxDragDistance := m.MinSize().Height - 90
 	test.AssertRendersToMarkup(t, "menu/mobile/drag_top.xml", w.Canvas())
 
-	test.Drag(c, fyne.NewPos(20, 20), 0, -50)
+	test.Drag(c, granio.NewPos(20, 20), 0, -50)
 	test.AssertRendersToMarkup(t, "menu/mobile/drag_middle.xml", w.Canvas())
 
-	test.Drag(c, fyne.NewPos(20, 20), 0, -maxDragDistance)
+	test.Drag(c, granio.NewPos(20, 20), 0, -maxDragDistance)
 	test.AssertRendersToMarkup(t, "menu/mobile/drag_bottom.xml", w.Canvas())
 
-	test.Drag(c, fyne.NewPos(20, 20), 0, maxDragDistance-50)
+	test.Drag(c, granio.NewPos(20, 20), 0, maxDragDistance-50)
 	test.AssertRendersToMarkup(t, "menu/mobile/drag_middle.xml", w.Canvas())
 
-	test.Drag(c, fyne.NewPos(20, 20), 0, 50)
+	test.Drag(c, granio.NewPos(20, 20), 0, 50)
 	test.AssertRendersToMarkup(t, "menu/mobile/drag_top.xml", w.Canvas())
 }

@@ -1,0 +1,5 @@
+--- FAIL: TestGraphicsAssessmentTerminateRegistry (0.75s)
+    graphics_assessment_probe_test.go:27: Terminate retained 1 window entries in the Go callback registry
+FAIL
+FAIL	github.com/go-gl/glfw/v3.4/glfw	1.115s
+FAIL

@@ -1,0 +1,5 @@
+ok  	github.com/Uzer007-admin/granio/v2/theme	1.948s
+ok  	github.com/Uzer007-admin/granio/v2/widget	13.475s
+ok  	github.com/Uzer007-admin/granio/v2/cmd/granio_gallery	4.422s
+ok  	github.com/Uzer007-admin/granio/v2/internal/foldermeta	4.639s
+?   	github.com/Uzer007-admin/granio/v2/storage/foldermeta	[no test files]

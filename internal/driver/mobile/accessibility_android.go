@@ -17,9 +17,9 @@ import "C"
 import (
 	"unsafe"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/internal/driver/mobile/app"
-	"fyne.io/fyne/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v2/internal/scale"
 )
 
 const (
@@ -80,21 +80,21 @@ func (w *window) gatherAndroidAccessNodes() []androidAccessNode {
 	nextID := 1
 
 	if w.canvas.Content() != nil {
-		w.collectAndroidNodes(w.canvas.Content(), fyne.NewPos(0, 0), &nodes, &nextID)
+		w.collectAndroidNodes(w.canvas.Content(), granio.NewPos(0, 0), &nodes, &nextID)
 	}
 	if w.canvas.menu != nil {
-		w.collectAndroidNodes(w.canvas.menu, fyne.NewPos(0, 0), &nodes, &nextID)
+		w.collectAndroidNodes(w.canvas.menu, granio.NewPos(0, 0), &nodes, &nextID)
 	}
 	for _, overlay := range w.canvas.Overlays().List() {
-		w.collectAndroidNodes(overlay, fyne.NewPos(0, 0), &nodes, &nextID)
+		w.collectAndroidNodes(overlay, granio.NewPos(0, 0), &nodes, &nextID)
 	}
 
 	return nodes
 }
 
 func (w *window) collectAndroidNodes(
-	obj fyne.CanvasObject,
-	pos fyne.Position,
+	obj granio.CanvasObject,
+	pos granio.Position,
 	nodes *[]androidAccessNode,
 	nextID *int,
 ) {
@@ -108,7 +108,7 @@ func (w *window) collectAndroidNodes(
 	// Android's AccessibilityNodeProvider uses a flat model: all virtual views
 	// must be direct children of the host view. Container nodes are skipped so
 	// their children surface at the top level where TalkBack can reach them.
-	if accessible, ok := obj.(fyne.Accessible); ok {
+	if accessible, ok := obj.(granio.Accessible); ok {
 		role := roleNameToAndroid(string(accessible.AccessibilityRole()))
 		if role != androidRoleContainer {
 			*nodes = append(*nodes, androidAccessNode{
@@ -124,7 +124,7 @@ func (w *window) collectAndroidNodes(
 		}
 	}
 
-	if cont, ok := obj.(*fyne.Container); ok {
+	if cont, ok := obj.(*granio.Container); ok {
 		for _, child := range cont.Objects {
 			w.collectAndroidNodes(child, objPos, nodes, nextID)
 		}

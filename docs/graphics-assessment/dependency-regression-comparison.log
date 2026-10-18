@@ -1,0 +1,4 @@
+ok  	fyne.io/fyne/v2/dialog	2.977s
+ok  	fyne.io/fyne/v2/internal/app	1.507s
+ok  	fyne.io/fyne/v2/widget	2.329s
+ok  	fyne.io/fyne/v2/cmd/fyne/internal/mobile/binres	1.387s [no tests to run]

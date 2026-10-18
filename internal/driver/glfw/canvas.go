@@ -4,33 +4,33 @@ import (
 	"image"
 	"math"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/internal"
-	"fyne.io/fyne/v2/internal/app"
-	"fyne.io/fyne/v2/internal/build"
-	"fyne.io/fyne/v2/internal/driver"
-	"fyne.io/fyne/v2/internal/driver/common"
-	"fyne.io/fyne/v2/theme"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v2/theme"
 )
 
 // Declare conformity with Canvas interface
-var _ fyne.Canvas = (*glCanvas)(nil)
+var _ granio.Canvas = (*glCanvas)(nil)
 
 type glCanvas struct {
 	common.Canvas
 
-	content fyne.CanvasObject
-	menu    fyne.CanvasObject
+	content granio.CanvasObject
+	menu    granio.CanvasObject
 	padded  bool
-	size    fyne.Size
+	size    granio.Size
 
 	onTypedRune func(rune)
-	onTypedKey  func(*fyne.KeyEvent)
-	onKeyDown   func(*fyne.KeyEvent)
-	onKeyUp     func(*fyne.KeyEvent)
-	// shortcut    fyne.ShortcutHandler
+	onTypedKey  func(*granio.KeyEvent)
+	onKeyDown   func(*granio.KeyEvent)
+	onKeyUp     func(*granio.KeyEvent)
+	// shortcut    granio.ShortcutHandler
 
 	scale, detectedScale, texScale float32
 
@@ -41,13 +41,65 @@ type glCanvas struct {
 func (c *glCanvas) Capture() image.Image {
 	var img image.Image
 	c.context.(*window).RunWithContext(func() {
-		img = c.Painter().Capture(c)
+		if painter, ok := c.Painter().(interface {
+			CaptureBack(granio.Canvas) image.Image
+		}); ok {
+			updateGLContext(c.context.(*window))
+			c.FreeDirtyTextures()
+			c.paint(c.Size())
+			img = painter.CaptureBack(c)
+		} else {
+			img = c.Painter().Capture(c)
+		}
 	})
 	return img
 }
 
-func (c *glCanvas) Content() fyne.CanvasObject {
+func (c *glCanvas) Content() granio.CanvasObject {
 	return c.content
+}
+
+func (c *glCanvas) Focus(object granio.Focusable) {
+	if c.Focused() == object {
+		return
+	}
+	if window, ok := c.context.(*window); ok {
+		window.resetInputMethod()
+	}
+	c.Canvas.Focus(object)
+	if window, ok := c.context.(*window); ok {
+		window.updateInputMethod()
+	}
+}
+
+func (c *glCanvas) FocusNext() {
+	if window, ok := c.context.(*window); ok {
+		window.resetInputMethod()
+	}
+	c.Canvas.FocusNext()
+	if window, ok := c.context.(*window); ok {
+		window.updateInputMethod()
+	}
+}
+
+func (c *glCanvas) FocusPrevious() {
+	if window, ok := c.context.(*window); ok {
+		window.resetInputMethod()
+	}
+	c.Canvas.FocusPrevious()
+	if window, ok := c.context.(*window); ok {
+		window.updateInputMethod()
+	}
+}
+
+func (c *glCanvas) FocusLost() {
+	if window, ok := c.context.(*window); ok {
+		window.resetInputMethod()
+	}
+	c.Canvas.FocusLost()
+	if window, ok := c.context.(*window); ok {
+		window.updateInputMethod()
+	}
 }
 
 func (c *glCanvas) DismissMenu() bool {
@@ -58,23 +110,23 @@ func (c *glCanvas) DismissMenu() bool {
 	return false
 }
 
-func (c *glCanvas) InteractiveArea() (fyne.Position, fyne.Size) {
-	return fyne.Position{}, c.Size()
+func (c *glCanvas) InteractiveArea() (granio.Position, granio.Size) {
+	return granio.Position{}, c.Size()
 }
 
-func (c *glCanvas) MinSize() fyne.Size {
+func (c *glCanvas) MinSize() granio.Size {
 	return c.canvasSize(c.content.MinSize())
 }
 
-func (c *glCanvas) OnKeyDown() func(*fyne.KeyEvent) {
+func (c *glCanvas) OnKeyDown() func(*granio.KeyEvent) {
 	return c.onKeyDown
 }
 
-func (c *glCanvas) OnKeyUp() func(*fyne.KeyEvent) {
+func (c *glCanvas) OnKeyUp() func(*granio.KeyEvent) {
 	return c.onKeyUp
 }
 
-func (c *glCanvas) OnTypedKey() func(*fyne.KeyEvent) {
+func (c *glCanvas) OnTypedKey() func(*granio.KeyEvent) {
 	return c.onTypedKey
 }
 
@@ -86,7 +138,7 @@ func (c *glCanvas) Padded() bool {
 	return c.padded
 }
 
-func (c *glCanvas) PixelCoordinateForPosition(pos fyne.Position) (x, y int) {
+func (c *glCanvas) PixelCoordinateForPosition(pos granio.Position) (x, y int) {
 	multiple := c.scale * c.texScale
 	scaleInt := func(x float32) int {
 		return int(math.Round(float64(x * multiple)))
@@ -95,13 +147,13 @@ func (c *glCanvas) PixelCoordinateForPosition(pos fyne.Position) (x, y int) {
 	return scaleInt(pos.X), scaleInt(pos.Y)
 }
 
-func (c *glCanvas) Resize(size fyne.Size) {
+func (c *glCanvas) Resize(size granio.Size) {
 	// This might not be the ideal solution, but it effectively avoid the first frame to be blurry due to the
 	// rounding of the size to the loower integer when scale == 1. It does not affect the other cases as far as we tested.
 	// This can easily be seen with fyne/cmd/hello and a scale == 1 as the text will happear blurry without the following line.
-	var nearestSize fyne.Size
+	var nearestSize granio.Size
 	if c.scale == 1 {
-		nearestSize = fyne.NewSize(float32(math.Ceil(float64(size.Width))), float32(math.Ceil(float64(size.Height))))
+		nearestSize = granio.NewSize(float32(math.Ceil(float64(size.Width))), float32(math.Ceil(float64(size.Height))))
 	} else {
 		nearestSize = size
 	}
@@ -126,7 +178,7 @@ func (c *glCanvas) Resize(size fyne.Size) {
 
 	if menu != nil {
 		menu.Refresh()
-		menu.Resize(fyne.NewSize(nearestSize.Width, menuHeight))
+		menu.Resize(granio.NewSize(nearestSize.Width, menuHeight))
 	}
 }
 
@@ -134,7 +186,13 @@ func (c *glCanvas) Scale() float32 {
 	return c.scale
 }
 
-func (c *glCanvas) SetContent(content fyne.CanvasObject) {
+// SetDirty wakes the native loop when a background resource finishes loading.
+func (c *glCanvas) SetDirty() {
+	c.Canvas.SetDirty()
+	wakeMainLoop()
+}
+
+func (c *glCanvas) SetContent(content granio.CanvasObject) {
 	newSize := internal.MaxSizes(c.size, c.canvasSize(content.MinSize()))
 
 	c.applyContent(content)
@@ -143,15 +201,15 @@ func (c *glCanvas) SetContent(content fyne.CanvasObject) {
 	c.SetDirty()
 }
 
-func (c *glCanvas) SetOnKeyDown(typed func(*fyne.KeyEvent)) {
+func (c *glCanvas) SetOnKeyDown(typed func(*granio.KeyEvent)) {
 	c.onKeyDown = typed
 }
 
-func (c *glCanvas) SetOnKeyUp(typed func(*fyne.KeyEvent)) {
+func (c *glCanvas) SetOnKeyUp(typed func(*granio.KeyEvent)) {
 	c.onKeyUp = typed
 }
 
-func (c *glCanvas) SetOnTypedKey(typed func(*fyne.KeyEvent)) {
+func (c *glCanvas) SetOnTypedKey(typed func(*granio.KeyEvent)) {
 	c.onTypedKey = typed
 }
 
@@ -178,7 +236,7 @@ func (c *glCanvas) reloadScale() {
 	c.context.RescaleContext()
 }
 
-func (c *glCanvas) Size() fyne.Size {
+func (c *glCanvas) Size() granio.Size {
 	return c.size
 }
 
@@ -188,12 +246,12 @@ func (c *glCanvas) ToggleMenu() {
 	}
 }
 
-func (c *glCanvas) applyContent(content fyne.CanvasObject) {
+func (c *glCanvas) applyContent(content granio.CanvasObject) {
 	c.content = content
 	c.SetContentTreeAndFocusMgr(content)
 }
 
-func (c *glCanvas) buildMenu(w *window, m *fyne.MainMenu) {
+func (c *glCanvas) buildMenu(w *window, m *granio.MainMenu) {
 	c.setMenuOverlay(nil)
 	if m == nil {
 		return
@@ -206,26 +264,26 @@ func (c *glCanvas) buildMenu(w *window, m *fyne.MainMenu) {
 }
 
 // canvasSize computes the needed canvas size for the given content size
-func (c *glCanvas) canvasSize(contentSize fyne.Size) fyne.Size {
-	canvasSize := contentSize.Add(fyne.NewSize(0, c.menuHeight()))
+func (c *glCanvas) canvasSize(contentSize granio.Size) granio.Size {
+	canvasSize := contentSize.Add(granio.NewSize(0, c.menuHeight()))
 	if c.Padded() {
-		return canvasSize.Add(fyne.NewSquareSize(theme.Padding() * 2))
+		return canvasSize.Add(granio.NewSquareSize(theme.Padding() * 2))
 	}
 	return canvasSize
 }
 
-func (c *glCanvas) contentPos() fyne.Position {
-	contentPos := fyne.NewPos(0, c.menuHeight())
+func (c *glCanvas) contentPos() granio.Position {
+	contentPos := granio.NewPos(0, c.menuHeight())
 	if c.Padded() {
-		return contentPos.Add(fyne.NewSquareOffsetPos(theme.Padding()))
+		return contentPos.Add(granio.NewSquareOffsetPos(theme.Padding()))
 	}
 	return contentPos
 }
 
-func (c *glCanvas) contentSize(canvasSize fyne.Size) fyne.Size {
-	contentSize := fyne.NewSize(canvasSize.Width, canvasSize.Height-c.menuHeight())
+func (c *glCanvas) contentSize(canvasSize granio.Size) granio.Size {
+	contentSize := granio.NewSize(canvasSize.Width, canvasSize.Height-c.menuHeight())
 	if c.Padded() {
-		return contentSize.Subtract(fyne.NewSquareSize(theme.Padding() * 2))
+		return contentSize.Subtract(granio.NewSquareSize(theme.Padding() * 2))
 	}
 	return contentSize
 }
@@ -242,14 +300,14 @@ func (c *glCanvas) overlayChanged() {
 	c.SetDirty()
 }
 
-func (c *glCanvas) paint(size fyne.Size) {
+func (c *glCanvas) paint(size granio.Size) {
 	clips := &internal.ClipStack{}
 	if c.Content() == nil {
 		return
 	}
 	c.Painter().Clear()
 
-	paint := func(node *common.RenderCacheNode, pos fyne.Position) {
+	paint := func(node *common.RenderCacheNode, pos granio.Position) {
 		obj := node.Obj()
 		if driver.IsClip(obj) {
 			inner := clips.Push(pos, obj.Size())
@@ -260,7 +318,7 @@ func (c *glCanvas) paint(size fyne.Size) {
 		}
 		c.Painter().Paint(obj, pos, size, clips.Top())
 	}
-	afterPaint := func(node *common.RenderCacheNode, pos fyne.Position) {
+	afterPaint := func(node *common.RenderCacheNode, pos granio.Position) {
 		if driver.IsClip(node.Obj()) {
 			clips.Pop()
 			if top := clips.Top(); top != nil {
@@ -270,7 +328,7 @@ func (c *glCanvas) paint(size fyne.Size) {
 			}
 		}
 
-		if build.Mode == fyne.BuildDebug {
+		if build.Mode == granio.BuildDebug {
 			c.DrawDebugOverlay(node.Obj(), pos, size, clips.Top())
 		}
 	}
@@ -282,7 +340,7 @@ func (c *glCanvas) paint(size fyne.Size) {
 	}
 }
 
-func (c *glCanvas) setMenuOverlay(b fyne.CanvasObject) {
+func (c *glCanvas) setMenuOverlay(b granio.CanvasObject) {
 	c.menu = b
 	c.SetMenuTreeAndFocusMgr(b)
 
@@ -291,7 +349,7 @@ func (c *glCanvas) setMenuOverlay(b fyne.CanvasObject) {
 		c.content.Move(c.contentPos())
 
 		c.menu.Refresh()
-		c.menu.Resize(fyne.NewSize(c.size.Width, c.menu.MinSize().Height))
+		c.menu.Resize(granio.NewSize(c.size.Width, c.menu.MinSize().Height))
 	}
 }
 

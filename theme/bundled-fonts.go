@@ -3,13 +3,13 @@ package theme
 import (
 	_ "embed"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 //go:embed font/NotoSans-Regular.ttf
 var notoSansRegular []byte
 
-var regular = &fyne.StaticResource{
+var regular = &granio.StaticResource{
 	StaticName:    "NotoSans-Regular.ttf",
 	StaticContent: notoSansRegular,
 }
@@ -17,7 +17,7 @@ var regular = &fyne.StaticResource{
 //go:embed font/NotoSans-Bold.ttf
 var notoSansBold []byte
 
-var bold = &fyne.StaticResource{
+var bold = &granio.StaticResource{
 	StaticName:    "NotoSans-Bold.ttf",
 	StaticContent: notoSansBold,
 }
@@ -25,7 +25,7 @@ var bold = &fyne.StaticResource{
 //go:embed font/NotoSans-Italic.ttf
 var notoSansItalic []byte
 
-var italic = &fyne.StaticResource{
+var italic = &granio.StaticResource{
 	StaticName:    "NotoSans-Italic.ttf",
 	StaticContent: notoSansItalic,
 }
@@ -33,7 +33,7 @@ var italic = &fyne.StaticResource{
 //go:embed font/NotoSans-BoldItalic.ttf
 var notoSansBoldItalic []byte
 
-var bolditalic = &fyne.StaticResource{
+var bolditalic = &granio.StaticResource{
 	StaticName:    "NotoSans-BoldItalic.ttf",
 	StaticContent: notoSansBoldItalic,
 }
@@ -41,7 +41,7 @@ var bolditalic = &fyne.StaticResource{
 //go:embed font/DejaVuSansMono-Powerline.ttf
 var dejaVuSansMono []byte
 
-var monospace = &fyne.StaticResource{
+var monospace = &granio.StaticResource{
 	StaticName:    "DejaVuSansMono-Powerline.ttf",
 	StaticContent: dejaVuSansMono,
 }
@@ -49,7 +49,7 @@ var monospace = &fyne.StaticResource{
 //go:embed font/InterSymbols-Regular.ttf
 var interSymbolsRegular []byte
 
-var symbol = &fyne.StaticResource{
+var symbol = &granio.StaticResource{
 	StaticName:    "InterSymbols-Regular.ttf",
 	StaticContent: interSymbolsRegular,
 }

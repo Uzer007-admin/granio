@@ -3,11 +3,11 @@ package canvas
 import (
 	"image/color"
 
-	"fyne.io/fyne/v2"
+	"github.com/Uzer007-admin/granio/v2"
 )
 
 // Declare conformity with CanvasObject interface
-var _ fyne.CanvasObject = (*RegularPolygon)(nil)
+var _ granio.CanvasObject = (*RegularPolygon)(nil)
 
 // RegularPolygon describes a colored regular polygon primitive in a Fyne canvas.
 // The rendered portion will be in the center of the available space.
@@ -32,7 +32,7 @@ func (r *RegularPolygon) Hide() {
 }
 
 // Move the polygon to a new position, relative to its parent / canvas
-func (r *RegularPolygon) Move(pos fyne.Position) {
+func (r *RegularPolygon) Move(pos granio.Position) {
 	if r.Position() == pos {
 		return
 	}
@@ -49,7 +49,7 @@ func (r *RegularPolygon) Refresh() {
 
 // Resize on a polygon updates the new size of this object.
 // If it has a stroke width this will cause it to Refresh.
-func (r *RegularPolygon) Resize(s fyne.Size) {
+func (r *RegularPolygon) Resize(s granio.Size) {
 	if s == r.Size() {
 		return
 	}

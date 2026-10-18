@@ -7,12 +7,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"fyne.io/fyne/v2"
-	fynecanvas "fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
+	"github.com/Uzer007-admin/granio/v2"
+	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v2/widget"
 )
 
 func Test_knownColor(t *testing.T) {
@@ -24,16 +24,16 @@ func Test_knownColor(t *testing.T) {
 func Test_snapshot(t *testing.T) {
 	// content elements
 	for name, tt := range map[string]struct {
-		content  fyne.CanvasObject
-		size     fyne.Size
-		pos      fyne.Position
-		overlays []fyne.CanvasObject
+		content  granio.CanvasObject
+		size     granio.Size
+		pos      granio.Position
+		overlays []granio.CanvasObject
 		want     string
 	}{
 		"circle": {
 			content: fynecanvas.NewCircle(color.NRGBA{R: 200, G: 100, B: 0, A: 50}),
-			size:    fyne.NewSize(42, 42),
-			pos:     fyne.NewPos(17, 17),
+			size:    granio.NewSize(42, 42),
+			pos:     granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<circle fillColor=\"rgba(200,100,0,50)\" pos=\"17,17\" size=\"42x42\"/>\n" +
@@ -49,14 +49,14 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"circle with stroke": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				c := fynecanvas.NewCircle(color.NRGBA{R: 200, G: 100, B: 0, A: 50})
 				c.StrokeWidth = 3
 				c.StrokeColor = theme.Color(theme.ColorNameBackground)
 				return c
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<circle fillColor=\"rgba(200,100,0,50)\" pos=\"17,17\" size=\"42x42\" strokeColor=\"background\" strokeWidth=\"3\"/>\n" +
@@ -65,8 +65,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"image from file": {
 			content: fynecanvas.NewImageFromFile("testdata/markup_renderer_image.svg"),
-			size:    fyne.NewSize(66, 33),
-			pos:     fyne.NewPos(10, 20),
+			size:    granio.NewSize(66, 33),
+			pos:     granio.NewPos(10, 20),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<image file=\"testdata/markup_renderer_image.svg\" pos=\"10,20\" size=\"66x33\"/>\n" +
@@ -82,7 +82,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"image from resource": {
-			content: fynecanvas.NewImageFromResource(fyne.NewStaticResource("resource name", []byte{})),
+			content: fynecanvas.NewImageFromResource(granio.NewStaticResource("resource name", []byte{})),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<image rsc=\"resource name\" size=\"100x100\"/>\n" +
@@ -98,7 +98,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"image themed resource": {
-			content: fynecanvas.NewImageFromResource(theme.NewThemedResource(fyne.NewStaticResource("resource name", []byte{}))),
+			content: fynecanvas.NewImageFromResource(theme.NewThemedResource(granio.NewStaticResource("resource name", []byte{}))),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<image rsc=\"resource name\" size=\"100x100\" themed=\"foreground\"/>\n" +
@@ -138,7 +138,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"image with translucency": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				img := fynecanvas.NewImageFromResource(theme.ZoomOutIcon())
 				img.Translucency = 0.3
 				return img
@@ -150,7 +150,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"image with fill mode contain": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				img := fynecanvas.NewImageFromResource(theme.ZoomOutIcon())
 				img.FillMode = fynecanvas.ImageFillContain
 				return img
@@ -162,7 +162,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"image with fill mode original": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				img := fynecanvas.NewImageFromResource(theme.ZoomInIcon())
 				img.FillMode = fynecanvas.ImageFillOriginal
 				return img
@@ -174,7 +174,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"image with scale mode pixels": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				img := fynecanvas.NewImageFromResource(theme.ViewRestoreIcon())
 				img.ScaleMode = fynecanvas.ImageScalePixels
 				return img
@@ -187,7 +187,7 @@ func Test_snapshot(t *testing.T) {
 		},
 		"image with inline icon size": {
 			content: fynecanvas.NewImageFromResource(theme.VisibilityIcon()),
-			size:    fyne.NewSize(theme.IconInlineSize(), theme.IconInlineSize()),
+			size:    granio.NewSize(theme.IconInlineSize(), theme.IconInlineSize()),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<image rsc=\"visibilityIcon\" size=\"iconInlineSize\" themed=\"foreground\"/>\n" +
@@ -196,8 +196,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"line": {
 			content: fynecanvas.NewLine(color.NRGBA{R: 17, G: 42, B: 128, A: 255}),
-			pos:     fyne.NewPos(13, 13),
-			size:    fyne.NewSize(10, 50),
+			pos:     granio.NewPos(13, 13),
+			size:    granio.NewSize(10, 50),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<line pos=\"13,13\" size=\"10x50\" strokeColor=\"rgba(17,42,128,255)\"/>\n" +
@@ -213,13 +213,13 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"line with stroke width": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				l := fynecanvas.NewLine(color.NRGBA{R: 17, G: 42, B: 128, A: 255})
 				l.StrokeWidth = 1.125
 				return l
 			}(),
-			pos:  fyne.NewPos(13, 13),
-			size: fyne.NewSize(10, 50),
+			pos:  granio.NewPos(13, 13),
+			size: granio.NewSize(10, 50),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<line pos=\"13,13\" size=\"10x50\" strokeColor=\"rgba(17,42,128,255)\" strokeWidth=\"1.125\"/>\n" +
@@ -228,8 +228,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"linear gradient": {
 			content: fynecanvas.NewLinearGradient(color.NRGBA{R: 1, G: 2, B: 3, A: 4}, theme.Color(theme.ColorNameDisabled), 13.25),
-			pos:     fyne.NewPos(6, 13),
-			size:    fyne.NewSize(50, 10),
+			pos:     granio.NewPos(6, 13),
+			size:    granio.NewSize(50, 10),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<linearGradient angle=\"13.25\" endColor=\"disabled\" pos=\"6,13\" size=\"50x10\" startColor=\"rgba(1,2,3,4)\"/>\n" +
@@ -245,7 +245,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"radial gradient with offset": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				g := fynecanvas.NewRadialGradient(color.NRGBA{R: 1, G: 2, B: 3, A: 4}, theme.Color(theme.ColorNameDisabled))
 				g.CenterOffsetX = 1.5
 				g.CenterOffsetY = -13.7
@@ -267,8 +267,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"rectangle": {
 			content: fynecanvas.NewRectangle(color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<rectangle fillColor=\"rgba(100,200,50,0)\" pos=\"42,17\" size=\"17x42\"/>\n" +
@@ -284,14 +284,14 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"rectangle with stroke": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				r := fynecanvas.NewRectangle(color.NRGBA{R: 200, G: 100, B: 0, A: 50})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<rectangle fillColor=\"rgba(200,100,0,50)\" pos=\"17,17\" size=\"42x42\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -300,8 +300,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"text": {
 			content: fynecanvas.NewText("foo", color.NRGBA{R: 123, G: 234, B: 56, A: 0}),
-			size:    fyne.NewSize(50, 50),
-			pos:     fyne.NewPos(20, 20),
+			size:    granio.NewSize(50, 50),
+			pos:     granio.NewPos(20, 20),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<text color=\"rgba(123,234,56,0)\" pos=\"20,20\" size=\"50x50\">foo</text>\n" +
@@ -317,9 +317,9 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"text with alignment center": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				t := fynecanvas.NewText("bar", theme.Color(theme.ColorNameForeground))
-				t.Alignment = fyne.TextAlignCenter
+				t.Alignment = granio.TextAlignCenter
 				return t
 			}(),
 			want: "<canvas size=\"100x100\">\n" +
@@ -329,9 +329,9 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"text with alignment trailing": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				txt := fynecanvas.NewText("bar", theme.Color(theme.ColorNameForeground))
-				txt.Alignment = fyne.TextAlignTrailing
+				txt.Alignment = granio.TextAlignTrailing
 				return txt
 			}(),
 			want: "<canvas size=\"100x100\">\n" +
@@ -341,7 +341,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"text with size": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				txt := fynecanvas.NewText("big", theme.Color(theme.ColorNameForeground))
 				txt.TextSize = 42
 				return txt
@@ -353,7 +353,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"text bold": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				txt := fynecanvas.NewText("bold", theme.Color(theme.ColorNameForeground))
 				txt.TextStyle.Bold = true
 				return txt
@@ -365,7 +365,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"text italic": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				txt := fynecanvas.NewText("italic", theme.Color(theme.ColorNameForeground))
 				txt.TextStyle.Italic = true
 				return txt
@@ -377,7 +377,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"text monospace": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				txt := fynecanvas.NewText("mono", theme.Color(theme.ColorNameForeground))
 				txt.TextStyle.Monospace = true
 				return txt
@@ -410,7 +410,7 @@ func Test_snapshot(t *testing.T) {
 		},
 		"widget with subobjects": {
 			content: &markupRendererTestWidget{
-				objs: []fyne.CanvasObject{
+				objs: []granio.CanvasObject{
 					fynecanvas.NewCircle(color.Black),
 					fynecanvas.NewLine(color.NRGBA{R: 250, G: 250, B: 250, A: 250}),
 				},
@@ -433,7 +433,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"invisible": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				c := fynecanvas.NewCircle(color.Black)
 				c.Hide()
 				l := fynecanvas.NewLine(color.NRGBA{R: 250, G: 250, B: 250, A: 250})
@@ -451,8 +451,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"polygon": {
 			content: fynecanvas.NewPolygon(3, color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<polygon fillColor=\"rgba(100,200,50,0)\" pos=\"42,17\" sides=\"3\" size=\"17x42\"/>\n" +
@@ -468,7 +468,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"polygon with stroke": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				r := fynecanvas.NewPolygon(4, color.NRGBA{R: 200, G: 100, B: 0, A: 50})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
@@ -476,8 +476,8 @@ func Test_snapshot(t *testing.T) {
 				r.CornerRadius = 12.5
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<polygon angle=\"18.25\" fillColor=\"rgba(200,100,0,50)\" pos=\"17,17\" radius=\"12.5\" sides=\"4\" size=\"42x42\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -486,8 +486,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"arc": {
 			content: fynecanvas.NewArc(25, 98, 0, color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<arc endAngle=\"98\" fillColor=\"rgba(100,200,50,0)\" pos=\"42,17\" size=\"17x42\" startAngle=\"25\"/>\n" +
@@ -503,7 +503,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"arc with stroke": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				r := fynecanvas.NewArc(-80, -110, 0, color.NRGBA{R: 200, G: 100, B: 0, A: 50})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
@@ -511,8 +511,8 @@ func Test_snapshot(t *testing.T) {
 				r.CutoutRatio = 0.375
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<arc cutoutRatio=\"0.375\" endAngle=\"-110\" fillColor=\"rgba(200,100,0,50)\" pos=\"17,17\" radius=\"15\" size=\"42x42\" startAngle=\"-80\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -520,9 +520,9 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"quadraticBezierCurve": {
-			content: fynecanvas.NewQuadraticBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(50, 50), fyne.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			content: fynecanvas.NewQuadraticBezierCurve(granio.NewPos(10, 10), granio.NewPos(50, 50), granio.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve controlPoint1=\"50,50\" endPoint=\"90,10\" pos=\"42,17\" size=\"17x42\" startPoint=\"10,10\" strokeColor=\"rgba(100,200,50,0)\"/>\n" +
@@ -530,7 +530,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"quadraticBezierCurve with theme color": { // we won’t test _all_ valid values … it’s not that important
-			content: fynecanvas.NewQuadraticBezierCurve(fyne.NewPos(5, 8.5), fyne.NewPos(15, 50), fyne.NewPos(90, 2), theme.Color(theme.ColorNameHover)),
+			content: fynecanvas.NewQuadraticBezierCurve(granio.NewPos(5, 8.5), granio.NewPos(15, 50), granio.NewPos(90, 2), theme.Color(theme.ColorNameHover)),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve controlPoint1=\"15,50\" endPoint=\"90,2\" size=\"100x100\" startPoint=\"5,8.5\" strokeColor=\"hover\"/>\n" +
@@ -538,14 +538,14 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"quadraticBezierCurve with stroke": {
-			content: func() fyne.CanvasObject {
-				r := fynecanvas.NewQuadraticBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(50, 50), fyne.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0})
+			content: func() granio.CanvasObject {
+				r := fynecanvas.NewQuadraticBezierCurve(granio.NewPos(10, 10), granio.NewPos(50, 50), granio.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve controlPoint1=\"50,50\" endPoint=\"90,10\" pos=\"17,17\" size=\"42x42\" startPoint=\"10,10\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -553,9 +553,9 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"cubicBezierCurve": {
-			content: fynecanvas.NewCubicBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(50, 50), fyne.NewPos(0, 5), fyne.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			content: fynecanvas.NewCubicBezierCurve(granio.NewPos(10, 10), granio.NewPos(50, 50), granio.NewPos(0, 5), granio.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve controlPoint1=\"50,50\" controlPoint2=\"0,5\" endPoint=\"90,10\" pos=\"42,17\" size=\"17x42\" startPoint=\"10,10\" strokeColor=\"rgba(100,200,50,0)\"/>\n" +
@@ -563,7 +563,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"cubicBezierCurve with theme color": { // we won’t test _all_ valid values … it’s not that important
-			content: fynecanvas.NewCubicBezierCurve(fyne.NewPos(5, 8.5), fyne.NewPos(15, 50), fyne.NewPos(70, 5), fyne.NewPos(90, 2), theme.Color(theme.ColorNameHover)),
+			content: fynecanvas.NewCubicBezierCurve(granio.NewPos(5, 8.5), granio.NewPos(15, 50), granio.NewPos(70, 5), granio.NewPos(90, 2), theme.Color(theme.ColorNameHover)),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve controlPoint1=\"15,50\" controlPoint2=\"70,5\" endPoint=\"90,2\" size=\"100x100\" startPoint=\"5,8.5\" strokeColor=\"hover\"/>\n" +
@@ -571,14 +571,14 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"cubicBezierCurve with stroke": {
-			content: func() fyne.CanvasObject {
-				r := fynecanvas.NewCubicBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(50, 50), fyne.NewPos(0, 5), fyne.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0})
+			content: func() granio.CanvasObject {
+				r := fynecanvas.NewCubicBezierCurve(granio.NewPos(10, 10), granio.NewPos(50, 50), granio.NewPos(0, 5), granio.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve controlPoint1=\"50,50\" controlPoint2=\"0,5\" endPoint=\"90,10\" pos=\"17,17\" size=\"42x42\" startPoint=\"10,10\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -586,9 +586,9 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"linearBezierCurve": {
-			content: fynecanvas.NewLinearBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			content: fynecanvas.NewLinearBezierCurve(granio.NewPos(10, 10), granio.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve endPoint=\"90,10\" pos=\"42,17\" size=\"17x42\" startPoint=\"10,10\" strokeColor=\"rgba(100,200,50,0)\"/>\n" +
@@ -596,7 +596,7 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"linearBezierCurve with theme color": { // we won’t test _all_ valid values … it’s not that important
-			content: fynecanvas.NewLinearBezierCurve(fyne.NewPos(5, 8.5), fyne.NewPos(90, 2), theme.Color(theme.ColorNameHover)),
+			content: fynecanvas.NewLinearBezierCurve(granio.NewPos(5, 8.5), granio.NewPos(90, 2), theme.Color(theme.ColorNameHover)),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve endPoint=\"90,2\" size=\"100x100\" startPoint=\"5,8.5\" strokeColor=\"hover\"/>\n" +
@@ -604,14 +604,14 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"linearBezierCurve with stroke": {
-			content: func() fyne.CanvasObject {
-				r := fynecanvas.NewLinearBezierCurve(fyne.NewPos(10, 10), fyne.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0})
+			content: func() granio.CanvasObject {
+				r := fynecanvas.NewLinearBezierCurve(granio.NewPos(10, 10), granio.NewPos(90, 10), color.NRGBA{R: 100, G: 200, B: 50, A: 0})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<bezierCurve endPoint=\"90,10\" pos=\"17,17\" size=\"42x42\" startPoint=\"10,10\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -619,8 +619,8 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"arbitraryPolygon": {
-			content: func() fyne.CanvasObject {
-				p := fynecanvas.NewArbitraryPolygon([]fyne.Position{
+			content: func() granio.CanvasObject {
+				p := fynecanvas.NewArbitraryPolygon([]granio.Position{
 					{X: 10, Y: 10},
 					{X: 90, Y: 10},
 					{X: 50, Y: 90},
@@ -630,8 +630,8 @@ func Test_snapshot(t *testing.T) {
 				p.CornerRadii = []float32{5, 10, 5}
 				return p
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<arbitraryPolygon fillColor=\"rgba(100,200,50,0)\" point0=\"10,10\" point1=\"90,10\" point2=\"50,90\" pos=\"17,17\" radius0=\"5\" radius1=\"10\" radius2=\"5\" size=\"42x42\" strokeColor=\"rgba(0,0,0,255)\" strokeWidth=\"2\"/>\n" +
@@ -639,8 +639,8 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"arbitraryPolygon normalized": {
-			content: func() fyne.CanvasObject {
-				p := fynecanvas.NewArbitraryPolygon([]fyne.Position{
+			content: func() granio.CanvasObject {
+				p := fynecanvas.NewArbitraryPolygon([]granio.Position{
 					{X: 0.375, Y: 0.375},
 					{X: 0.875, Y: 0.875},
 					{X: 0.5, Y: 0.5},
@@ -656,8 +656,8 @@ func Test_snapshot(t *testing.T) {
 		},
 		"ellipse": {
 			content: fynecanvas.NewEllipse(color.NRGBA{R: 100, G: 200, B: 50, A: 0}),
-			size:    fyne.NewSize(17, 42),
-			pos:     fyne.NewPos(42, 17),
+			size:    granio.NewSize(17, 42),
+			pos:     granio.NewPos(42, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<ellipse fillColor=\"rgba(100,200,50,0)\" pos=\"42,17\" size=\"17x42\"/>\n" +
@@ -673,14 +673,14 @@ func Test_snapshot(t *testing.T) {
 				"</canvas>\n",
 		},
 		"ellipse with stroke": {
-			content: func() fyne.CanvasObject {
+			content: func() granio.CanvasObject {
 				r := fynecanvas.NewEllipse(color.NRGBA{R: 200, G: 100, B: 0, A: 50})
 				r.StrokeWidth = 6.375
 				r.StrokeColor = theme.Color(theme.ColorNamePlaceHolder)
 				return r
 			}(),
-			size: fyne.NewSize(42, 42),
-			pos:  fyne.NewPos(17, 17),
+			size: granio.NewSize(42, 42),
+			pos:  granio.NewPos(17, 17),
 			want: "<canvas size=\"100x100\">\n" +
 				"\t<content>\n" +
 				"\t\t<ellipse fillColor=\"rgba(200,100,0,50)\" pos=\"17,17\" size=\"42x42\" strokeColor=\"placeholder\" strokeWidth=\"6.375\"/>\n" +
@@ -692,7 +692,7 @@ func Test_snapshot(t *testing.T) {
 			c := NewCanvas()
 			c.SetPadded(false)
 			c.SetContent(tt.content)
-			c.Resize(fyne.NewSize(100, 100))
+			c.Resize(granio.NewSize(100, 100))
 			if !tt.pos.IsZero() {
 				tt.content.Move(tt.pos)
 			}
@@ -707,7 +707,7 @@ func Test_snapshot(t *testing.T) {
 		c := NewCanvas()
 		c.SetPadded(true)
 		c.SetContent(fynecanvas.NewCircle(color.Black))
-		c.Resize(fyne.NewSize(100, 100))
+		c.Resize(granio.NewSize(100, 100))
 		assert.Equal(
 			t,
 			"<canvas padded size=\"100x100\">\n"+
@@ -725,7 +725,7 @@ func Test_snapshot(t *testing.T) {
 		c.SetContent(fynecanvas.NewCircle(color.Black))
 		c.Overlays().Add(fynecanvas.NewRectangle(color.NRGBA{R: 250, G: 250, B: 250, A: 250}))
 		c.Overlays().Add(fynecanvas.NewRectangle(color.Transparent))
-		c.Resize(fyne.NewSize(100, 100))
+		c.Resize(granio.NewSize(100, 100))
 		assert.Equal(
 			t,
 			"<canvas padded size=\"100x100\">\n"+
@@ -774,14 +774,14 @@ func Benchmark_knownResource(b *testing.B) {
 
 type markupRendererTestWidget struct {
 	hidden bool
-	objs   []fyne.CanvasObject
-	pos    fyne.Position
-	size   fyne.Size
+	objs   []granio.CanvasObject
+	pos    granio.Position
+	size   granio.Size
 }
 
-var _ fyne.Widget = (*markupRendererTestWidget)(nil)
+var _ granio.Widget = (*markupRendererTestWidget)(nil)
 
-func (w *markupRendererTestWidget) CreateRenderer() fyne.WidgetRenderer {
+func (w *markupRendererTestWidget) CreateRenderer() granio.WidgetRenderer {
 	return &markupRendererTestWidgetRenderer{w: w}
 }
 
@@ -789,26 +789,26 @@ func (w *markupRendererTestWidget) Hide() {
 	w.hidden = true
 }
 
-func (*markupRendererTestWidget) MinSize() fyne.Size {
-	return fyne.Size{}
+func (*markupRendererTestWidget) MinSize() granio.Size {
+	return granio.Size{}
 }
 
-func (w *markupRendererTestWidget) Move(position fyne.Position) {
+func (w *markupRendererTestWidget) Move(position granio.Position) {
 	w.pos = position
 }
 
-func (w *markupRendererTestWidget) Position() fyne.Position {
+func (w *markupRendererTestWidget) Position() granio.Position {
 	return w.pos
 }
 
 func (*markupRendererTestWidget) Refresh() {
 }
 
-func (w *markupRendererTestWidget) Resize(size fyne.Size) {
+func (w *markupRendererTestWidget) Resize(size granio.Size) {
 	w.size = size
 }
 
-func (w *markupRendererTestWidget) SetObjects(objects ...fyne.CanvasObject) {
+func (w *markupRendererTestWidget) SetObjects(objects ...granio.CanvasObject) {
 	w.objs = objects
 }
 
@@ -816,7 +816,7 @@ func (w *markupRendererTestWidget) Show() {
 	w.hidden = false
 }
 
-func (w *markupRendererTestWidget) Size() fyne.Size {
+func (w *markupRendererTestWidget) Size() granio.Size {
 	return w.size
 }
 
@@ -831,18 +831,18 @@ type markupRendererTestWidgetRenderer struct {
 func (*markupRendererTestWidgetRenderer) Destroy() {
 }
 
-func (*markupRendererTestWidgetRenderer) Layout(_ fyne.Size) {
+func (*markupRendererTestWidgetRenderer) Layout(_ granio.Size) {
 }
 
-func (*markupRendererTestWidgetRenderer) MinSize() fyne.Size {
-	return fyne.Size{}
+func (*markupRendererTestWidgetRenderer) MinSize() granio.Size {
+	return granio.Size{}
 }
 
-func (r *markupRendererTestWidgetRenderer) Objects() []fyne.CanvasObject {
+func (r *markupRendererTestWidgetRenderer) Objects() []granio.CanvasObject {
 	return r.w.objs
 }
 
 func (*markupRendererTestWidgetRenderer) Refresh() {
 }
 
-var _ fyne.WidgetRenderer = (*markupRendererTestWidgetRenderer)(nil)
+var _ granio.WidgetRenderer = (*markupRendererTestWidgetRenderer)(nil)

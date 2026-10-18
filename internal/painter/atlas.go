@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-text/typesetting/font"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/canvas"
 )
 
 // This file is the renderer-neutral half of the glyph atlas the GPU painters
@@ -107,7 +107,7 @@ type GlyphAtlas struct {
 // reports false with dst unchanged when the string has to take the whole-run
 // texture path instead: a character the shaper found no glyph for, or a glyph
 // a coverage atlas cannot hold, such as a colour emoji.
-func (a *GlyphAtlas) TextQuads(dst []GlyphQuad, text *canvas.Text, pos fyne.Position, pixScale, minX, maxX float32, tex AtlasTexture) ([]GlyphQuad, bool) {
+func (a *GlyphAtlas) TextQuads(dst []GlyphQuad, text *canvas.Text, pos granio.Position, pixScale, minX, maxX float32, tex AtlasTexture) ([]GlyphQuad, bool) {
 	glyphs, ok := a.shape(text, pixScale)
 	if !ok {
 		return dst, false
@@ -310,7 +310,7 @@ type shapedKey struct {
 	face  *FontCacheItem
 	size  float32
 	scale float32
-	style fyne.TextStyle
+	style granio.TextStyle
 }
 
 // shapedEntry is one cached shaping result. ok is false when the string has to
