@@ -2,56 +2,101 @@
   "github.com/Uzer007-admin/gl": {
     "version": "v0.0.0-20261017234122-3756695c6558",
     "commit": "3756695c655823cb1c7ceb3bc8c7ff068838f855",
-    "directory": "deps\\gl"
+    "directory": "deps/gl"
   },
   "github.com/Uzer007-admin/dbus/v5": {
     "version": "v5.3.0",
     "commit": "2eb3d0dba943ea7c2df845285aea69db9fb4712a",
-    "directory": "deps\\dbus"
+    "directory": "deps/dbus"
   },
   "github.com/Uzer007-admin/glow": {
     "version": "v0.0.0-20261017234250-3169226de4e2",
     "commit": "3169226de4e23d221876255a099c0603000dfc39",
-    "directory": "deps\\glow"
+    "directory": "deps/glow"
   },
   "github.com/Uzer007-admin/glfw/v3.3/glfw": {
     "version": "v0.0.0-20261017234256-57a5925f8166",
     "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
-    "directory": "deps\\glfw"
+    "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/glfw/v3.4/glfw": {
     "version": "v0.1.0-pre.2.0.20261017234256-57a5925f8166",
     "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
-    "directory": "deps\\glfw"
+    "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/glfw/v3.5/glfw": {
     "version": "v0.0.0-20261017234256-57a5925f8166",
     "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
-    "directory": "deps\\glfw"
+    "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/granio-image": {
     "version": "v0.1.2-0.20261017234830-b1607a79c1eb",
     "commit": "b1607a79c1ebffe894310f02c81bf19357e3c80d",
-    "directory": "deps\\image"
+    "directory": "deps/image"
   },
   "github.com/Uzer007-admin/granio-oksvg": {
     "version": "v0.2.1-0.20261017234852-ddb3049db67c",
     "commit": "ddb3049db67ca590393977442a37227d944cd61a",
-    "directory": "deps\\oksvg"
+    "directory": "deps/oksvg"
   },
   "github.com/Uzer007-admin/granio-gl-js": {
     "version": "v0.2.1-0.20261017234923-9e3b07127717",
     "commit": "9e3b07127717faca7c69b5d215a7184317a41b41",
-    "directory": "deps\\gl-js"
+    "directory": "deps/gl-js"
   },
   "github.com/Uzer007-admin/granio-glfw-js": {
     "version": "v0.4.1-0.20261017234950-9e15a5515cc9",
     "commit": "9e15a5515cc9406ee996e3086a0a9b979df6b017",
-    "directory": "deps\\glfw-js"
+    "directory": "deps/glfw-js"
   },
   "github.com/Uzer007-admin/granio-systray": {
     "version": "v1.12.3-0.20261017235015-fd45fbf4dbbd",
     "commit": "fd45fbf4dbbd8124eec16765ed71bb2c72ca7817",
-    "directory": "deps\\systray"
+    "directory": "deps/systray"
+  },
+  "github.com/Uzer007-admin/granio/v2": {
+    "version": "v2.8.2-0.20261018000600-86cc66cfefa1",
+    "commit": "86cc66cfefa1bf68498c368cd51402e85bbae6c8",
+    "directory": "."
+  },
+  "github.com/Uzer007-admin/granio-x": {
+    "version": "v0.0.0-20261018001545-c5b034111a18",
+    "commit": "c5b034111a1801306b02518af866c8753027a89a",
+    "directory": "ecosystem/work/granio-x"
+  },
+  "github.com/Uzer007-admin/granio-tools": {
+    "version": "v1.7.4-0.20261018003122-f078fb2d381a",
+    "commit": "f078fb2d381a74d8e93b202a19df9e12ca676e52",
+    "directory": "ecosystem/work/granio-tools"
+  },
+  "github.com/Uzer007-admin/granio-demo": {
+    "version": "v1.6.1-0.20261018002625-53f190115906",
+    "commit": "53f190115906cc856870e4e3fae5c7f4efdd95ad",
+    "directory": "ecosystem/work/granio-demo"
+  },
+  "github.com/Uzer007-admin/granio-examples": {
+    "version": "v0.0.0-20261018001837-b1ad451181bf",
+    "commit": "b1ad451181bf47072c3177d5a1c7d856587bce7a",
+    "directory": "ecosystem/work/granio-examples"
+  },
+  "github.com/Uzer007-admin/granio-cross": {
+    "version": "v1.6.4-0.20261018002423-31df9a655fbd",
+    "commit": "31df9a655fbdd6ef62f61dc7f39f00e57537ff5e",
+    "directory": "ecosystem/work/granio-cross"
+  },
+  "github.com/Uzer007-admin/granio-setup": {
+    "version": "v0.0.0-20261018002508-683d1f108126",
+    "commit": "683d1f108126c6ea51bc7052cf5208e4ce55ea6f",
+    "directory": "ecosystem/work/granio-setup"
+  },
+  "github.com/Uzer007-admin/granio-ui": {
+    "version": "v0.0.8-0.20261018002026-c66cdcecc0d5",
+    "commit": "c66cdcecc0d58a5b58b32e3c0b81dfe3dbfbc205",
+    "directory": "ecosystem/work/granio-ui"
+  },
+  "github.com/Uzer007-admin/granio-apps": {
+    "version": "v0.0.0-20261018002111-cd4e572f8915",
+    "commit": "cd4e572f89158a374abaa717d4bfca8ba511c50d",
+    "directory": "extras/apps"
   }
 }

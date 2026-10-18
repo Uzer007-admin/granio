@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
+	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/app"
 )
 
 func init() {
-	app.SetMetadata(fyne.AppMetadata{
+	app.SetMetadata(granio.AppMetadata{
 		ID: "{{.AppID}}",
 		Name: "{{.Name}}",
 		Version: "{{.AppVersion}}",

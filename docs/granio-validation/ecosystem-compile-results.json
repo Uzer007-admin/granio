@@ -1,0 +1,189 @@
+[
+  {
+    "module": "github.com/Uzer007-admin/granio-locale",
+    "directory": "ecosystem/work/granio-locale",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-locale.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-x",
+    "directory": "ecosystem/work/granio-x",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-x.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tools",
+    "directory": "ecosystem/work/granio-tools",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tools.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-cross",
+    "directory": "ecosystem/work/granio-cross",
+    "compile_windows_ci": "pass",
+    "log": "cross-xgb-compile-final.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-setup",
+    "directory": "ecosystem/work/granio-setup",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-setup.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-ui",
+    "directory": "ecosystem/work/granio-ui",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-ui.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-cloud",
+    "directory": "ecosystem/work/granio-cloud",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-cloud.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-examples",
+    "directory": "ecosystem/work/granio-examples",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-examples.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-7guis",
+    "directory": "ecosystem/work/granio-7guis",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-7guis.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-flatpak-demo",
+    "directory": "ecosystem/work/granio-flatpak-demo",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-flatpak-demo.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tutorials/explore/systray",
+    "directory": "ecosystem/work/granio-tutorials/explore/systray",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tutorials_explore_systray.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tutorials/started/hello",
+    "directory": "ecosystem/work/granio-tutorials/started/hello",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tutorials_started_hello.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tutorials/started/packaging",
+    "directory": "ecosystem/work/granio-tutorials/started/packaging",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tutorials_started_packaging.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tutorials/started/testing",
+    "directory": "ecosystem/work/granio-tutorials/started/testing",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tutorials_started_testing.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tutorials/started/update",
+    "directory": "ecosystem/work/granio-tutorials/started/update",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tutorials_started_update.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-tutorials/started/windows",
+    "directory": "ecosystem/work/granio-tutorials/started/windows",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-tutorials_started_windows.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-workshops/FyneConf2023/hello",
+    "directory": "ecosystem/work/granio-workshops/FyneConf2023/hello",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-workshops_FyneConf2023_hello.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-workshops/FyneConf2023/todo",
+    "directory": "ecosystem/work/granio-workshops/FyneConf2023/todo",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-workshops_FyneConf2023_todo.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-workshops/GoLab2024/greeter",
+    "directory": "ecosystem/work/granio-workshops/GoLab2024/greeter",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-workshops_GoLab2024_greeter.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-workshops/GoLab2024/hello",
+    "directory": "ecosystem/work/granio-workshops/GoLab2024/hello",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-workshops_GoLab2024_hello.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-workshops/GoLab2024/more",
+    "directory": "ecosystem/work/granio-workshops/GoLab2024/more",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-workshops_GoLab2024_more.log",
+    "mode": "три самостоятельных примера bind.go, custom.go, extend.go"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-workshops/GoLab2024/todo",
+    "directory": "ecosystem/work/granio-workshops/GoLab2024/todo",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-workshops_GoLab2024_todo.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-demo",
+    "directory": "ecosystem/work/granio-demo",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-demo.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-pixeledit",
+    "directory": "ecosystem/work/granio-pixeledit",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-pixeledit.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-terminal",
+    "directory": "ecosystem/work/granio-terminal",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-terminal.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-calculator",
+    "directory": "ecosystem/work/granio-calculator",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-calculator.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-life",
+    "directory": "ecosystem/work/granio-life",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-life.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-solitaire",
+    "directory": "ecosystem/work/granio-solitaire",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-solitaire.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-studio",
+    "directory": "ecosystem/work/granio-studio",
+    "compile_windows_ci": "pass",
+    "log": "compile-ecosystem_work_granio-studio.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-xgb",
+    "directory": "ecosystem/work/granio-xgb",
+    "compile_windows_ci": "pass",
+    "log": "cross-xgb-compile-final.log"
+  },
+  {
+    "module": "github.com/Uzer007-admin/granio-xgbutil",
+    "directory": "ecosystem/work/granio-xgbutil",
+    "compile_windows_ci": "pass",
+    "log": "xgbutil-final.log"
+  }
+]
