@@ -1,0 +1,45 @@
+{
+  "initial_attempt": {
+    "process": {
+      "ExitCode": 2,
+      "CPUSeconds": 1.96875
+    },
+    "capture": "empty 0x0",
+    "cause": "not established"
+  },
+  "successful_followups": {
+    "published-final": {
+      "process": {
+        "ExitCode": 0,
+        "CPUSeconds": 1.90625
+      },
+      "runtime": {
+        "automatic_rate": 360,
+        "heap_alloc": 25266408,
+        "heap_inuse": 28352512,
+        "heap_objects": 100651,
+        "image_height": 800,
+        "image_width": 1180
+      },
+      "capture_sha256": "371eb18ffc73c02d20617f4e69d16c784bd4f60bd334bb3b238cfe6f378bb083",
+      "matches_control_capture": true
+    },
+    "published-repeat": {
+      "process": {
+        "ExitCode": 0,
+        "CPUSeconds": 1.40625
+      },
+      "runtime": {
+        "automatic_rate": 360,
+        "heap_alloc": 25270992,
+        "heap_inuse": 28549120,
+        "heap_objects": 100658,
+        "image_height": 800,
+        "image_width": 1180
+      },
+      "capture_sha256": "371eb18ffc73c02d20617f4e69d16c784bd4f60bd334bb3b238cfe6f378bb083",
+      "matches_control_capture": true
+    }
+  },
+  "initial_empty_capture_reproduced": false
+}

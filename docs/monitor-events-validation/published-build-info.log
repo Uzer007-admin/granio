@@ -1,0 +1,42 @@
+D:\fyne\.build-monitor-events-20261030-a81c\published.exe: go1.27.2
+	path	exam14/cmd/drivercheck
+	mod	exam14	(devel)	
+	dep	github.com/BurntSushi/toml	v1.6.0	h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
+	dep	github.com/Uzer007-admin/dbus/v5	v5.3.0	h1:JGT4eHSObhX6k+m7V7xPGNu0GNLl4Xi3XBXtBLmLa6Q=
+	dep	github.com/Uzer007-admin/gl	v0.0.0-20261017234122-3756695c6558	h1:l6OwrYlYclIdsdvxJ2HXyu7mXgttcvJYXiPN3uMDTm0=
+	dep	github.com/Uzer007-admin/glfw/v3.5/glfw	v0.0.0-20261030082442-5c267d637d9d	h1:fkPqFljzBZLQ9hXgK7vh4RPYjeUh6zPchIKA9mpgMw8=
+	dep	github.com/Uzer007-admin/granio/deps/image	v0.0.0-20261018062049-d56bde3dff7f	h1:1vUi7RsW+B/CiJAaB7ylDUjCjg69py9wdLgJ8PoQAEk=
+	dep	github.com/Uzer007-admin/granio/deps/oksvg	v0.0.0-20261018062049-d56bde3dff7f	h1:pL60HnHAfCyCiLhtrHRkS7oCgUA6kj6IR1Lhn86hCMg=
+	dep	github.com/Uzer007-admin/granio/deps/systray	v0.0.0-20261018062049-d56bde3dff7f	h1:Y5CRq1HGk3BKKndtK3H7s94oumR0kBROuq+5RrBU+zk=
+	dep	github.com/Uzer007-admin/granio/v2	v2.8.2-0.20261030082719-0667a339c696	h1:+9AEdIlqd012Efx3JaHjm7JRizdEl/OOFlL1uvx1u9U=
+	dep	github.com/anthonynsimon/bild	v0.17.1	h1:CVcoR+jxUx++UBXpVJHTjt7RmfEbsnhtlqPR5utSfiU=
+	dep	github.com/clipperhouse/uax29/v2	v2.7.0	h1:+gs4oBZ2gPfVrKPthwbMzWZDaAFPGYK72F0NJv2v7Vk=
+	dep	github.com/fsnotify/fsnotify	v1.10.1	h1:b0/UzAf9yR5rhf3RPm9gf3ehBPpf0oZKIjtpKrx59Ho=
+	dep	github.com/go-text/render	v0.2.1	h1:qwHhxqGUjjg4L0XyJWj7M7bpY75NZM+kBpv2Yfw5mcg=
+	dep	github.com/go-text/typesetting	v0.3.5	h1:XZPUooClHY0Vf/rFyUyuPRNEkawARaFzLMQcXLSEyPk=
+	dep	github.com/jeandeaual/go-locale	v0.0.0-20250612000132-0ef82f21eade	h1:FmusiCI1wHw+XQbvL9M+1r/C3SPqKrmBaIOYwVfQoDE=
+	dep	github.com/jsummers/gobmp	v0.0.0-20230614200233-a9de23ed2e25	h1:YLvr1eE6cdCqjOe972w/cYF+FjW34v27+9Vo5106B4M=
+	dep	github.com/mattn/go-runewidth	v0.0.31	h1:1oCV4ReTlosDBc6rYRw5cL8S/4y8iv5oRl4SJ5IBgwo=
+	dep	github.com/nfnt/resize	v0.0.0-20180221191011-83c6a9932646	h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
+	dep	github.com/nicksnyder/go-i18n/v2	v2.6.1	h1:JDEJraFsQE17Dut9HFDHzCoAWGEQJom5s0TRd17NIEQ=
+	dep	github.com/srwiley/oksvg	v0.0.0-20221011165216-be6e8873101c	h1:km8GpoQut05eY3GiYWEedbTT0qnSxrCjsVbb7yKY1KE=
+	dep	github.com/srwiley/rasterx	v0.0.0-20220730225603-2ab79fcdd4ef	h1:Ch6Q+AZUxDBCVqdkI8FSpFyZDtCVBc2VmejdNrm5rRQ=
+	dep	github.com/yuin/goldmark	v1.8.6	h1:d0VcaP1sx9GkFVkoW+KtggpGi2KZ965i14b0+bDQST4=
+	dep	golang.org/x/image	v0.47.0	h1:za/8gVz++PPZqmZJBNSISICN5Rrj5zixP/8K++fgmqo=
+	dep	golang.org/x/net	v0.61.0	h1:RR+6j/BTBCrggOLugxa+66R8FvoN6MHlzDlZIbN9YFw=
+	dep	golang.org/x/sys	v0.49.0	h1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=
+	dep	golang.org/x/text	v0.43.0	h1:1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v3
+	build	vcs=git
+	build	vcs.revision=0667a339c6966ec37ac67527ce1986c7a08218f6
+	build	vcs.time=2026-10-30T08:27:19Z
+	build	vcs.modified=false

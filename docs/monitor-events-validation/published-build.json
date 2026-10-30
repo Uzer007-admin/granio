@@ -1,0 +1,7 @@
+{
+  "GOWORK": "off",
+  "replace": false,
+  "granio": "v2.8.2-0.20261030082719-0667a339c696",
+  "glfw": "v0.0.0-20261030082442-5c267d637d9d",
+  "build_exit_code": 0
+}

@@ -12,8 +12,8 @@
       "purpose": "Ядро Granio и встроенные модули графического и системного стека: OpenGL/WebGL, окна, трей, SVG и изображения.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "Проверки и границы объединения — docs/REPOSITORY_CONSOLIDATION.md",
-      "prepared_commit": "44c3df9361e7c2dc933576717d21ff62e6626f99"
+      "validation": "docs/REPOSITORY_CONSOLIDATION.md; docs/MONITOR_EVENT_UPDATES.md",
+      "prepared_commit": "0667a339c6966ec37ac67527ce1986c7a08218f6"
     },
     {
       "name": "granio-apps",
@@ -92,8 +92,8 @@
       "purpose": "GLFW 3.5.1, окна, ввод, Wayland/X11 и оконные материалы Granio.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "Проверки и границы объединения — docs/REPOSITORY_CONSOLIDATION.md",
-      "prepared_commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff"
+      "validation": "docs/REPOSITORY_CONSOLIDATION.md; docs/MONITOR_EVENT_UPDATES.md",
+      "prepared_commit": "5c267d637d9d35b669068c9082e7b4e61c7f5338"
     },
     {
       "name": "glow",

@@ -1,0 +1,25 @@
+{
+  "checked_files": 19,
+  "all_match": true,
+  "sha256": {
+    "core/driver/desktop/frame_rate.go": "586f6e8b168d25bad8fa386947f72c8e3d60cf2943f3ac7991f167bfbb1edf91",
+    "core/internal/driver/glfw/driver.go": "dc61a97f0b3054393017f996da7f86121e27eef131525075a9346d27f18e87ec",
+    "core/internal/driver/glfw/frame_rate.go": "e62ee5a7a4eeb75052a15a9681d297dc8ecdf169cff62d9220bfd2a6c9074315",
+    "core/internal/driver/glfw/frame_rate_policy_test.go": "e80be4cc33480f42e4a76dc1c2df9cd3a4cc4a06567f06444a3eeac093273370",
+    "core/internal/driver/glfw/loop_desktop.go": "cae3707e3a2a09077bd8529ded89658a941fee9aa4221f8c92596a6ed3c0d9ca",
+    "glfw/v3.5/glfw/glfw.go": "be13dfd00f6881bf15c65b1949fa81d742a253ee3be7f0cecd858799c10135da",
+    "glfw/v3.5/glfw/glfw/include/GLFW/glfw3.h": "a9cade81f8d792b653eee7b9df48f70f79aeb66f7e404caf5ee67f0b84a08868",
+    "glfw/v3.5/glfw/glfw/src/cocoa_init.m": "d8afde0bf7747d114c59f33ad9fe3f0718180d550ad4c98f65a23193db02e470",
+    "glfw/v3.5/glfw/glfw/src/internal.h": "0bb277e0f3670eca3011bec22be6282d46db69a4c1a2850d62333f0622675ff1",
+    "glfw/v3.5/glfw/glfw/src/monitor.c": "2d34b54167f32a36a977fe31bc92a43030865e79cbbb0e3e655ecee678fd86bf",
+    "glfw/v3.5/glfw/glfw/src/win32_init.c": "f762252813c257a0b88fe5358a672499eb47f65dc4ade737615caa7727910280",
+    "glfw/v3.5/glfw/glfw/src/wl_monitor.c": "97528e87958fcdb99d3f7cc6128b1bee11634e51ed7930185251e50412113bb2",
+    "glfw/v3.5/glfw/glfw/src/x11_init.c": "a47d20d0ea89afee6dd962969b699da154822e40ed142b7d43f070f0e186782e",
+    "glfw/v3.5/glfw/glfw/src/x11_window.c": "27158bf3e18105034a780f91b3e3c9f97d010694b14a6482a3f70d9f496d3509",
+    "glfw/v3.5/glfw/monitor.c": "2004d12dfb9c5564b450ecf4dc29321db109250d8879a9dfa4846a7f38639e6f",
+    "glfw/v3.5/glfw/monitor.go": "c9dd91bccf71bf9744d59e883a4f0624f7383c8ebc9bb31b9afb5d9a5bf3ed2f",
+    "glfw/v3.5/glfw/monitor_configuration_integration_test.go": "44210ab9c8c5c1097b86446128dd9bf1d4de31bcd3b9297a827c95fc2b70b99e",
+    "glfw/v3.5/glfw/monitor_configuration_test.go": "1b7630fdc3eb9a0091461e91ca0780e8e14e0bfe3c6093c1495fa8e1d798187f",
+    "glfw/v3.5/glfw/monitor_configuration_windows_test.go": "175650c7d845c99cd995bb922b9a57b76c5e4d8ced8145d93e0026878f21dade"
+  }
+}

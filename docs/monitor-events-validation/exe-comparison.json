@@ -1,0 +1,33 @@
+{
+  "before": {
+    "runtime": {
+      "automatic_rate": 360,
+      "heap_alloc": 25265456,
+      "heap_inuse": 28270592,
+      "heap_objects": 100648,
+      "image_height": 800,
+      "image_width": 1180
+    },
+    "process": {
+      "ExitCode": 0,
+      "CPUSeconds": 1.796875
+    },
+    "capture_sha256": "371eb18ffc73c02d20617f4e69d16c784bd4f60bd334bb3b238cfe6f378bb083"
+  },
+  "after": {
+    "runtime": {
+      "automatic_rate": 360,
+      "heap_alloc": 25276304,
+      "heap_inuse": 28377088,
+      "heap_objects": 100663,
+      "image_height": 800,
+      "image_width": 1180
+    },
+    "process": {
+      "ExitCode": 0,
+      "CPUSeconds": 1.953125
+    },
+    "capture_sha256": "371eb18ffc73c02d20617f4e69d16c784bd4f60bd334bb3b238cfe6f378bb083"
+  },
+  "same_capture": true
+}

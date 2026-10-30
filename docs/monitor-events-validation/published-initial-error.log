@@ -1,0 +1,19 @@
+panic: png: invalid format: invalid image size: 0x0
+
+goroutine 1 [running, locked to thread]:
+main.main.func1.1()
+	D:/fyne/.build-monitor-events-20261030-a81c/consumer/cmd/drivercheck/main.go:24 +0x505
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.executeMainFunc(...)
+	C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261030082719-0667a339c696/internal/driver/glfw/loop.go:163
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).runLoop(0x2ebd5545c000)
+	C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261030082719-0667a339c696/internal/driver/glfw/loop_desktop.go:59 +0xd5
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).runGL(0x10?)
+	C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261030082719-0667a339c696/internal/driver/glfw/loop.go:159 +0x1d0
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).Run(0x2ebd5545c000)
+	C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261030082719-0667a339c696/internal/driver/glfw/driver.go:128 +0x85
+github.com/Uzer007-admin/granio/v2/app.(*fyneApp).Run(0x2ebd5542e6c0)
+	C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261030082719-0667a339c696/app/app.go:92 +0x17e
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*window).ShowAndRun(0x2ebd551c6008)
+	C:/Users/night/go/pkg/mod/github.com/!uzer007-admin/granio/v2@v2.8.2-0.20261030082719-0667a339c696/internal/driver/glfw/window.go:332 +0x68
+main.main()
+	D:/fyne/.build-monitor-events-20261030-a81c/consumer/cmd/drivercheck/main.go:29 +0x2ba
