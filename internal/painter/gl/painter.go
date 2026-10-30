@@ -51,6 +51,7 @@ type painter struct {
 	blurKernel          blurKernel // cached 1D kernel texture on GPU
 	blurSnap            blurSnap   // cached texture for GPU-side blur snapshot
 	canvas              granio.Canvas
+	capture             captureBackend
 	clippedTextTextures map[*canvas.Text]clippedTextTexture
 	contextProvider     driver.WithContext
 	ctx                 context

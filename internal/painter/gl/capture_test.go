@@ -32,4 +32,8 @@ func TestCaptureImage_SubImage(t *testing.T) {
 
 	sub := img.SubImage(image.Rect(1, 1, 3, 4))
 	assert.Equal(t, image.Rect(1, 1, 3, 4), sub.Bounds())
+	assert.Equal(t, sub.Bounds(), sub.SubImage(image.Rect(-5, -5, 9, 9)).Bounds())
+	assert.True(t, sub.SubImage(image.Rect(8, 8, 10, 10)).Bounds().Empty())
+	assert.Equal(t, color.RGBA{}, img.At(-1, 0))
+	assert.Equal(t, color.RGBA{}, img.At(4, 0))
 }

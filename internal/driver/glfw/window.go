@@ -398,6 +398,12 @@ func (w *window) processMoved(x, y int) {
 }
 
 func (w *window) processResized(width, height int) {
+	// A zero native size suspends the drawable (for example WM_SIZE when
+	// minimized). It is not a new layout size: keep the last usable geometry
+	// for capture, DPI changes and restoring the window.
+	if width <= 0 || height <= 0 {
+		return
+	}
 	canvasSize := w.computeCanvasSize(width, height)
 	if !w.fullScreen {
 		w.width = scale.ToScreenCoordinate(w.canvas, canvasSize.Width)
@@ -426,7 +432,13 @@ func (w *window) processFrameSized(width, height int) {
 	}
 
 	winWidth, _ := w.view().GetSize()
+	if winWidth <= 0 {
+		return
+	}
 	newTexScale := float32(width) / float32(winWidth) // This will be > 1.0 on a HiDPI screen
+	if !validScale(newTexScale) {
+		return
+	}
 	if w.canvas.texScale != newTexScale {
 		w.canvas.texScale = newTexScale
 		w.canvas.Refresh(w.canvas.Content()) // reset graphics to apply texture scale

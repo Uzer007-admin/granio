@@ -73,6 +73,7 @@ const glyphAtlasSupported = true
 
 func (p *painter) Init() {
 	p.ctx = nil
+	p.capture = nil
 	procs, err := gl.Load()
 	if err != nil {
 		granio.LogError("failed to initialise OpenGL", err)

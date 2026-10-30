@@ -7,8 +7,10 @@ import (
 	"github.com/Uzer007-admin/granio/v2"
 	"github.com/Uzer007-admin/granio/v2/canvas"
 	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
 	"github.com/Uzer007-admin/granio/v2/internal"
 	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v2/internal/async"
 	"github.com/Uzer007-admin/granio/v2/internal/build"
 	"github.com/Uzer007-admin/granio/v2/internal/driver"
 	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
@@ -39,20 +41,58 @@ type glCanvas struct {
 }
 
 func (c *glCanvas) Capture() image.Image {
-	var img image.Image
-	c.context.(*window).RunWithContext(func() {
-		if painter, ok := c.Painter().(interface {
-			CaptureBack(granio.Canvas) image.Image
-		}); ok {
-			updateGLContext(c.context.(*window))
-			c.FreeDirtyTextures()
-			c.paint(c.Size())
-			img = painter.CaptureBack(c)
-		} else {
-			img = c.Painter().Capture(c)
-		}
-	})
+	img, err := c.CaptureWithError()
+	if err != nil {
+		granio.LogError("Failed to capture canvas", err)
+	}
 	return img
+}
+
+var _ desktop.CanvasCapture = (*glCanvas)(nil)
+
+func (c *glCanvas) CaptureWithError() (image.Image, error) {
+	var img image.Image
+	err := desktop.ErrCaptureUnavailable
+	capture := func() {
+		w := c.context.(*window)
+		if w.closing || w.viewport == nil {
+			return
+		}
+		err = nil
+		w.RunWithContext(func() {
+			if painter, ok := c.Painter().(interface {
+				CaptureCanvas(granio.Canvas, func()) (image.Image, error)
+			}); ok {
+				img, err = painter.CaptureCanvas(c, func() {
+					updateGLContext(w)
+					c.FreeDirtyTextures()
+					c.paint(c.Size())
+				})
+				return
+			}
+			if painter, ok := c.Painter().(interface {
+				CaptureBack(granio.Canvas) image.Image
+			}); ok {
+				updateGLContext(c.context.(*window))
+				c.FreeDirtyTextures()
+				c.paint(c.Size())
+				img = painter.CaptureBack(c)
+			} else {
+				img = c.Painter().Capture(c)
+			}
+		})
+		if err == nil && (img == nil || img.Bounds().Empty()) {
+			img, err = nil, desktop.ErrCaptureUnavailable
+		}
+	}
+	// Capture is synchronous and must own the context thread even when the
+	// application's other UI calls have opted into migrated_fynedo.
+	if async.IsMainGoroutine() {
+		capture()
+	} else {
+		runOnMain(capture)
+	}
+	return img, err
 }
 
 func (c *glCanvas) Content() granio.CanvasObject {

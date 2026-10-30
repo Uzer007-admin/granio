@@ -5,6 +5,8 @@ github.com/Uzer007-admin/dbus/v5 v5.3.0 h1:JGT4eHSObhX6k+m7V7xPGNu0GNLl4Xi3XBXtB
 github.com/Uzer007-admin/dbus/v5 v5.3.0/go.mod h1:LoBVr/AtCA5GxoYaPjneSxKW8tgneN+DnQBnkPZe7tc=
 github.com/Uzer007-admin/gl v0.0.0-20261017234122-3756695c6558 h1:l6OwrYlYclIdsdvxJ2HXyu7mXgttcvJYXiPN3uMDTm0=
 github.com/Uzer007-admin/gl v0.0.0-20261017234122-3756695c6558/go.mod h1:WWhaBjlh8fh0HIyvmFyDaPMDs9wNkVg8UJ1BnjAZqso=
+github.com/Uzer007-admin/gl v0.0.0-20261030092416-83550b6a7fd2 h1:7n6HpiYKj0/GIHLA7zfbJO9z7oh0DdzlFOPzhfwPrgo=
+github.com/Uzer007-admin/gl v0.0.0-20261030092416-83550b6a7fd2/go.mod h1:WWhaBjlh8fh0HIyvmFyDaPMDs9wNkVg8UJ1BnjAZqso=
 github.com/Uzer007-admin/glfw/v3.4/glfw v0.1.0-pre.2.0.20261017234256-57a5925f8166 h1:BGdAUZESzYYdkn1m9gE39tildVtxNBprsKCnywoWxCY=
 github.com/Uzer007-admin/glfw/v3.4/glfw v0.1.0-pre.2.0.20261017234256-57a5925f8166/go.mod h1:awU63+JR8VyweAirNHK6xWX3GBBlLCW4ceFHQspDksQ=
 github.com/Uzer007-admin/glfw/v3.5/glfw v0.0.0-20261017234256-57a5925f8166 h1:6Or1va3ItbR6EsledqNpwX04LaZd/4JTKBbtyVAqrsA=

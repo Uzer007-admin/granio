@@ -5,7 +5,7 @@ go 1.27.1
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/Uzer007-admin/dbus/v5 v5.3.0
-	github.com/Uzer007-admin/gl v0.0.0-20261017234122-3756695c6558
+	github.com/Uzer007-admin/gl v0.0.0-20261030092416-83550b6a7fd2
 	github.com/Uzer007-admin/glfw/v3.5/glfw v0.0.0-20261030082442-5c267d637d9d
 	github.com/Uzer007-admin/granio/deps/gl-js v0.0.0-20261018062049-d56bde3dff7f
 	github.com/Uzer007-admin/granio/deps/glfw-js v0.0.0-20261018062049-d56bde3dff7f
