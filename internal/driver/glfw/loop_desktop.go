@@ -31,18 +31,18 @@ func wakeMainLoop() {
 	nativeEventMu.RUnlock()
 }
 
-func (d *gLDriver) sampleMonitorFrameRate() {
+func sampleMonitorFrameRate() int {
 	maximum := 60
 	for _, monitor := range glfw.GetMonitors() {
 		if mode := monitor.GetVideoMode(); mode != nil && mode.RefreshRate > maximum {
 			maximum = mode.RefreshRate
 		}
 	}
-	d.detectedFrameRate.Store(int32(maximum))
+	return maximum
 }
 
 func (d *gLDriver) runLoop() {
-	var nextFrame, nextMonitorCheck time.Time
+	var nextFrame time.Time
 	var previousInterval time.Duration
 	for {
 		select {
@@ -63,10 +63,7 @@ func (d *gLDriver) runLoop() {
 		}
 		d.processWindowEvents()
 		now := time.Now()
-		if d.requestedFrameRate.Load() == 0 && !now.Before(nextMonitorCheck) {
-			d.sampleMonitorFrameRate()
-			nextMonitorCheck = now.Add(2 * time.Second)
-		}
+		d.updateMonitorFrameRate(sampleMonitorFrameRate)
 		interval := time.Second / time.Duration(d.FrameRate())
 		if interval != previousInterval {
 			nextFrame = now
@@ -133,6 +130,8 @@ func (d *gLDriver) initGLFW() {
 	}
 
 	d.displayPlatform.Store(int32(glfw.GetPlatform()))
+	glfw.SetMonitorConfigurationCallback(func() { d.monitorFrameRateDirty.Store(true) })
+	d.monitorFrameRateDirty.Store(true)
 	initCursors()
 	nativeEventMu.Lock()
 	nativeEventsReady = true
@@ -147,6 +146,7 @@ func (*gLDriver) pollEvents() {
 func (*gLDriver) Terminate() {
 	nativeEventMu.Lock()
 	nativeEventsReady = false
+	glfw.SetMonitorConfigurationCallback(nil)
 	glfw.Terminate()
 	nativeEventMu.Unlock()
 }

@@ -38,12 +38,13 @@ func NewGLDriver() granio.Driver {
 }
 
 type gLDriver struct {
-	displayPlatform    atomic.Int32
-	windows            []granio.Window
-	initialized        bool
-	done               chan struct{}
-	requestedFrameRate atomic.Int32
-	detectedFrameRate  atomic.Int32
+	displayPlatform       atomic.Int32
+	windows               []granio.Window
+	initialized           bool
+	done                  chan struct{}
+	requestedFrameRate    atomic.Int32
+	detectedFrameRate     atomic.Int32
+	monitorFrameRateDirty atomic.Bool
 
 	animation       animation.Runner
 	animationOwners map[granio.CanvasObject]bool

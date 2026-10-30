@@ -12,6 +12,9 @@ func (d *gLDriver) SetFrameRate(fps int) error {
 		return fmt.Errorf("frame rate must be 0 (automatic) or between 1 and 1000, got %d", fps)
 	}
 	d.requestedFrameRate.Store(int32(fps))
+	if fps == 0 {
+		d.monitorFrameRateDirty.Store(true)
+	}
 	wakeMainLoop()
 	return nil
 }
@@ -24,6 +27,17 @@ func (d *gLDriver) FrameRate() int {
 	}
 	return 60
 }
+
+// updateMonitorFrameRate coalesces native display changes. In particular, an
+// idle application never queries display settings just because time has passed.
+func (d *gLDriver) updateMonitorFrameRate(sample func() int) {
+	if d.requestedFrameRate.Load() != 0 || !d.monitorFrameRateDirty.Swap(false) {
+		return
+	}
+	rate := max(60, min(1000, sample()))
+	d.detectedFrameRate.Store(int32(rate))
+}
+
 func (d *gLDriver) hasFrameWork() bool {
 	if d.animation.HasAnimations() {
 		return true
