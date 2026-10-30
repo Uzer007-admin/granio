@@ -1,0 +1,40 @@
+--- FAIL: TestNativeCaptureAfterZeroSizeNotification (0.18s)
+    capture_geometry_native_test.go:31: 
+        	Error Trace:	<workspace>/internal/driver/glfw/capture_geometry_native_test.go:31
+        	Error:      	Not equal: 
+        	            	expected: granio.Size{Width:80, Height:60}
+        	            	actual  : granio.Size{Width:0, Height:0}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (granio.Size) {
+        	            	- Width: (float32) 80,
+        	            	- Height: (float32) 60
+        	            	+ Width: (float32) 0,
+        	            	+ Height: (float32) 0
+        	            	 }
+        	Test:       	TestNativeCaptureAfterZeroSizeNotification
+        	Messages:   	a suspended native surface must not erase canvas geometry
+--- FAIL: TestNativeCaptureMinimizedWin32 (0.06s)
+    capture_geometry_windows_test.go:35: 
+        	Error Trace:	<workspace>/internal/driver/glfw/capture_geometry_windows_test.go:35
+        	Error:      	Not equal: 
+        	            	expected: granio.Size{Width:80, Height:60}
+        	            	actual  : granio.Size{Width:0, Height:0}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,4 +1,4 @@
+        	            	 (granio.Size) {
+        	            	- Width: (float32) 80,
+        	            	- Height: (float32) 60
+        	            	+ Width: (float32) 0,
+        	            	+ Height: (float32) 0
+        	            	 }
+        	Test:       	TestNativeCaptureMinimizedWin32
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.669s
+FAIL

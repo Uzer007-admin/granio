@@ -1,0 +1,8 @@
+--- FAIL: TestNativeCaptureMinimizedWin32 (0.06s)
+    capture_geometry_windows_test.go:40: 
+        	Error Trace:	<workspace>/internal/driver/glfw/capture_geometry_windows_test.go:40
+        	Error:      	"0" is not greater than "65280"
+        	Test:       	TestNativeCaptureMinimizedWin32
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.611s
+FAIL

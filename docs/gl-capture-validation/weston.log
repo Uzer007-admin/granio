@@ -1,0 +1,64 @@
+Date: 2026-10-30 MSK
+[12:20:16.347] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[12:20:16.347] Command line: weston --backend=headless-backend.so --use-pixman --socket=granio-gl-readback-test --idle-time=0 --no-config --width=1280 --height=800 --log=<validation>/weston.log
+[12:20:16.347] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[12:20:16.347] Flight recorder: enabled
+[12:20:16.348] Starting with no config file.
+[12:20:16.348] Output repaint window is 7 ms maximum.
+[12:20:16.348] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[12:20:16.348] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[12:20:16.348] Color manager: no-op
+[12:20:16.348] Output 'headless' using color profile: built-in default sRGB SDR profile
+[12:20:16.348] Output 'headless' enabled with head(s) headless
+[12:20:16.348] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[12:20:16.348] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[12:20:16.348] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[12:20:16.348] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[12:20:16.348] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[12:20:34.174] caught signal 15
+[12:20:34.174] panel surface gone
+[12:20:34.174] background surface gone
+Date: 2026-10-30 MSK
+[12:22:16.193] weston 10.0.1
+               https://wayland.freedesktop.org
+               Bug reports to: https://gitlab.freedesktop.org/wayland/weston/issues/
+               Build: 10.0.1
+[12:22:16.193] Command line: weston --backend=headless-backend.so --use-pixman --socket=granio-gl-readback-test --idle-time=0 --no-config --width=1280 --height=800 --log=<validation>/weston.log
+[12:22:16.193] OS: Linux, 6.12.60-1-amd64, #1 SMP PREEMPT_DYNAMIC 6.12.60+lvc8p-0osnova3u1 (2025-12-12), x86_64
+[12:22:16.193] Flight recorder: enabled
+[12:22:16.193] Starting with no config file.
+[12:22:16.193] Output repaint window is 7 ms maximum.
+[12:22:16.193] Loading module '/usr/lib/x86_64-linux-gnu/libweston-10/headless-backend.so'
+[12:22:16.193] Registered plugin API 'weston_windowed_output_api_v1' of size 16
+[12:22:16.193] Color manager: no-op
+[12:22:16.193] Output 'headless' using color profile: built-in default sRGB SDR profile
+[12:22:16.193] Output 'headless' enabled with head(s) headless
+[12:22:16.193] Compositor capabilities:
+               arbitrary surface rotation: yes
+               screen capture uses y-flip: no
+               cursor planes: no
+               arbitrary resolutions: no
+               view mask clipping: yes
+               explicit sync: no
+               color operations: no
+               presentation clock: CLOCK_MONOTONIC_RAW, id 4
+               presentation clock resolution: 0.000000001 s
+[12:22:16.194] Loading module '/usr/lib/x86_64-linux-gnu/weston/desktop-shell.so'
+[12:22:16.194] launching '/usr/lib/x86_64-linux-gnu/weston-keyboard'
+[12:22:16.194] Note: support for the deprecated wl_shell interface is disabled. If a legacy client still needs it, it can be re-enabled by passing -Ddeprecated-wl-shell=true to Meson when building Weston.
+[12:22:16.194] launching '/usr/lib/x86_64-linux-gnu/weston-desktop-shell'
+[12:22:27.160] caught signal 15
+[12:22:27.160] panel surface gone
+[12:22:27.160] background surface gone

@@ -1,0 +1,120 @@
+{
+  "count": 19,
+  "identical": true,
+  "files": [
+    {
+      "path": "deps/gl/material/device.go",
+      "windows_sha256": "dd54965e3350f1a0c38ab694efc76088184cb36d52ebb707a090711c5b0bc06c",
+      "linux_sha256": "dd54965e3350f1a0c38ab694efc76088184cb36d52ebb707a090711c5b0bc06c",
+      "identical": true
+    },
+    {
+      "path": "deps/gl/profiles/material-gl21.json",
+      "windows_sha256": "31aafd5dd8b1764bfd1363c65184a9015a6ba450edfa171e24c431e3b2581846",
+      "linux_sha256": "31aafd5dd8b1764bfd1363c65184a9015a6ba450edfa171e24c431e3b2581846",
+      "identical": true
+    },
+    {
+      "path": "deps/gl/readback/readback.go",
+      "windows_sha256": "0f4489129263483a4f6a5aedb085f865c20ff8ac2c1e844eadb38af92caef0cc",
+      "linux_sha256": "0f4489129263483a4f6a5aedb085f865c20ff8ac2c1e844eadb38af92caef0cc",
+      "identical": true
+    },
+    {
+      "path": "deps/gl/readback/readback_test.go",
+      "windows_sha256": "3e4e2c445b0b166099d166a33eae3e7ef5e9c6cf58a6c54706c6cd22b3c53dbc",
+      "linux_sha256": "3e4e2c445b0b166099d166a33eae3e7ef5e9c6cf58a6c54706c6cd22b3c53dbc",
+      "identical": true
+    },
+    {
+      "path": "deps/gl/v2.1/material/package.go",
+      "windows_sha256": "bca6ac647fe0e29e30966f6cd4d5af80a88ff2803f46932e176250caca5c1038",
+      "linux_sha256": "bca6ac647fe0e29e30966f6cd4d5af80a88ff2803f46932e176250caca5c1038",
+      "identical": true
+    },
+    {
+      "path": "deps/gl/v2.1/material/symbol_manifest.json",
+      "windows_sha256": "b39005079fa0bc06b5a93771ba274584ffa73f1e6a6603bc69fb84b3dae49648",
+      "linux_sha256": "b39005079fa0bc06b5a93771ba274584ffa73f1e6a6603bc69fb84b3dae49648",
+      "identical": true
+    },
+    {
+      "path": "driver/desktop/capture.go",
+      "windows_sha256": "35bcf7a8f1b304e9e0600c3160bc4424a3c29f043c3a12662ba6679032328b2b",
+      "linux_sha256": "35bcf7a8f1b304e9e0600c3160bc4424a3c29f043c3a12662ba6679032328b2b",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/canvas.go",
+      "windows_sha256": "d402836a92b4de602c35cbd0b9ec13cc5b7d792e17432b486fa462c87465246d",
+      "linux_sha256": "d402836a92b4de602c35cbd0b9ec13cc5b7d792e17432b486fa462c87465246d",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/capture_geometry_native_test.go",
+      "windows_sha256": "e6bc7238a639e8d7396836a84aa7d3001c156fe5efdf66eb8628a48bc0899c26",
+      "linux_sha256": "e6bc7238a639e8d7396836a84aa7d3001c156fe5efdf66eb8628a48bc0899c26",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/capture_geometry_windows_test.go",
+      "windows_sha256": "530c719de10bebe4ca98599291b77a622963adbeec84e3c20ca4c78adaa1a2dd",
+      "linux_sha256": "530c719de10bebe4ca98599291b77a622963adbeec84e3c20ca4c78adaa1a2dd",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/capture_state_native_test.go",
+      "windows_sha256": "e8752882e4bca7e4fd4a3641083c70a14e196e870e95bc81c6dd159d5154a970",
+      "linux_sha256": "e8752882e4bca7e4fd4a3641083c70a14e196e870e95bc81c6dd159d5154a970",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/window.go",
+      "windows_sha256": "3d1b55493729ea0b79f19dffb6da5c4e283240e2b7fd97bc78bab95b6e667648",
+      "linux_sha256": "3d1b55493729ea0b79f19dffb6da5c4e283240e2b7fd97bc78bab95b6e667648",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/capture.go",
+      "windows_sha256": "566cf12b41c8af30628d71e89d23c334c79260a4f2d5548383c2cbdb45b9cc8d",
+      "linux_sha256": "566cf12b41c8af30628d71e89d23c334c79260a4f2d5548383c2cbdb45b9cc8d",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/capture_fallback.go",
+      "windows_sha256": "983a8a2ed317d69230963a438338845f4868cb82883308a02b9de771c5b0387f",
+      "linux_sha256": "983a8a2ed317d69230963a438338845f4868cb82883308a02b9de771c5b0387f",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/capture_native.go",
+      "windows_sha256": "42fd8800863681eef53c7abf2f093e2c25a22d909c60cd073b4a8f8920b04e13",
+      "linux_sha256": "42fd8800863681eef53c7abf2f093e2c25a22d909c60cd073b4a8f8920b04e13",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/capture_test.go",
+      "windows_sha256": "c46be7ed6af1ef96edb3f0ea9d0e7a114c11018db8bff5d1dfd7c6c97bb33884",
+      "linux_sha256": "c46be7ed6af1ef96edb3f0ea9d0e7a114c11018db8bff5d1dfd7c6c97bb33884",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/gl_core.go",
+      "windows_sha256": "ff02753ffa9db37f2caa73eaa809b4c0167a90b2edc4ebaf2a0155ad26aacf1a",
+      "linux_sha256": "ff02753ffa9db37f2caa73eaa809b4c0167a90b2edc4ebaf2a0155ad26aacf1a",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/gl_es.go",
+      "windows_sha256": "b6ebd90f043aba3aebc1ab1fd7b3e821657bf72515af96a9b4b19c070fe7174a",
+      "linux_sha256": "b6ebd90f043aba3aebc1ab1fd7b3e821657bf72515af96a9b4b19c070fe7174a",
+      "identical": true
+    },
+    {
+      "path": "internal/painter/gl/painter.go",
+      "windows_sha256": "704b27c37472206cea384dc3fae7a030873e7fd2f23620f5e4d04e30c8060392",
+      "linux_sha256": "704b27c37472206cea384dc3fae7a030873e7fd2f23620f5e4d04e30c8060392",
+      "identical": true
+    }
+  ]
+}

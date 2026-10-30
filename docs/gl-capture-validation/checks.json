@@ -1,0 +1,253 @@
+{
+  "go": "1.27.2",
+  "minimum_go": "1.27.1",
+  "long_performance_checks": false,
+  "native": [
+    {
+      "environment": "Windows / NVIDIA OpenGL",
+      "log": "capture-windows-native-final.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureMinimizedWin32",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestPainterTablesSurviveFailedGlobalReload",
+        "TestNestedNativeContexts"
+      ],
+      "count": 7
+    },
+    {
+      "environment": "X11 / Xvfb / Mesa OpenGL",
+      "log": "capture-x11-gl.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestPainterTablesSurviveFailedGlobalReload",
+        "TestNestedNativeContexts"
+      ],
+      "count": 6
+    },
+    {
+      "environment": "X11 / Xvfb / Mesa GLES 2.0",
+      "log": "capture-x11-gles2.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestNestedNativeContexts"
+      ],
+      "count": 5
+    },
+    {
+      "environment": "Wayland / Weston / Mesa OpenGL",
+      "log": "capture-wayland-gl.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestPainterTablesSurviveFailedGlobalReload",
+        "TestNestedNativeContexts"
+      ],
+      "count": 6
+    },
+    {
+      "environment": "Wayland / Weston / Mesa GLES 2.0",
+      "log": "capture-wayland-gles2.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestNestedNativeContexts"
+      ],
+      "count": 5
+    }
+  ],
+  "windows": [
+    {
+      "command": "go test -p 2 -race -tags migrated_fynedo -run 'TestNativeCapture|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload' -count=1 -v -timeout=90s ./internal/driver/glfw",
+      "log": "capture-windows-native-final.log",
+      "passed": true
+    },
+    {
+      "command": "go test -p 2 -race ./readback ./material ./capabilities ./v2.1/material ./v2.1/fyne ./v2.0/gles2",
+      "log": "gl-libraries-windows-final.log",
+      "passed": true
+    },
+    {
+      "command": "go test -p 2 -race -tags migrated_fynedo,no_glfw ./internal/painter/gl ./driver/desktop",
+      "log": "renderer-windows-final.log",
+      "passed": true
+    }
+  ],
+  "linux": {
+    "system": "Linux-6.12.60-1-amd64-x86_64-Intel-R-_Xeon-R-_Gold_5320_CPU_@_2.20GHz-with-glibc2.36",
+    "checks": [
+      {
+        "name": "gl-libraries-linux",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-v",
+          "./readback",
+          "./material",
+          "./capabilities",
+          "./v2.1/material",
+          "./v2.1/fyne",
+          "./v2.0/gles2"
+        ],
+        "exit_code": 0,
+        "seconds": 0.107
+      },
+      {
+        "name": "capture-x11-gl",
+        "command": [
+          "xvfb-run",
+          "-a",
+          "-s",
+          "-screen 0 1280x800x24",
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo",
+          "-run",
+          "TestNativeCapture|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 5.829
+      },
+      {
+        "name": "capture-x11-gles2",
+        "command": [
+          "xvfb-run",
+          "-a",
+          "-s",
+          "-screen 0 1280x800x24",
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,gles",
+          "-run",
+          "TestNativeCapture|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 7.467
+      },
+      {
+        "name": "capture-wayland-gl",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,wayland",
+          "-run",
+          "TestNativeCapture|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 5.698
+      },
+      {
+        "name": "capture-wayland-gles2",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,wayland,gles",
+          "-run",
+          "TestNativeCapture|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 5.175
+      },
+      {
+        "name": "renderer-linux",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,no_glfw",
+          "./internal/painter/gl",
+          "./driver/desktop"
+        ],
+        "exit_code": 0,
+        "seconds": 1.164
+      }
+    ]
+  },
+  "wasm": {
+    "command": "GOOS=js GOARCH=wasm CGO_ENABLED=0 go test -c ./internal/painter/gl",
+    "compiled": true,
+    "runtime_tested": false,
+    "artifact_bytes": 18957379
+  },
+  "reproductions": [
+    {
+      "log": "baseline-zero-windows.log",
+      "expected_failure": true
+    },
+    {
+      "log": "geometry-fixed-windows.log",
+      "expected_failure": true
+    },
+    {
+      "log": "unpack-fresh-windows.log",
+      "expected_failure": true
+    }
+  ],
+  "logs": "Локальные абсолютные пути заменены; диагностические сообщения и результаты сохранены."
+}

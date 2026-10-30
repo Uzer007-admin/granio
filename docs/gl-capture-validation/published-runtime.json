@@ -1,0 +1,37 @@
+{
+  "frames": [
+    {
+      "height": 240,
+      "minimized": false,
+      "phase": "shown",
+      "png_bytes": 1291,
+      "sha256": "305fb9d61c29224aaafcb294f7e79cf80b3c354da9202e1f12408b464f05099c",
+      "width": 320
+    },
+    {
+      "height": 240,
+      "minimized": true,
+      "phase": "minimized",
+      "png_bytes": 1291,
+      "sha256": "305fb9d61c29224aaafcb294f7e79cf80b3c354da9202e1f12408b464f05099c",
+      "width": 320
+    },
+    {
+      "height": 240,
+      "minimized": false,
+      "phase": "restored",
+      "png_bytes": 1291,
+      "sha256": "305fb9d61c29224aaafcb294f7e79cf80b3c354da9202e1f12408b464f05099c",
+      "width": 320
+    }
+  ],
+  "modules": {
+    "github.com/Uzer007-admin/gl": "v0.0.0-20261030092416-83550b6a7fd2",
+    "github.com/Uzer007-admin/glfw/v3.5/glfw": "v0.0.0-20261030082442-5c267d637d9d",
+    "github.com/Uzer007-admin/granio/v2": "v2.8.2-0.20261030092632-a80862403af9"
+  },
+  "exit_code": 0,
+  "exe_sha256": "893500729dc52e5309d6451b38280db11ef399ff2e1b094eaca0270cc2b6c85f",
+  "workspace": "off",
+  "replacements": false
+}

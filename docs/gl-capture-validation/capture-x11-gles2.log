@@ -1,0 +1,13 @@
+=== RUN   TestNativeCaptureAfterZeroSizeNotification
+--- PASS: TestNativeCaptureAfterZeroSizeNotification (0.04s)
+=== RUN   TestNativeCaptureRestoresPackAndFramebufferState
+    capture_state_native_test.go:74: GL version=OpenGL ES 2.0 Mesa 25.0.5-1; vendor=Mesa; renderer=llvmpipe (LLVM 19.1.7, 256 bits)
+--- PASS: TestNativeCaptureRestoresPackAndFramebufferState (0.04s)
+=== RUN   TestNativeCaptureHiddenFirstFrameAndWorker
+--- PASS: TestNativeCaptureHiddenFirstFrameAndWorker (0.03s)
+=== RUN   TestNativeCaptureAlphaAndClosedSurface
+--- PASS: TestNativeCaptureAlphaAndClosedSurface (0.04s)
+=== RUN   TestNestedNativeContexts
+--- PASS: TestNestedNativeContexts (0.05s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.454s

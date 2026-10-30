@@ -1,0 +1,17 @@
+=== RUN   TestNativeCaptureAfterZeroSizeNotification
+--- PASS: TestNativeCaptureAfterZeroSizeNotification (0.05s)
+=== RUN   TestNativeCaptureMinimizedWin32
+--- PASS: TestNativeCaptureMinimizedWin32 (0.06s)
+=== RUN   TestNativeCaptureRestoresPackAndFramebufferState
+    capture_state_native_test.go:74: GL version=4.6.0 NVIDIA 616.92; vendor=NVIDIA Corporation; renderer=NVIDIA GeForce RTX 4080 SUPER/PCIe/SSE2
+--- PASS: TestNativeCaptureRestoresPackAndFramebufferState (0.05s)
+=== RUN   TestNativeCaptureHiddenFirstFrameAndWorker
+--- PASS: TestNativeCaptureHiddenFirstFrameAndWorker (0.03s)
+=== RUN   TestNativeCaptureAlphaAndClosedSurface
+--- PASS: TestNativeCaptureAlphaAndClosedSurface (0.02s)
+=== RUN   TestPainterTablesSurviveFailedGlobalReload
+--- PASS: TestPainterTablesSurviveFailedGlobalReload (0.39s)
+=== RUN   TestNestedNativeContexts
+--- PASS: TestNestedNativeContexts (0.05s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	3.100s

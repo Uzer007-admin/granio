@@ -1,0 +1,9 @@
+--- FAIL: TestNativeCaptureRestoresPackAndFramebufferState (0.05s)
+    capture_state_native_test.go:132: 
+        	Error Trace:	<workspace>/internal/driver/glfw/capture_state_native_test.go:132
+        	Error:      	Received unexpected error:
+        	            	gl readback: GL error 0x0502
+        	Test:       	TestNativeCaptureRestoresPackAndFramebufferState
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.995s
+FAIL

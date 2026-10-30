@@ -1,0 +1,38 @@
+[
+  {
+    "file": "v2.1/fyne/package.go",
+    "identical": true
+  },
+  {
+    "file": "v2.1/fyne/conversions.go",
+    "identical": true
+  },
+  {
+    "file": "v2.1/material/package.go",
+    "identical": true
+  },
+  {
+    "file": "v2.1/material/conversions.go",
+    "identical": true
+  },
+  {
+    "file": "v2.0/gles2/package.go",
+    "identical": true
+  },
+  {
+    "file": "v2.0/gles2/conversions.go",
+    "identical": true
+  },
+  {
+    "file": "v2.1/fyne/symbol_manifest.json",
+    "identical": true
+  },
+  {
+    "file": "v2.1/material/symbol_manifest.json",
+    "identical": true
+  },
+  {
+    "file": "v2.0/gles2/symbol_manifest.json",
+    "identical": true
+  }
+]

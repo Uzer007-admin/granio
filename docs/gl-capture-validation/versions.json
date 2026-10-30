@@ -1,0 +1,19 @@
+{
+  "github.com/Uzer007-admin/gl": {
+    "version": "v0.0.0-20261030092416-83550b6a7fd2",
+    "commit": "83550b6a7fd23126692f1b1c817a507e679a6615",
+    "go": "1.27.1",
+    "published": true
+  },
+  "github.com/Uzer007-admin/granio/v2": {
+    "version": "v2.8.2-0.20261030092632-a80862403af9",
+    "commit": "a80862403af997cee539f49962ba0a087cecec73",
+    "go": "1.27.1",
+    "published": true
+  },
+  "github.com/Uzer007-admin/glfw/v3.5/glfw": {
+    "version": "v0.0.0-20261030082442-5c267d637d9d",
+    "commit": "5c267d637d9d35b669068c9082e7b4e61c7f5338",
+    "unchanged": true
+  }
+}
