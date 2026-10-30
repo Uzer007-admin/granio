@@ -53,14 +53,7 @@ func (d *gLDriver) runLoop() {
 		}
 		// Keep native input responsive even under a long queue of UI callbacks.
 		d.pollEvents()
-		for processed := 0; processed < 64; processed++ {
-			select {
-			case f := <-funcQueue.Out():
-				executeMainFunc(f)
-			default:
-				processed = 64
-			}
-		}
+		drainMainQueue(nextFrame)
 		d.processWindowEvents()
 		now := time.Now()
 		d.updateMonitorFrameRate(sampleMonitorFrameRate)

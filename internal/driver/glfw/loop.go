@@ -41,12 +41,14 @@ func runOnMain(f func()) {
 
 // force a function f to run on the main thread and specify if we should wait for it to return
 func runOnMainWithWait(f func(), wait bool) {
-	// If we are on main before app run just execute - otherwise add it to the main queue and wait.
+	// A synchronous callback already on the UI thread must execute inline:
+	// waiting for this same loop to dequeue it would deadlock. Asynchronous
+	// submissions during Run stay queued to preserve their deferred semantics.
 	// Once the loop has stopped, UI callbacks cannot be executed on another thread.
 	if drained.Load() {
 		return
 	}
-	if !running.Load() && async.IsMainGoroutine() {
+	if (wait || !running.Load()) && async.IsMainGoroutine() {
 		f()
 		return
 	}
@@ -163,6 +165,27 @@ func executeMainFunc(f funcData) {
 	f.f()
 	if f.done != nil {
 		f.done <- struct{}{}
+	}
+}
+
+// drainMainQueue preserves FIFO while bounding one batch by time as well as
+// count. One slow callback cannot be preempted, but the following callbacks
+// must not keep native events and a due frame waiting for the whole batch.
+func drainMainQueue(nextFrame time.Time) {
+	deadline := time.Now().Add(2 * time.Millisecond)
+	if !nextFrame.IsZero() && nextFrame.Before(deadline) {
+		deadline = nextFrame
+	}
+	for processed := 0; processed < 64; processed++ {
+		select {
+		case f := <-funcQueue.Out():
+			executeMainFunc(f)
+			if !time.Now().Before(deadline) {
+				return
+			}
+		default:
+			return
+		}
 	}
 }
 
