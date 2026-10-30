@@ -1,0 +1,11 @@
+=== RUN   TestNativeUIQueueYieldsToFrames
+    ui_dispatch_native_test.go:55: callbacks=48 intermediate_frames=0 elapsed=115.1223ms
+    ui_dispatch_native_test.go:57: 
+        	Error Trace:	<workspace>/internal/driver/glfw/ui_dispatch_native_test.go:57
+        	Error:      	"0" is not positive
+        	Test:       	TestNativeUIQueueYieldsToFrames
+        	Messages:   	queued UI callbacks starved animation and presentation until the whole batch completed
+--- FAIL: TestNativeUIQueueYieldsToFrames (0.18s)
+FAIL
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	1.765s
+FAIL

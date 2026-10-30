@@ -1,0 +1,80 @@
+=== RUN   TestNativeSynchronousMainDispatchReentrant
+panic: test timed out after 6s
+	running tests:
+		TestNativeSynchronousMainDispatchReentrant (6s)
+
+goroutine 28 [running]:
+testing.(*M).startAlarm.func1()
+	<goroot>/src/testing/testing.go:2961 +0x605
+created by time.goFunc
+	<goroot>/src/time/sleep.go:182 +0x45
+
+goroutine 1 [chan receive, locked to thread]:
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.runOnMainWithWait(0xc00060c440, 0x1)
+	<workspace>/internal/driver/glfw/loop.go:65 +0x186
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.runOnMain(...)
+	<workspace>/internal/driver/glfw/loop.go:39
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.TestNativeSynchronousMainDispatchReentrant.func1()
+	<workspace>/internal/driver/glfw/ui_dispatch_native_test.go:64 +0x14e
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.executeMainFunc(...)
+	<workspace>/internal/driver/glfw/loop.go:163
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).runLoop(0xc00042e0e0)
+	<workspace>/internal/driver/glfw/loop_desktop.go:59 +0x134
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).runGL(0xc00042e0e0)
+	<workspace>/internal/driver/glfw/loop.go:159 +0x3dc
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).Run(0xc00042e0e0)
+	<workspace>/internal/driver/glfw/driver.go:128 +0xa7
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.TestMain(0xc0003f0140)
+	<workspace>/internal/driver/glfw/window_test.go:58 +0x216
+main.main()
+	_testmain.go:312 +0x172
+
+goroutine 5 [select]:
+github.com/Uzer007-admin/granio/v2/internal/async.(*UnboundedChan[...]).processing(0x22922600040)
+	<workspace>/internal/async/chan.go:57 +0x197
+created by github.com/Uzer007-admin/granio/v2/internal/async.NewUnboundedChanWithNotify[...] in goroutine 1
+	<workspace>/internal/async/chan.go:34 +0x29a
+
+goroutine 34 [chan receive]:
+testing.(*T).Run(0xc0004fa000, {0x229225c3447, 0x2a}, 0x2292300d660)
+	<goroot>/src/testing/testing.go:2268 +0xb56
+testing.runTests.func1(0xc0004fa000)
+	<goroot>/src/testing/testing.go:2744 +0x85
+testing.tRunner(0xc0004fa000, 0xc00060bc00)
+	<goroot>/src/testing/testing.go:2195 +0x1cb
+testing.runTests({0x229225bb3f8, 0x22}, {0x229225cea34, 0x37}, 0xc00011f278, {0x22922573768, 0x81, 0x81}, {0xc2b168140facdc94, 0x19d97eee5, ...})
+	<goroot>/src/testing/testing.go:2742 +0x9f8
+testing.(*M).Run(0xc0003f0140)
+	<goroot>/src/testing/testing.go:2602 +0xf45
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.TestMain.func1()
+	<workspace>/internal/driver/glfw/window_test.go:49 +0x4f
+created by github.com/Uzer007-admin/granio/v2/internal/driver/glfw.TestMain in goroutine 1
+	<workspace>/internal/driver/glfw/window_test.go:42 +0x13a
+
+goroutine 35 [select]:
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).catchTerm(0xc00042e0e0)
+	<workspace>/internal/driver/glfw/driver_desktop.go:291 +0x1b6
+created by github.com/Uzer007-admin/granio/v2/internal/driver/glfw.(*gLDriver).Run in goroutine 1
+	<workspace>/internal/driver/glfw/driver.go:127 +0x9d
+
+goroutine 6 [syscall]:
+os/signal.signal_recv()
+	<goroot>/src/runtime/sigqueue.go:152 +0x98
+os/signal.loop()
+	<goroot>/src/os/signal/signal_unix.go:23 +0x1d
+created by os/signal.Notify.func2.1 in goroutine 35
+	<goroot>/src/os/signal/signal.go:164 +0x47
+
+goroutine 50 [chan receive]:
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.runOnMainWithWait(0xc00060c430, 0x1)
+	<workspace>/internal/driver/glfw/loop.go:65 +0x186
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.runOnMain(...)
+	<workspace>/internal/driver/glfw/loop.go:39
+github.com/Uzer007-admin/granio/v2/internal/driver/glfw.TestNativeSynchronousMainDispatchReentrant(0xc00061e000)
+	<workspace>/internal/driver/glfw/ui_dispatch_native_test.go:62 +0xcb
+testing.tRunner(0xc00061e000, 0x2292300d660)
+	<goroot>/src/testing/testing.go:2195 +0x1cb
+created by testing.(*T).Run in goroutine 34
+	<goroot>/src/testing/testing.go:2260 +0xb2b
+FAIL	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	7.450s
+FAIL

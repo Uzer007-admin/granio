@@ -1,0 +1,270 @@
+{
+  "go": "1.27.2",
+  "minimum_go": "1.27.1",
+  "long_performance_checks": false,
+  "native": [
+    {
+      "log": "driver-after-windows.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureMinimizedWin32",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestNativeFrameRates",
+        "TestQueuedWorkWakesNativeIdle",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant",
+        "TestNativeAsynchronousMainDispatchStaysDeferred"
+      ],
+      "count": 10
+    },
+    {
+      "log": "driver-x11-gl.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestPainterTablesSurviveFailedGlobalReload",
+        "TestNestedNativeContexts",
+        "TestNativeFrameRates",
+        "TestQueuedWorkWakesNativeIdle",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant",
+        "TestNativeAsynchronousMainDispatchStaysDeferred"
+      ],
+      "count": 11
+    },
+    {
+      "log": "driver-x11-gles2.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestNestedNativeContexts",
+        "TestNativeFrameRates",
+        "TestQueuedWorkWakesNativeIdle",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant",
+        "TestNativeAsynchronousMainDispatchStaysDeferred"
+      ],
+      "count": 10
+    },
+    {
+      "log": "driver-wayland-gl.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestPainterTablesSurviveFailedGlobalReload",
+        "TestNestedNativeContexts",
+        "TestNativeFrameRates",
+        "TestQueuedWorkWakesNativeIdle",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant",
+        "TestNativeAsynchronousMainDispatchStaysDeferred"
+      ],
+      "count": 11
+    },
+    {
+      "log": "driver-wayland-gles2.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeCaptureAfterZeroSizeNotification",
+        "TestNativeCaptureRestoresPackAndFramebufferState",
+        "TestNativeCaptureHiddenFirstFrameAndWorker",
+        "TestNativeCaptureAlphaAndClosedSurface",
+        "TestNestedNativeContexts",
+        "TestNativeFrameRates",
+        "TestQueuedWorkWakesNativeIdle",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant",
+        "TestNativeAsynchronousMainDispatchStaysDeferred"
+      ],
+      "count": 10
+    },
+    {
+      "log": "driver-default-windows.log",
+      "race": true,
+      "passed": true,
+      "tests": [
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant",
+        "TestNativeAsynchronousMainDispatchStaysDeferred"
+      ],
+      "count": 3
+    }
+  ],
+  "linux": {
+    "platform": "Linux-6.12.60-1-amd64-x86_64-Intel-R-_Xeon-R-_Gold_5320_CPU_@_2.20GHz-with-glibc2.36",
+    "checks": [
+      {
+        "name": "driver-x11-gles2",
+        "command": [
+          "xvfb-run",
+          "-a",
+          "-s",
+          "-screen 0 1280x800x24",
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,gles",
+          "-run",
+          "TestNative(UIQueue|SynchronousMainDispatch|AsynchronousMainDispatch|FrameRates|Capture)|TestQueuedWorkWakesNativeIdle|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 46.347
+      },
+      {
+        "name": "driver-x11-gl",
+        "command": [
+          "xvfb-run",
+          "-a",
+          "-s",
+          "-screen 0 1280x800x24",
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo",
+          "-run",
+          "TestNative(UIQueue|SynchronousMainDispatch|AsynchronousMainDispatch|FrameRates|Capture)|TestQueuedWorkWakesNativeIdle|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 46.744
+      },
+      {
+        "name": "driver-wayland-gl",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,wayland",
+          "-run",
+          "TestNative(UIQueue|SynchronousMainDispatch|AsynchronousMainDispatch|FrameRates|Capture)|TestQueuedWorkWakesNativeIdle|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 15.581
+      },
+      {
+        "name": "driver-wayland-gles2",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "migrated_fynedo,wayland,gles",
+          "-run",
+          "TestNative(UIQueue|SynchronousMainDispatch|AsynchronousMainDispatch|FrameRates|Capture)|TestQueuedWorkWakesNativeIdle|TestNestedNativeContexts|TestPainterTablesSurviveFailedGlobalReload",
+          "-count=1",
+          "-v",
+          "-timeout=90s",
+          "./internal/driver/glfw"
+        ],
+        "exit_code": 0,
+        "seconds": 8.627
+      },
+      {
+        "name": "library-regression-linux",
+        "command": [
+          "go",
+          "test",
+          "-p",
+          "2",
+          "-mod=vendor",
+          "-race",
+          "-tags",
+          "ci",
+          "./internal/async",
+          "./internal/app",
+          "./internal/animation",
+          "./internal/painter/gl",
+          "./driver/desktop"
+        ],
+        "exit_code": 0,
+        "seconds": 12.633
+      }
+    ]
+  },
+  "source_identity": [
+    {
+      "path": "internal/driver/glfw/loop.go",
+      "windows_sha256": "6b9151008d053db971e511149cffb3c43763c0077e2da1bc75f22488cf9fed3e",
+      "linux_sha256": "6b9151008d053db971e511149cffb3c43763c0077e2da1bc75f22488cf9fed3e",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/loop_desktop.go",
+      "windows_sha256": "630f6d695e63cdce374030dfea45ef50d3eb96bf5af2acddbff91fb962d4cddc",
+      "linux_sha256": "630f6d695e63cdce374030dfea45ef50d3eb96bf5af2acddbff91fb962d4cddc",
+      "identical": true
+    },
+    {
+      "path": "internal/driver/glfw/ui_dispatch_native_test.go",
+      "windows_sha256": "37ecc5963458a39d7a8a070836e99c17e91e0d1d97852fe9f977245c8c43fbbf",
+      "linux_sha256": "37ecc5963458a39d7a8a070836e99c17e91e0d1d97852fe9f977245c8c43fbbf",
+      "identical": true
+    }
+  ],
+  "windows_commands": [
+    "go test -p 2 -race -tags migrated_fynedo -run 'TestNative(UIQueue|SynchronousMainDispatch|AsynchronousMainDispatch)|TestQueuedWorkWakesNativeIdle|TestNativeFrameRates|TestNativeCapture' -count=1 -v -timeout=90s ./internal/driver/glfw",
+    "go test -p 2 -race -run 'TestNative(UIQueue|SynchronousMainDispatch|AsynchronousMainDispatch)' -count=1 -v -timeout=30s ./internal/driver/glfw",
+    "go test -p 2 -race -tags ci ./internal/async ./internal/app ./internal/animation ./internal/painter/gl ./driver/desktop"
+  ],
+  "wasm": {
+    "command": "GOOS=js GOARCH=wasm CGO_ENABLED=0 go build ./internal/driver/glfw",
+    "compiled": true,
+    "runtime_tested": false,
+    "archive_bytes": 2342636
+  },
+  "reproductions": [
+    {
+      "log": "queue-before-windows.log",
+      "expected_failure": true
+    },
+    {
+      "log": "reentrant-before-windows.log",
+      "expected_failure": true,
+      "test_timeout_seconds": 6
+    }
+  ],
+  "logs": "Локальные абсолютные пути заменены; результаты и диагностические сообщения сохранены."
+}

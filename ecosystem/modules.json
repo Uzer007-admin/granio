@@ -30,8 +30,8 @@
     "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/granio/v2": {
-    "version": "v2.8.2-0.20261030092632-a80862403af9",
-    "commit": "a80862403af997cee539f49962ba0a087cecec73",
+    "version": "v2.8.2-0.20261030233756-e8ecd8600e12",
+    "commit": "e8ecd8600e12707d553b864a73bdc10ca5686188",
     "directory": "."
   },
   "github.com/Uzer007-admin/granio-x": {

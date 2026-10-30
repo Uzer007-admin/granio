@@ -1,0 +1,32 @@
+=== RUN   TestNativeCaptureAfterZeroSizeNotification
+--- PASS: TestNativeCaptureAfterZeroSizeNotification (0.04s)
+=== RUN   TestNativeCaptureRestoresPackAndFramebufferState
+    capture_state_native_test.go:74: GL version=OpenGL ES 2.0 Mesa 25.0.5-1; vendor=Mesa; renderer=llvmpipe (LLVM 19.1.7, 256 bits)
+--- PASS: TestNativeCaptureRestoresPackAndFramebufferState (0.03s)
+=== RUN   TestNativeCaptureHiddenFirstFrameAndWorker
+--- PASS: TestNativeCaptureHiddenFirstFrameAndWorker (0.03s)
+=== RUN   TestNativeCaptureAlphaAndClosedSurface
+--- PASS: TestNativeCaptureAlphaAndClosedSurface (0.03s)
+=== RUN   TestNestedNativeContexts
+--- PASS: TestNestedNativeContexts (0.05s)
+=== RUN   TestNativeFrameRates
+    frame_rate_test.go:26: target=120Hz observed=49 animation ticks in 400ms
+    frame_rate_test.go:26: target=144Hz observed=57 animation ticks in 400ms
+    frame_rate_test.go:26: target=160Hz observed=64 animation ticks in 400ms
+    frame_rate_test.go:26: target=180Hz observed=72 animation ticks in 400ms
+    frame_rate_test.go:26: target=240Hz observed=96 animation ticks in 400ms
+    frame_rate_test.go:26: target=280Hz observed=112 animation ticks in 400ms
+    frame_rate_test.go:26: target=300Hz observed=120 animation ticks in 400ms
+    frame_rate_test.go:26: target=360Hz observed=144 animation ticks in 400ms
+--- PASS: TestNativeFrameRates (3.21s)
+=== RUN   TestQueuedWorkWakesNativeIdle
+--- PASS: TestQueuedWorkWakesNativeIdle (0.00s)
+=== RUN   TestNativeUIQueueYieldsToFrames
+    ui_dispatch_native_test.go:55: callbacks=48 intermediate_frames=6 elapsed=109.167924ms
+--- PASS: TestNativeUIQueueYieldsToFrames (0.14s)
+=== RUN   TestNativeSynchronousMainDispatchReentrant
+--- PASS: TestNativeSynchronousMainDispatchReentrant (0.00s)
+=== RUN   TestNativeAsynchronousMainDispatchStaysDeferred
+--- PASS: TestNativeAsynchronousMainDispatchStaysDeferred (0.00s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	4.817s

@@ -1,0 +1,16 @@
+{
+  "callbacks": 48,
+  "height": 240,
+  "intermediate_animation_ticks": 24,
+  "modules": {
+    "github.com/Uzer007-admin/gl": "v0.0.0-20261030092416-83550b6a7fd2",
+    "github.com/Uzer007-admin/glfw/v3.5/glfw": "v0.0.0-20261030082442-5c267d637d9d",
+    "github.com/Uzer007-admin/granio/v2": "v2.8.2-0.20261030233756-e8ecd8600e12"
+  },
+  "reentrant": true,
+  "replacements": false,
+  "width": 320,
+  "workspace": "off",
+  "exit_code": 0,
+  "exe_sha256": "ec4cf1ea0bf350fa163e7bbb0b7ba5721f3cbebcdfe3e857582a86b140ead154"
+}

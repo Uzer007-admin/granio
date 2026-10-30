@@ -12,8 +12,8 @@
       "purpose": "Ядро Granio и встроенные модули графического и системного стека: OpenGL/WebGL, окна, трей, SVG и изображения.",
       "remote_created": true,
       "branch": "dev/granio",
-      "validation": "docs/REPOSITORY_CONSOLIDATION.md; docs/MONITOR_EVENT_UPDATES.md; docs/GL_CAPTURE_REPAIR.md",
-      "prepared_commit": "a80862403af997cee539f49962ba0a087cecec73"
+      "validation": "docs/REPOSITORY_CONSOLIDATION.md; docs/MONITOR_EVENT_UPDATES.md; docs/GL_CAPTURE_REPAIR.md; docs/UI_DISPATCH_LATENCY.md",
+      "prepared_commit": "e8ecd8600e12707d553b864a73bdc10ca5686188"
     },
     {
       "name": "granio-apps",

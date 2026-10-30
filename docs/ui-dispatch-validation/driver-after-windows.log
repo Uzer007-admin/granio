@@ -1,0 +1,32 @@
+=== RUN   TestNativeCaptureAfterZeroSizeNotification
+--- PASS: TestNativeCaptureAfterZeroSizeNotification (0.17s)
+=== RUN   TestNativeCaptureMinimizedWin32
+--- PASS: TestNativeCaptureMinimizedWin32 (0.08s)
+=== RUN   TestNativeCaptureRestoresPackAndFramebufferState
+    capture_state_native_test.go:74: GL version=4.6.0 NVIDIA 616.92; vendor=NVIDIA Corporation; renderer=NVIDIA GeForce RTX 4080 SUPER/PCIe/SSE2
+--- PASS: TestNativeCaptureRestoresPackAndFramebufferState (0.08s)
+=== RUN   TestNativeCaptureHiddenFirstFrameAndWorker
+--- PASS: TestNativeCaptureHiddenFirstFrameAndWorker (0.04s)
+=== RUN   TestNativeCaptureAlphaAndClosedSurface
+--- PASS: TestNativeCaptureAlphaAndClosedSurface (0.03s)
+=== RUN   TestNativeFrameRates
+    frame_rate_test.go:26: target=120Hz observed=49 animation ticks in 400ms
+    frame_rate_test.go:26: target=144Hz observed=57 animation ticks in 400ms
+    frame_rate_test.go:26: target=160Hz observed=64 animation ticks in 400ms
+    frame_rate_test.go:26: target=180Hz observed=72 animation ticks in 400ms
+    frame_rate_test.go:26: target=240Hz observed=96 animation ticks in 400ms
+    frame_rate_test.go:26: target=280Hz observed=112 animation ticks in 400ms
+    frame_rate_test.go:26: target=300Hz observed=120 animation ticks in 400ms
+    frame_rate_test.go:26: target=360Hz observed=145 animation ticks in 400ms
+--- PASS: TestNativeFrameRates (3.20s)
+=== RUN   TestQueuedWorkWakesNativeIdle
+--- PASS: TestQueuedWorkWakesNativeIdle (0.00s)
+=== RUN   TestNativeUIQueueYieldsToFrames
+    ui_dispatch_native_test.go:55: callbacks=48 intermediate_frames=7 elapsed=128.7459ms
+--- PASS: TestNativeUIQueueYieldsToFrames (0.16s)
+=== RUN   TestNativeSynchronousMainDispatchReentrant
+--- PASS: TestNativeSynchronousMainDispatchReentrant (0.01s)
+=== RUN   TestNativeAsynchronousMainDispatchStaysDeferred
+--- PASS: TestNativeAsynchronousMainDispatchStaysDeferred (0.00s)
+PASS
+ok  	github.com/Uzer007-admin/granio/v2/internal/driver/glfw	6.367s

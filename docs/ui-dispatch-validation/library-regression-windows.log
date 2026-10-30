@@ -1,0 +1,5 @@
+ok  	github.com/Uzer007-admin/granio/v2/internal/async	2.452s
+ok  	github.com/Uzer007-admin/granio/v2/internal/app	1.398s
+ok  	github.com/Uzer007-admin/granio/v2/internal/animation	2.411s
+ok  	github.com/Uzer007-admin/granio/v2/internal/painter/gl	1.353s
+ok  	github.com/Uzer007-admin/granio/v2/driver/desktop	1.261s
