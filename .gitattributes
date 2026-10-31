@@ -1,3 +1,5 @@
 *.go text eol=lf
 
 *.sh text eol=lf
+
+/scripts/windows-graphics-light.wprp text eol=lf

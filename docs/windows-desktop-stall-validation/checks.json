@@ -155,7 +155,9 @@
     "repeated_light_trace_lost_events": 0,
     "repeated_light_trace_process_seen": true,
     "final_recorder_self_check_seconds": 10,
-    "final_recorder_self_check_saved": true
+    "final_recorder_self_check_saved": true,
+    "final_recorder_profile_sha256": "f99c0494a989d6807d7e040068c1afbdd6d05e625154436d8eec8d4d6acd342e",
+    "published_profile_line_endings": "LF; XML data identical to recorded CRLF profile"
   },
   "runtime_library_changed": true,
   "applications_changed": false,
@@ -180,7 +182,7 @@
     "internal/painter/software/frame.go": "d19fd03407e6cde8bfa11ed8f55a334ed8ad20d65705bbc236ad5a3fc93dc04a",
     "internal/painter/software/frame_test.go": "052667a285a6deb5f91fdd1e8c75434f6ec02a9bc058df6fb32e3129636ff6a3",
     "internal/painter/software/painter.go": "b681395ef17da11dc3a2cec1ee1b09cf5dc731ac158c694a99d07df878be5781",
-    "scripts/windows-graphics-light.wprp": "f99c0494a989d6807d7e040068c1afbdd6d05e625154436d8eec8d4d6acd342e"
+    "scripts/windows-graphics-light.wprp": "0dad27e156a3dcc4c116ae224efdea54084031bfd62d2d2f5feb51711d432778"
   },
   "runtime_renderer": {
     "windows_software_opt_in": "GRANIO_RENDERER=software",
