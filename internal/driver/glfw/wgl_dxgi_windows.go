@@ -21,7 +21,9 @@ type wglDXGIPresenter struct {
 	interop, object                       uintptr
 	fbo, renderbuffer                     uint32
 	width, height                         int
+	maxDimension                          int
 	frames                                uint64
+	presentMethod                         uintptr
 	d3d                                   windows.Handle
 	api                                   wglDXGIApi
 }
@@ -56,9 +58,21 @@ func releaseGraphicsCOM(c **graphicsCOM) {
 	}
 }
 
+type graphicsError struct {
+	operation string
+	code      uint32
+}
+
+func (e graphicsError) Error() string { return fmt.Sprintf("%s: HRESULT 0x%08x", e.operation, e.code) }
+
+func graphicsDeviceLost(err error) bool {
+	e, ok := err.(graphicsError)
+	return ok && (e.code == 0x887a0005 || e.code == 0x887a0006 || e.code == 0x887a0007)
+}
+
 func graphicsResult(operation string, result uintptr) error {
 	if int32(result) < 0 {
-		return fmt.Errorf("%s: HRESULT 0x%08x", operation, uint32(result))
+		return graphicsError{operation, uint32(result)}
 	}
 	return nil
 }
@@ -130,6 +144,9 @@ func newWGLDXGIPresenter(hwnd uintptr) (_ *wglDXGIPresenter, err error) {
 	if current == nil || current.GetAttrib(glfw.ClientAPI) != glfw.OpenGLAPI {
 		return nil, fmt.Errorf("WGL/DXGI requires a desktop OpenGL context")
 	}
+	if current.GetAttrib(glfw.DoubleBuffer) != glfw.True {
+		return nil, fmt.Errorf("WGL/DXGI requires a double-buffered context")
+	}
 	a, err := loadWGLDXGIApi()
 	if err != nil {
 		return nil, err
@@ -161,6 +178,14 @@ func newWGLDXGIPresenter(hwnd uintptr) (_ *wglDXGIPresenter, err error) {
 		uintptr(unsafe.Pointer(&level)), uintptr(unsafe.Pointer(&p.immediate)))
 	if err = graphicsResult("D3D11CreateDeviceAndSwapChain", result); err != nil {
 		return nil, err
+	}
+	p.presentMethod = p.swap.vtable[8]
+	if level >= 0xb000 {
+		p.maxDimension = 16384
+	} else if level >= 0xa000 {
+		p.maxDimension = 8192
+	} else {
+		return nil, fmt.Errorf("WGL/DXGI requires D3D feature level 10.0 or newer")
 	}
 	p.interop, _, _ = syscall.SyscallN(a.open, uintptr(unsafe.Pointer(p.device)))
 	if p.interop == 0 {
@@ -285,12 +310,18 @@ func (p *wglDXGIPresenter) present(width, height int) error {
 		return fmt.Errorf("wglDXUnlockObjectsNV failed")
 	}
 	p.immediate.call2(47, uintptr(unsafe.Pointer(p.back)), uintptr(unsafe.Pointer(p.shared))) // CopyResource
-	result := p.swap.call2(8, 0, 0)                                                           // Частоту ограничивает диспетчер кадров Granio.
+	result, _, _ := syscall.SyscallN(p.presentMethod, uintptr(unsafe.Pointer(p.swap)), 0, 0)
 	if err := graphicsResult("DXGI Present", result); err != nil {
 		return err
 	}
-	p.frames++
+	if result == 0 {
+		p.frames++
+	}
 	return nil
+}
+
+func (p *wglDXGIPresenter) deviceLost() bool {
+	return p.device != nil && int32(p.device.call(39)) < 0 // GetDeviceRemovedReason
 }
 
 func (p *wglDXGIPresenter) destroy() {

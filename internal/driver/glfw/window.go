@@ -56,6 +56,9 @@ func (w *window) screenSize(canvasSize granio.Size) (width, height int) {
 	if p := w.canvas.Painter(); p != nil {
 		maxTexture = p.MaxTextureSize()
 	}
+	if limit := w.presentationMaxTextureSize(); limit > 0 && (maxTexture == 0 || limit < maxTexture) {
+		maxTexture = limit
+	}
 	limit := maxWindowSize(maxTexture, w.canvas.texScale)
 	width, height = scale.ToScreenCoordinate(w.canvas, canvasSize.Width), scale.ToScreenCoordinate(w.canvas, canvasSize.Height)
 	if width > limit || height > limit {
@@ -240,6 +243,7 @@ func (w *window) Show() {
 		if !w.prepareVisualFirstFrame() {
 			return
 		}
+		w.preparePresentationFirstFrame()
 		view.Show()
 		w.visible = true
 

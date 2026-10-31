@@ -24,27 +24,53 @@ func softwareRendererRequested() bool {
 func (w *window) softwareRendering() bool { return w.software }
 
 type windowPresentation struct {
-	requested bool
-	dxgi      *wglDXGIPresenter
-	failed    bool
+	requested         bool
+	automatic         bool
+	dxgi              *wglDXGIPresenter
+	failed            bool
+	recoveryAttempted bool
 }
 
 func (w *window) preparePresentation() {
-	w.presentation.requested = !w.software && strings.EqualFold(strings.TrimSpace(os.Getenv("GRANIO_WGL_PRESENT")), "dxgi")
+	mode := strings.ToLower(strings.TrimSpace(os.Getenv("GRANIO_WGL_PRESENT")))
+	w.presentation.requested = !w.software && mode == "dxgi"
+	w.presentation.automatic = !w.software && (mode == "" || mode == "auto")
 }
 
 func (w *window) opaqueRendering() bool { return w.software || w.presentation.requested }
 
+func (w *window) presentationMaxTextureSize() int {
+	if p := w.presentation.dxgi; p != nil {
+		return p.maxDimension
+	}
+	return 0
+}
+
 func (w *window) initPresentation() {
-	if !w.presentation.requested {
+	if !w.presentation.requested && !w.presentation.automatic {
 		return
+	}
+	if w.presentation.automatic {
+		w.visuals.mu.Lock()
+		alpha := w.visuals.alphaReserved
+		w.visuals.mu.Unlock()
+		// Подготовленная прозрачная поверхность сохраняет путь WGL/DWM.
+		// GLES и драйверы без interop не создают устройство D3D11.
+		if alpha || w.viewport.GetAttrib(glfw.ClientAPI) != glfw.OpenGLAPI || !glfw.ExtensionSupported("WGL_NV_DX_interop2") {
+			return
+		}
 	}
 	p, err := newWGLDXGIPresenter(uintptr(unsafe.Pointer(w.viewport.GetWin32Window())))
 	if err != nil {
-		granio.LogError("Failed to initialise WGL/DXGI presentation; using WGL", err)
+		if w.presentation.failed {
+			granio.LogError("Failed to restore WGL/DXGI presentation", err)
+		} else {
+			granio.LogError("Failed to initialise WGL/DXGI presentation; using WGL", err)
+		}
 		return
 	}
 	w.presentation.dxgi = p
+	w.presentation.failed = false
 }
 
 func (w *window) releasePresentation() {
@@ -53,6 +79,14 @@ func (w *window) releasePresentation() {
 		defer restore()
 		p.destroy()
 		w.presentation.dxgi = nil
+	}
+}
+
+func (w *window) preparePresentationFirstFrame() {
+	if p := w.presentation.dxgi; p != nil && p.shared == nil {
+		// Полноразмерные буферы и содержимое готовятся до Show. После
+		// Show следует видимый repaint, в том числе после OCCLUDED.
+		w.RunWithContext(func() { w.driver.repaintWindow(w); w.presentFrame() })
 	}
 }
 
@@ -132,14 +166,27 @@ func drawSoftwareFrame(dc uintptr, frame *image.NRGBA) error {
 
 func (w *window) presentFrame() {
 	if !w.software {
+		if w.presentation.failed {
+			return
+		}
 		if p := w.presentation.dxgi; p != nil {
 			if w.viewport.GetAttrib(glfw.Iconified) == glfw.True {
 				return
 			}
 			width, height := w.viewport.GetFramebufferSize()
-			if err := p.present(width, height); err != nil && !w.presentation.failed {
+			if err := p.present(width, height); err != nil {
 				w.presentation.failed = true
 				granio.LogError("Failed to present WGL/DXGI frame", err)
+				if !w.presentation.recoveryAttempted && (graphicsDeviceLost(err) || p.deviceLost()) {
+					w.presentation.recoveryAttempted = true
+					w.releasePresentation()
+					w.initPresentation()
+					if w.presentation.dxgi != nil {
+						w.canvas.SetDirty()
+					}
+				}
+			} else {
+				w.presentation.recoveryAttempted = false
 			}
 			return
 		}

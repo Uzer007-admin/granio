@@ -145,10 +145,88 @@ func TestWGLDXGINativeFrameResizeStateAndFallback(t *testing.T) {
 	require.Equal(t, desktop.VisualFallback, status.Phase)
 	require.Equal(t, desktop.BackdropOpaque, status.Selected)
 	require.Equal(t, desktop.VisualUnsupportedBackend, status.Reason)
+	// Подменяется только ответ Present нашей копии presenter. Настоящий GPU
+	// не сбрасывается: проверяем ограниченное восстановление после
+	// DXGI_ERROR_DEVICE_REMOVED и освобождение старых interop-ресурсов.
+	removed := syscall.NewCallback(func(_, _, _ uintptr) uintptr { return 0x887a0005 })
+	var replacement *wglDXGIPresenter
+	var recoveredPixel color.NRGBA
+	var recoveredErr error
+	runOnMain(func() {
+		raw.RunWithContext(func() {
+			p.presentMethod = removed
+			raw.presentFrame()
+			replacement = raw.presentation.dxgi
+			if replacement != nil {
+				d.repaintWindow(raw)
+				recoveredPixel, recoveredErr = sampleDXGIPixel(replacement, 10, 10)
+			}
+		})
+	})
+	require.NotNil(t, replacement)
+	require.NotSame(t, p, replacement)
+	require.Zero(t, p.interop)
+	require.Nil(t, p.device)
+	require.NoError(t, recoveredErr)
+	require.Equal(t, color.NRGBA{R: 255, A: 255}, recoveredPixel)
+	p = replacement
 	// Освобождение выполняется до удаления GLFW/WGL-контекста; повторный вызов безопасен.
 	runOnMain(func() { raw.releasePresentation(); raw.releasePresentation() })
 	require.Zero(t, p.interop)
 	require.Zero(t, p.d3d)
 	require.Nil(t, p.device)
 	require.Nil(t, p.swap)
+}
+
+func TestWGLDXGIAutomaticAndAlphaSelection(t *testing.T) {
+	for _, scenario := range []struct {
+		name, mode string
+		alpha      bool
+	}{
+		{"default", "", false}, {"legacy", "wgl", false}, {"prepared-alpha", "", true},
+	} {
+		t.Run(scenario.name, func(t *testing.T) {
+			t.Setenv("GRANIO_WGL_PRESENT", scenario.mode)
+			var raw *window
+			var configErr error
+			runOnMain(func() {
+				raw = d.CreateWindow("Проверка выбора аппаратного вывода").(*window)
+				if scenario.alpha {
+					_, configErr = raw.ConfigureVisuals(desktop.VisualOptions{PrepareAlpha: true, Backdrop: desktop.BackdropOpaque, Fallback: desktop.VisualFallbackOpaque})
+				}
+				raw.SetPadded(false)
+				raw.SetContent(canvas.NewRectangle(color.NRGBA{G: 255, A: 255}))
+				raw.Resize(granio.NewSize(100, 80))
+				raw.Show()
+			})
+			w := &safeWindow{window: raw}
+			defer w.Close()
+			require.NoError(t, configErr)
+			var p *wglDXGIPresenter
+			var supports bool
+			runOnMain(func() {
+				raw.RunWithContext(func() {
+					p = raw.presentation.dxgi
+					supports = raw.viewport.GetAttrib(glfw.ClientAPI) == glfw.OpenGLAPI && glfw.ExtensionSupported("WGL_NV_DX_interop2")
+				})
+			})
+			if scenario.alpha || scenario.mode == "wgl" {
+				require.Nil(t, p)
+				return
+			}
+			if !supports {
+				t.Skip("interop is unavailable for this context")
+			}
+			require.NotNil(t, p, "a compatible opaque window must select DXGI by default")
+			var maxWidth, maxHeight int
+			runOnMain(func() { maxWidth, maxHeight = raw.screenSize(granio.NewSize(32768, 32768)) })
+			require.LessOrEqual(t, maxWidth, p.maxDimension)
+			require.LessOrEqual(t, maxHeight, p.maxDimension)
+			var lateErr error
+			runOnMain(func() {
+				_, lateErr = raw.ConfigureVisuals(desktop.VisualOptions{PrepareAlpha: true, Backdrop: desktop.BackdropTransparent})
+			})
+			require.ErrorIs(t, lateErr, desktop.ErrVisualNeedsRecreate)
+		})
+	}
 }

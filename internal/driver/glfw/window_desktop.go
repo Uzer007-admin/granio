@@ -305,7 +305,11 @@ func (w *window) fitContent() {
 		}
 		view.SetSizeLimits(w.requestedWidth, w.requestedHeight, w.requestedWidth, w.requestedHeight)
 	} else {
-		view.SetSizeLimits(minWidth, minHeight, glfw.DontCare, glfw.DontCare)
+		maximum := glfw.DontCare
+		if limit := w.presentationMaxTextureSize(); limit > 0 {
+			maximum = maxWindowSize(limit, w.canvas.texScale)
+		}
+		view.SetSizeLimits(minWidth, minHeight, maximum, maximum)
 	}
 }
 

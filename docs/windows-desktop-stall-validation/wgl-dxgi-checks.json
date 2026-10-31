@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-31",
+  "checkpoint_commit": "d3c829b67978b799e07bcee0dbd9a2b7f41b5d4b",
+  "windows": {
+    "os_build": 26300,
+    "gpu": "NVIDIA RTX 4080 SUPER",
+    "driver": "616.92",
+    "go": "1.27.2",
+    "automatic_gl_race": {
+      "passed": 6
+    },
+    "forced_dxgi_race": {
+      "passed": 1,
+      "includes_first_frame_resize_scissor_capture": true,
+      "injected_hresult": "0x887a0005",
+      "real_gpu_reset": false
+    },
+    "gles_race": {
+      "passed": 5
+    },
+    "software_gl_race": {
+      "passed": 4
+    },
+    "software_gles_race": {
+      "passed": 4
+    }
+  },
+  "linux": {
+    "x11_gl": 4,
+    "x11_gles": 4,
+    "wayland_gl": 4,
+    "wayland_gles": 4,
+    "renderer": "Mesa 25.0.5 llvmpipe",
+    "hardware_acceptance": false
+  },
+  "wasm_build": "passed",
+  "vet": {
+    "existing_unsafe_pointer_warnings": 7,
+    "new_warnings": 0,
+    "without_unsafeptr": "passed"
+  },
+  "physical_observation": {
+    "hardware_dxgi_idle_seconds": 23,
+    "submitted_frames": 2,
+    "size": [
+      1180,
+      800
+    ],
+    "user_result": "Подвисания исчезли",
+    "continuous_update": "Не принято: ручной старт не получен"
+  },
+  "long_performance_runs": false,
+  "sources_sha256_lf": {
+    "internal/driver/glfw/loop.go": "a653e822f6d033e0aafae0d31cfebd04f811e4a5f58e03c0f52e60dde6b30651",
+    "internal/driver/glfw/render_other.go": "8ce6e162daa5162d42f2fcc6f08b80d94dcbbd1873c26ba7e1a1ba96966fbd86",
+    "internal/driver/glfw/render_windows.go": "0d46c3748f1824ac3cd19cdb80911957377c6fa56367c3a5eec05a23b2560b54",
+    "internal/driver/glfw/window.go": "83760e79c5bac771f8a497ac1696645cc601c9b82649ccf0c0ddafc8b4f51ecf",
+    "internal/driver/glfw/window_desktop.go": "1287e77e4d282d55a753a2a91babef5924e77e31a83c5fd0e14aac55384bde4b",
+    "internal/driver/glfw/window_visuals.go": "64903db5bc487406fd19655cc83136cf654bfac95b767bf8dbf6f121008a468e",
+    "internal/driver/glfw/window_visuals_windows.go": "72f0fe8db36dbd20e4aa09b723e5ad27670b67bd2782e24eb87f3c7b4f6050f6",
+    "internal/driver/glfw/wgl_dxgi_windows.go": "522add5cf93265b054ff39f2811489dabdc53e05fae72c08129b195d2b5dcd74",
+    "internal/driver/glfw/wgl_dxgi_windows_test.go": "022a2d560e8f39190589979ad95fc8d069aa28b80f803074ae25770e295cf440"
+  },
+  "application_check": {
+    "result": "passed",
+    "mode": "automatic",
+    "hardware": true,
+    "frames": 140,
+    "size": [
+      1180,
+      800
+    ],
+    "coverage": [
+      "расчёты",
+      "кодировки",
+      "экспорт",
+      "интерфейс",
+      "простой"
+    ],
+    "original_inputs_unchanged": 74
+  }
+}

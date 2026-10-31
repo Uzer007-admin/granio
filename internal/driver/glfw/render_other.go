@@ -6,10 +6,14 @@ import "github.com/Uzer007-admin/granio/v2/internal/painter/gl"
 
 type windowPresentation struct{}
 
+func (*window) preparePresentationFirstFrame() {}
+
 func (*window) preparePresentation()  {}
 func (*window) initPresentation()     {}
 func (*window) releasePresentation()  {}
 func (*window) opaqueRendering() bool { return false }
+
+func (*window) presentationMaxTextureSize() int { return 0 }
 
 func softwareRendererRequested() bool { return false }
 
