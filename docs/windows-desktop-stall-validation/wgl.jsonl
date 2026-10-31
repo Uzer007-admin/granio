@@ -1,0 +1,8 @@
+{"milliseconds":8.9051,"stage":"glfw_init"}
+{"milliseconds":645.4171,"stage":"create_window"}
+{"milliseconds":0,"stage":"make_current"}
+{"initial_swap_interval":1,"is_win8":true,"is_win81":true}
+{"milliseconds":10.2108,"stage":"show"}
+{"actual_swap_interval":1,"requested_swap_interval":-1,"swap_ms":[0,0,0,0,0,0,0,0,0,0,0,0]}
+{"actual_swap_interval":0,"requested_swap_interval":0,"swap_ms":[0,0,0,0,0,0,0,0,0,0,0,0]}
+{"actual_swap_interval":1,"requested_swap_interval":1,"swap_ms":[0,0,0,0,0,0,0,0,0,0,0,0]}

@@ -103,3 +103,6 @@ go get github.com/Uzer007-admin/granio/v2@v2.8.2-0.20261030233756-e8ecd8600e12
 Короткие пробы не являются измерением p95/p99, гарантией времени GPU или
 аппаратной приёмкой GNOME/KDE/Fly, Intel/AMD и macOS. Длительные
 performance-проверки не выполнялись.
+
+Подвисание видео и других приложений при запуске OpenGL исследуется отдельно:
+[диагностика графического тракта Windows](WINDOWS_DESKTOP_STALL_DIAGNOSIS.md).

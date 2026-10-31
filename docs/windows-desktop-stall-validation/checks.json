@@ -1,0 +1,63 @@
+{
+  "minimum_go": "1.27.1",
+  "checked_go": "1.27.2",
+  "environment": {
+    "os": "Windows 11 Pro",
+    "build": "26300",
+    "gpu": "NVIDIA GeForce RTX 4080 SUPER",
+    "driver": "616.92"
+  },
+  "checks": [
+    {
+      "command": "PowerShell parser: scripts/record-windows-graphics.ps1",
+      "passed": true
+    },
+    {
+      "command": "pwsh: scripts/record-windows-graphics.ps1 -ValidateOnly",
+      "passed": true
+    },
+    {
+      "command": "powershell.exe -NoProfile -NonInteractive -File scripts/record-windows-graphics.ps1 -ValidateOnly",
+      "passed": true
+    },
+    {
+      "command": "Capture without administrator privileges",
+      "rejected_before_recording": true,
+      "output_directory_created": false
+    },
+    {
+      "command": "GOWORK=off go build -p 2 -mod=readonly ./scripts/wgl-startup-probe (from its module)",
+      "passed": true
+    },
+    {
+      "command": "GOWORK=off go vet -p 2 ./... (from scripts/wgl-startup-probe)",
+      "passed": true
+    },
+    {
+      "command": "wgl-startup-probe invalid",
+      "exit_code": 2,
+      "passed": true
+    },
+    {
+      "command": "wgl-startup-probe noapi; wgl-startup-probe wgl",
+      "passed": true
+    }
+  ],
+  "system_trace": {
+    "recorded": false,
+    "wpr_error": "0xc5585011",
+    "administrator": false,
+    "SeSystemProfilePrivilege_present": false,
+    "elevated_positive_path_tested": false
+  },
+  "runtime_library_changed": false,
+  "applications_changed": false,
+  "driver_settings_changed": false,
+  "long_performance_runs": false,
+  "source_sha256": {
+    "scripts/record-windows-graphics.ps1": "facb18d66823e5ac77f1ae24bdb62f6a80e30c34df4e90d0958661159324cb58",
+    "scripts/wgl-startup-probe/main_windows.go": "e31a6b7855b0f6efefd9034c7162755f637a7eaa3692b0f4d966e1b11566b80e",
+    "scripts/wgl-startup-probe/go.mod": "f4d60ca01ba03c3e2270dfe24988ca45930c08cf63d8c7b6f0865090b7de9b32",
+    "scripts/wgl-startup-probe/go.sum": "0b598e28b4af548ce2b26a49d887f1f5aebe5f4460b5695f127ac6ffb8f92e29"
+  }
+}

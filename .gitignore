@@ -55,6 +55,7 @@ tags
 ### Local project workspace
 /bin/
 /.build-*/
+/graphics-trace-*/
 
 # Отдельные рабочие копии компонентов из реестра экосистемы.
 /ecosystem/work/
