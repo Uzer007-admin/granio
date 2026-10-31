@@ -22,7 +22,6 @@ import (
 	"github.com/Uzer007-admin/granio/v2/internal/cache"
 	"github.com/Uzer007-admin/granio/v2/internal/goos"
 	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
 	"github.com/Uzer007-admin/granio/v2/internal/scale"
 	"github.com/Uzer007-admin/granio/v2/internal/svg"
 	"github.com/Uzer007-admin/granio/v2/storage"
@@ -78,6 +77,7 @@ type window struct {
 	decorate    bool
 	closing     bool
 	fixedSize   bool
+	software    bool
 	scalePolicy desktop.ScalePolicy
 
 	cursor       desktop.Cursor
@@ -786,8 +786,10 @@ func (w *window) focused(_ *glfw.Window, focused bool) {
 	w.processFocused(focused)
 }
 
-func (*window) DetachCurrentContext() {
-	glfw.DetachCurrentContext()
+func (w *window) DetachCurrentContext() {
+	if !w.software {
+		glfw.DetachCurrentContext()
+	}
 }
 
 func (w *window) RescaleContext() {
@@ -839,8 +841,12 @@ func (w *window) create() {
 	}
 	glfw.WindowHint(glfw.AutoIconify, glfw.False)
 	initWindowHints()
+	w.software = softwareRendererRequested()
+	if w.software {
+		glfw.WindowHint(glfw.ClientAPI, glfw.NoAPI)
+	}
 	alphaSurface := w.beginVisualCreation()
-	if alphaSurface {
+	if alphaSurface && !w.software {
 		glfw.WindowHint(glfw.TransparentFramebuffer, glfw.True)
 	} else {
 		glfw.WindowHint(glfw.TransparentFramebuffer, glfw.False)
@@ -893,10 +899,10 @@ func (w *window) create() {
 
 	// run the GL init on the draw thread
 	w.RunWithContext(func() {
-		w.canvas.SetPainter(gl.NewPainter(w.canvas, w))
+		w.canvas.SetPainter(newWindowPainter(w))
 		w.canvas.Painter().Init()
 
-		if build.IsWayland {
+		if build.IsWayland && !w.software {
 			glfw.SwapInterval(0)
 		}
 	})

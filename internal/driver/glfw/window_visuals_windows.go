@@ -49,6 +49,15 @@ func (w *window) queryWindowVisualPolicy() (windowVisualPolicy, glfw.WindowVisua
 }
 
 func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *desktop.VisualCapabilities) (desktop.VisualFallbackReason, bool, uint32) {
+	if w.software {
+		caps.Backend = desktop.VisualBackendOpaque
+		caps.TransparentSurface, caps.AlphaSurface = false, false
+		caps.OSBackdrops = 1 << desktop.BackdropOpaque
+		if o.Backdrop != desktop.BackdropOpaque {
+			return desktop.VisualUnsupportedBackend, false, 0
+		}
+		return desktop.VisualReasonNone, false, 0
+	}
 	policy, state, err := w.queryWindowVisualPolicy()
 	w.visuals.lastPolicy = policy
 	caps.OSKnown = err == nil

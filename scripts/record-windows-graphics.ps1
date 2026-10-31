@@ -8,6 +8,8 @@ param(
 
     [string]$OutputDirectory = '',
 
+    [string]$ProfilePath = '',
+
     [switch]$ValidateOnly
 )
 
@@ -22,6 +24,13 @@ if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
 }
 
 $recorder = (Get-Command wpr.exe -ErrorAction Stop).Source
+$profiles = @('GPU.light', 'CPU.light')
+$profileFile = $null
+if (-not [string]::IsNullOrWhiteSpace($ProfilePath)) {
+    $profileFile = Get-Item -LiteralPath $ProfilePath -ErrorAction Stop
+    if ($profileFile.PSIsContainer) { throw 'ProfilePath должен указывать на файл WPRP.' }
+    $profiles = @('{0}!GranioGraphics.light' -f $profileFile.FullName)
+}
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
 try {
     $principal = [Security.Principal.WindowsPrincipal]::new($identity)
@@ -37,7 +46,7 @@ if ($ValidateOnly) {
         duration_seconds = $Seconds
         process_name = $ProcessName
         output_directory = [IO.Path]::GetFullPath($OutputDirectory)
-        profiles = @('GPU', 'CPU.light')
+        profiles = $profiles
         starts_application = $false
         changes_driver_settings = $false
     } | ConvertTo-Json -Depth 3
@@ -62,8 +71,11 @@ $record = [ordered]@{
     instance = $instance
     process_name = $ProcessName
     duration_seconds = $Seconds
+    profiles = $profiles
+    profile_sha256 = if ($profileFile) { (Get-FileHash -LiteralPath $profileFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant() } else { $null }
     started_utc = [DateTime]::UtcNow.ToString('O')
     trace_saved = $false
+    phase = 'initializing'
     error = $null
 }
 $record | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $destination 'capture.json') -Encoding utf8
@@ -71,13 +83,19 @@ $record | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $destina
 try {
     # Уникальное имя изолирует эту запись от других сеансов WPR.
     # Параметр instancename обязан быть последним в каждой команде WPR.
-    $messages = & $recorder -start GPU -start CPU.light -filemode -recordtempto $destination -instancename $instance 2>&1
+    $recorderArguments = @()
+    foreach ($profile in $profiles) { $recorderArguments += @('-start', $profile) }
+    $recorderArguments += @('-filemode', '-recordtempto', $destination, '-instancename', $instance)
+    $messages = & $recorder @recorderArguments 2>&1
     $result = $LASTEXITCODE
     $messages | Out-File -LiteralPath (Join-Path $destination 'wpr-start.log') -Encoding utf8
     if ($result -ne 0) {
         throw "WPR не начал запись, код $result. Причина сохранена в wpr-start.log."
     }
     $started = $true
+    $record.phase = 'recording'
+    $record.recording_started_utc = [DateTime]::UtcNow.ToString('O')
+    $record | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $destination 'capture.json') -Encoding utf8
 
     Write-Host "Запись GPU/CPU началась на $Seconds секунд. Запустите проблемную Granio-сборку сейчас."
     Write-Host 'Приложение не закрывайте и не перемещайте окно во время проверки запуска.'
@@ -108,6 +126,9 @@ try {
     throw
 } finally {
     if ($started) {
+        $record.phase = 'saving'
+        $record.recording_ended_utc = [DateTime]::UtcNow.ToString('O')
+        $record | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $destination 'capture.json') -Encoding utf8
         try {
             $messages = & $recorder -stop $traceFile -skipPdbGen -instancename $instance 2>&1
             $result = $LASTEXITCODE
@@ -125,6 +146,7 @@ try {
         }
     }
     $record.ended_utc = [DateTime]::UtcNow.ToString('O')
+    $record.phase = if ($record.trace_saved) { 'saved' } else { 'failed' }
     $record.process_seen = $samples.Count -gt 0
     $record.process_sample_count = $samples.Count
     ConvertTo-Json -InputObject @($samples.ToArray()) -Depth 3 | Set-Content -LiteralPath (Join-Path $destination 'process-samples.json') -Encoding utf8

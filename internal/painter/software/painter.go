@@ -33,37 +33,7 @@ func (*Painter) Paint(c granio.Canvas) image.Image {
 			scale.ToScreenCoordinate(c, w),
 			scale.ToScreenCoordinate(c, h),
 		)
-		switch o := obj.(type) {
-		case *canvas.Material:
-			drawRectangle(c, o.FallbackRectangle(), pos, base, clip)
-		case *canvas.Image:
-			drawImage(c, o, pos, base, clip)
-		case *canvas.Text:
-			drawText(c, o, pos, base, clip)
-		case gradient:
-			drawGradient(c, o, pos, base, clip)
-		case *canvas.Circle:
-			drawCircle(c, o, pos, base, clip)
-		case *canvas.Line:
-			drawLine(c, o, pos, base, clip)
-		case *canvas.RegularPolygon:
-			drawPolygon(c, o, pos, base, clip)
-		case *canvas.ArbitraryPolygon:
-			drawArbitraryPolygon(c, o, pos, base, clip)
-		case *canvas.Raster:
-			drawRaster(c, o, pos, base, clip)
-		case *canvas.Rectangle:
-			drawRectangle(c, o, pos, base, clip)
-		case *canvas.Blur:
-			drawBlur(c, o, pos, base, clip)
-		case *canvas.Arc:
-			drawArc(c, o, pos, base, clip)
-		case *canvas.BezierCurve:
-			drawBezierCurve(c, o, pos, base, clip)
-		case *canvas.Ellipse:
-			drawEllipse(c, o, pos, base, clip)
-		}
-
+		paintObject(c, obj, pos, base, clip)
 		return false
 	}
 
@@ -73,4 +43,40 @@ func (*Painter) Paint(c granio.Canvas) image.Image {
 	}
 
 	return base
+}
+
+func paintObject(c granio.Canvas, obj granio.CanvasObject, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
+	if clip.Empty() {
+		return
+	}
+	switch o := obj.(type) {
+	case *canvas.Material:
+		drawRectangle(c, o.FallbackRectangle(), pos, base, clip)
+	case *canvas.Image:
+		drawImage(c, o, pos, base, clip)
+	case *canvas.Text:
+		drawText(c, o, pos, base, clip)
+	case gradient:
+		drawGradient(c, o, pos, base, clip)
+	case *canvas.Circle:
+		drawCircle(c, o, pos, base, clip)
+	case *canvas.Line:
+		drawLine(c, o, pos, base, clip)
+	case *canvas.RegularPolygon:
+		drawPolygon(c, o, pos, base, clip)
+	case *canvas.ArbitraryPolygon:
+		drawArbitraryPolygon(c, o, pos, base, clip)
+	case *canvas.Raster:
+		drawRaster(c, o, pos, base, clip)
+	case *canvas.Rectangle:
+		drawRectangle(c, o, pos, base, clip)
+	case *canvas.Blur:
+		drawBlur(c, o, pos, base, clip)
+	case *canvas.Arc:
+		drawArc(c, o, pos, base, clip)
+	case *canvas.BezierCurve:
+		drawBezierCurve(c, o, pos, base, clip)
+	case *canvas.Ellipse:
+		drawEllipse(c, o, pos, base, clip)
+	}
 }

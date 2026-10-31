@@ -288,7 +288,7 @@ func (*gLDriver) repaintWindow(w *window) bool {
 
 	if view != nil && visible {
 		w.frame.requestFrame()
-		view.SwapBuffers()
+		w.presentFrame()
 	}
 
 	// mark that we have walked the window and don't

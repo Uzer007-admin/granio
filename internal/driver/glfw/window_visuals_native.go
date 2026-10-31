@@ -23,7 +23,7 @@ func (w *window) paintVisualFrames() uint32 {
 			// Leave the last hidden draw in the back buffer. A final swap may
 			// acquire an undefined buffer on drivers with more than two buffers.
 			if !w.visible && i == 0 {
-				w.viewport.SwapBuffers()
+				w.presentFrame()
 			}
 			prepared++
 		}

@@ -58,6 +58,9 @@ func (c *glCanvas) CaptureWithError() (image.Image, error) {
 		if w.closing || w.viewport == nil {
 			return
 		}
+		if w.softwareCaptureUnavailable() {
+			return
+		}
 		err = nil
 		w.RunWithContext(func() {
 			if painter, ok := c.Painter().(interface {

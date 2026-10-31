@@ -41,23 +41,178 @@
     {
       "command": "wgl-startup-probe noapi; wgl-startup-probe wgl",
       "passed": true
+    },
+    {
+      "command": "PowerShell 5.1: record-windows-graphics.ps1 -Seconds 10 -ProfilePath scripts/windows-graphics-light.wprp",
+      "passed": true,
+      "trace_saved": true,
+      "process_intentionally_absent": true
+    },
+    {
+      "command": "go test -p 2 -race -count=1 ./internal/painter/software",
+      "passed": true
+    },
+    {
+      "command": "GRANIO_RENDERER=software go test -p 2 -race -count=1 -run TestSoftware|TestNativeUIQueueYieldsToFrames|TestNativeSynchronousMainDispatchReentrant ./internal/driver/glfw",
+      "passed": true,
+      "cases": [
+        "TestSoftwareFrameGDIColorOrder",
+        "TestSoftwareNativeWindowCaptureResizeAndVisualFallback",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant"
+      ]
+    },
+    {
+      "command": "GRANIO_RENDERER=software go test -p 2 -tags gles -race -count=1 -run TestSoftware|TestNativeUIQueueYieldsToFrames|TestNativeSynchronousMainDispatchReentrant ./internal/driver/glfw",
+      "passed": true,
+      "cases": [
+        "TestSoftwareFrameGDIColorOrder",
+        "TestSoftwareNativeWindowCaptureResizeAndVisualFallback",
+        "TestNativeUIQueueYieldsToFrames",
+        "TestNativeSynchronousMainDispatchReentrant"
+      ]
+    },
+    {
+      "command": "Windows: go test -p 2 -count=1 -run TestNativeCapture|TestPainterTablesSurviveFailedGlobalReload ./internal/driver/glfw",
+      "passed": true
+    },
+    {
+      "command": "Linux: go test -p 2 -race ./internal/painter/software",
+      "passed": true
+    },
+    {
+      "command": "Linux Xvfb/Weston: native capture, context and dispatcher regression",
+      "passed": true,
+      "cases": {
+        "x11_gl": [
+          "TestNativeCaptureAfterZeroSizeNotification",
+          "TestNativeCaptureRestoresPackAndFramebufferState",
+          "TestNativeCaptureHiddenFirstFrameAndWorker",
+          "TestNativeCaptureAlphaAndClosedSurface",
+          "TestPainterTablesSurviveFailedGlobalReload",
+          "TestNestedNativeContexts",
+          "TestNativeUIQueueYieldsToFrames",
+          "TestNativeSynchronousMainDispatchReentrant"
+        ],
+        "x11_gles": [
+          "TestNativeCaptureAfterZeroSizeNotification",
+          "TestNativeCaptureRestoresPackAndFramebufferState",
+          "TestNativeCaptureHiddenFirstFrameAndWorker",
+          "TestNativeCaptureAlphaAndClosedSurface",
+          "TestNestedNativeContexts",
+          "TestNativeUIQueueYieldsToFrames",
+          "TestNativeSynchronousMainDispatchReentrant"
+        ],
+        "wayland_gl": [
+          "TestNativeCaptureAfterZeroSizeNotification",
+          "TestNativeCaptureRestoresPackAndFramebufferState",
+          "TestNativeCaptureHiddenFirstFrameAndWorker",
+          "TestNativeCaptureAlphaAndClosedSurface",
+          "TestPainterTablesSurviveFailedGlobalReload",
+          "TestNestedNativeContexts",
+          "TestNativeUIQueueYieldsToFrames",
+          "TestNativeSynchronousMainDispatchReentrant"
+        ],
+        "wayland_gles": [
+          "TestNativeCaptureAfterZeroSizeNotification",
+          "TestNativeCaptureRestoresPackAndFramebufferState",
+          "TestNativeCaptureHiddenFirstFrameAndWorker",
+          "TestNativeCaptureAlphaAndClosedSurface",
+          "TestNestedNativeContexts",
+          "TestNativeUIQueueYieldsToFrames",
+          "TestNativeSynchronousMainDispatchReentrant"
+        ]
+      },
+      "source_fingerprints_matched": 14,
+      "gpu": "Mesa 25.0.5 llvmpipe, OpenGL 4.5 / GLES 3.2"
+    },
+    {
+      "command": "go vet -p 2 ./internal/driver/glfw ./internal/painter/software ./internal/painter/gl",
+      "passed": false,
+      "preexisting_unsafe_pointer_diagnostics": 7,
+      "unchanged_files": [
+        "internal/driver/glfw/clipboard_data_windows.go",
+        "internal/driver/glfw/ime_reconversion_windows.go"
+      ]
+    },
+    {
+      "command": "go vet -p 2 -unsafeptr=false ./internal/driver/glfw ./internal/painter/software ./internal/painter/gl",
+      "passed": true
+    },
+    {
+      "command": "GOOS=js GOARCH=wasm CGO_ENABLED=0 go build -p 2 -tags test_web_driver ./internal/driver/glfw",
+      "passed": true,
+      "browser_runtime_tested": false
     }
   ],
   "system_trace": {
-    "recorded": false,
-    "wpr_error": "0xc5585011",
-    "administrator": false,
-    "SeSystemProfilePrivilege_present": false,
-    "elevated_positive_path_tested": false
+    "recorded": true,
+    "administrator": true,
+    "elevated_positive_path_tested": true,
+    "initial_unelevated_error": "0xc5585011",
+    "initial_verbose_trace_usable": false,
+    "initial_verbose_trace_lost_events": 51175,
+    "repeated_light_trace_lost_events": 0,
+    "repeated_light_trace_process_seen": true,
+    "final_recorder_self_check_seconds": 10,
+    "final_recorder_self_check_saved": true
   },
-  "runtime_library_changed": false,
+  "runtime_library_changed": true,
   "applications_changed": false,
-  "driver_settings_changed": false,
+  "driver_settings_changed": true,
   "long_performance_runs": false,
   "source_sha256": {
-    "scripts/record-windows-graphics.ps1": "facb18d66823e5ac77f1ae24bdb62f6a80e30c34df4e90d0958661159324cb58",
+    "scripts/record-windows-graphics.ps1": "f67563eb5fffdac5e307fc1da8f55b9991a28960e1cd3631fe9edf714dba71e9",
     "scripts/wgl-startup-probe/main_windows.go": "e31a6b7855b0f6efefd9034c7162755f637a7eaa3692b0f4d966e1b11566b80e",
     "scripts/wgl-startup-probe/go.mod": "f4d60ca01ba03c3e2270dfe24988ca45930c08cf63d8c7b6f0865090b7de9b32",
-    "scripts/wgl-startup-probe/go.sum": "0b598e28b4af548ce2b26a49d887f1f5aebe5f4460b5695f127ac6ffb8f92e29"
+    "scripts/wgl-startup-probe/go.sum": "0b598e28b4af548ce2b26a49d887f1f5aebe5f4460b5695f127ac6ffb8f92e29",
+    "internal/driver/glfw/canvas.go": "3474631efcdcc16ac06cd9efbfda4ca3c476eb7de2282d22c12794a005af061a",
+    "internal/driver/glfw/context_desktop.go": "1aecb0f9bcf093a932a60e6020d3197b333abd618d32b077523ce12b0ad7c46b",
+    "internal/driver/glfw/glfw_core.go": "5dda6bc43ca98fa045df5a921ab568a96b8ecbf62d3403fb7ca73a8941dcaf90",
+    "internal/driver/glfw/loop.go": "d3d521fc974004ef52d2f2221ee392ab9bd49d364a0dd4477774c024d8607bec",
+    "internal/driver/glfw/render_other.go": "69cbfac9ceeaa05be221d81d49e9109299a653a3ec341c39bfe5e152346f69e7",
+    "internal/driver/glfw/render_windows.go": "036d2f00d0653fe03abdbba38ffda1653745f859eaa11c755b1f14831155faa3",
+    "internal/driver/glfw/render_windows_test.go": "5a447051a44776e3a03053bd6f534d417f2c889174dfe91ac9ae36efb62acc59",
+    "internal/driver/glfw/window_desktop.go": "b19c86fb0d46ec2bdf151d3bb3ca4998f0e8b44300e8efee432b44b0fbc53e87",
+    "internal/driver/glfw/window_visuals.go": "16989aaf4e187902fcb9dcb3f789af349bbe0259f014989c5b94de5355752695",
+    "internal/driver/glfw/window_visuals_native.go": "01590a0ececd62ed15cd371bab48789ecdd77eb81923e1aad0cba03bac1e85db",
+    "internal/driver/glfw/window_visuals_windows.go": "8b9fda2538583e0d293e9cc33ba215cde24b76921f27c835be25c88162308011",
+    "internal/painter/software/frame.go": "d19fd03407e6cde8bfa11ed8f55a334ed8ad20d65705bbc236ad5a3fc93dc04a",
+    "internal/painter/software/frame_test.go": "052667a285a6deb5f91fdd1e8c75434f6ec02a9bc058df6fb32e3129636ff6a3",
+    "internal/painter/software/painter.go": "b681395ef17da11dc3a2cec1ee1b09cf5dc731ac158c694a99d07df878be5781",
+    "scripts/windows-graphics-light.wprp": "f99c0494a989d6807d7e040068c1afbdd6d05e625154436d8eec8d4d6acd342e"
+  },
+  "runtime_renderer": {
+    "windows_software_opt_in": "GRANIO_RENDERER=software",
+    "default_changed": false,
+    "window_api": "GLFW_NO_API",
+    "presentation": "GDI SetDIBitsToDevice",
+    "wgl_context_created_in_software_mode": false,
+    "window_visuals_fallback": "opaque",
+    "frame_reused_until_resize": true,
+    "capture_owns_pixels": true,
+    "minimized_zero_closed_capture": "ErrCaptureUnavailable",
+    "opengl_hardware_failure_resolved": false
+  },
+  "original_application": {
+    "source_files_preserved": 74,
+    "legacy_exe_sha256": "afe021face05c7f86f7f0ca8b08706fee8aea77ad2bfc416dea9503a046cd2db"
+  },
+  "persistent_driver_settings_changed": false,
+  "temporary_driver_profile": {
+    "scope": "one_owned_diagnostic_executable",
+    "setting": "OGL_CPL_PREFER_DXPRESENT_ID",
+    "tested_value": 0,
+    "removed_and_verified": true,
+    "application_mapping_absent": true,
+    "global_and_base_readback_unchanged": true,
+    "profile_count_restored": true
+  },
+  "visible_result": {
+    "wgl_cpp": "подвисание подтверждено пользователем",
+    "dwm_alpha": "подвисание сохранилось",
+    "nvidia_prefer_native": "подвисание сохранилось",
+    "software_with_capture": "после запуска постоянное подвисание исчезло",
+    "software_without_elevation": "пауза при запуске исчезла; подтверждено пользователем"
   }
 }
