@@ -47,7 +47,18 @@
       800
     ],
     "user_result": "Подвисания исчезли",
-    "continuous_update": "Не принято: ручной старт не получен"
+    "continuous_update": {
+      "seconds": 23,
+      "automatic": true,
+      "external_observers": false,
+      "successful_dxgi_present_calls": 1379,
+      "size": [
+        1180,
+        800
+      ],
+      "exit_code": 0,
+      "user_result": "Подвисаний нет"
+    }
   },
   "long_performance_runs": false,
   "sources_sha256_lf": {
