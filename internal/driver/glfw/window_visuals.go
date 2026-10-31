@@ -59,7 +59,7 @@ func (w *window) ConfigureVisuals(options desktop.VisualOptions) (uint64, error)
 		v.mu.Unlock()
 		return 0, desktop.ErrVisualWindowClosed
 	}
-	if v.started && windowVisualAlphaFormat() && !w.softwareRendering() && !v.alphaReserved && (options.PrepareAlpha || options.Backdrop != desktop.BackdropOpaque) {
+	if v.started && windowVisualAlphaFormat() && !w.opaqueRendering() && !v.alphaReserved && (options.PrepareAlpha || options.Backdrop != desktop.BackdropOpaque) {
 		v.mu.Unlock()
 		return 0, desktop.ErrVisualNeedsRecreate
 	}
@@ -159,7 +159,7 @@ func (w *window) beginVisualCreation() bool {
 	v.mu.Lock()
 	defer v.mu.Unlock()
 	v.started = true
-	v.alphaReserved = windowVisualAlphaFormat() && !w.softwareRendering() && (v.options.PrepareAlpha || v.options.Backdrop != desktop.BackdropOpaque)
+	v.alphaReserved = windowVisualAlphaFormat() && !w.opaqueRendering() && (v.options.PrepareAlpha || v.options.Backdrop != desktop.BackdropOpaque)
 	v.capabilities.Generation++
 	return v.alphaReserved
 }

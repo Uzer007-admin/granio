@@ -70,15 +70,16 @@ func initCursors() {
 var _ granio.Window = (*window)(nil)
 
 type window struct {
-	visuals     windowVisualState
-	viewport    *glfw.Window
-	frame       presentGate
-	created     bool
-	decorate    bool
-	closing     bool
-	fixedSize   bool
-	software    bool
-	scalePolicy desktop.ScalePolicy
+	visuals      windowVisualState
+	viewport     *glfw.Window
+	frame        presentGate
+	created      bool
+	decorate     bool
+	closing      bool
+	fixedSize    bool
+	software     bool
+	presentation windowPresentation
+	scalePolicy  desktop.ScalePolicy
 
 	cursor       desktop.Cursor
 	customCursor *glfw.Cursor
@@ -842,6 +843,7 @@ func (w *window) create() {
 	glfw.WindowHint(glfw.AutoIconify, glfw.False)
 	initWindowHints()
 	w.software = softwareRendererRequested()
+	w.preparePresentation()
 	if w.software {
 		glfw.WindowHint(glfw.ClientAPI, glfw.NoAPI)
 	}
@@ -901,6 +903,7 @@ func (w *window) create() {
 	w.RunWithContext(func() {
 		w.canvas.SetPainter(newWindowPainter(w))
 		w.canvas.Painter().Init()
+		w.initPresentation()
 
 		if build.IsWayland && !w.software {
 			glfw.SwapInterval(0)

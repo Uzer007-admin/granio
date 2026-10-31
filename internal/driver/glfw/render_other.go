@@ -4,6 +4,13 @@ package glfw
 
 import "github.com/Uzer007-admin/granio/v2/internal/painter/gl"
 
+type windowPresentation struct{}
+
+func (*window) preparePresentation()  {}
+func (*window) initPresentation()     {}
+func (*window) releasePresentation()  {}
+func (*window) opaqueRendering() bool { return false }
+
 func softwareRendererRequested() bool { return false }
 
 func (*window) softwareRendering() bool { return false }

@@ -257,6 +257,7 @@ func (d *gLDriver) processWindowEvents() {
 func (d *gLDriver) destroyWindow(w *window, index int) {
 	w.visible = false
 	if w.viewport != nil {
+		w.releasePresentation()
 		w.viewport.Destroy()
 	}
 	w.destroy(d)

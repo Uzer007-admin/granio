@@ -23,6 +23,39 @@ func softwareRendererRequested() bool {
 
 func (w *window) softwareRendering() bool { return w.software }
 
+type windowPresentation struct {
+	requested bool
+	dxgi      *wglDXGIPresenter
+	failed    bool
+}
+
+func (w *window) preparePresentation() {
+	w.presentation.requested = !w.software && strings.EqualFold(strings.TrimSpace(os.Getenv("GRANIO_WGL_PRESENT")), "dxgi")
+}
+
+func (w *window) opaqueRendering() bool { return w.software || w.presentation.requested }
+
+func (w *window) initPresentation() {
+	if !w.presentation.requested {
+		return
+	}
+	p, err := newWGLDXGIPresenter(uintptr(unsafe.Pointer(w.viewport.GetWin32Window())))
+	if err != nil {
+		granio.LogError("Failed to initialise WGL/DXGI presentation; using WGL", err)
+		return
+	}
+	w.presentation.dxgi = p
+}
+
+func (w *window) releasePresentation() {
+	if p := w.presentation.dxgi; p != nil {
+		restore := w.activateContext()
+		defer restore()
+		p.destroy()
+		w.presentation.dxgi = nil
+	}
+}
+
 func (w *window) softwareCaptureUnavailable() bool {
 	if !w.software {
 		return false
@@ -99,6 +132,17 @@ func drawSoftwareFrame(dc uintptr, frame *image.NRGBA) error {
 
 func (w *window) presentFrame() {
 	if !w.software {
+		if p := w.presentation.dxgi; p != nil {
+			if w.viewport.GetAttrib(glfw.Iconified) == glfw.True {
+				return
+			}
+			width, height := w.viewport.GetFramebufferSize()
+			if err := p.present(width, height); err != nil && !w.presentation.failed {
+				w.presentation.failed = true
+				granio.LogError("Failed to present WGL/DXGI frame", err)
+			}
+			return
+		}
 		w.viewport.SwapBuffers()
 		return
 	}
