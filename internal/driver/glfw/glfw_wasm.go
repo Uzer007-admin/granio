@@ -4,7 +4,8 @@ package glfw
 
 import glfw "github.com/Uzer007-admin/granio/deps/glfw-js"
 
-func initWindowHints() {
+func initWindowHints() bool {
 	// Request an alpha channel so the WebGL canvas framebuffer is RGBA.
 	glfw.WindowHint(glfw.AlphaBits, 8)
+	return false
 }

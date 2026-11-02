@@ -1,5 +1,9 @@
 # WindowVisuals и WGL/DWM: протокол прототипа
 
+Обновление 2 ноября 2026: совместимые подготовленные alpha-окна Windows
+используют [DXGI/DirectComposition](WINDOWS_DIRECTCOMPOSITION.md). Ниже сохранён
+исторический протокол WGL/DWM.
+
 Продолжение: переносимые Transparent/SystemBlur и Linux X11/Wayland описаны в
 [LINUX_WINDOW_VISUALS_VALIDATION](LINUX_WINDOW_VISUALS_VALIDATION.md).
 

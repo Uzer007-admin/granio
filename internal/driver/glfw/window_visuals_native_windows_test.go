@@ -126,8 +126,14 @@ func visualScreen(w *window, bg *safeWindow) (*image.NRGBA, error) {
 	var err error
 	runOnMain(func() {
 		focusVisualTestWindow(w)
+		// Удерживаем только две собственные fixture-поверхности рядом
+		// в z-order. Посторонние перекрытия по-прежнему запрещают чтение.
+		hwnd := uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
+		background := uintptr(unsafe.Pointer(bg.viewport.GetWin32Window()))
+		visualUser32.NewProc("SetWindowPos").Call(hwnd, ^uintptr(0), 0, 0, 0, 0, 0x13)
+		visualUser32.NewProc("SetWindowPos").Call(background, hwnd, 0, 0, 0, 0, 0x13)
 		visualDWM.NewProc("DwmFlush").Call()
-		img, err = captureVisualClient(uintptr(unsafe.Pointer(w.viewport.GetWin32Window())), uintptr(unsafe.Pointer(bg.viewport.GetWin32Window())))
+		img, err = captureVisualClient(hwnd, background)
 	})
 	return img, err
 }
@@ -222,8 +228,22 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 		w.viewport.SetAttrib(glfw.Floating, glfw.True)
 		initialHWND = uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
 		initialStyle, _, _ = visualUser32.NewProc("GetWindowLongPtrW").Call(initialHWND, ^uintptr(15))
+		// Иначе первый снимок попадает в системную анимацию Show: DWM
+		// масштабирует и смешивает всё окно поверх фона. Отключаем переход
+		// только для fixture, не меняя системные настройки или рабочий драйвер.
+		disabled := int32(1)
+		result, _, _ := visualDWM.NewProc("DwmSetWindowAttribute").Call(initialHWND, 3, uintptr(unsafe.Pointer(&disabled)), 4)
+		if int32(result) < 0 {
+			err = graphicsResult("test disable window transition", result)
+		}
 		w.RunWithContext(func() { hidden = w.canvas.Painter().Capture(w.canvas) })
 	})
+	require.NoError(t, err)
+	if os.Getenv("GRANIO_REQUIRE_DXGI") == "1" {
+		var composition bool
+		runOnMain(func() { p := w.presentation.dxgi; composition = p != nil && p.composition != nil })
+		require.True(t, composition, "hardware DirectComposition presenter is required")
+	}
 	caps := w.VisualCapabilities()
 	if !caps.OSBackdrops.Supports(desktop.BackdropMica) || w.VisualStatus().Reason != desktop.VisualReasonNone {
 		t.Skipf("native policy: %+v caps=%+v", w.VisualStatus(), caps)
@@ -235,6 +255,13 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	require.NoError(t, err)
 	directory := os.Getenv("FYNE_WINDOW_VISUALS_OUTPUT")
 	require.NoError(t, saveVisualImage(directory, "first-show", first))
+	for i, alpha := range []float64{0, .25, .5, .75, 1} {
+		base := visualRGB(first, float64(40+i*60), 75)
+		pixel := visualRGB(first, float64(40+i*60), 40)
+		for channel, source := range [3]float64{32, 176, 240} {
+			require.InDelta(t, alpha*source+(1-alpha)*base[channel], pixel[channel], 8, "alpha in the first shown frame")
+		}
+	}
 	type sample struct {
 		Mode                        desktop.WindowBackdrop
 		Status                      desktop.VisualStatus
@@ -349,5 +376,7 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	require.Less(t, acrylicDeviation, rawDeviation*.6, "Desktop Acrylic must reduce checker contrast")
 	firstBase := visualRGB(first, 40, 75)
 	require.Greater(t, firstBase[0]+firstBase[1]+firstBase[2], 10.0, "first shown frame cannot be black")
-	require.LessOrEqual(t, visualDelta(firstBase, samples[0].RedBase), 2.0, "first shown frame already contains Mica")
+	// DWM слегка меняет tint Mica при активации. Первое содержимое должно
+	// уже соответствовать материалу, а не красному фону или чёрному кадру.
+	require.LessOrEqual(t, visualDelta(firstBase, samples[0].RedBase), 4.0, "first shown frame already contains Mica")
 }

@@ -49,7 +49,9 @@ func (w *window) queryWindowVisualPolicy() (windowVisualPolicy, glfw.WindowVisua
 }
 
 func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *desktop.VisualCapabilities) (desktop.VisualFallbackReason, bool, uint32) {
-	if w.opaqueRendering() || w.presentation.dxgi != nil {
+	presenter := w.presentation.dxgi
+	composition := presenter != nil && presenter.composition != nil
+	if w.opaqueRendering() || w.presentation.alphaUnavailable || presenter != nil && !composition {
 		caps.Backend = desktop.VisualBackendOpaque
 		caps.TransparentSurface, caps.AlphaSurface = false, false
 		caps.OSBackdrops = 1 << desktop.BackdropOpaque
@@ -66,6 +68,11 @@ func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *deskto
 	caps.Backend = desktop.VisualBackendWGL
 	caps.TransparentSurface = state.WGLAlphaAvailable()
 	caps.AlphaSurface = state.WGLAlphaAvailable() && caps.AlphaBits > 0
+	if composition {
+		caps.Backend = desktop.VisualBackendDirectComposition
+		caps.AlphaSurface = caps.AlphaBits > 0
+		caps.TransparentSurface = state.Composition && caps.AlphaSurface
+	}
 	caps.CompositorAvailable = state.Composition
 	caps.OSBackdrops |= 1 << desktop.BackdropTransparent
 	if state.OSAttributes&glfw.VisualBackdrop != 0 {
@@ -91,7 +98,7 @@ func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *deskto
 	attributes := state.OSAttributes & (glfw.VisualBackdrop | glfw.VisualDarkCaption)
 	// Older Windows uses GLFW's documented transparent framebuffer path. The
 	// redirection alpha attribute is additional and requested only when supported.
-	if state.OSAttributes&glfw.VisualPremultipliedAlpha != 0 {
+	if !composition && state.OSAttributes&glfw.VisualPremultipliedAlpha != 0 {
 		attributes |= glfw.VisualPremultipliedAlpha
 	}
 	result, applyErr := w.viewport.ApplyWindowVisuals(glfw.WindowVisualOptions{Attributes: attributes, Backdrop: backdrop, DarkCaption: granio.CurrentApp().Settings().ThemeVariant() == theme.VariantDark, PremultipliedAlpha: true})

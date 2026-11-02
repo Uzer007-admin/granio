@@ -22,7 +22,9 @@ func (w *window) paintVisualFrames() uint32 {
 			w.driver.repaintWindow(w)
 			// Leave the last hidden draw in the back buffer. A final swap may
 			// acquire an undefined buffer on drivers with more than two buffers.
-			if !w.visible && i == 0 {
+			// После восстановления устройства новый presenter ещё не имеет
+			// готового кадра. Завершаем его скрытую подготовку вторым draw.
+			if !w.visible && (i == 0 || !w.presentationReady()) {
 				w.presentFrame()
 			}
 			prepared++
@@ -109,7 +111,7 @@ func (w *window) applyWindowVisuals() bool {
 		status.PreparedFrames += preparedNow
 	}
 	status.FirstFrameBeforeShow = status.FirstFrameBeforeShow || hidden && preparedNow > 0
-	status.SurfaceReady = ready && preparedNow > 0
+	status.SurfaceReady = ready && preparedNow > 0 && w.presentationReady()
 	if status.Selected == desktop.BackdropOpaque && status.SurfaceReady && caps.Backend != desktop.VisualBackendWayland {
 		w.clearNativeWindowBackdrop()
 	}

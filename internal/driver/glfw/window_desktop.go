@@ -845,7 +845,7 @@ func (w *window) create() {
 		glfw.WindowHint(glfw.Floating, glfw.False)
 	}
 	glfw.WindowHint(glfw.AutoIconify, glfw.False)
-	initWindowHints()
+	desktopGL := initWindowHints()
 	w.software = softwareRendererRequested()
 	w.preparePresentation()
 	if w.software {
@@ -871,19 +871,39 @@ func (w *window) create() {
 		pixHeight = fallbackScreenSize
 	}
 
-	win, err := glfw.CreateWindow(pixWidth, pixHeight, w.title, nil, nil)
-	// TransparentFramebuffer is a global GLFW hint. Never leak our reservation
-	// into another application window, including after creation failure.
-	glfw.WindowHint(glfw.TransparentFramebuffer, glfw.False)
-	if err != nil {
-		w.failVisualCreation()
-		w.driver.initFailed("window creation error", err)
-		return
-	}
-
-	w.viewport = win
-	if w.view() == nil { // something went wrong above, it will have been logged
-		return
+	var win *glfw.Window
+	for {
+		w.preparePresentationWindow(alphaSurface, desktopGL)
+		var err error
+		win, err = glfw.CreateWindow(pixWidth, pixHeight, w.title, nil, nil)
+		// Не оставляем глобальные hints для другого окна даже при отказе.
+		w.resetPresentationWindowHint()
+		glfw.WindowHint(glfw.TransparentFramebuffer, glfw.False)
+		if err != nil {
+			if w.retryPresentationWindow(true) {
+				continue
+			}
+			w.failVisualCreation()
+			w.driver.initFailed("window creation error", err)
+			return
+		}
+		w.viewport = win
+		w.RunWithContext(func() {
+			w.canvas.SetPainter(newWindowPainter(w))
+			w.canvas.Painter().Init()
+			w.initPresentation()
+			if build.IsWayland && !w.software {
+				glfw.SwapInterval(0)
+			}
+		})
+		if !w.retryPresentationWindow(false) {
+			break
+		}
+		// NOREDIRECTIONBITMAP неизменяем после CreateWindowEx. При отказе
+		// DirectComposition создаём обычный opaque HWND до callbacks/Show.
+		w.releasePresentation()
+		win.Destroy()
+		w.viewport = nil
 	}
 
 	// macOS 26 places new windows on a different screen than existing app windows;
@@ -902,17 +922,6 @@ func (w *window) create() {
 	if (w.xpos != 0 || w.ypos != 0) && !build.IsWayland {
 		win.SetPos(w.xpos, w.ypos)
 	}
-
-	// run the GL init on the draw thread
-	w.RunWithContext(func() {
-		w.canvas.SetPainter(newWindowPainter(w))
-		w.canvas.Painter().Init()
-		w.initPresentation()
-
-		if build.IsWayland && !w.software {
-			glfw.SwapInterval(0)
-		}
-	})
 
 	w.setDarkMode()
 

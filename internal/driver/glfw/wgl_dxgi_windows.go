@@ -26,6 +26,7 @@ type wglDXGIPresenter struct {
 	presentMethod                         uintptr
 	d3d                                   windows.Handle
 	api                                   wglDXGIApi
+	composition                           *wglComposition
 }
 
 // Индексы методов соответствуют интерфейсам Windows SDK: IUnknown,
@@ -139,7 +140,7 @@ type graphicsTextureDesc struct {
 
 var graphicsTexture2DIID = windows.GUID{Data1: 0x6f15aaf2, Data2: 0xd208, Data3: 0x4e89, Data4: [8]byte{0x9a, 0xb4, 0x48, 0x95, 0x35, 0xd3, 0x4f, 0x9c}}
 
-func newWGLDXGIPresenter(hwnd uintptr) (_ *wglDXGIPresenter, err error) {
+func newWGLDXGIPresenter(hwnd uintptr, alpha bool) (_ *wglDXGIPresenter, err error) {
 	current := glfw.GetCurrentContext()
 	if current == nil || current.GetAttrib(glfw.ClientAPI) != glfw.OpenGLAPI {
 		return nil, fmt.Errorf("WGL/DXGI requires a desktop OpenGL context")
@@ -165,7 +166,11 @@ func newWGLDXGIPresenter(hwnd uintptr) (_ *wglDXGIPresenter, err error) {
 	if err != nil {
 		return nil, err
 	}
-	create, err := windows.GetProcAddress(p.d3d, "D3D11CreateDeviceAndSwapChain")
+	entry := "D3D11CreateDeviceAndSwapChain"
+	if alpha {
+		entry = "D3D11CreateDevice"
+	}
+	create, err := windows.GetProcAddress(p.d3d, entry)
 	if err != nil {
 		return nil, err
 	}
@@ -173,13 +178,18 @@ func newWGLDXGIPresenter(hwnd uintptr) (_ *wglDXGIPresenter, err error) {
 	// размеры выделяются по первому ненулевому framebuffer непосредственно перед выводом.
 	desc := graphicsSwapDesc{mode: graphicsModeDesc{width: 1, height: 1, format: 28}, sampleCount: 1, usage: 0x20, count: 2, window: hwnd, windowed: 1, effect: 3}
 	var level uint32
-	result, _, _ := syscall.SyscallN(create, 0, 1, 0, 0, 0, 0, 7, uintptr(unsafe.Pointer(&desc)),
-		uintptr(unsafe.Pointer(&p.swap)), uintptr(unsafe.Pointer(&p.device)),
-		uintptr(unsafe.Pointer(&level)), uintptr(unsafe.Pointer(&p.immediate)))
-	if err = graphicsResult("D3D11CreateDeviceAndSwapChain", result); err != nil {
+	var result uintptr
+	if alpha {
+		result, _, _ = syscall.SyscallN(create, 0, 1, 0, 0x20, 0, 0, 7,
+			uintptr(unsafe.Pointer(&p.device)), uintptr(unsafe.Pointer(&level)), uintptr(unsafe.Pointer(&p.immediate)))
+	} else {
+		result, _, _ = syscall.SyscallN(create, 0, 1, 0, 0, 0, 0, 7, uintptr(unsafe.Pointer(&desc)),
+			uintptr(unsafe.Pointer(&p.swap)), uintptr(unsafe.Pointer(&p.device)),
+			uintptr(unsafe.Pointer(&level)), uintptr(unsafe.Pointer(&p.immediate)))
+	}
+	if err = graphicsResult(entry, result); err != nil {
 		return nil, err
 	}
-	p.presentMethod = p.swap.vtable[8]
 	if level >= 0xb000 {
 		p.maxDimension = 16384
 	} else if level >= 0xa000 {
@@ -187,6 +197,12 @@ func newWGLDXGIPresenter(hwnd uintptr) (_ *wglDXGIPresenter, err error) {
 	} else {
 		return nil, fmt.Errorf("WGL/DXGI requires D3D feature level 10.0 or newer")
 	}
+	if alpha {
+		if err = p.initComposition(); err != nil {
+			return nil, err
+		}
+	}
+	p.presentMethod = p.swap.vtable[8]
 	p.interop, _, _ = syscall.SyscallN(a.open, uintptr(unsafe.Pointer(p.device)))
 	if p.interop == 0 {
 		return nil, fmt.Errorf("wglDXOpenDeviceNV failed")
@@ -277,6 +293,9 @@ func (p *wglDXGIPresenter) present(width, height int) error {
 	if width <= 0 || height <= 0 {
 		return nil
 	}
+	if width > p.maxDimension || height > p.maxDimension {
+		return fmt.Errorf("WGL/DXGI frame %dx%d exceeds device limit %d", width, height, p.maxDimension)
+	}
 	if !p.current() {
 		return fmt.Errorf("WGL/DXGI context is not current")
 	}
@@ -314,6 +333,11 @@ func (p *wglDXGIPresenter) present(width, height int) error {
 	if err := graphicsResult("DXGI Present", result); err != nil {
 		return err
 	}
+	if p.composition != nil {
+		if err := p.commitComposition(); err != nil {
+			return err
+		}
+	}
 	if result == 0 {
 		p.frames++
 	}
@@ -325,6 +349,7 @@ func (p *wglDXGIPresenter) deviceLost() bool {
 }
 
 func (p *wglDXGIPresenter) destroy() {
+	p.destroyComposition()
 	p.freeBuffers()
 	if p.interop != 0 {
 		syscall.SyscallN(p.api.close, p.interop)

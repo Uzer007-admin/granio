@@ -150,8 +150,11 @@ SurfaceReady и NativeAccepted описывают запрос и framebuffer, �
 Режим PrepareAlpha с начальным Opaque разрешает поздние переключения материалов
 на той же поверхности. Обычная рамка/системные caption buttons сохраняются.
 
-Windows использует WGL/DWM для Mica/Mica Alt/Desktop Acrylic; unsupported API,
-RDP, high contrast или запрет прозрачности дают непрозрачный fallback. Linux
+Windows использует аппаратный DXGI/DirectComposition для совместимых заранее
+подготовленных alpha-окон с Mica/Mica Alt/Desktop Acrylic. Подробности выбора
+и первого кадра: [WINDOWS_DIRECTCOMPOSITION](WINDOWS_DIRECTCOMPOSITION.md).
+Неподдерживаемые API, RDP, high contrast или запрет прозрачности дают
+непрозрачный fallback. Linux
 Transparent/SystemBlur используют runtime-возможности X11 compositor/KWin hints
 или Wayland background-effect protocol. Если compositor/blur отсутствует,
 рендерер выбирает opaque. Реальные GNOME/KDE/Fly в текущей аппаратной матрице

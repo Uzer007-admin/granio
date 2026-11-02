@@ -142,9 +142,14 @@ func TestWGLDXGINativeFrameResizeStateAndFallback(t *testing.T) {
 	require.Equal(t, uintptr(1), scissor)
 	require.Equal(t, [4]int32{4, 5, 6, 7}, box)
 	status := raw.VisualStatus()
-	require.Equal(t, desktop.VisualFallback, status.Phase)
-	require.Equal(t, desktop.BackdropOpaque, status.Selected)
-	require.Equal(t, desktop.VisualUnsupportedBackend, status.Reason)
+	if p.composition != nil && status.Reason == desktop.VisualReasonNone {
+		require.Equal(t, desktop.VisualReady, status.Phase)
+		require.Equal(t, desktop.BackdropMica, status.Selected)
+		require.Equal(t, desktop.VisualBackendDirectComposition, status.Backend)
+	} else {
+		require.Equal(t, desktop.VisualFallback, status.Phase)
+		require.Equal(t, desktop.BackdropOpaque, status.Selected)
+	}
 	// Подменяется только ответ Present нашей копии presenter. Настоящий GPU
 	// не сбрасывается: проверяем ограниченное восстановление после
 	// DXGI_ERROR_DEVICE_REMOVED и освобождение старых interop-ресурсов.
@@ -210,14 +215,18 @@ func TestWGLDXGIAutomaticAndAlphaSelection(t *testing.T) {
 					supports = raw.viewport.GetAttrib(glfw.ClientAPI) == glfw.OpenGLAPI && glfw.ExtensionSupported("WGL_NV_DX_interop2")
 				})
 			})
-			if scenario.alpha || scenario.mode == "wgl" {
+			if scenario.mode == "wgl" {
 				require.Nil(t, p)
 				return
 			}
 			if !supports {
 				t.Skip("interop is unavailable for this context")
 			}
-			require.NotNil(t, p, "a compatible opaque window must select DXGI by default")
+			require.NotNil(t, p, "a compatible window must select DXGI by default")
+			if scenario.alpha {
+				require.NotNil(t, p.composition, "reserved alpha selects DirectComposition")
+				return
+			}
 			var maxWidth, maxHeight int
 			runOnMain(func() { maxWidth, maxHeight = raw.screenSize(granio.NewSize(32768, 32768)) })
 			require.LessOrEqual(t, maxWidth, p.maxDimension)

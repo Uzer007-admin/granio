@@ -29,6 +29,8 @@ type windowPresentation struct {
 	dxgi              *wglDXGIPresenter
 	failed            bool
 	recoveryAttempted bool
+	noRedirection     bool
+	alphaUnavailable  bool
 }
 
 func (w *window) preparePresentation() {
@@ -37,7 +39,37 @@ func (w *window) preparePresentation() {
 	w.presentation.automatic = !w.software && (mode == "" || mode == "auto")
 }
 
-func (w *window) opaqueRendering() bool { return w.software || w.presentation.requested }
+func (w *window) opaqueRendering() bool { return w.software }
+
+func (w *window) preparePresentationWindow(alpha, desktopGL bool) {
+	w.presentation.noRedirection = alpha && desktopGL && !w.presentation.alphaUnavailable && (w.presentation.requested || w.presentation.automatic)
+	value := glfw.False
+	if w.presentation.noRedirection {
+		value = glfw.True
+	}
+	glfw.WindowHint(glfw.Win32NoRedirectionBitmap, value)
+}
+
+func (*window) resetPresentationWindowHint() {
+	glfw.WindowHint(glfw.Win32NoRedirectionBitmap, glfw.False)
+}
+
+func (w *window) retryPresentationWindow(creationFailed bool) bool {
+	if !w.presentation.noRedirection || !creationFailed && w.presentation.dxgi != nil && w.presentation.dxgi.composition != nil {
+		return false
+	}
+	w.presentation.alphaUnavailable = true
+	w.presentation.noRedirection = false
+	return true
+}
+
+func (w *window) presentationReady() bool {
+	if w.presentation.failed {
+		return false
+	}
+	p := w.presentation.dxgi
+	return p == nil || p.composition == nil || p.composition.attached
+}
 
 func (w *window) presentationMaxTextureSize() int {
 	if p := w.presentation.dxgi; p != nil {
@@ -51,19 +83,25 @@ func (w *window) initPresentation() {
 		return
 	}
 	if w.presentation.automatic {
-		w.visuals.mu.Lock()
-		alpha := w.visuals.alphaReserved
-		w.visuals.mu.Unlock()
-		// Подготовленная прозрачная поверхность сохраняет путь WGL/DWM.
 		// GLES и драйверы без interop не создают устройство D3D11.
-		if alpha || w.viewport.GetAttrib(glfw.ClientAPI) != glfw.OpenGLAPI || !glfw.ExtensionSupported("WGL_NV_DX_interop2") {
+		if w.viewport.GetAttrib(glfw.ClientAPI) != glfw.OpenGLAPI || !glfw.ExtensionSupported("WGL_NV_DX_interop2") {
 			return
 		}
 	}
-	p, err := newWGLDXGIPresenter(uintptr(unsafe.Pointer(w.viewport.GetWin32Window())))
+	w.visuals.mu.Lock()
+	alpha := w.visuals.alphaReserved && !w.presentation.alphaUnavailable
+	w.visuals.mu.Unlock()
+	hwnd := uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
+	p, err := newWGLDXGIPresenter(hwnd, alpha)
+	if err != nil && alpha && !w.presentation.noRedirection {
+		granio.LogError("Failed to initialise DirectComposition; using opaque DXGI", err)
+		p, err = newWGLDXGIPresenter(hwnd, false)
+	}
 	if err != nil {
 		if w.presentation.failed {
 			granio.LogError("Failed to restore WGL/DXGI presentation", err)
+		} else if w.presentation.noRedirection {
+			granio.LogError("Failed to initialise DirectComposition; recreating an opaque window", err)
 		} else {
 			granio.LogError("Failed to initialise WGL/DXGI presentation; using WGL", err)
 		}

@@ -111,6 +111,8 @@ const (
 	VisualBackendWGL
 	VisualBackendX11
 	VisualBackendWayland
+	// VisualBackendDirectComposition presents premultiplied GPU surfaces on Windows.
+	VisualBackendDirectComposition
 )
 
 // Before native creation the Known fields may be false. Generation identifies
