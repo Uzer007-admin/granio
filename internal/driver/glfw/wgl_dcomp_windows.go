@@ -97,6 +97,22 @@ func (p *wglDXGIPresenter) commitComposition() error {
 	return nil
 }
 
+func (p *wglDXGIPresenter) checkCompositionDevice() error {
+	c := p.composition
+	if c == nil || !c.attached {
+		return nil
+	}
+	var valid int32
+	result := c.device.call(26, uintptr(unsafe.Pointer(&valid))) // IDCompositionDevice::CheckDeviceState
+	if err := graphicsResult("DirectComposition CheckDeviceState", result); err != nil {
+		return err
+	}
+	if valid == 0 {
+		return graphicsError{"DirectComposition device is invalid", 0x887a0005}
+	}
+	return nil
+}
+
 func (p *wglDXGIPresenter) destroyComposition() {
 	c := p.composition
 	if c == nil {

@@ -91,7 +91,8 @@ func captureVisualClient(hwnd, background uintptr) (*image.NRGBA, error) {
 	}
 	defer visualGDI32.NewProc("DeleteObject").Call(bitmap)
 	old, _, _ := visualGDI32.NewProc("SelectObject").Call(memory, bitmap)
-	ok, _, err = visualGDI32.NewProc("BitBlt").Call(memory, 0, 0, uintptr(width), uintptr(height), dc, uintptr(origin.x), uintptr(origin.y), 0x00cc0020)
+	const captureComposedPixels = 0x00cc0020 | 0x40000000 // SRCCOPY | CAPTUREBLT
+	ok, _, err = visualGDI32.NewProc("BitBlt").Call(memory, 0, 0, uintptr(width), uintptr(height), dc, uintptr(origin.x), uintptr(origin.y), captureComposedPixels)
 	visualGDI32.NewProc("SelectObject").Call(memory, old)
 	if ok == 0 {
 		return nil, err
@@ -158,6 +159,29 @@ func visualRGB(img image.Image, x, y float64) [3]float64 {
 	width, height := img.Bounds().Dx(), img.Bounds().Dy()
 	r, g, b, _ := img.At(int(x*float64(width)/360), int(y*float64(height)/290)).RGBA()
 	return [3]float64{float64(r) / 257, float64(g) / 257, float64(b) / 257}
+}
+
+func visualBackgroundColor(w *window) (color.NRGBA, error) {
+	hwnd := uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
+	point := struct{ x, y int32 }{20, 100}
+	if r, _, err := visualUser32.NewProc("ClientToScreen").Call(hwnd, uintptr(unsafe.Pointer(&point))); r == 0 {
+		return color.NRGBA{}, err
+	}
+	packed := uint64(uint32(point.x)) | uint64(uint32(point.y))<<32
+	under, _, _ := visualUser32.NewProc("WindowFromPoint").Call(uintptr(packed))
+	if under != hwnd {
+		return color.NRGBA{}, fmt.Errorf("background probe is occluded")
+	}
+	dc, _, err := visualUser32.NewProc("GetDC").Call(0)
+	if dc == 0 {
+		return color.NRGBA{}, err
+	}
+	defer visualUser32.NewProc("ReleaseDC").Call(0, dc)
+	pixel, _, err := visualGDI32.NewProc("GetPixel").Call(dc, uintptr(point.x), uintptr(point.y))
+	if uint32(pixel) == 0xffffffff {
+		return color.NRGBA{}, err
+	}
+	return color.NRGBA{R: uint8(pixel), G: uint8(pixel >> 8), B: uint8(pixel >> 16), A: 255}, nil
 }
 
 func visualDelta(a, b [3]float64) float64 {
@@ -286,6 +310,32 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 			time.Sleep(300 * time.Millisecond)
 			screens[i], err = visualScreen(w, bg)
 			require.NoError(t, err)
+			if mode == desktop.BackdropDesktopAcrylic {
+				// DWM can still be composing the previous background after the
+				// first flush. Require evidence of both the source and the effect.
+				deadline := time.Now().Add(1500 * time.Millisecond)
+				for {
+					var got color.NRGBA
+					var sampleErr error
+					runOnMain(func() { got, sampleErr = visualBackgroundColor(bg.window) })
+					require.NoError(t, sampleErr)
+					base := visualRGB(screens[i], 40, 75)
+					source := [3]float64{float64(got.R), float64(got.G), float64(got.B)}
+					want := [3]float64{float64(c.R), float64(c.G), float64(c.B)}
+					if visualDelta(source, want) < 8 && (i == 0 || visualDelta(visualRGB(screens[0], 40, 75), base) > 5) {
+						break
+					}
+					if time.Now().After(deadline) {
+						require.Less(t, visualDelta(source, want), 8.0, "background fixture did not update: got %v, want %v", source, want)
+						// Preserve the stale sample so the final live-background gate
+						// can fail alongside independent alpha and blur measurements.
+						break
+					}
+					time.Sleep(40 * time.Millisecond)
+					screens[i], err = visualScreen(w, bg)
+					require.NoError(t, err)
+				}
+			}
 			require.NoError(t, saveVisualImage(directory, fmt.Sprintf("mode-%d-background-%d", mode, i), screens[i]))
 		}
 		s := sample{Mode: mode, Status: w.VisualStatus(), RedBase: visualRGB(screens[0], 40, 75), BlueBase: visualRGB(screens[1], 40, 75)}
@@ -363,9 +413,6 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	// These are optical acceptance gates, beyond surface and HRESULT checks.
 	for _, s := range samples {
 		require.LessOrEqual(t, s.AlphaError, 8.0, "screen alpha composition mode %d", s.Mode)
-		if s.Mode == desktop.BackdropDesktopAcrylic {
-			require.Greater(t, s.BackgroundDelta, 5.0, "Acrylic must use the live background")
-		}
 		if s.Mode == desktop.BackdropMica || s.Mode == desktop.BackdropMicaAlt {
 			require.Less(t, s.BackgroundDelta, 4.0, "Mica is wallpaper based")
 		}
@@ -379,4 +426,5 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	// DWM слегка меняет tint Mica при активации. Первое содержимое должно
 	// уже соответствовать материалу, а не красному фону или чёрному кадру.
 	require.LessOrEqual(t, visualDelta(firstBase, samples[0].RedBase), 4.0, "first shown frame already contains Mica")
+	require.Greater(t, samples[2].BackgroundDelta, 5.0, "Acrylic must use the live background")
 }

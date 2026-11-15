@@ -12,10 +12,6 @@ import (
 // on hidden surfaces: its back buffer is painted here and the first visible swap
 // follows a full repaint. PreparedFrames counts prepared draws, not scanouts.
 func (w *window) paintVisualFrames() uint32 {
-	width, height := w.viewport.GetFramebufferSize()
-	if width <= 0 || height <= 0 {
-		return 0
-	}
 	var prepared uint32
 	w.RunWithContext(func() {
 		for i := 0; i < 2; i++ {
@@ -33,12 +29,38 @@ func (w *window) paintVisualFrames() uint32 {
 	return prepared
 }
 
+func (w *window) resumeDeferredVisuals() {
+	v := &w.visuals
+	if !v.waitForDrawable || w.closing {
+		return
+	}
+	w.queueVisualApply()
+}
+
+func (w *window) queueVisualApply() {
+	v := &w.visuals
+	v.mu.Lock()
+	queue := !v.applyQueued && !v.closed
+	if queue {
+		v.applyQueued = true
+	}
+	v.mu.Unlock()
+	if queue {
+		runOnMainWithWait(w.applyQueuedVisuals, false)
+	}
+}
+
 func (w *window) applyWindowVisuals() bool {
 	options, status, enabled := w.visualRequest()
 	if !enabled {
 		return true
 	}
 	if w.viewport == nil || w.closing {
+		return false
+	}
+	width, height := w.viewport.GetFramebufferSize()
+	w.visuals.waitForDrawable = width <= 0 || height <= 0 || w.viewport.GetAttrib(glfw.Iconified) == glfw.True
+	if w.visuals.waitForDrawable {
 		return false
 	}
 	caps := w.VisualCapabilities()
@@ -110,14 +132,17 @@ func (w *window) applyWindowVisuals() bool {
 		preparedNow = w.paintVisualFrames()
 		status.PreparedFrames += preparedNow
 	}
-	status.FirstFrameBeforeShow = status.FirstFrameBeforeShow || hidden && preparedNow > 0
 	status.SurfaceReady = ready && preparedNow > 0 && w.presentationReady()
+	status.FirstFrameBeforeShow = status.FirstFrameBeforeShow || hidden && status.SurfaceReady
 	if status.Selected == desktop.BackdropOpaque && status.SurfaceReady && caps.Backend != desktop.VisualBackendWayland {
 		w.clearNativeWindowBackdrop()
 	}
 	if !status.SurfaceReady {
 		status.Phase = desktop.VisualFailed
 		status.Reason = desktop.VisualUnsupportedBackend
+		if code, failed := w.presentationFailure(); failed {
+			status.Reason, status.NativeCode = desktop.VisualNativeFailure, code
+		}
 	}
 	caps.CanChangeWithoutRecreate = caps.AlphaSurface && caps.RendererBackdrops.Supports(desktop.BackdropTransparent)
 	w.publishVisualStatus(status, caps)

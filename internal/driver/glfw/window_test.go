@@ -3,6 +3,7 @@
 package glfw
 
 import (
+	"image"
 	"image/color"
 	"net/url"
 	"os"
@@ -69,6 +70,34 @@ func TestGLDriver_CreateWindow(t *testing.T) {
 func TestGLDriver_CreateWindow_EmptyTitle(t *testing.T) {
 	w := createWindow("")
 	assert.Equal(t, w.Title(), "Fyne Application")
+}
+
+func TestWindow_CloseBeforeShow(t *testing.T) {
+	var w *window
+	var closed int
+	var created bool
+	runOnMain(func() {
+		w = d.CreateWindow("Закрытие до первого показа").(*window)
+		w.SetOnClosed(func() { closed++; w.Close() })
+		w.Close()
+		w.Show()
+		created = w.viewport != nil
+	})
+	defer runOnMain(w.Close)
+	require.Equal(t, 1, closed)
+	require.False(t, created)
+	require.Eventually(t, func() bool {
+		var found bool
+		runOnMain(func() {
+			for _, candidate := range d.AllWindows() {
+				if candidate == w {
+					found = true
+					break
+				}
+			}
+		})
+		return !found
+	}, time.Second, 10*time.Millisecond)
 }
 
 func TestGLDriver_CreateSplashWindow(t *testing.T) {
@@ -281,6 +310,36 @@ func TestWindow_Cursor(t *testing.T) {
 		defaultCursor := desktop.DefaultCursor
 		assert.Equal(t, defaultCursor, w.cursor)
 	})
+}
+
+type pixelCursor []byte
+
+func (p pixelCursor) Image() (image.Image, int, int) {
+	return &image.NRGBA{Pix: p, Stride: 4, Rect: image.Rect(0, 0, 1, 1)}, 0, 0
+}
+
+type entryWithCursor struct {
+	*widget.Entry
+	cursor desktop.Cursor
+}
+
+func (e *entryWithCursor) Cursor() desktop.Cursor { return e.cursor }
+
+func TestWindow_CustomCursorWithUncomparableValue(t *testing.T) {
+	w := createWindow("Проверка пользовательского курсора")
+	defer w.Close()
+	entry := &entryWithCursor{Entry: widget.NewEntry(), cursor: pixelCursor{10, 20, 30, 255}}
+	w.SetContent(entry)
+	var caught any
+	var cursor desktop.Cursor
+	runOnMain(func() {
+		defer func() { caught = recover() }()
+		w.processMouseMoved(10, 10)
+		w.processMouseMoved(11, 10)
+		cursor = w.cursor
+	})
+	require.Nil(t, caught)
+	require.Equal(t, entry.cursor, cursor)
 }
 
 func TestWindow_CursorUnderInnerWindow(t *testing.T) {

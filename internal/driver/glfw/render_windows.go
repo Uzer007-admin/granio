@@ -8,10 +8,12 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 	"unsafe"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v2/driver/desktop"
 	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
 	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
 	"golang.org/x/sys/windows"
@@ -27,8 +29,10 @@ type windowPresentation struct {
 	requested         bool
 	automatic         bool
 	dxgi              *wglDXGIPresenter
-	failed            bool
+	failure           error
 	recoveryAttempted bool
+	checkComposition  bool
+	retryAfter        time.Time
 	noRedirection     bool
 	alphaUnavailable  bool
 }
@@ -64,11 +68,22 @@ func (w *window) retryPresentationWindow(creationFailed bool) bool {
 }
 
 func (w *window) presentationReady() bool {
-	if w.presentation.failed {
+	if w.presentation.failure != nil {
 		return false
 	}
 	p := w.presentation.dxgi
-	return p == nil || p.composition == nil || p.composition.attached
+	return p == nil || p.shared != nil && (p.composition == nil || p.composition.attached)
+}
+
+func (w *window) presentationFailure() (uint32, bool) {
+	native, _ := w.presentation.failure.(graphicsError)
+	return native.code, w.presentation.failure != nil
+}
+
+func (w *window) requestPresentationCheck() {
+	if w.presentation.noRedirection {
+		w.presentation.checkComposition = true
+	}
 }
 
 func (w *window) presentationMaxTextureSize() int {
@@ -88,17 +103,10 @@ func (w *window) initPresentation() {
 			return
 		}
 	}
-	w.visuals.mu.Lock()
-	alpha := w.visuals.alphaReserved && !w.presentation.alphaUnavailable
-	w.visuals.mu.Unlock()
 	hwnd := uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
-	p, err := newWGLDXGIPresenter(hwnd, alpha)
-	if err != nil && alpha && !w.presentation.noRedirection {
-		granio.LogError("Failed to initialise DirectComposition; using opaque DXGI", err)
-		p, err = newWGLDXGIPresenter(hwnd, false)
-	}
+	p, err := newWGLDXGIPresenter(hwnd, w.presentation.noRedirection)
 	if err != nil {
-		if w.presentation.failed {
+		if w.presentation.failure != nil {
 			granio.LogError("Failed to restore WGL/DXGI presentation", err)
 		} else if w.presentation.noRedirection {
 			granio.LogError("Failed to initialise DirectComposition; recreating an opaque window", err)
@@ -108,7 +116,7 @@ func (w *window) initPresentation() {
 		return
 	}
 	w.presentation.dxgi = p
-	w.presentation.failed = false
+	w.presentation.failure = nil
 }
 
 func (w *window) releasePresentation() {
@@ -121,11 +129,18 @@ func (w *window) releasePresentation() {
 }
 
 func (w *window) preparePresentationFirstFrame() {
-	if p := w.presentation.dxgi; p != nil && p.shared == nil {
-		// Полноразмерные буферы и содержимое готовятся до Show. После
-		// Show следует видимый repaint, в том числе после OCCLUDED.
-		w.RunWithContext(func() { w.driver.repaintWindow(w); w.presentFrame() })
+	if w.visible || w.presentationReady() {
+		return
 	}
+	w.RunWithContext(func() {
+		for range 2 {
+			w.driver.repaintWindow(w)
+			w.presentFrame()
+			if w.presentationReady() || w.presentation.failure != nil {
+				break
+			}
+		}
+	})
 }
 
 func (w *window) softwareCaptureUnavailable() bool {
@@ -203,36 +218,78 @@ func drawSoftwareFrame(dc uintptr, frame *image.NRGBA) error {
 }
 
 func (w *window) presentFrame() {
-	if !w.software {
-		if w.presentation.failed {
-			return
+	if w.software {
+		p := w.canvas.Painter().(*softwareWindowPainter)
+		if err := presentSoftwareFrame(uintptr(unsafe.Pointer(w.viewport.GetWin32Window())), p.Frame()); err != nil {
+			granio.LogError("Failed to present software frame", err)
 		}
-		if p := w.presentation.dxgi; p != nil {
-			if w.viewport.GetAttrib(glfw.Iconified) == glfw.True {
-				return
-			}
-			width, height := w.viewport.GetFramebufferSize()
-			if err := p.present(width, height); err != nil {
-				w.presentation.failed = true
-				granio.LogError("Failed to present WGL/DXGI frame", err)
-				if !w.presentation.recoveryAttempted && (graphicsDeviceLost(err) || p.deviceLost()) {
-					w.presentation.recoveryAttempted = true
-					w.releasePresentation()
-					w.initPresentation()
-					if w.presentation.dxgi != nil {
-						w.canvas.SetDirty()
-					}
-				}
-			} else {
-				w.presentation.recoveryAttempted = false
-			}
-			return
-		}
+		return
+	}
+
+	state := &w.presentation
+	p := state.dxgi
+	if p == nil && state.failure == nil {
 		w.viewport.SwapBuffers()
 		return
 	}
-	p := w.canvas.Painter().(*softwareWindowPainter)
-	if err := presentSoftwareFrame(uintptr(unsafe.Pointer(w.viewport.GetWin32Window())), p.Frame()); err != nil {
-		granio.LogError("Failed to present software frame", err)
+	if state.failure != nil && time.Now().Before(state.retryAfter) {
+		return
+	}
+	if w.viewport.GetAttrib(glfw.Iconified) == glfw.True {
+		return
+	}
+	width, height := w.viewport.GetFramebufferSize()
+	if width <= 0 || height <= 0 || p != nil && (width > p.maxDimension || height > p.maxDimension) {
+		return // Wait for usable geometry before allocating a new frame.
+	}
+	if state.failure != nil {
+		state.recoveryAttempted = false
+		w.recoverPresentation(state.failure)
+		return
+	}
+	if state.checkComposition {
+		state.checkComposition = false
+		if err := p.checkCompositionDevice(); err != nil {
+			w.recoverPresentation(err)
+			return
+		}
+	}
+	before := p.frames
+	if err := p.present(width, height); err != nil {
+		w.recoverPresentation(err)
+		return
+	}
+	if p.frames != before {
+		state.recoveryAttempted = false
+		if !state.retryAfter.IsZero() {
+			state.retryAfter = time.Time{}
+			if w.visuals.active.Load() {
+				w.queueVisualApply()
+			}
+		}
+	}
+}
+
+func (w *window) recoverPresentation(err error) {
+	state := &w.presentation
+	state.failure = err
+	granio.LogError("Failed to present WGL/DXGI frame", err)
+	if !state.recoveryAttempted {
+		state.recoveryAttempted = true
+		w.releasePresentation()
+		w.initPresentation()
+		if state.dxgi != nil {
+			w.canvas.SetDirty()
+			return
+		}
+	}
+	// Delay another attempt even if the application keeps requesting frames.
+	state.retryAfter = time.Now().Add(time.Second)
+	_, status, enabled := w.visualRequest()
+	if enabled && status.Phase != desktop.VisualPending {
+		status.Phase, status.Reason = desktop.VisualFailed, desktop.VisualNativeFailure
+		status.NativeCode, _ = w.presentationFailure()
+		status.SurfaceReady = false
+		w.publishVisualStatus(status, w.VisualCapabilities())
 	}
 }

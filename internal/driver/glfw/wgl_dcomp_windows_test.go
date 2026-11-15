@@ -7,8 +7,10 @@ import (
 	"os"
 	"syscall"
 	"testing"
+	"time"
 	"unsafe"
 
+	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 	"github.com/Uzer007-admin/granio/v2"
 	"github.com/Uzer007-admin/granio/v2/driver/desktop"
 	"github.com/stretchr/testify/require"
@@ -25,6 +27,119 @@ func requireComposition(t *testing.T, w *window) *wglDXGIPresenter {
 		t.Skip("hardware DirectComposition interop is unavailable")
 	}
 	return p
+}
+
+func TestWindowVisualsThemeBeforeShow(t *testing.T) {
+	w := newVisualTestWindow("Смена темы до первого показа")
+	defer runOnMain(w.Close)
+	var caught any
+	runOnMain(func() {
+		defer func() { caught = recover() }()
+		d.applyThemeToWindow(w)
+	})
+	require.Nil(t, caught)
+}
+
+func TestWGLDCompApplyWhileMinimized(t *testing.T) {
+	requireVisualTest(t)
+	w := newVisualTestWindow("Смена материала в свёрнутом окне")
+	defer runOnMain(w.Close)
+	_, err := w.ConfigureVisuals(desktop.VisualOptions{PrepareAlpha: true})
+	require.NoError(t, err)
+	runOnMain(func() {
+		w.SetPadded(false)
+		w.SetContent(visualAlphaScene())
+		w.Resize(granio.NewSize(360, 290))
+		w.Show()
+		w.viewport.Iconify()
+	})
+	p := requireComposition(t, w)
+	require.Eventually(t, func() bool {
+		var minimized bool
+		runOnMain(func() { minimized = w.viewport.GetAttrib(glfw.Iconified) == glfw.True })
+		return minimized
+	}, time.Second, 10*time.Millisecond)
+	id, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropTransparent})
+	require.NoError(t, err)
+	runOnMain(func() {}) // дождаться обработки запроса при свёрнутом окне
+	status := w.VisualStatus()
+	require.Equal(t, id, status.RequestID)
+	require.Equal(t, desktop.VisualPending, status.Phase)
+	require.False(t, status.SurfaceReady)
+	require.Zero(t, status.PreparedFrames)
+	runOnMain(func() { w.viewport.Restore() })
+	require.Eventually(t, func() bool {
+		s := w.VisualStatus()
+		return s.RequestID == id && s.Phase == desktop.VisualReady && s.SurfaceReady
+	}, 2*time.Second, 10*time.Millisecond)
+	var pixel color.NRGBA
+	runOnMain(func() { w.RunWithContext(func() { pixel, err = sampleDXGIPixel(p, 10, 70) }) })
+	require.NoError(t, err)
+	require.Zero(t, pixel, "пиксели после восстановления должны быть прозрачными")
+}
+
+func TestWGLDCompRecoverAfterPresentFailure(t *testing.T) {
+	requireVisualTest(t)
+	w := newVisualTestWindow("Восстановление после ошибки Present")
+	defer runOnMain(w.Close)
+	_, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropTransparent})
+	require.NoError(t, err)
+	runOnMain(func() {
+		w.SetPadded(false)
+		w.SetContent(visualAlphaScene())
+		w.Resize(granio.NewSize(360, 290))
+		w.Show()
+	})
+	old := requireComposition(t, w)
+	failed := syscall.NewCallback(func(_, _, _ uintptr) uintptr { return 0x80004005 }) // E_FAIL
+	var recovered *wglDXGIPresenter
+	var presents uint64
+	runOnMain(func() {
+		w.RunWithContext(func() {
+			old.presentMethod = failed
+			w.presentFrame()
+			recovered = w.presentation.dxgi
+			if recovered != nil {
+				d.repaintWindow(w)
+				presents = recovered.frames
+			}
+		})
+	})
+	require.NotNil(t, recovered)
+	require.NotSame(t, old, recovered)
+	require.Positive(t, presents)
+	require.True(t, w.VisualStatus().SurfaceReady)
+
+	var failedStatus desktop.VisualStatus
+	var retryThrottled bool
+	runOnMain(func() {
+		w.RunWithContext(func() {
+			recovered.presentMethod = failed
+			w.presentFrame()
+			retry := w.presentation.dxgi
+			if retry == nil {
+				return
+			}
+			retry.presentMethod = failed
+			w.presentFrame()
+			failedStatus = w.VisualStatus()
+			w.refresh(w.viewport)
+			w.presentFrame()
+			retryThrottled = w.presentation.dxgi == retry
+			w.presentation.retryAfter = time.Now().Add(-time.Millisecond)
+			w.refresh(w.viewport)
+			w.presentFrame()
+		})
+	})
+	require.Equal(t, desktop.VisualFailed, failedStatus.Phase)
+	require.Equal(t, desktop.VisualNativeFailure, failedStatus.Reason)
+	require.EqualValues(t, 0x80004005, failedStatus.NativeCode)
+	require.False(t, failedStatus.SurfaceReady)
+	require.True(t, retryThrottled)
+	require.Eventually(t, func() bool {
+		s := w.VisualStatus()
+		return s.Phase == desktop.VisualReady && s.SurfaceReady && s.NativeCode == 0
+	}, 2*time.Second, 10*time.Millisecond)
 }
 
 func TestWGLDCompAlphaFirstFrameResizeAndRecovery(t *testing.T) {

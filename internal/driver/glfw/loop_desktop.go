@@ -136,7 +136,12 @@ func (*gLDriver) pollEvents() {
 	glfw.PollEvents() // This call blocks while window is being resized, which prevents freeDirtyTextures from being called
 }
 
-func (*gLDriver) Terminate() {
+func (d *gLDriver) Terminate() {
+	// Quit can reach Terminate before the event loop destroys closing windows.
+	// Interop resources must be released with their WGL context still alive.
+	for _, win := range d.windows {
+		win.(*window).releasePresentation()
+	}
 	nativeEventMu.Lock()
 	nativeEventsReady = false
 	glfw.SetMonitorConfigurationCallback(nil)

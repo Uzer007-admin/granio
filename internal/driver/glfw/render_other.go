@@ -12,11 +12,13 @@ func (*window) retryPresentationWindow(bool) bool    { return false }
 
 func (*window) preparePresentationFirstFrame() {}
 
-func (*window) preparePresentation()    {}
-func (*window) initPresentation()       {}
-func (*window) releasePresentation()    {}
-func (*window) opaqueRendering() bool   { return false }
-func (*window) presentationReady() bool { return true }
+func (*window) preparePresentation()                {}
+func (*window) initPresentation()                   {}
+func (*window) releasePresentation()                {}
+func (*window) opaqueRendering() bool               { return false }
+func (*window) presentationReady() bool             { return true }
+func (*window) presentationFailure() (uint32, bool) { return 0, false }
+func (*window) requestPresentationCheck()           {}
 
 func (*window) presentationMaxTextureSize() int { return 0 }
 

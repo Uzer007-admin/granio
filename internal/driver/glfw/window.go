@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "image/png" // for the icon
 	"math"
+	"reflect"
 	"runtime"
 	"slices"
 	"time"
@@ -217,7 +218,7 @@ func (w *window) detectTextureScale() float32 {
 
 func (w *window) Show() {
 	async.EnsureMain(func() {
-		if w.visualsClosed() {
+		if w.windowClosed() {
 			return
 		}
 		if w.view() != nil {
@@ -240,7 +241,7 @@ func (w *window) Show() {
 		if !build.IsWayland && w.centered {
 			w.doCenterOnScreen() // lastly center if that was requested
 		}
-		if !w.prepareVisualFirstFrame() {
+		if !w.prepareVisualFirstFrame() || w.closing {
 			return
 		}
 		w.preparePresentationFirstFrame()
@@ -284,16 +285,7 @@ func (w *window) Hide() {
 
 func (w *window) Close() {
 	async.EnsureMain(func() {
-		visualsEnabled := w.closeWindowVisuals()
-		if w.viewport == nil && visualsEnabled {
-			w.closing = true
-			if fn := w.onClosed; fn != nil {
-				w.onClosed = nil
-				fn()
-			}
-			return
-		}
-		if w.isClosing() {
+		if !w.closeWindowVisuals() {
 			return
 		}
 
@@ -301,6 +293,11 @@ func (w *window) Close() {
 		if fn := w.onClosed; fn != nil {
 			w.onClosed = nil // avoid possibility of calling twice
 			fn()
+		}
+		if w.viewport == nil {
+			w.pending = nil
+			w.closing = true
+			return
 		}
 
 		// Clean up accessibility resources
@@ -476,7 +473,11 @@ func (w *window) processMouseMoved(xpos float64, ypos float64) {
 		return hover
 	})
 
-	if w.cursor != cursor {
+	if cursor == nil {
+		cursor = desktop.DefaultCursor
+	}
+	// Cursor implementations can contain slices or other non-comparable data.
+	if !reflect.ValueOf(cursor).Comparable() || w.cursor != cursor {
 		// cursor has changed, store new cursor and apply change via glfw
 		rawCursor, isCustomCursor := fyneToNativeCursor(cursor)
 		w.cursor = cursor
@@ -1104,7 +1105,7 @@ func (w *window) doShowAgain() {
 	if !build.IsWayland {
 		view.SetPos(w.xpos, w.ypos)
 	}
-	if !w.prepareVisualFirstFrame() {
+	if !w.prepareVisualFirstFrame() || w.closing {
 		return
 	}
 	view.Show()

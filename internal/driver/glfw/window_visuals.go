@@ -26,6 +26,7 @@ type windowVisualState struct {
 	capabilities                                                       desktop.VisualCapabilities
 	enabled, started, alphaReserved, closed, applyQueued, notifyQueued bool
 	observers                                                          map[*visualObserver]struct{}
+	waitForDrawable                                                    bool               // UI thread only
 	policyNext                                                         time.Time          // UI thread only
 	lastPolicy                                                         windowVisualPolicy // UI thread only
 }
@@ -208,10 +209,9 @@ func (w *window) applyQueuedVisuals() {
 func (w *window) closeWindowVisuals() bool {
 	v := &w.visuals
 	v.mu.Lock()
-	enabled := v.enabled
 	if v.closed {
 		v.mu.Unlock()
-		return enabled
+		return false
 	}
 	v.closed = true
 	v.active.Store(false)
@@ -221,11 +221,11 @@ func (w *window) closeWindowVisuals() bool {
 	v.capabilities.CanChangeWithoutRecreate = false
 	v.mu.Unlock()
 	w.queueVisualNotification()
-	return enabled
+	return true
 }
 
-func (w *window) visualsClosed() bool {
+func (w *window) windowClosed() bool {
 	w.visuals.mu.Lock()
 	defer w.visuals.mu.Unlock()
-	return w.visuals.enabled && w.visuals.closed
+	return w.visuals.closed
 }

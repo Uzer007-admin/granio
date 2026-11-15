@@ -1,37 +1,32 @@
 package glfw
 
 import (
-	"runtime"
-	"syscall"
+	"fmt"
 	"unsafe"
 
 	"github.com/Uzer007-admin/granio/v2"
 	"github.com/Uzer007-admin/granio/v2/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
 	"github.com/Uzer007-admin/granio/v2/internal/scale"
 
+	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
 )
 
-func (w *window) setDarkMode() {
-	if runtime.GOOS == goos.Windows {
-		hwnd := w.view().GetWin32Window()
-		dark := isDark()
-		// cannot use a go bool.
-		var winBool int32
-		if dark {
-			winBool = 1
-		}
-		dwm := syscall.NewLazyDLL("dwmapi.dll")
-		setAtt := dwm.NewProc("DwmSetWindowAttribute")
-		ret, _, err := setAtt.Call(uintptr(unsafe.Pointer(hwnd)), // window handle
-			20,                                // DWMWA_USE_IMMERSIVE_DARK_MODE
-			uintptr(unsafe.Pointer(&winBool)), // on or off
-			4)                                 // sizeof(bool for windows)
+var setWindowThemeAttribute = windows.NewLazySystemDLL("dwmapi.dll").NewProc("DwmSetWindowAttribute")
 
-		if ret != 0 && ret != 0x80070057 { // err is always non-nil, we check return value (except erroneous code)
-			granio.LogError("Failed to set dark mode", err)
-		}
+func (w *window) setDarkMode() {
+	view := w.view()
+	if view == nil {
+		return
+	}
+	var dark int32 // Win32 BOOL
+	if isDark() {
+		dark = 1
+	}
+	result, _, _ := setWindowThemeAttribute.Call(uintptr(unsafe.Pointer(view.GetWin32Window())),
+		20, uintptr(unsafe.Pointer(&dark)), unsafe.Sizeof(dark)) // DWMWA_USE_IMMERSIVE_DARK_MODE
+	if int32(result) < 0 && uint32(result) != 0x80070057 { // Older Windows does not know this attribute.
+		granio.LogError("Failed to set dark mode", fmt.Errorf("DwmSetWindowAttribute: HRESULT 0x%08x", uint32(result)))
 	}
 }
 

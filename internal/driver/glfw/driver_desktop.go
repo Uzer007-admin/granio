@@ -40,7 +40,7 @@ func (d *gLDriver) CreateWindow(title string) (win granio.Window) {
 
 func (*gLDriver) HasSecondaryDisplay() bool {
 	monitors := glfw.GetMonitors()
-	if len(monitors) == 1 {
+	if len(monitors) < 2 {
 		return false
 	}
 

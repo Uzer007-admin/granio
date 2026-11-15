@@ -66,11 +66,6 @@ type graphicsError struct {
 
 func (e graphicsError) Error() string { return fmt.Sprintf("%s: HRESULT 0x%08x", e.operation, e.code) }
 
-func graphicsDeviceLost(err error) bool {
-	e, ok := err.(graphicsError)
-	return ok && (e.code == 0x887a0005 || e.code == 0x887a0006 || e.code == 0x887a0007)
-}
-
 func graphicsResult(operation string, result uintptr) error {
 	if int32(result) < 0 {
 		return graphicsError{operation, uint32(result)}
@@ -333,19 +328,16 @@ func (p *wglDXGIPresenter) present(width, height int) error {
 	if err := graphicsResult("DXGI Present", result); err != nil {
 		return err
 	}
+	if uint32(result) != 0 { // E.g. DXGI_STATUS_OCCLUDED cannot seed a visual.
+		return nil
+	}
 	if p.composition != nil {
 		if err := p.commitComposition(); err != nil {
 			return err
 		}
 	}
-	if result == 0 {
-		p.frames++
-	}
+	p.frames++
 	return nil
-}
-
-func (p *wglDXGIPresenter) deviceLost() bool {
-	return p.device != nil && int32(p.device.call(39)) < 0 // GetDeviceRemovedReason
 }
 
 func (p *wglDXGIPresenter) destroy() {

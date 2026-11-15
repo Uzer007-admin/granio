@@ -431,9 +431,21 @@ func (w *window) scaled(_ *glfw.Window, x, _ float32) {
 
 func (w *window) frameSized(_ *glfw.Window, width, height int) {
 	w.processFrameSized(width, height)
+	if width > 0 && height > 0 {
+		w.resumeDeferredVisuals()
+	}
+}
+
+func (w *window) iconified(_ *glfw.Window, minimized bool) {
+	if !minimized && !w.closing {
+		w.resumeDeferredVisuals()
+		w.requestPresentationCheck()
+		w.canvas.SetDirty()
+	}
 }
 
 func (w *window) refresh(_ *glfw.Window) {
+	w.requestPresentationCheck()
 	w.processRefresh()
 }
 
@@ -929,6 +941,7 @@ func (w *window) create() {
 	win.SetPosCallback(w.moved)
 	win.SetSizeCallback(w.resized)
 	win.SetFramebufferSizeCallback(w.frameSized)
+	win.SetIconifyCallback(w.iconified)
 	win.SetRefreshCallback(w.refresh)
 	win.SetContentScaleCallback(w.scaled)
 	win.SetCursorPosCallback(w.mouseMoved)

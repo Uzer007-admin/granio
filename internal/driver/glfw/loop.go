@@ -232,7 +232,7 @@ func (d *gLDriver) processWindowEvents() {
 		w.ensurePositionProcessed()
 		w.refreshVisualPolicy()
 		if w.viewport == nil {
-			if w.closing && w.visualsClosed() {
+			if w.closing {
 				d.destroyWindow(w, i)
 				i--
 			}
@@ -257,6 +257,7 @@ func (d *gLDriver) processWindowEvents() {
 func (d *gLDriver) destroyWindow(w *window, index int) {
 	w.visible = false
 	if w.viewport != nil {
+		w.setCustomCursor(nil, false)
 		w.releasePresentation()
 		w.viewport.Destroy()
 	}
