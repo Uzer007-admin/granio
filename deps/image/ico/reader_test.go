@@ -23,8 +23,8 @@ func TestDecodeAll(t *testing.T) {
 		rd.Close()
 
 		// Specific Testfile with no images should error
-		if f == "testdata/DFONT.ico" {
-			assert.Error(err, ico.ErrorNoEntries)
+		if filepath.Base(f) == "DFONT.ico" {
+			assert.ErrorIs(err, ico.ErrorNoEntries)
 			continue
 		}
 		assert.NoError(err, f)

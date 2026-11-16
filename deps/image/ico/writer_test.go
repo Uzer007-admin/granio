@@ -1,6 +1,7 @@
 package ico
 
 import (
+	"bytes"
 	"image"
 	"image/png"
 	"os"
@@ -20,14 +21,18 @@ func TestWriter(t *testing.T) {
 	fn := "testdata/icondata.png"
 	m0, err := readPng(fn)
 	if err != nil {
-		t.Error(fn, err)
+		t.Fatal(fn, err)
 	}
 
-	icoimg, _ := os.Create("testdata/new.ico")
-	defer icoimg.Close()
-
-	err = Encode(icoimg, m0)
+	var encoded bytes.Buffer
+	if err := Encode(&encoded, m0); err != nil {
+		t.Fatal(err)
+	}
+	decoded, err := Decode(&encoded)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
+	}
+	if got, want := decoded.Bounds(), m0.Bounds(); got != want {
+		t.Fatalf("decoded bounds %v, want %v", got, want)
 	}
 }

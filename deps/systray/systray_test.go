@@ -2,8 +2,10 @@ package systray
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 	"testing"
+	"time"
 )
 
 func TestMenuItem_Remove(t *testing.T) {
@@ -74,11 +76,25 @@ func TestMenuItem_Remove(t *testing.T) {
 	}
 	var wait sync.WaitGroup
 	wait.Add(1)
-	go Run(func() {
-		SetTitle("Test Tray")
-		SetTooltip("Test Tray Tooltip")
-		wait.Done()
-	}, nil)
+	exited := make(chan struct{})
+	go func() {
+		runtime.LockOSThread()
+		defer runtime.UnlockOSThread()
+		defer close(exited)
+		Run(func() {
+			SetTitle("Test Tray")
+			SetTooltip("Test Tray Tooltip")
+			wait.Done()
+		}, nil)
+	}()
+	t.Cleanup(func() {
+		quit()
+		select {
+		case <-exited:
+		case <-time.After(5 * time.Second):
+			t.Error("tray event loop did not exit")
+		}
+	})
 	wait.Wait()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -91,5 +107,4 @@ func TestMenuItem_Remove(t *testing.T) {
 			}
 		})
 	}
-	quit()
 }
