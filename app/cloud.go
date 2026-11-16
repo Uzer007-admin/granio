@@ -1,6 +1,6 @@
 package app
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 func (a *fyneApp) SetCloudProvider(p granio.CloudProvider) {
 	if p == nil {

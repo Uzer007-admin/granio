@@ -14,7 +14,7 @@ import (
 	"image/color"
 	"runtime"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func windowsAppearance(raw C.FyneAppearanceSnapshot) granio.SystemAppearance {

@@ -3,11 +3,11 @@ package dialog
 import (
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 // ProgressDialog is a simple dialog window that displays text and a progress bar.

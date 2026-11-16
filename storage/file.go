@@ -4,7 +4,7 @@ package storage
 import (
 	"errors"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // OpenFileFromURI loads a file read stream from a resource identifier.

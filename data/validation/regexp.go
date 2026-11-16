@@ -5,7 +5,7 @@ import (
 	"errors"
 	"regexp"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // NewRegexp creates a new validator that uses regular expression parsing.

@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
 )
 
 const domainLabelPattern = "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?"

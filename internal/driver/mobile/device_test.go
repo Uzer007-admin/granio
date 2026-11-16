@@ -3,9 +3,9 @@ package mobile
 import (
 	"io"
 	"log"
-	"os"
 	"testing"
 
+	"github.com/Uzer007-admin/granio/v3"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,11 +17,16 @@ func Test_device(t *testing.T) {
 	assert.Equal(t, false, dev.HasKeyboard())
 }
 
-func Test_device_HideVirtualKeyboard_BeforeRun(t *testing.T) {
-	// Discarding log output for tests
-	// The following method logs an error:
-	// (&device{}).HideVirtualKeyboard() // should not crash!
+func TestDeviceVirtualKeyboardWithoutApp(t *testing.T) {
+	previousApp, previousLog := granio.CurrentApp(), log.Writer()
+	t.Cleanup(func() {
+		granio.SetCurrentApp(previousApp)
+		log.SetOutput(previousLog)
+	})
+	granio.SetCurrentApp(nil)
 	log.SetOutput(io.Discard)
-	t.Cleanup(func() { log.SetOutput(os.Stderr) })
-	(&device{}).HideVirtualKeyboard() // should not crash!
+
+	dev := &device{}
+	assert.NotPanics(t, dev.ShowVirtualKeyboard)
+	assert.NotPanics(t, dev.HideVirtualKeyboard)
 }

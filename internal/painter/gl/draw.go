@@ -5,11 +5,11 @@ import (
 	"math"
 	"sort"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	paint "github.com/Uzer007-admin/granio/v3/internal/painter"
 )
 
 const (
@@ -74,7 +74,7 @@ const (
 func (p *painter) createBuffer(size int) Buffer {
 	vbo := p.ctx.CreateBuffer()
 	p.logError()
-	p.ctx.BindBuffer(arrayBuffer, vbo)
+	p.bindArrayBuffer(vbo)
 	p.logError()
 	p.ctx.BufferData(arrayBuffer, make([]float32, size), staticDraw)
 	p.logError()
@@ -164,7 +164,7 @@ func (p *painter) drawBlur(b *canvas.Blur, pos granio.Position, frame granio.Siz
 	p.UpdateVertexArray(p.programs.blur, attrVertex, coordinateSize2D, coordinateSize2DWithTexture, 0)
 	p.UpdateVertexArray(p.programs.blur, attrVertexTextureCoordinates, coordinateSize2D, coordinateSize2DWithTexture, coordinateSize2D)
 
-	p.ctx.BlendFunc(one, oneMinusSrcAlpha)
+	p.blendFunc(one, oneMinusSrcAlpha)
 	p.logError()
 
 	cornerRadius := min(paint.GetMaximumRadius(b.Size()), b.CornerRadius)
@@ -188,7 +188,7 @@ func (p *painter) drawBlur(b *canvas.Blur, pos granio.Position, frame granio.Siz
 
 	// Horizontal Blur
 	// Draw horizontal blur over the background. Use gl: one, gl: zero to replace the screen content.
-	p.ctx.BlendFunc(one, zero)
+	p.blendFunc(one, zero)
 	p.SetUniform2f(p.programs.blur, attrDirection, 1.0/float32(bw), 0.0)
 
 	p.ctx.DrawArrays(triangleStrip, 0, vertexCountRectangle)
@@ -199,7 +199,7 @@ func (p *painter) drawBlur(b *canvas.Blur, pos granio.Position, frame granio.Siz
 	// Vertical Blur
 	// Draw vertical blur using the horizontally-blurred texture.
 	// Use one, zero since it replaces the exact same rect we just copied from.
-	p.ctx.BlendFunc(one, zero)
+	p.blendFunc(one, zero)
 	p.SetUniform2f(p.programs.blur, attrDirection, 0.0, 1.0/float32(bh))
 
 	p.ctx.DrawArrays(triangleStrip, 0, vertexCountRectangle)
@@ -216,7 +216,7 @@ func (p *painter) drawCircle(circle *canvas.Circle, pos granio.Position, frame g
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -302,7 +302,7 @@ func (p *painter) drawBezierCurve(bezierCurve *canvas.BezierCurve, pos granio.Po
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -366,7 +366,7 @@ func (p *painter) drawArbitraryPolygon(polygon *canvas.ArbitraryPolygon, pos gra
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -520,7 +520,7 @@ func (p *painter) drawShader(shader *canvas.Shader, pos granio.Position, frame g
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -581,15 +581,12 @@ func (p *painter) drawRaster(img *canvas.Raster, pos granio.Position, frame gran
 }
 
 func (p *painter) drawRectangle(rect *canvas.Rectangle, pos granio.Position, frame granio.Size) {
-	topRightRadius := paint.GetCornerRadius(rect.TopRightCornerRadius, rect.CornerRadius)
-	topLeftRadius := paint.GetCornerRadius(rect.TopLeftCornerRadius, rect.CornerRadius)
-	bottomRightRadius := paint.GetCornerRadius(rect.BottomRightCornerRadius, rect.CornerRadius)
-	bottomLeftRadius := paint.GetCornerRadius(rect.BottomLeftCornerRadius, rect.CornerRadius)
-	if topRightRadius == 0 && topLeftRadius == 0 && bottomRightRadius == 0 && bottomLeftRadius == 0 &&
+	r := rect.EffectiveCornerRadii(rect.Size())
+	if r == (granio.CornerRadii{}) &&
 		p.pushSolidRect(rect, pos, frame) {
 		return
 	}
-	p.drawOblong(rect, rect.FillColor, rect.StrokeColor, rect.StrokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, rect.Aspect, rect.Shadow, pos, frame)
+	p.drawOblong(rect, rect.FillColor, rect.StrokeColor, rect.StrokeWidth, r.TopRight, r.TopLeft, r.BottomRight, r.BottomLeft, rect.Aspect, rect.Shadow, pos, frame)
 }
 
 func (p *painter) drawOblong(obj granio.CanvasObject, fill, stroke color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, aspect float32, shadow canvas.Shadow, pos granio.Position, frame granio.Size) {
@@ -611,7 +608,7 @@ func (p *painter) drawOblong(obj granio.CanvasObject, fill, stroke color.Color, 
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -698,7 +695,7 @@ func (p *painter) drawPolygon(polygon *canvas.RegularPolygon, pos granio.Positio
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -755,7 +752,7 @@ func (p *painter) drawArc(arc *canvas.Arc, pos granio.Position, frame granio.Siz
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -829,7 +826,7 @@ func (p *painter) drawEllipse(ellipse *canvas.Ellipse, pos granio.Position, fram
 	p.updateBuffer(program.buff, points[:])
 	p.UpdateVertexArray(program, attrVertex, coordinateSize2D, coordinateSize2D, 0)
 
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.logError()
 	// Vertex: END
 
@@ -980,7 +977,7 @@ func (p *painter) drawTextureRegion(texture Texture, pos granio.Position, size, 
 
 	p.SetUniform1f(p.programs.simple, attrAlpha, alpha)
 
-	p.ctx.BlendFunc(one, oneMinusSrcAlpha)
+	p.blendFunc(one, oneMinusSrcAlpha)
 	p.logError()
 
 	p.ctx.ActiveTexture(texture0)

@@ -3,7 +3,7 @@ package storage
 import (
 	"io"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // LoadResourceFromURI creates a new StaticResource in memory using the contents of the specified URI.

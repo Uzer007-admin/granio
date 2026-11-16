@@ -1,10 +1,10 @@
 package test
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	fynedriver "github.com/Uzer007-admin/granio/v2/driver"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/driver/software"
+	"github.com/Uzer007-admin/granio/v3"
+	fynedriver "github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/driver/software"
 )
 
 // WindowlessCanvas provides functionality for a canvas to operate without a window

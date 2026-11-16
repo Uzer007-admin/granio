@@ -2,7 +2,7 @@
 
 package widget
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // DragEnd will stop scrolling on mobile has stopped
 func (s *Scroll) DragEnd() {

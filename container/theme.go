@@ -1,10 +1,10 @@
 package container
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	intTheme "github.com/Uzer007-admin/granio/v2/internal/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	intTheme "github.com/Uzer007-admin/granio/v3/internal/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 // ThemeOverride is a container where the child widgets are themed by the specified theme.
@@ -74,6 +74,8 @@ type featureTheme struct {
 
 	over *ThemeOverride
 }
+
+func (f *featureTheme) UnderlyingTheme() granio.Theme { return f.Theme }
 
 func addFeatures(th granio.Theme, o *ThemeOverride) granio.Theme {
 	return &featureTheme{Theme: th, over: o}

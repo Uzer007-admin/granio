@@ -1,6 +1,6 @@
 package desktop
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // CompositionEvent describes uncommitted input-method text. All offsets count
 // Unicode runes, rather than UTF-8 bytes or platform UTF-16 code units.

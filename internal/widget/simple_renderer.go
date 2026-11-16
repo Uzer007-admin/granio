@@ -1,6 +1,6 @@
 package widget
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 var _ granio.WidgetRenderer = (*SimpleRenderer)(nil)
 

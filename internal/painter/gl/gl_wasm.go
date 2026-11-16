@@ -68,6 +68,7 @@ var (
 const glyphAtlasSupported = true
 
 func (p *painter) Init() {
+	p.bindings.reset()
 	p.ctx = &xjsContext{}
 	p.maxTextureSize = p.ctx.GetInteger(maxTextureSizeParam)
 	gl.Disable(gl.DEPTH_TEST)

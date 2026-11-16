@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2/storage"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3/storage"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 func TestFileRepositoryChild(t *testing.T) {

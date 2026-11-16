@@ -1,8 +1,8 @@
 package lang
 
 import (
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/mobileinit"
 
 	"github.com/jeandeaual/go-locale"
 )

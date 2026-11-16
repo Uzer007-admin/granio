@@ -4,8 +4,8 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
 )
 
 const (

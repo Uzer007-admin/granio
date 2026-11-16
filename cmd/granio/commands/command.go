@@ -1,7 +1,7 @@
 // Package commands provides functionality for managing fyne packages and the build process
 package commands
 
-import "github.com/Uzer007-admin/granio/v2/cmd/granio/internal/commands"
+import "github.com/Uzer007-admin/granio/v3/cmd/granio/internal/commands"
 
 // Command defines the required functionality to provide a subcommand to the "fyne" tool.
 //

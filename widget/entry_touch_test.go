@@ -3,9 +3,9 @@ package widget
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/mobile"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3/test"
 )
 
 func TestEntry_TouchDown_AccountsForScroll(t *testing.T) {

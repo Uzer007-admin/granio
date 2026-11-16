@@ -3,13 +3,15 @@
 package glfw
 
 import (
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"time"
+
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/gl"
 )
 
 func windowVisualAlphaFormat() bool             { return false }
 func (w *window) prepareVisualFirstFrame() bool { return w.applyWindowVisuals() }
-func (*window) refreshVisualPolicy()            {}
+func (*window) refreshVisualPolicy() time.Time  { return time.Time{} }
 func (w *window) applyWindowVisuals() bool {
 	o, status, enabled := w.visualRequest()
 	if !enabled {

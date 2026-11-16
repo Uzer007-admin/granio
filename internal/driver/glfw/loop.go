@@ -6,14 +6,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 )
 
 type funcData struct {
@@ -226,11 +226,14 @@ func (d *gLDriver) finishLoop() {
 	d.Terminate()
 }
 
-func (d *gLDriver) processWindowEvents() {
+func (d *gLDriver) processWindowEvents() time.Time {
+	var nextVisualUpdate time.Time
 	for i := 0; i < len(d.windows); i++ {
 		w := d.windows[i].(*window)
 		w.ensurePositionProcessed()
-		w.refreshVisualPolicy()
+		if next := w.refreshVisualPolicy(); !next.IsZero() && (nextVisualUpdate.IsZero() || next.Before(nextVisualUpdate)) {
+			nextVisualUpdate = next
+		}
 		if w.viewport == nil {
 			if w.closing {
 				d.destroyWindow(w, i)
@@ -248,10 +251,11 @@ func (d *gLDriver) processWindowEvents() {
 			shouldExpand := w.shouldExpand
 			w.shouldExpand = false
 			if shouldExpand && runtime.GOOS != goos.JavaScript {
-				w.viewport.SetSize(w.shouldWidth, w.shouldHeight)
+				w.setViewportSize(w.shouldWidth, w.shouldHeight)
 			}
 		}
 	}
+	return nextVisualUpdate
 }
 
 func (d *gLDriver) destroyWindow(w *window, index int) {
@@ -306,12 +310,18 @@ func refreshWindow(w *window) {
 
 func updateGLContext(w *window) {
 	canvas := w.canvas
+	p := canvas.Painter()
+	p.SetFrameBufferScale(canvas.texScale)
+	if w.softwareRendering() {
+		width, height := w.softwareFrameSize()
+		p.SetOutputSize(width, height)
+		return
+	}
 	size := canvas.Size()
 
 	// w.width and w.height are not correct if we are maximised, so figure from canvas
 	winWidth := float32(scale.ToScreenCoordinate(canvas, size.Width)) * canvas.texScale
 	winHeight := float32(scale.ToScreenCoordinate(canvas, size.Height)) * canvas.texScale
 
-	canvas.Painter().SetFrameBufferScale(canvas.texScale)
-	canvas.Painter().SetOutputSize(int(winWidth), int(winHeight))
+	p.SetOutputSize(int(winWidth), int(winHeight))
 }

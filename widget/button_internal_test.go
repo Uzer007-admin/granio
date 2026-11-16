@@ -6,15 +6,39 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	col "github.com/Uzer007-admin/granio/v2/internal/color"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	col "github.com/Uzer007-admin/granio/v3/internal/color"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
+
+func TestToolbarButtonHoverKeepsIconBitmap(t *testing.T) {
+	test.NewTempApp(t)
+	button := NewButtonWithIcon("", theme.HomeIcon(), nil)
+	button.Style = ButtonStyleToolbar
+	button.Resize(granio.NewSize(36, 30))
+	renderer := test.TempWidgetRenderer(t, button).(*buttonRenderer)
+	before := renderer.icon.Image
+	require.NotNil(t, before)
+	button.MouseIn(&desktop.MouseEvent{})
+	require.Same(t, before, renderer.icon.Image)
+	require.False(t, colorsEqual(renderer.background.FillColor, color.Transparent))
+	button.MouseOut()
+	button.SetSelected(true)
+	require.True(t, colorsEqual(theme.ColorForWidget(theme.ColorNameSelection, button), renderer.background.FillColor))
+	taps := 0
+	button.OnTapped = func() { taps++ }
+	button.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
+	button.Disable()
+	button.TypedKey(&granio.KeyEvent{Name: granio.KeySpace})
+	require.Equal(t, 1, taps)
+}
 
 func TestButton_Style(t *testing.T) {
 	button := NewButton("Test", nil)

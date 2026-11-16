@@ -5,14 +5,14 @@ import (
 	"math"
 	"sort"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/data/binding"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/data/binding"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // Declare conformity with interfaces.

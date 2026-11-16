@@ -5,13 +5,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	intWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	intWidget "github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 func clickPrimary(e *Entry, ev *granio.PointEvent) {
@@ -27,6 +27,20 @@ func clickPrimary(e *Entry, ev *granio.PointEvent) {
 func TestEntry_Cursor(t *testing.T) {
 	entry := NewEntry()
 	assert.Equal(t, desktop.TextCursor, entry.Cursor())
+}
+
+func TestEntry_BorderlessRetainsCaretOnFocus(t *testing.T) {
+	test.NewTempApp(t)
+	entry := NewMultiLineEntry()
+	entry.Borderless = true
+	entry.Resize(granio.NewSize(220, 60))
+	entry.FocusGained()
+	renderer := cache.Renderer(entry).(*entryRenderer)
+	assert.False(t, renderer.border.Visible())
+	assert.True(t, entry.cursorAnim.cursor.Visible())
+	entry.Borderless = false
+	entry.Refresh()
+	assert.True(t, renderer.border.Visible())
 }
 
 func TestEntry_DoubleTapped(t *testing.T) {

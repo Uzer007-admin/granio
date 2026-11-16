@@ -1,47 +1,64 @@
 package common
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"sync"
+
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal"
 )
 
+const retainedRefreshObjects = 4096
+
 type deduplicatedObjectQueue struct {
-	queue *async.CanvasObjectQueue
-	dedup async.Map[granio.CanvasObject, struct{}] //revive:disable-line:nested-structs -- The empty struct here is a common pattern to simulate a set via a map.
+	mu      sync.Mutex
+	pending []granio.CanvasObject
+	spare   []granio.CanvasObject
+	dedup   map[granio.CanvasObject]struct{}
 }
 
 // In adds an object to the queue if it is not already present.
 func (q *deduplicatedObjectQueue) In(obj granio.CanvasObject) {
-	_, exists := q.dedup.Load(obj)
-	if exists {
+	if obj == nil {
 		return
 	}
-
-	q.queue.In(obj)
-	q.dedup.Store(obj, struct{}{})
+	q.mu.Lock()
+	if _, exists := q.dedup[obj]; !exists {
+		if q.dedup == nil {
+			q.dedup = make(map[granio.CanvasObject]struct{})
+		}
+		q.dedup[obj] = struct{}{}
+		q.pending = append(q.pending, obj)
+	}
+	q.mu.Unlock()
 }
 
-// Out removes and returns the next object from the queue.
-// It assumes that the whole queue is drained and defers clearing
-// the deduplication map until it is empty.
-func (q *deduplicatedObjectQueue) Out() granio.CanvasObject {
-	if q.queue.Len() == 0 {
-		q.dedup.Clear()
-		return nil
+// drain takes the current batch before calling into the painter. Objects
+// refreshed in the meantime enter the next batch, including ones just drained.
+func (q *deduplicatedObjectQueue) drain(consume func(granio.CanvasObject)) uint64 {
+	q.mu.Lock()
+	batch := q.pending
+	if len(batch) == 0 {
+		q.mu.Unlock()
+		return 0
 	}
-
-	out := q.queue.Out()
-	if !build.MigratedToFyneDo() {
-		q.dedup.Delete(out)
+	q.pending, q.spare = q.spare[:0], nil
+	if len(batch) > retainedRefreshObjects {
+		q.dedup = nil
+	} else {
+		clear(q.dedup)
 	}
-	return out
-}
+	q.mu.Unlock()
 
-// Len returns the number of elements in the queue.
-func (q *deduplicatedObjectQueue) Len() uint64 {
-	return q.queue.Len()
+	for _, object := range batch {
+		consume(object)
+	}
+	if cap(batch) <= retainedRefreshObjects {
+		clear(batch)
+		q.mu.Lock()
+		q.spare = batch[:0]
+		q.mu.Unlock()
+	}
+	return uint64(len(batch))
 }
 
 type renderCacheTree struct {

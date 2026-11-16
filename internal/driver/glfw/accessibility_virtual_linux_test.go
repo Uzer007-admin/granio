@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/Uzer007-admin/dbus/v5"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/widget"
 	"github.com/stretchr/testify/require"
 )
 

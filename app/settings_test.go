@@ -5,12 +5,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	internalapp "github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	internalapp "github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	internalTest "github.com/Uzer007-admin/granio/v3/internal/test"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

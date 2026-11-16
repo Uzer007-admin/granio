@@ -3,8 +3,8 @@ package desktop
 import (
 	"errors"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // ApplyModernProfile configures an existing window and application on the UI

@@ -4,11 +4,11 @@ import (
 	"image"
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	paint "github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // This file is the GL half of the glyph atlas in internal/painter's atlas.go.
@@ -34,7 +34,7 @@ const (
 // quads queued before the object reach the framebuffer before it does.
 func (p *painter) useProgram(prog Program) {
 	p.FlushGlyphs()
-	p.ctx.UseProgram(prog)
+	p.bindProgram(prog)
 }
 
 // FlushGlyphs draws the queued batch, quads or lines, in one draw call. It has
@@ -54,13 +54,13 @@ func (p *painter) flushQuads() {
 	}
 
 	prog := p.programs.glyph
-	p.ctx.UseProgram(prog.ref)
-	p.ctx.BindBuffer(arrayBuffer, prog.buff)
+	p.bindProgram(prog.ref)
+	p.bindArrayBuffer(prog.buff)
 	p.ctx.BufferData(arrayBuffer, p.glyphPending, staticDraw)
 	p.UpdateVertexArray(prog, attrVertex, 2, glyphVertexFloats, 0)
 	p.UpdateVertexArray(prog, attrVertexTextureCoordinates, 2, glyphVertexFloats, 2)
 	p.UpdateVertexArray(prog, attrVertexColor, 4, glyphVertexFloats, 4)
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.ctx.ActiveTexture(texture0)
 	p.ctx.BindTexture(texture2D, p.atlasTex)
 	p.ctx.DrawArrays(triangles, 0, vertices)
@@ -79,14 +79,14 @@ func (p *painter) flushLines() {
 	}
 
 	prog := p.programs.line
-	p.ctx.UseProgram(prog.ref)
-	p.ctx.BindBuffer(arrayBuffer, prog.buff)
+	p.bindProgram(prog.ref)
+	p.bindArrayBuffer(prog.buff)
 	p.ctx.BufferData(arrayBuffer, p.linePending, staticDraw)
 	p.UpdateVertexArray(prog, attrVertex, 2, lineVertexFloats, 0)
 	p.UpdateVertexArray(prog, attrNormal, 2, lineVertexFloats, 2)
 	p.UpdateVertexArray(prog, attrVertexColor, 4, lineVertexFloats, 4)
 	p.UpdateVertexArray(prog, attrLineStyle, 2, lineVertexFloats, lineStyleOffset)
-	p.ctx.BlendFunc(srcAlpha, oneMinusSrcAlpha)
+	p.blendFunc(srcAlpha, oneMinusSrcAlpha)
 	p.ctx.DrawArrays(triangles, 0, vertices)
 	p.logError()
 
@@ -115,10 +115,6 @@ func (p *painter) ResizeAtlas(int) {
 }
 
 // ensureAtlas allocates the atlas texture the first time anything is batched.
-//
-// The texture is RGBA, although only alpha is read. A single-channel one would
-// be a quarter of the 4MB (16MB once grown), but needs format constants and an
-// unpack alignment call on every GL binding; this needs neither.
 func (p *painter) ensureAtlas() {
 	if p.atlasTexValid {
 		return
@@ -128,7 +124,10 @@ func (p *painter) ensureAtlas() {
 	// Cleared rather than left undefined: nothing samples outside the glyphs,
 	// but a driver that hands back stale memory would make any bug in that
 	// promise show up as garbage instead of nothing.
-	p.ctx.TexImage2D(texture2D, 0, size, size, colorFormatRGBA, unsignedByte, make([]uint8, size*size*4))
+	compact, ok := p.ctx.(interface{ allocateCompactGlyphAtlas(int) bool })
+	if !ok || !compact.allocateCompactGlyphAtlas(size) {
+		p.ctx.TexImage2D(texture2D, 0, size, size, colorFormatRGBA, unsignedByte, make([]uint8, size*size*4))
+	}
 	p.logError()
 	p.atlasTexValid = true
 }

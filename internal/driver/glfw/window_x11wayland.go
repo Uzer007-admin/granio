@@ -7,8 +7,8 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
 )
 
 // assert we are implementing driver.NativeWindow

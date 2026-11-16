@@ -1,9 +1,9 @@
 package layout
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // Declare conformity with Layout interface

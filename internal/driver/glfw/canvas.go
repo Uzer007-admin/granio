@@ -2,19 +2,20 @@ package glfw
 
 import (
 	"image"
+	"image/color"
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // Declare conformity with Canvas interface
@@ -274,6 +275,7 @@ func (c *glCanvas) reloadScale() {
 	}
 
 	c.scale = w.calculatedScale()
+	w.updateClientTitleBar()
 	c.SetDirty()
 
 	c.context.RescaleContext()
@@ -348,26 +350,35 @@ func (c *glCanvas) paint(size granio.Size) {
 	if c.Content() == nil {
 		return
 	}
-	c.Painter().Clear()
+	p := c.Painter()
+	if w, ok := c.context.(*window); ok && w.visuals.active.Load() {
+		if surface, ok := p.(interface{ SetWindowBackdropTint(color.NRGBA) }); ok {
+			w.visuals.mu.Lock()
+			tint := w.visuals.tint
+			w.visuals.mu.Unlock()
+			surface.SetWindowBackdropTint(tint)
+		}
+	}
+	p.Clear()
 
 	paint := func(node *common.RenderCacheNode, pos granio.Position) {
 		obj := node.Obj()
 		if driver.IsClip(obj) {
 			inner := clips.Push(pos, obj.Size())
-			c.Painter().StartClipping(inner.Rect())
+			p.StartClipping(inner.Rect())
 		}
 		if size.Width <= 0 || size.Height <= 0 { // iconifying on Windows can do bad things
 			return
 		}
-		c.Painter().Paint(obj, pos, size, clips.Top())
+		p.Paint(obj, pos, size, clips.Top())
 	}
 	afterPaint := func(node *common.RenderCacheNode, pos granio.Position) {
 		if driver.IsClip(node.Obj()) {
 			clips.Pop()
 			if top := clips.Top(); top != nil {
-				c.Painter().StartClipping(top.Rect())
+				p.StartClipping(top.Rect())
 			} else {
-				c.Painter().StopClipping()
+				p.StopClipping()
 			}
 		}
 
@@ -378,8 +389,8 @@ func (c *glCanvas) paint(size granio.Size) {
 	c.WalkTrees(paint, afterPaint)
 	// The painter batches text and plain rectangles, so the tail of the tree can
 	// still be sitting in a queue when the walk ends.
-	if p, ok := c.Painter().(interface{ FlushGlyphs() }); ok {
-		p.FlushGlyphs()
+	if flusher, ok := p.(interface{ FlushGlyphs() }); ok {
+		flusher.FlushGlyphs()
 	}
 }
 

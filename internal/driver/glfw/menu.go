@@ -1,7 +1,7 @@
 package glfw
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func buildMenuOverlay(menus *granio.MainMenu, w *window) granio.CanvasObject {

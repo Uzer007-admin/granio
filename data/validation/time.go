@@ -3,7 +3,7 @@ package validation
 import (
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // NewTime creates a new validator that verifies times using time.Parse.

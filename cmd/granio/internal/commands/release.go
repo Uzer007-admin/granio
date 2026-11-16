@@ -9,9 +9,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/mobile"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
 
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sys/execabs"

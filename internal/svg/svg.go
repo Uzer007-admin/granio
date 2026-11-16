@@ -17,8 +17,8 @@ import (
 	"github.com/Uzer007-admin/granio/deps/oksvg"
 	"github.com/srwiley/rasterx"
 
-	"github.com/Uzer007-admin/granio/v2"
-	col "github.com/Uzer007-admin/granio/v2/internal/color"
+	"github.com/Uzer007-admin/granio/v3"
+	col "github.com/Uzer007-admin/granio/v3/internal/color"
 )
 
 const (

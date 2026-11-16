@@ -3,7 +3,7 @@ package gl
 import (
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 type WindowSurfaceMode uint8
@@ -34,6 +34,7 @@ func (p *painter) SetWindowSurface(mode WindowSurfaceMode) bool {
 	if !control.setPremultipliedAlpha(mode != WindowSurfaceLegacy) {
 		return false
 	}
+	p.bindings.haveBlend = false
 	if p.windowSurface != mode {
 		// The canvas clear colour is part of every material snapshot, even when
 		// none of the lower objects changed. Do not reuse the old alpha/background.
@@ -50,9 +51,15 @@ func (p *painter) WindowSurfaceAlphaBits() int {
 	return p.ctx.GetInteger(0x0D55)
 }
 
+func (p *painter) SetWindowBackdropTint(tint color.NRGBA) {
+	p.windowBackdropTint = tint
+}
+
 func (p *painter) windowClearColor() (float32, float32, float32, float32) {
 	if p.windowSurface == WindowSurfaceBackdrop {
-		return 0, 0, 0, 0
+		tint := p.windowBackdropTint
+		alpha := float32(tint.A) / 255
+		return float32(tint.R) * (alpha / 255), float32(tint.G) * (alpha / 255), float32(tint.B) * (alpha / 255), alpha
 	}
 	background := theme.Color(theme.ColorNameBackground)
 	if p.windowSurface == WindowSurfaceOpaque {

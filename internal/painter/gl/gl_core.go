@@ -6,9 +6,10 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/Uzer007-admin/gl/capabilities"
 	"github.com/Uzer007-admin/gl/v2.1/fyne"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 const (
@@ -72,6 +73,7 @@ var textureFilterToGL = [...]int32{gl.LINEAR, gl.NEAREST, gl.LINEAR}
 const glyphAtlasSupported = true
 
 func (p *painter) Init() {
+	p.bindings.reset()
 	p.ctx = nil
 	p.capture = nil
 	procs, err := gl.Load()
@@ -296,6 +298,32 @@ func (c *coreContext) ShaderSource(shader Shader, source string) {
 	if err := c.procs.ShaderSourceString(uint32(shader), source); err != nil {
 		granio.LogError("failed to upload shader source", err)
 	}
+}
+
+func (c *coreContext) allocateCompactGlyphAtlas(size int) bool {
+	procs := c.procs
+	api, major, minor, err := capabilities.ParseVersion(gl.GoStr(procs.GetString(gl.VERSION)))
+	if err != nil || api != capabilities.OpenGL || major < 3 || major == 3 && minor < 3 {
+		return false
+	}
+	const (
+		red           = 0x1903 // GL_RED
+		r8            = 0x8229 // GL_R8
+		swizzleAlpha  = 0x8e45 // GL_TEXTURE_SWIZZLE_A
+		identityAlpha = 0x1906 // GL_ALPHA
+	)
+	// The atlas rasterizes white premultiplied glyphs, so R equals coverage.
+	// The texture swizzle preserves the existing shader's alpha sampling.
+	// The atlas side is aligned for every supported unpack alignment.
+	pixels := make([]byte, size*size)
+	procs.TexImage2D(gl.TEXTURE_2D, 0, r8, int32(size), int32(size), 0,
+		red, gl.UNSIGNED_BYTE, unsafe.Pointer(unsafe.SliceData(pixels)))
+	procs.TexParameteri(gl.TEXTURE_2D, swizzleAlpha, red)
+	if procs.GetError() != 0 {
+		procs.TexParameteri(gl.TEXTURE_2D, swizzleAlpha, identityAlpha)
+		return false
+	}
+	return true
 }
 
 func (c *coreContext) TexImage2D(target uint32, level, width, height int, colorFormat, typ uint32, data []uint8) {

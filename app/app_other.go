@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func (a *fyneApp) OpenURL(_ *url.URL) error {

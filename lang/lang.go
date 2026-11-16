@@ -41,7 +41,7 @@ import (
 	"github.com/jeandeaual/go-locale"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 
 	"golang.org/x/text/language"
 )

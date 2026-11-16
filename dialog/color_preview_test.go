@@ -4,9 +4,9 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 func Test_colorPreview_Color(t *testing.T) {

@@ -4,12 +4,12 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/software"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/software"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 	"github.com/stretchr/testify/require"
 )
 

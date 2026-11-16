@@ -3,9 +3,10 @@
 package gl
 
 import (
-	"math"
+	"bytes"
+	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/gl"
 )
 
 const (
@@ -69,6 +70,7 @@ var (
 const glyphAtlasSupported = true
 
 func (p *painter) Init() {
+	p.bindings.reset()
 	glctx := p.contextProvider.Context().(gl.Context)
 	glctx.Disable(gl.DepthTest)
 	glctx.Enable(gl.Blend)
@@ -114,12 +116,12 @@ func (c *mobileContext) BlendFunc(srcFactor, destFactor uint32) {
 }
 
 func (c *mobileContext) BufferData(target uint32, points []float32, usage uint32) {
-	data := toLEByteOrder(points...)
+	data := copyFloatBuffer(points)
 	c.glContext.BufferData(gl.Enum(target), data, gl.Enum(usage))
 }
 
 func (c *mobileContext) BufferSubData(target uint32, points []float32) {
-	data := toLEByteOrder(points...)
+	data := copyFloatBuffer(points)
 	c.glContext.BufferSubData(gl.Enum(target), data)
 }
 
@@ -291,15 +293,9 @@ func (c *mobileContext) Viewport(x, y, width, height int) {
 	c.glContext.Viewport(x, y, width, height)
 }
 
-// toLEByteOrder returns the byte representation of float32 values in little endian byte order.
-func toLEByteOrder(values ...float32) []byte {
-	b := make([]byte, 4*len(values))
-	for i, v := range values {
-		u := math.Float32bits(v)
-		b[4*i+0] = byte(u >> 0)
-		b[4*i+1] = byte(u >> 8)
-		b[4*i+2] = byte(u >> 16)
-		b[4*i+3] = byte(u >> 24)
-	}
-	return b
+// The mobile GL worker consumes uploads asynchronously. Copy the native float
+// bytes before reusing the painter's vertex slice for the next submission.
+func copyFloatBuffer(values []float32) []byte {
+	raw := unsafe.Slice((*byte)(unsafe.Pointer(unsafe.SliceData(values))), len(values)*4)
+	return bytes.Clone(raw)
 }

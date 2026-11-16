@@ -2,7 +2,7 @@ package glfw
 
 import (
 	"fmt"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 )
 
 var _ desktop.FrameRateDriver = (*gLDriver)(nil)

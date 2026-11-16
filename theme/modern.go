@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // Density describes spacing rather than a platform-specific set of controls.

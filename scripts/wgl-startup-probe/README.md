@@ -4,7 +4,7 @@
 окна с WGL/OpenGL. Исходник GLFW — [go-gl/glfw](https://github.com/go-gl/glfw),
 обёрток GL — [go-gl/gl](https://github.com/go-gl/gl).
 
-Нужны Windows, Go 1.27.1+ и C-компилятор. Из этого каталога:
+Нужны Windows, Go 1.27.4+ и C-компилятор. Из этого каталога:
 
 ```powershell
 $env:GOWORK='off'

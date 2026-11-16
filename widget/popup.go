@@ -1,12 +1,12 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 var _ granio.Widget = (*PopUp)(nil)
@@ -168,6 +168,7 @@ func (p *PopUp) CreateRenderer() granio.WidgetRenderer {
 	background := canvas.NewRectangle(th.Color(theme.ColorNameOverlayBackground, v))
 	widget.ApplyShadowForLevel(&background.Shadow, widget.PopUpLevel, th.Color(theme.ColorNameShadow, v))
 	background.CornerRadius = th.Size(theme.SizeNamePopupRadius)
+	background.SetCornerRadii(theme.Corners(th, granio.ComponentPopup, v))
 	objects := []granio.CanvasObject{background, p.Content}
 	if p.Material != nil {
 		background.FillColor = nil
@@ -284,12 +285,15 @@ func (r *popUpRenderer) Refresh() {
 		r.Layout(r.popUp.Size())
 	}
 	if r.material != nil {
-		r.material.Fallback = r.background.FillColor
+		if !r.material.TranslucentFallback {
+			r.material.Fallback = r.background.FillColor
+		}
 		r.background.FillColor = nil
 		r.material.Refresh()
 	}
 	r.background.Shadow.Color = th.Color(theme.ColorNameShadow, v)
 	r.background.CornerRadius = th.Size(theme.SizeNamePopupRadius)
+	r.background.SetCornerRadii(theme.Corners(th, granio.ComponentPopup, v))
 	expectedContentSize := internal.MaxSizes(innerSize, r.popUp.MinSize()).Subtract(r.padding())
 	shouldRelayout := r.popUp.Content.Size() != expectedContentSize
 

@@ -13,8 +13,8 @@ import "C"
 
 import (
 	"fmt"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 	"slices"
 	"sort"
 	"strconv"

@@ -3,7 +3,7 @@ package scale
 import (
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // ToScreenCoordinate converts a fyne coordinate in the given canvas to a screen coordinate

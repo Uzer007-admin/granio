@@ -7,8 +7,8 @@ import (
 
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/theme"
 )
 
 const themeRegKey = `SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize`

@@ -1,9 +1,9 @@
 package mobile
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 // declare conformance with repository types

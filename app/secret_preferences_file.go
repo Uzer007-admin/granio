@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/internal/repository"
 )
 
 const secretPreferencesFile = "preferences.secret"

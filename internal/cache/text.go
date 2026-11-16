@@ -6,7 +6,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // fontSizeCache is read by every canvas.Text on every frame the canvas is

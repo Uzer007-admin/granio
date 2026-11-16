@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio_demo/data"
-	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio_demo/data"
+	"github.com/Uzer007-admin/granio/v3/container"
 )
 
 func rgbGradient(x, y, w, h int) color.Color {

@@ -4,12 +4,13 @@ package gl
 import (
 	"fmt"
 	"image"
+	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	paint "github.com/Uzer007-admin/granio/v3/internal/painter"
 )
 
 // Painter defines the functionality of our OpenGL based renderer
@@ -47,7 +48,8 @@ func NewPainter(c granio.Canvas, ctx driver.WithContext) Painter {
 type painter struct {
 	atlas               paint.GlyphAtlas
 	atlasTex            Texture
-	atlasTexValid       bool       // whether atlasTex has been allocated
+	atlasTexValid       bool // whether atlasTex has been allocated
+	bindings            drawBindings
 	blurKernel          blurKernel // cached 1D kernel texture on GPU
 	blurSnap            blurSnap   // cached texture for GPU-side blur snapshot
 	canvas              granio.Canvas
@@ -58,6 +60,9 @@ type painter struct {
 	fbHeight            int       // current framebuffer height in pixels
 	glyphPending        []float32 // queued batch vertices, glyphVertexFloats each
 	linePending         []float32 // queued line vertices, lineVertexFloats each
+	scissorBox          [4]int32
+	scissorKnown        bool
+	scissorEnabled      bool
 	maxTextureSize      int
 	materials           materialPipeline
 	materialUnavailable bool
@@ -70,12 +75,19 @@ type painter struct {
 	texScale            float32
 	vertices            []float32 // updateBuffer's upload buffer, reused
 	windowSurface       WindowSurfaceMode
+	windowBackdropTint  color.NRGBA
 }
 
 // Declare conformity to Painter interface
 var _ Painter = (*painter)(nil)
 
 func (p *painter) Clear() {
+	p.bindings.reset()
+	if p.scissorEnabled {
+		p.ctx.Disable(scissorTest)
+		p.scissorEnabled = false
+	}
+	p.scissorKnown = false
 	if p.materials != nil {
 		p.materials.ResetFrame()
 	}
@@ -207,33 +219,45 @@ func (p *painter) SetUniform4f(pState programState, name string, v0, v1, v2, v3 
 }
 
 func (p *painter) StartClipping(pos granio.Position, size granio.Size) {
+	x0 := int32(p.textureScale(pos.X))
+	x1 := int32(p.textureScale(pos.X + size.Width))
+	y0 := int32(p.textureScale(pos.Y))
+	y1 := int32(p.textureScale(pos.Y + size.Height))
+	height := p.fbHeight
+	if height <= 0 {
+		height = int(p.textureScale(p.canvas.Size().Height))
+	}
+	// Round the edges together with the intersected parent clip. At fractional
+	// scales the rounded origin plus a rounded length can add an extra pixel.
+	box := [4]int32{x0, int32(height) - y1, max(0, x1-x0), max(0, y1-y0)}
+	if p.scissorEnabled && p.scissorKnown && box == p.scissorBox {
+		return
+	}
 	p.FlushGlyphs() // queued quads belong to the outgoing scissor rectangle
-	x := p.textureScale(pos.X)
-	y := p.textureScale(p.canvas.Size().Height - pos.Y - size.Height)
-	w := p.textureScale(size.Width)
-	h := p.textureScale(size.Height)
-	// must be positive, just clamp to 0
-	if w < 0 {
-		w = 0
+	if !p.scissorKnown || box != p.scissorBox {
+		p.ctx.Scissor(box[0], box[1], box[2], box[3])
+		p.scissorBox, p.scissorKnown = box, true
 	}
-	if h < 0 {
-		h = 0
+	if !p.scissorEnabled {
+		p.ctx.Enable(scissorTest)
+		p.scissorEnabled = true
 	}
-	p.ctx.Scissor(int32(x), int32(y), int32(w), int32(h))
-	p.ctx.Enable(scissorTest)
 	p.logError()
 }
 
 func (p *painter) StopClipping() {
+	if !p.scissorEnabled {
+		return
+	}
 	p.FlushGlyphs() // as in StartClipping: draw under the rectangle still in force
 	p.ctx.Disable(scissorTest)
+	p.scissorEnabled = false
 	p.logError()
 }
 
 func (p *painter) UpdateVertexArray(pState programState, name string, size, stride, offset int) {
-	a := p.enableAttribArray(pState, name)
-
-	p.ctx.VertexAttribPointerWithOffset(a, size, float, false, stride*floatSize, offset*floatSize)
+	a := p.attribLocation(pState, name)
+	p.setVertexFormat(a, size, stride*floatSize, offset*floatSize)
 	p.logError()
 }
 
@@ -361,16 +385,15 @@ func (p *painter) createProgram(vertexSrc, fragmentSrc []byte) (Program, error) 
 		return noProgram, fmt.Errorf("failed to link OpenGL program; error code: %x", glErr)
 	}
 
-	p.ctx.UseProgram(prog)
+	p.bindProgram(prog)
 
 	return prog, nil
 }
 
-func (p *painter) enableAttribArray(pState programState, name string) Attribute {
+func (p *painter) attribLocation(pState programState, name string) Attribute {
 	a, ok := pState.attributes[name]
 	if !ok {
 		a = p.ctx.GetAttribLocation(pState.ref, name)
-		p.ctx.EnableVertexAttribArray(a)
 		pState.attributes[name] = a
 	}
 

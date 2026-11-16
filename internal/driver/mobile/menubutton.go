@@ -1,10 +1,10 @@
 package mobile
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	fynecanvas "github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 type menuButton struct {

@@ -6,12 +6,12 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio_demo/data"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio_demo/data"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 // containerScreen loads a tab panel for containers

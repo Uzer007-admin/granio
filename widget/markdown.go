@@ -12,7 +12,7 @@ import (
 	ast2 "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/renderer"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // NewRichTextFromMarkdown configures a RichText widget by parsing the provided markdown content.

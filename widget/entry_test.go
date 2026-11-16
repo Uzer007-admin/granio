@@ -6,18 +6,51 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/data/binding"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/data/binding"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestEntry_SubmitOnEnterDuringComposition(t *testing.T) {
+	test.NewTempApp(t)
+	entry := widget.NewMultiLineEntry()
+	entry.SubmitOnEnter = true
+	entry.SetText("Привет")
+	entry.CursorColumn = len([]rune(entry.Text))
+	var submitted []string
+	entry.OnSubmitted = func(text string) { submitted = append(submitted, text) }
+	entry.UpdateComposition(desktop.CompositionEvent{Text: "日本", Cursor: 2})
+	entry.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
+	assert.True(t, entry.CompositionActive())
+	assert.Empty(t, submitted)
+	entry.CommitComposition("日本")
+	entry.TypedKey(&granio.KeyEvent{Name: granio.KeyReturn})
+	assert.Equal(t, []string{"Привет日本"}, submitted)
+}
+
+func TestEntry_TextContentHeightFollowsWrappedWidth(t *testing.T) {
+	test.NewTempApp(t)
+	entry := widget.NewMultiLineEntry()
+	entry.Wrapping = granio.TextWrapWord
+	entry.SetText("Многострочное сообщение переносится по ширине области редактирования.")
+	entry.Resize(granio.NewSize(260, 35))
+	wide := entry.TextContentHeight()
+	entry.Resize(granio.NewSize(105, 35))
+	narrow := entry.TextContentHeight()
+	assert.Greater(t, narrow, wide)
+	entry.Resize(granio.NewSize(105, 120))
+	assert.Equal(t, narrow, entry.TextContentHeight())
+	entry.Resize(granio.NewSize(260, 120))
+	assert.Equal(t, wide, entry.TextContentHeight())
+}
 
 func TestEntry_Binding(t *testing.T) {
 	entry := widget.NewEntry()

@@ -8,7 +8,7 @@ import (
 	"unicode/utf16"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 )
 
 // RECONVERTSTRING stores UTF-16 lengths in code units, but all three offsets

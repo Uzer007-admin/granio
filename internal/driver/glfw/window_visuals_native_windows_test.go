@@ -1,4 +1,4 @@
-//go:build windows && !no_glfw && !wasm && !test_web_driver && !mobile
+//go:build windows && !no_glfw && !wasm && !test_web_driver && !mobile && !ci
 
 package glfw
 
@@ -11,14 +11,16 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"syscall"
 	"testing"
 	"time"
 	"unsafe"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/theme"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sys/windows"
 )
@@ -31,21 +33,11 @@ var visualDWM = windows.NewLazySystemDLL("dwmapi.dll")
 // to read the screen if another top-level window owns any sampled point. It is
 // not a renderer or a per-frame transfer path; DWM output cannot be read by GL.
 func captureVisualClient(hwnd, background uintptr) (*image.NRGBA, error) {
-	foreground, _, _ := visualUser32.NewProc("GetForegroundWindow").Call()
-	if foreground != hwnd {
-		return nil, fmt.Errorf("our Fyne test window 0x%x is not foreground (0x%x)", hwnd, foreground)
-	}
-	var rect struct{ left, top, right, bottom int32 }
-	ok, _, err := visualUser32.NewProc("GetClientRect").Call(hwnd, uintptr(unsafe.Pointer(&rect)))
-	if ok == 0 {
+	bounds, err := visualClientBounds(hwnd)
+	if err != nil {
 		return nil, err
 	}
-	var origin struct{ x, y int32 }
-	ok, _, err = visualUser32.NewProc("ClientToScreen").Call(hwnd, uintptr(unsafe.Pointer(&origin)))
-	if ok == 0 {
-		return nil, err
-	}
-	width, height := int(rect.right), int(rect.bottom)
+	width, height := bounds.Dx(), bounds.Dy()
 	if width <= 0 || height <= 0 || width > 4096 || height > 4096 {
 		return nil, fmt.Errorf("invalid owned client size %dx%d", width, height)
 	}
@@ -56,18 +48,24 @@ func captureVisualClient(hwnd, background uintptr) (*image.NRGBA, error) {
 		visible, _, _ := visualUser32.NewProc("IsWindowVisible").Call(under)
 		var area struct{ left, top, right, bottom int32 }
 		visualUser32.NewProc("GetWindowRect").Call(under, uintptr(unsafe.Pointer(&area)))
-		intersects := area.left < origin.x+int32(width) && area.right > origin.x && area.top < origin.y+int32(height) && area.bottom > origin.y
+		intersects := bounds.Overlaps(image.Rect(int(area.left), int(area.top), int(area.right), int(area.bottom)))
 		if visible != 0 && intersects {
-			break
+			// A cloaked window keeps WS_VISIBLE and its bounds but is absent
+			// from the desktop image. It cannot occlude the owned source.
+			var cloaked uint32
+			hr, _, _ := visualDWM.NewProc("DwmGetWindowAttribute").Call(under, 14, uintptr(unsafe.Pointer(&cloaked)), 4)
+			if int32(hr) < 0 || cloaked == 0 {
+				break
+			}
 		}
 		under, _, _ = visualUser32.NewProc("GetWindow").Call(under, 2)
 	}
-	if under != background {
+	if background != 0 && under != background {
 		return nil, fmt.Errorf("owned background 0x%x is not immediately behind our client (0x%x)", background, under)
 	}
 	for y := 4; y < height-4; y += 16 {
 		for x := 4; x < width-4; x += 16 {
-			point := uint64(uint32(origin.x+int32(x))) | uint64(uint32(origin.y+int32(y)))<<32
+			point := uint64(uint32(bounds.Min.X+x)) | uint64(uint32(bounds.Min.Y+y))<<32
 			owner, _, _ := visualUser32.NewProc("WindowFromPoint").Call(uintptr(point))
 			root, _, _ := visualUser32.NewProc("GetAncestor").Call(owner, 2)
 			if root != hwnd {
@@ -92,7 +90,7 @@ func captureVisualClient(hwnd, background uintptr) (*image.NRGBA, error) {
 	defer visualGDI32.NewProc("DeleteObject").Call(bitmap)
 	old, _, _ := visualGDI32.NewProc("SelectObject").Call(memory, bitmap)
 	const captureComposedPixels = 0x00cc0020 | 0x40000000 // SRCCOPY | CAPTUREBLT
-	ok, _, err = visualGDI32.NewProc("BitBlt").Call(memory, 0, 0, uintptr(width), uintptr(height), dc, uintptr(origin.x), uintptr(origin.y), captureComposedPixels)
+	ok, _, err := visualGDI32.NewProc("BitBlt").Call(memory, 0, 0, uintptr(width), uintptr(height), dc, uintptr(bounds.Min.X), uintptr(bounds.Min.Y), captureComposedPixels)
 	visualGDI32.NewProc("SelectObject").Call(memory, old)
 	if ok == 0 {
 		return nil, err
@@ -126,17 +124,32 @@ func visualScreen(w *window, bg *safeWindow) (*image.NRGBA, error) {
 	var img *image.NRGBA
 	var err error
 	runOnMain(func() {
-		focusVisualTestWindow(w)
-		// Удерживаем только две собственные fixture-поверхности рядом
-		// в z-order. Посторонние перекрытия по-прежнему запрещают чтение.
 		hwnd := uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
 		background := uintptr(unsafe.Pointer(bg.viewport.GetWin32Window()))
-		visualUser32.NewProc("SetWindowPos").Call(hwnd, ^uintptr(0), 0, 0, 0, 0, 0x13)
-		visualUser32.NewProc("SetWindowPos").Call(background, hwnd, 0, 0, 0, 0, 0x13)
 		visualDWM.NewProc("DwmFlush").Call()
 		img, err = captureVisualClient(hwnd, background)
 	})
 	return img, err
+}
+
+// Keep the two owned windows adjacent when other topmost windows are present.
+func stackVisualWindows(foreground, background uintptr) error {
+	batch, _, err := visualUser32.NewProc("BeginDeferWindowPos").Call(2)
+	if batch == 0 {
+		return fmt.Errorf("BeginDeferWindowPos: %w", err)
+	}
+	deferPos := visualUser32.NewProc("DeferWindowPos")
+	const flags = 0x213 // SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOOWNERZORDER
+	for _, hwnd := range []uintptr{background, foreground} {
+		batch, _, err = deferPos.Call(batch, hwnd, ^uintptr(0), 0, 0, 0, 0, flags) // HWND_TOPMOST
+		if batch == 0 {
+			return fmt.Errorf("DeferWindowPos: %w", err)
+		}
+	}
+	if ok, _, err := visualUser32.NewProc("EndDeferWindowPos").Call(batch); ok == 0 {
+		return fmt.Errorf("EndDeferWindowPos: %w", err)
+	}
+	return nil
 }
 
 // Test-only focus setup. Native tests are launched from a background terminal,
@@ -161,27 +174,31 @@ func visualRGB(img image.Image, x, y float64) [3]float64 {
 	return [3]float64{float64(r) / 257, float64(g) / 257, float64(b) / 257}
 }
 
-func visualBackgroundColor(w *window) (color.NRGBA, error) {
-	hwnd := uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
-	point := struct{ x, y int32 }{20, 100}
-	if r, _, err := visualUser32.NewProc("ClientToScreen").Call(hwnd, uintptr(unsafe.Pointer(&point))); r == 0 {
-		return color.NRGBA{}, err
+func visualClientBounds(hwnd uintptr) (image.Rectangle, error) {
+	var rect struct{ left, top, right, bottom int32 }
+	ok, _, err := visualUser32.NewProc("GetClientRect").Call(hwnd, uintptr(unsafe.Pointer(&rect)))
+	if ok == 0 {
+		return image.Rectangle{}, err
 	}
-	packed := uint64(uint32(point.x)) | uint64(uint32(point.y))<<32
-	under, _, _ := visualUser32.NewProc("WindowFromPoint").Call(uintptr(packed))
-	if under != hwnd {
-		return color.NRGBA{}, fmt.Errorf("background probe is occluded")
+	var origin struct{ x, y int32 }
+	ok, _, err = visualUser32.NewProc("ClientToScreen").Call(hwnd, uintptr(unsafe.Pointer(&origin)))
+	if ok == 0 {
+		return image.Rectangle{}, err
 	}
-	dc, _, err := visualUser32.NewProc("GetDC").Call(0)
-	if dc == 0 {
-		return color.NRGBA{}, err
-	}
-	defer visualUser32.NewProc("ReleaseDC").Call(0, dc)
-	pixel, _, err := visualGDI32.NewProc("GetPixel").Call(dc, uintptr(point.x), uintptr(point.y))
-	if uint32(pixel) == 0xffffffff {
-		return color.NRGBA{}, err
-	}
-	return color.NRGBA{R: uint8(pixel), G: uint8(pixel >> 8), B: uint8(pixel >> 16), A: 255}, nil
+	return image.Rect(0, 0, int(rect.right), int(rect.bottom)).Add(image.Pt(int(origin.x), int(origin.y))), nil
+}
+
+func visualBackgroundColor(w *window) (pixel color.NRGBA, frames uint64, err error) {
+	w.RunWithContext(func() {
+		p := w.presentation.dxgi
+		if p == nil || p.shared == nil || p.width <= 20 || p.height <= 100 {
+			err = fmt.Errorf("background fixture has no full DXGI frame")
+			return
+		}
+		pixel, err = sampleDXGIPixel(p, 20, 100)
+		frames = p.frames
+	})
+	return
 }
 
 func visualDelta(a, b [3]float64) float64 {
@@ -199,6 +216,17 @@ func visualDeviation(img image.Image) float64 {
 		}
 	}
 	return math.Sqrt(math.Max(0, squares/count-sum*sum/count/count))
+}
+
+func assertVisualScreenAlpha(t *testing.T, frame *image.NRGBA) {
+	t.Helper()
+	for i, alpha := range []float64{0, .25, .5, .75, 1} {
+		base := visualRGB(frame, float64(40+i*60), 75)
+		pixel := visualRGB(frame, float64(40+i*60), 40)
+		for channel, source := range [3]float64{32, 176, 240} {
+			require.InDelta(t, alpha*source+(1-alpha)*base[channel], pixel[channel], 8, "screen alpha in the first frame")
+		}
+	}
 }
 
 func saveVisualImage(directory, name string, img image.Image) error {
@@ -220,25 +248,64 @@ func saveVisualImage(directory, name string, img image.Image) error {
 	return closeErr
 }
 
+type visualTestApp struct {
+	granio.App
+	settings granio.Settings
+}
+
+func (a visualTestApp) Settings() granio.Settings { return a.settings }
+
+type visualTestDarkSettings struct{ granio.Settings }
+
+func (visualTestDarkSettings) ThemeVariant() granio.ThemeVariant { return theme.VariantDark }
+
+func setVisualTestTheme(t *testing.T) {
+	t.Helper()
+	if os.Getenv("FYNE_THEME") != "dark" {
+		return
+	}
+	var original granio.App
+	runOnMain(func() {
+		original = granio.CurrentApp()
+		granio.SetCurrentApp(visualTestApp{original, visualTestDarkSettings{original.Settings()}})
+	})
+	t.Cleanup(func() { runOnMain(func() { granio.SetCurrentApp(original) }) })
+}
+
 // Checks optical DWM output with two owned Fyne windows. In particular an
 // accepted HRESULT does not satisfy the Acrylic and alpha composition gates.
 func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	requireVisualTest(t)
+	setVisualTestTheme(t)
+	red := color.NRGBA{R: 220, G: 40, B: 30, A: 255}
+	blue := color.NRGBA{R: 30, G: 55, B: 225, A: 255}
 	bg := createWindowWithResizeCallback("Fyne owned DWM test background")
 	defer bg.Close()
 	var bgContent *canvas.Rectangle
 	runOnMain(func() {
-		bgContent = canvas.NewRectangle(color.NRGBA{R: 220, G: 40, B: 30, A: 255})
+		bgContent = canvas.NewRectangle(red)
 		bg.window.SetPadded(false)
 		bg.window.SetContent(bgContent)
-		bg.window.Resize(granio.NewSize(780, 580))
+		bg.window.Resize(granio.NewSize(360, 290))
 		bg.window.Show()
-		bg.viewport.SetPos(80, 80)
+		bg.viewport.SetPos(220, 200)
 		bg.viewport.SetAttrib(glfw.Floating, glfw.True)
 	})
+	// Let the opaque source reach the desktop before covering it. Present and
+	// HWND visibility can complete while DWM is still displaying an old frame.
+	// Transparent captures below additionally verify the immediate underlay.
+	require.Eventually(t, func() bool {
+		var frame *image.NRGBA
+		runOnMain(func() {
+			hwnd := uintptr(unsafe.Pointer(bg.viewport.GetWin32Window()))
+			visualDWM.NewProc("DwmFlush").Call()
+			frame, _ = captureVisualClient(hwnd, 0)
+		})
+		return frame != nil && visualRGB(frame, 40, 75) == [3]float64{220, 40, 30}
+	}, time.Second, 5*time.Millisecond, "the source must be visible before creating the foreground")
 	w := newVisualTestWindow("Fyne WindowVisuals WGL/DWM")
 	defer runOnMain(w.Close)
-	_, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropMica})
+	_, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropDesktopAcrylic})
 	require.NoError(t, err)
 	var initialHWND, initialStyle uintptr
 	var hidden image.Image
@@ -263,29 +330,74 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 		w.RunWithContext(func() { hidden = w.canvas.Painter().Capture(w.canvas) })
 	})
 	require.NoError(t, err)
-	if os.Getenv("GRANIO_REQUIRE_DXGI") == "1" {
-		var composition bool
-		runOnMain(func() { p := w.presentation.dxgi; composition = p != nil && p.composition != nil })
-		require.True(t, composition, "hardware DirectComposition presenter is required")
+	requireComposition(t, w)
+	var sourceDXGI, usingAccent bool
+	runOnMain(func() {
+		sourceDXGI = bg.presentation.dxgi != nil
+		usingAccent = w.presentation.acrylicAccent
+	})
+	if !sourceDXGI {
+		if os.Getenv("GRANIO_REQUIRE_DXGI") == "1" {
+			t.Fatal("background fixture requires a hardware DXGI presenter")
+		}
+		t.Skip("background fixture requires a hardware DXGI presenter")
 	}
 	caps := w.VisualCapabilities()
-	if !caps.OSBackdrops.Supports(desktop.BackdropMica) || w.VisualStatus().Reason != desktop.VisualReasonNone {
+	if !caps.OSBackdrops.Supports(desktop.BackdropDesktopAcrylic) || w.VisualStatus().Reason != desktop.VisualReasonNone {
+		if os.Getenv("GRANIO_REQUIRE_DXGI") == "1" {
+			t.Fatalf("native backdrop policy: %+v caps=%+v", w.VisualStatus(), caps)
+		}
 		t.Skipf("native policy: %+v caps=%+v", w.VisualStatus(), caps)
+	}
+	if caps.OSBuild == acrylicBackdropWorkaroundBuild {
+		if !windowsAcrylicPowerAllowed() {
+			t.Skip("Windows power policy has disabled the Acrylic workaround")
+		}
+		require.True(t, usingAccent, "the initial hidden frame must use the Acrylic workaround")
 	}
 	assertVisualAlpha(t, hidden, true)
 	require.True(t, w.VisualStatus().FirstFrameBeforeShow)
-	runOnMain(func() { w.Show(); focusVisualTestWindow(w) })
+	runOnMain(func() {
+		w.Show()
+		focusVisualTestWindow(w)
+		background := uintptr(unsafe.Pointer(bg.viewport.GetWin32Window()))
+		err = stackVisualWindows(initialHWND, background)
+	})
+	require.NoError(t, err)
 	first, err := visualScreen(w, bg)
 	require.NoError(t, err)
+	// The HWND can own the hit-test region before the desktop has composed
+	// its first frame. A screenshot entirely showing the red source at the
+	// scene's sample points still belongs to the preceding desktop frame.
+	// As soon as any foreground pixel appears, check that very frame below.
+	stillSource := func(frame *image.NRGBA) bool {
+		source := [3]float64{float64(red.R), float64(red.G), float64(red.B)}
+		for _, point := range [][2]float64{{40, 40}, {100, 40}, {160, 40}, {220, 40}, {280, 40}, {40, 75}, {64, 240}} {
+			if visualDelta(visualRGB(frame, point[0], point[1]), source) > 2 {
+				return false
+			}
+		}
+		return true
+	}
+	for deadline := time.Now().Add(300 * time.Millisecond); stillSource(first); {
+		require.True(t, time.Now().Before(deadline), "DWM did not compose the prepared first frame")
+		time.Sleep(4 * time.Millisecond)
+		first, err = visualScreen(w, bg)
+		require.NoError(t, err)
+	}
+	var fgBounds, bgBounds image.Rectangle
+	runOnMain(func() {
+		fgBounds, err = visualClientBounds(initialHWND)
+		if err == nil {
+			bgBounds, err = visualClientBounds(uintptr(unsafe.Pointer(bg.viewport.GetWin32Window())))
+		}
+	})
+	require.NoError(t, err)
+	require.False(t, bgBounds.Empty())
+	require.True(t, bgBounds.In(fgBounds), "Acrylic client must fully cover the source client: %v over %v", fgBounds, bgBounds)
 	directory := os.Getenv("FYNE_WINDOW_VISUALS_OUTPUT")
 	require.NoError(t, saveVisualImage(directory, "first-show", first))
-	for i, alpha := range []float64{0, .25, .5, .75, 1} {
-		base := visualRGB(first, float64(40+i*60), 75)
-		pixel := visualRGB(first, float64(40+i*60), 40)
-		for channel, source := range [3]float64{32, 176, 240} {
-			require.InDelta(t, alpha*source+(1-alpha)*base[channel], pixel[channel], 8, "alpha in the first shown frame")
-		}
-	}
+	assertVisualScreenAlpha(t, first)
 	type sample struct {
 		Mode                        desktop.WindowBackdrop
 		Status                      desktop.VisualStatus
@@ -294,49 +406,111 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	}
 	var samples []sample
 	var lastModeBase [3]float64
+	// In the diagnostic run, enqueue copies of both surfaces immediately
+	// before the real Present. Map only after the first optical sample.
+	var staging *graphicsCOM
+	var producer *wglDXGIPresenter
+	var realPresent, recordPresent uintptr
+	var sampled bool
+	if os.Getenv("FYNE_DWM_VALIDATE_BACKBUFFER") == "1" {
+		recordPresent = syscall.NewCallback(func(chain, interval, flags uintptr) uintptr {
+			copyDXGIPixel(producer, staging, 0, producer.shared, 20, 100)
+			copyDXGIPixel(producer, staging, 1, producer.back, 20, 100)
+			sampled = true
+			result, _, _ := syscall.SyscallN(realPresent, chain, interval, flags)
+			return result
+		})
+	}
 	for _, mode := range []desktop.WindowBackdrop{desktop.BackdropMica, desktop.BackdropMicaAlt, desktop.BackdropDesktopAcrylic} {
 		request, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: mode})
 		require.NoError(t, err)
 		require.Eventually(t, func() bool { s := w.VisualStatus(); return s.RequestID == request && s.Phase != desktop.VisualPending }, 2*time.Second, 10*time.Millisecond)
 		require.Equal(t, desktop.VisualReady, w.VisualStatus().Phase)
+		runOnMain(func() { usingAccent = w.presentation.acrylicAccent })
+		require.Equal(t, mode == desktop.BackdropDesktopAcrylic && caps.OSBuild == acrylicBackdropWorkaroundBuild, usingAccent)
+		colors := []color.NRGBA{red, blue}
+		if mode == desktop.BackdropDesktopAcrylic {
+			for len(colors) < 20 {
+				colors = append(colors, red, blue)
+			}
+		}
 		var screens [2]*image.NRGBA
-		for i, c := range []color.NRGBA{{R: 220, G: 40, B: 30, A: 255}, {R: 30, G: 55, B: 225, A: 255}} {
+		var previous [3]float64
+		for i, c := range colors {
+			var previousPresents uint64
+			var diagnosticErr error
 			runOnMain(func() {
+				producer = bg.presentation.dxgi
+				if producer != nil {
+					previousPresents = producer.frames
+				}
+				if producer != nil && mode == desktop.BackdropDesktopAcrylic && recordPresent != 0 {
+					staging, diagnosticErr = newDXGIPixelRow(producer, 2)
+					if diagnosticErr == nil {
+						sampled = false
+						realPresent = producer.presentMethod
+						defer func() { producer.presentMethod = realPresent }()
+						producer.presentMethod = recordPresent
+					}
+				}
 				bgContent.FillColor = c
 				bgContent.Refresh()
 				bg.RunWithContext(func() { d.repaintWindow(bg.window) })
-				focusVisualTestWindow(w)
 			})
 			time.Sleep(300 * time.Millisecond)
-			screens[i], err = visualScreen(w, bg)
+			screen, err := visualScreen(w, bg)
+			if staging != nil {
+				var pixels [2]color.NRGBA
+				runOnMain(func() {
+					defer releaseGraphicsCOM(&staging)
+					if sampled && producer == bg.presentation.dxgi {
+						diagnosticErr = readDXGIPixelRow(producer, staging, pixels[:])
+					} else {
+						diagnosticErr = fmt.Errorf("the original presenter did not submit a frame")
+					}
+				})
+				require.NoError(t, diagnosticErr, "pre-Present readback")
+				t.Logf("pre-Present background %d: expected=%v interop=%v DXGI buffer=%v", i, c, pixels[0], pixels[1])
+				require.Equal(t, [2]color.NRGBA{c, c}, pixels)
+			}
+			require.NoError(t, diagnosticErr)
 			require.NoError(t, err)
 			if mode == desktop.BackdropDesktopAcrylic {
-				// DWM can still be composing the previous background after the
-				// first flush. Require evidence of both the source and the effect.
+				// Check each change while the foreground is idle. A focus or
+				// z-order change could refresh an otherwise stale backdrop.
 				deadline := time.Now().Add(1500 * time.Millisecond)
 				for {
 					var got color.NRGBA
+					var presented uint64
 					var sampleErr error
-					runOnMain(func() { got, sampleErr = visualBackgroundColor(bg.window) })
+					runOnMain(func() { got, presented, sampleErr = visualBackgroundColor(bg.window) })
 					require.NoError(t, sampleErr)
-					base := visualRGB(screens[i], 40, 75)
+					base := visualRGB(screen, 40, 75)
 					source := [3]float64{float64(got.R), float64(got.G), float64(got.B)}
 					want := [3]float64{float64(c.R), float64(c.G), float64(c.B)}
-					if visualDelta(source, want) < 8 && (i == 0 || visualDelta(visualRGB(screens[0], 40, 75), base) > 5) {
+					// Use the direction of the red/blue change. A change in
+					// tint alone can shift overall brightness.
+					direction := math.Copysign(1, want[2]-want[0])
+					change := ((base[2] - base[0]) - (previous[2] - previous[0])) * direction
+					if presented > previousPresents && visualDelta(source, want) < 8 && (i == 0 || change > 10) {
+						t.Logf("Acrylic background %d: source=%v backdrop=%v", i, source, base)
+						previous = base
 						break
 					}
 					if time.Now().After(deadline) {
+						require.Greater(t, presented, previousPresents, "DXGI did not accept a new background frame")
 						require.Less(t, visualDelta(source, want), 8.0, "background fixture did not update: got %v, want %v", source, want)
-						// Preserve the stale sample so the final live-background gate
-						// can fail alongside independent alpha and blur measurements.
-						break
+						t.Fatalf("Acrylic background %d stayed stale: source=%v backdrop=%v previous=%v", i, source, base, previous)
 					}
 					time.Sleep(40 * time.Millisecond)
-					screens[i], err = visualScreen(w, bg)
+					screen, err = visualScreen(w, bg)
 					require.NoError(t, err)
 				}
 			}
-			require.NoError(t, saveVisualImage(directory, fmt.Sprintf("mode-%d-background-%d", mode, i), screens[i]))
+			if i < len(screens) {
+				screens[i] = screen
+			}
+			require.NoError(t, saveVisualImage(directory, fmt.Sprintf("mode-%d-background-%d", mode, i), screen))
 		}
 		s := sample{Mode: mode, Status: w.VisualStatus(), RedBase: visualRGB(screens[0], 40, 75), BlueBase: visualRGB(screens[1], 40, 75)}
 		s.BackgroundDelta = visualDelta(s.RedBase, s.BlueBase)
@@ -353,37 +527,51 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	}
 	// Raw alpha and Acrylic have different optical behaviour. Checker contrast
 	// supplies a blur gate, so live-background response alone cannot pass it.
-	checker := canvas.NewRasterWithPixels(func(x, y, width, height int) color.Color {
-		if (x/16+y/16)%2 == 0 {
-			return color.NRGBA{R: 250, G: 250, B: 250, A: 255}
-		}
-		return color.NRGBA{R: 12, G: 12, B: 12, A: 255}
-	})
+	checker := visualChecker()
 	runOnMain(func() {
 		bg.window.SetContent(checker)
 		bg.RunWithContext(func() { d.repaintWindow(bg.window) })
-		focusVisualTestWindow(w)
 	})
 	time.Sleep(350 * time.Millisecond)
 	acrylic, err := visualScreen(w, bg)
 	require.NoError(t, err)
 	require.NoError(t, saveVisualImage(directory, "acrylic-checker", acrylic))
-	runOnMain(func() {
-		_, err = w.viewport.ApplyWindowVisuals(glfw.WindowVisualOptions{Attributes: glfw.VisualBackdrop, Backdrop: glfw.BackdropNone})
-	})
+	id, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropTransparent})
 	require.NoError(t, err)
-	time.Sleep(200 * time.Millisecond)
+	require.Eventually(t, func() bool {
+		s := w.VisualStatus()
+		return s.RequestID == id && s.Phase == desktop.VisualReady
+	}, 2*time.Second, 10*time.Millisecond)
+	runOnMain(func() { usingAccent = w.presentation.acrylicAccent })
+	require.False(t, usingAccent, "Transparent must remove the Acrylic policy")
 	raw, err := visualScreen(w, bg)
 	require.NoError(t, err)
 	require.NoError(t, saveVisualImage(directory, "raw-transparent-checker", raw))
 	acrylicDeviation, rawDeviation := visualDeviation(acrylic), visualDeviation(raw)
 	t.Logf("checker contrast stddev: acrylic=%.3f raw-alpha=%.3f", acrylicDeviation, rawDeviation)
-	// Restore through the public interface before the opaque fallback check.
-	_, err = w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropOpaque, PrepareAlpha: true})
+	// Exercise the automatic opaque fallback from an already active Acrylic.
+	id, err = w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropDesktopAcrylic})
 	require.NoError(t, err)
 	require.Eventually(t, func() bool {
-		return w.VisualStatus().Phase == desktop.VisualReady && w.VisualStatus().Requested == desktop.BackdropOpaque
+		s := w.VisualStatus()
+		return s.RequestID == id && s.Phase == desktop.VisualReady && s.Selected == desktop.BackdropDesktopAcrylic
 	}, 2*time.Second, 10*time.Millisecond)
+	contrast, err := theme.NewModern(theme.ModernOptions{HighContrast: true})
+	require.NoError(t, err)
+	var original granio.Theme
+	runOnMain(func() {
+		settings := granio.CurrentApp().Settings()
+		original = settings.Theme()
+		settings.SetTheme(contrast)
+	})
+	defer runOnMain(func() { granio.CurrentApp().Settings().SetTheme(original) })
+	require.Eventually(t, func() bool {
+		s := w.VisualStatus()
+		return s.RequestID == id && s.SurfaceReady && s.Phase == desktop.VisualFallback &&
+			s.Reason == desktop.VisualHighContrast && s.Selected == desktop.BackdropOpaque
+	}, 2*time.Second, 10*time.Millisecond)
+	runOnMain(func() { usingAccent = w.presentation.acrylicAccent })
+	require.False(t, usingAccent, "opaque fallback must remove the Acrylic policy")
 	assertVisualAlpha(t, visualFrame(w), false)
 	time.Sleep(150 * time.Millisecond)
 	opaque, err := visualScreen(w, bg)
@@ -411,6 +599,12 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 		require.NoError(t, os.WriteFile(filepath.Join(directory, "dwm-composition.json"), append(data, '\n'), 0o644))
 	}
 	// These are optical acceptance gates, beyond surface and HRESULT checks.
+	t.Run("first Acrylic", func(t *testing.T) {
+		firstBase := visualRGB(first, 40, 75)
+		t.Logf("first displayed Acrylic: %v, settled: %v", firstBase, samples[2].RedBase)
+		require.Greater(t, firstBase[0]+firstBase[1]+firstBase[2], 10.0, "first shown frame cannot be black")
+		require.LessOrEqual(t, visualDelta(firstBase, samples[2].RedBase), 4.0, "first shown frame already contains Acrylic")
+	})
 	for _, s := range samples {
 		require.LessOrEqual(t, s.AlphaError, 8.0, "screen alpha composition mode %d", s.Mode)
 		if s.Mode == desktop.BackdropMica || s.Mode == desktop.BackdropMicaAlt {
@@ -421,10 +615,258 @@ func TestNativeWindowVisualsDWMComposition(t *testing.T) {
 	require.Greater(t, visualDelta(lastModeBase, visualRGB(opaque, 40, 75)), 3.0, "native material must be visible")
 	require.Greater(t, rawDeviation, 30.0, "checker source must be visible through raw alpha")
 	require.Less(t, acrylicDeviation, rawDeviation*.6, "Desktop Acrylic must reduce checker contrast")
-	firstBase := visualRGB(first, 40, 75)
-	require.Greater(t, firstBase[0]+firstBase[1]+firstBase[2], 10.0, "first shown frame cannot be black")
-	// DWM слегка меняет tint Mica при активации. Первое содержимое должно
-	// уже соответствовать материалу, а не красному фону или чёрному кадру.
-	require.LessOrEqual(t, visualDelta(firstBase, samples[0].RedBase), 4.0, "first shown frame already contains Mica")
-	require.Greater(t, samples[2].BackgroundDelta, 5.0, "Acrylic must use the live background")
+	require.Greater(t, visualDelta(visualRGB(acrylic, 40, 75), lastModeBase), 5.0, "Desktop Acrylic must reflect the new checker source")
+}
+
+func TestNativeAcrylicFallbackWithoutAccent(t *testing.T) {
+	requireVisualTest(t)
+	var original *windows.LazyProc
+	runOnMain(func() {
+		original = setWindowCompositionAttribute
+		setWindowCompositionAttribute = visualUser32.NewProc("GranioTestUnknownCompositionEntry")
+	})
+	defer runOnMain(func() { setWindowCompositionAttribute = original })
+
+	w := newVisualTestWindow("Проверка резервного Desktop Acrylic")
+	defer runOnMain(w.Close)
+	_, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropDesktopAcrylic})
+	require.NoError(t, err)
+	runOnMain(func() {
+		w.SetContent(visualAlphaScene())
+		w.Resize(granio.NewSize(360, 290))
+		w.Show()
+	})
+	requireComposition(t, w)
+	if w.VisualCapabilities().OSBuild != acrylicBackdropWorkaroundBuild {
+		t.Skip("this Windows build uses the system backdrop by default")
+	}
+	status := w.VisualStatus()
+	require.Equal(t, desktop.VisualReady, status.Phase)
+	require.Equal(t, desktop.BackdropDesktopAcrylic, status.Selected)
+	require.True(t, status.NativeAccepted)
+	require.True(t, status.FirstFrameBeforeShow)
+
+	var state glfw.WindowVisualState
+	var active bool
+	runOnMain(func() {
+		state, err = w.viewport.QueryWindowVisuals()
+		active = w.presentation.acrylicAccent
+	})
+	require.NoError(t, err)
+	require.False(t, active)
+	require.True(t, state.BackdropKnown)
+	require.Equal(t, glfw.BackdropTransientWindow, state.Backdrop)
+	assertVisualAlpha(t, visualFrame(w), true)
+}
+
+func TestNativeAcrylicRemovalFailureDoesNotApplyMica(t *testing.T) {
+	requireVisualTest(t)
+	var originalAccent *windows.LazyProc
+	var originalPower func() bool
+	runOnMain(func() {
+		originalAccent, originalPower = setWindowCompositionAttribute, windowsAcrylicPowerAllowed
+		windowsAcrylicPowerAllowed = func() bool { return true }
+	})
+	defer runOnMain(func() {
+		setWindowCompositionAttribute, windowsAcrylicPowerAllowed = originalAccent, originalPower
+	})
+	w := newVisualTestWindow("Проверка снятия Desktop Acrylic")
+	defer runOnMain(w.Close)
+	_, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropDesktopAcrylic})
+	require.NoError(t, err)
+	runOnMain(func() {
+		w.SetContent(visualAlphaScene())
+		w.Resize(granio.NewSize(360, 290))
+		w.Show()
+	})
+	requireComposition(t, w)
+	if w.VisualCapabilities().OSBuild != acrylicBackdropWorkaroundBuild {
+		t.Skip("the legacy accent path is limited to the target build")
+	}
+	var active bool
+	runOnMain(func() {
+		active = w.presentation.acrylicAccent
+		setWindowCompositionAttribute = visualUser32.NewProc("GranioTestUnknownCompositionEntry")
+	})
+	require.True(t, active)
+	for _, failure := range []desktop.VisualFallbackPolicy{desktop.VisualFallbackOpaque, desktop.VisualFallbackFail} {
+		id, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropMica, Fallback: failure})
+		require.NoError(t, err)
+		want := desktop.VisualFallback
+		if failure == desktop.VisualFallbackFail {
+			want = desktop.VisualFailed
+		}
+		require.Eventually(t, func() bool {
+			s := w.VisualStatus()
+			return s.RequestID == id && s.Phase == want && s.SurfaceReady && !s.NativeAccepted &&
+				s.Selected == desktop.BackdropOpaque && s.Reason == desktop.VisualNativeFailure
+		}, 2*time.Second, 10*time.Millisecond)
+		var state glfw.WindowVisualState
+		runOnMain(func() { state, err = w.viewport.QueryWindowVisuals() })
+		require.NoError(t, err)
+		require.Equal(t, glfw.BackdropNone, state.Backdrop, "Mica must wait for accent removal")
+		assertVisualAlpha(t, visualFrame(w), false)
+	}
+	runOnMain(func() { setWindowCompositionAttribute = originalAccent })
+	id, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropMica})
+	require.NoError(t, err)
+	require.Eventually(t, func() bool {
+		s := w.VisualStatus()
+		return s.RequestID == id && s.Phase == desktop.VisualReady && s.Selected == desktop.BackdropMica
+	}, 2*time.Second, 10*time.Millisecond)
+	assertVisualAlpha(t, visualFrame(w), true)
+}
+
+func TestNativeAcrylicFollowsPowerPolicy(t *testing.T) {
+	requireVisualTest(t)
+	var original func() bool
+	runOnMain(func() {
+		original = windowsAcrylicPowerAllowed
+		windowsAcrylicPowerAllowed = func() bool { return true }
+	})
+	defer runOnMain(func() { windowsAcrylicPowerAllowed = original })
+	w := newVisualTestWindow("Проверка Acrylic при энергосбережении")
+	defer runOnMain(w.Close)
+	request, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropDesktopAcrylic})
+	require.NoError(t, err)
+	runOnMain(func() {
+		w.SetContent(visualAlphaScene())
+		w.Resize(granio.NewSize(360, 290))
+		w.Show()
+	})
+	requireComposition(t, w)
+	caps := w.VisualCapabilities()
+	if caps.OSBuild != acrylicBackdropWorkaroundBuild {
+		t.Skip("the Acrylic workaround is limited to build 26300")
+	}
+
+	checkBackdrop := func(wantAccent bool, want glfw.SystemBackdrop) {
+		t.Helper()
+		require.Eventually(t, func() bool {
+			var applied bool
+			runOnMain(func() {
+				state, err := w.viewport.QueryWindowVisuals()
+				applied = err == nil && state.BackdropKnown && state.Backdrop == want &&
+					w.presentation.acrylicAccent == wantAccent
+			})
+			return applied
+		}, 2*time.Second, 10*time.Millisecond, "native backdrop %v, accent=%t", want, wantAccent)
+		status := w.VisualStatus()
+		require.Equal(t, request, status.RequestID)
+		require.Equal(t, desktop.VisualReady, status.Phase)
+		require.True(t, status.SurfaceReady && status.NativeAccepted)
+		require.Equal(t, caps.Generation, w.VisualCapabilities().Generation)
+	}
+	checkBackdrop(true, glfw.BackdropNone)
+	// Substitute only the reported power state. Windows settings stay untouched.
+	runOnMain(func() { windowsAcrylicPowerAllowed = func() bool { return false } })
+	checkBackdrop(false, glfw.BackdropTransientWindow)
+	runOnMain(func() { windowsAcrylicPowerAllowed = func() bool { return true } })
+	checkBackdrop(true, glfw.BackdropNone)
+}
+
+func TestNativeWindowsBackdropTransitions(t *testing.T) {
+	requireVisualTest(t)
+	setVisualTestTheme(t)
+	w := newVisualTestWindow("Проверка переходов между материалами Granio")
+	defer runOnMain(w.Close)
+	initial := desktop.BackdropTransparent
+	request, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: initial})
+	require.NoError(t, err)
+	runOnMain(func() {
+		w.SetPadded(false)
+		w.SetContent(visualAlphaScene())
+		w.Resize(granio.NewSize(360, 290))
+		w.Show()
+	})
+	requireComposition(t, w)
+	caps := w.VisualCapabilities()
+	if !caps.OSBackdrops.Supports(desktop.BackdropDesktopAcrylic) || w.VisualStatus().Reason != desktop.VisualReasonNone {
+		if os.Getenv("GRANIO_REQUIRE_DXGI") == "1" {
+			t.Fatalf("native backdrop policy: %+v caps=%+v", w.VisualStatus(), caps)
+		}
+		t.Skipf("native backdrop policy: %+v caps=%+v", w.VisualStatus(), caps)
+	}
+	require.True(t, w.VisualStatus().FirstFrameBeforeShow)
+
+	contrast, err := theme.NewModern(theme.ModernOptions{HighContrast: true})
+	require.NoError(t, err)
+	var original granio.Theme
+	var hwnd uintptr
+	runOnMain(func() {
+		original = granio.CurrentApp().Settings().Theme()
+		hwnd = uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
+	})
+	defer runOnMain(func() { granio.CurrentApp().Settings().SetTheme(original) })
+
+	// Opaque represents a real policy fallback on the current request.
+	// Each ordered pair must be exercised on the same prepared HWND.
+	type material struct {
+		backdrop desktop.WindowBackdrop
+		native   glfw.SystemBackdrop
+	}
+	acrylic := material{desktop.BackdropDesktopAcrylic, glfw.BackdropTransientWindow}
+	useAccent := caps.OSBuild == acrylicBackdropWorkaroundBuild && windowsAcrylicPowerAllowed()
+	if useAccent {
+		acrylic.native = glfw.BackdropNone
+	}
+	materials := []material{
+		acrylic,
+		{desktop.BackdropMica, glfw.BackdropMainWindow},
+		{desktop.BackdropMicaAlt, glfw.BackdropTabbedWindow},
+		{desktop.BackdropTransparent, glfw.BackdropNone},
+		{desktop.BackdropOpaque, glfw.BackdropNone},
+	}
+	current, requested := initial, initial
+	apply := func(target material) {
+		if current == target.backdrop {
+			return
+		}
+		from := current
+		fallback := target.backdrop == desktop.BackdropOpaque
+		phase, reason := desktop.VisualReady, desktop.VisualReasonNone
+		if fallback {
+			phase, reason = desktop.VisualFallback, desktop.VisualHighContrast
+			runOnMain(func() { granio.CurrentApp().Settings().SetTheme(contrast) })
+		} else {
+			request, err = w.ConfigureVisuals(desktop.VisualOptions{Backdrop: target.backdrop})
+			require.NoError(t, err)
+			requested = target.backdrop
+			if from == desktop.BackdropOpaque {
+				runOnMain(func() { granio.CurrentApp().Settings().SetTheme(original) })
+			}
+		}
+		require.Eventually(t, func() bool {
+			s := w.VisualStatus()
+			return s.RequestID == request && s.Requested == requested && s.Selected == target.backdrop &&
+				s.Phase == phase && s.Reason == reason && s.SurfaceReady && s.NativeAccepted == !fallback
+		}, 2*time.Second, 10*time.Millisecond, "%s → %s, status %+v", from, target.backdrop, w.VisualStatus())
+
+		var state glfw.WindowVisualState
+		var actualHWND uintptr
+		var accent bool
+		runOnMain(func() {
+			state, err = w.viewport.QueryWindowVisuals()
+			actualHWND = uintptr(unsafe.Pointer(w.viewport.GetWin32Window()))
+			accent = w.presentation.acrylicAccent
+		})
+		require.NoError(t, err)
+		require.Equal(t, hwnd, actualHWND, "%s → %s", from, target.backdrop)
+		require.Equal(t, caps.Generation, w.VisualCapabilities().Generation)
+		require.True(t, state.BackdropKnown)
+		require.Equal(t, target.native, state.Backdrop, "%s → %s", from, target.backdrop)
+		require.Equal(t, useAccent && target.backdrop == desktop.BackdropDesktopAcrylic, accent)
+		assertVisualAlpha(t, visualFrame(w), !fallback)
+		current = target.backdrop
+	}
+	for _, from := range materials {
+		for _, to := range materials {
+			if from == to {
+				continue
+			}
+			apply(from)
+			apply(to)
+			t.Logf("%s → %s", from.backdrop, to.backdrop)
+		}
+	}
 }

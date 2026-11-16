@@ -10,36 +10,51 @@ import (
 	"unsafe"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 	"github.com/stretchr/testify/require"
 )
 
 // Читается один пиксель собственной interop-текстуры. Этот путь отсутствует
 // в рабочем выводе кадров и не захватывает рабочий стол или чужие окна.
 func sampleDXGIPixel(p *wglDXGIPresenter, x, y uint32) (color.NRGBA, error) {
-	desc := graphicsTextureDesc{width: 1, height: 1, mips: 1, arraySize: 1, format: 28, sampleCount: 1, usage: 3, cpuAccess: 0x20000}
-	var staging *graphicsCOM
-	r := p.device.call(5, uintptr(unsafe.Pointer(&desc)), 0, uintptr(unsafe.Pointer(&staging)))
-	if err := graphicsResult("test staging texture", r); err != nil {
+	staging, err := newDXGIPixelRow(p, 1)
+	if err != nil {
 		return color.NRGBA{}, err
 	}
 	defer releaseGraphicsCOM(&staging)
+	copyDXGIPixel(p, staging, 0, p.shared, x, y)
+	var pixel [1]color.NRGBA
+	err = readDXGIPixelRow(p, staging, pixel[:])
+	return pixel[0], err
+}
+
+func newDXGIPixelRow(p *wglDXGIPresenter, width uint32) (*graphicsCOM, error) {
+	desc := graphicsTextureDesc{width: width, height: 1, mips: 1, arraySize: 1, format: 28, sampleCount: 1, usage: 3, cpuAccess: 0x20000}
+	var staging *graphicsCOM
+	r := p.device.call(5, uintptr(unsafe.Pointer(&desc)), 0, uintptr(unsafe.Pointer(&staging)))
+	return staging, graphicsResult("test staging texture", r)
+}
+
+func copyDXGIPixel(p *wglDXGIPresenter, staging *graphicsCOM, destination uintptr, source *graphicsCOM, x, y uint32) {
 	box := [6]uint32{x, y, 0, x + 1, y + 1, 1}
-	p.immediate.call(46, uintptr(unsafe.Pointer(staging)), 0, 0, 0, 0, uintptr(unsafe.Pointer(p.shared)), 0, uintptr(unsafe.Pointer(&box)))
+	p.immediate.call(46, uintptr(unsafe.Pointer(staging)), 0, destination, 0, 0, uintptr(unsafe.Pointer(source)), 0, uintptr(unsafe.Pointer(&box)))
+}
+
+func readDXGIPixelRow(p *wglDXGIPresenter, staging *graphicsCOM, pixels []color.NRGBA) error {
 	var mapped struct {
 		data                 unsafe.Pointer
 		rowPitch, depthPitch uint32
 	}
-	r = p.immediate.call(14, uintptr(unsafe.Pointer(staging)), 0, 1, 0, uintptr(unsafe.Pointer(&mapped)))
+	r := p.immediate.call(14, uintptr(unsafe.Pointer(staging)), 0, 1, 0, uintptr(unsafe.Pointer(&mapped)))
 	if err := graphicsResult("test Map", r); err != nil {
-		return color.NRGBA{}, err
+		return err
 	}
 	defer p.immediate.call(15, uintptr(unsafe.Pointer(staging)), 0)
-	pixel := unsafe.Slice((*byte)(mapped.data), 4)
-	return color.NRGBA{R: pixel[0], G: pixel[1], B: pixel[2], A: pixel[3]}, nil
+	copy(pixels, unsafe.Slice((*color.NRGBA)(mapped.data), len(pixels)))
+	return nil
 }
 
 func TestWGLDXGINativeFrameResizeStateAndFallback(t *testing.T) {
@@ -150,6 +165,27 @@ func TestWGLDXGINativeFrameResizeStateAndFallback(t *testing.T) {
 		require.Equal(t, desktop.VisualFallback, status.Phase)
 		require.Equal(t, desktop.BackdropOpaque, status.Selected)
 	}
+	// A positive DXGI status does not submit a frame. Allocated buffers must
+	// not make the presentation ready before a subsequent S_OK.
+	modeChanging := syscall.NewCallback(func(_, _, _ uintptr) uintptr { return 0x087a0008 })
+	var allocated, deferredReady, submitted bool
+	runOnMain(func() {
+		raw.RunWithContext(func() {
+			originalPresent := p.presentMethod
+			p.freeBuffers()
+			p.presentMethod = modeChanging
+			raw.presentFrame()
+			allocated = p.shared != nil
+			deferredReady = raw.presentationReady()
+			p.presentMethod = originalPresent
+			raw.presentFrame()
+			submitted = raw.presentationReady()
+		})
+	})
+	require.True(t, allocated, "the test must recreate real DXGI buffers")
+	require.False(t, deferredReady, "DXGI_STATUS_MODE_CHANGE_IN_PROGRESS does not submit the new buffers")
+	require.True(t, submitted, "S_OK makes the current buffers ready")
+
 	// Подменяется только ответ Present нашей копии presenter. Настоящий GPU
 	// не сбрасывается: проверяем ограниченное восстановление после
 	// DXGI_ERROR_DEVICE_REMOVED и освобождение старых interop-ресурсов.

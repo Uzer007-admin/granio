@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/app"
-	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/app"
+	"github.com/Uzer007-admin/granio/v3/canvas"
 )
 
 func main() {

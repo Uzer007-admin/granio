@@ -1,6 +1,6 @@
 package desktop
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // MouseButton represents a single button in a desktop MouseEvent
 type MouseButton int

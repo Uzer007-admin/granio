@@ -3,7 +3,7 @@ package theme
 import (
 	_ "embed"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 //go:embed font/NotoSans-Regular.ttf

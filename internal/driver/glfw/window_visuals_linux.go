@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 )
 
 func windowVisualAlphaFormat() bool { return true }
@@ -37,7 +37,7 @@ func (w *window) queryWindowVisualPolicy() (windowVisualPolicy, glfw.BackgroundE
 	return p, s, err
 }
 
-func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *desktop.VisualCapabilities) (desktop.VisualFallbackReason, bool, uint32) {
+func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, _ uint64, caps *desktop.VisualCapabilities) (desktop.VisualFallbackReason, bool, uint32) {
 	policy, state, err := w.queryWindowVisualPolicy()
 	w.visuals.lastPolicy = policy
 	caps.OSKnown = err == nil
@@ -109,20 +109,22 @@ func windowBackdropRejection(o desktop.VisualOptions, p windowVisualPolicy, caps
 	return desktop.VisualReasonNone
 }
 
-func (w *window) clearNativeWindowBackdrop() {
+func (w *window) clearNativeWindowBackdrop() (uint32, error) {
 	state, err := w.viewport.QueryBackgroundEffects()
 	if err == nil && state.BlurRequested {
 		_ = w.viewport.SetBackgroundBlur(false)
 	}
+	return 0, nil
 }
 
-func (w *window) refreshVisualPolicy() {
+func (w *window) refreshVisualPolicy() time.Time {
 	if !w.visuals.active.Load() || w.viewport == nil || w.closing || time.Now().Before(w.visuals.policyNext) {
-		return
+		return time.Time{}
 	}
 	w.visuals.policyNext = time.Now().Add(500 * time.Millisecond)
 	policy, _, _ := w.queryWindowVisualPolicy()
 	if policy != w.visuals.lastPolicy {
 		w.applyWindowVisuals()
 	}
+	return time.Time{}
 }

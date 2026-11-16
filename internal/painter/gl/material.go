@@ -1,9 +1,9 @@
 package gl
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal"
 )
 
 type materialPipeline interface {
@@ -14,15 +14,16 @@ type materialPipeline interface {
 }
 
 func (p *painter) drawMaterial(m *canvas.Material, pos granio.Position, frame granio.Size, clip *internal.ClipItem) {
-	disabled := !m.Enabled || !m.Valid()
-	if theme, ok := granio.CurrentApp().Settings().Theme().(interface{ HighContrast() bool }); ok {
-		disabled = disabled || theme.HighContrast()
-	}
-	if settings, ok := granio.CurrentApp().Settings().(granio.SystemAppearanceProvider); ok {
-		appearance := settings.SystemAppearance()
-		disabled = disabled || appearance.HighContrast.Available && appearance.HighContrast.Value || appearance.Transparency.Available && !appearance.Transparency.Value
-	}
-	if !disabled {
+	if m.EffectsAllowed() {
+		if m.CanPaintTint() {
+			p.drawRectangle(m.TintRectangle(), pos, frame)
+			if m.Tint.A == 255 {
+				m.SetEffect(canvas.MaterialOpaque)
+			} else {
+				m.SetEffect(canvas.MaterialTint)
+			}
+			return
+		}
 		if p.materials == nil && !p.materialUnavailable {
 			p.materials = newMaterialPipeline(p)
 			p.materialUnavailable = p.materials == nil
@@ -31,7 +32,14 @@ func (p *painter) drawMaterial(m *canvas.Material, pos granio.Position, frame gr
 			return
 		}
 	}
-	p.drawRectangle(m.FallbackRectangle(), pos, frame)
+	fallback := m.FallbackRectangle()
+	p.drawRectangle(fallback, pos, frame)
+	_, _, _, alpha := fallback.FillColor.RGBA()
+	mode := canvas.MaterialOpaque
+	if alpha < 65535 {
+		mode = canvas.MaterialTint
+	}
+	m.SetEffect(mode)
 }
 
 // ReleaseMaterials is called with the owning context current before Destroy.

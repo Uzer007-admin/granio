@@ -8,7 +8,7 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/commands"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/commands"
 	"github.com/urfave/cli/v2"
 )
 

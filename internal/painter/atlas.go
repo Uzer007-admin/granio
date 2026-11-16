@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-text/typesetting/font"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
 )
 
 // This file is the renderer-neutral half of the glyph atlas the GPU painters

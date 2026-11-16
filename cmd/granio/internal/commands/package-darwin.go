@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
 

@@ -3,8 +3,8 @@ package widget
 import (
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/lang"
 )
 
 type weekday int

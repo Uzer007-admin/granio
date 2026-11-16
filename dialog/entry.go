@@ -1,9 +1,9 @@
 package dialog
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/lang"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/lang"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 // EntryDialog is a variation of a dialog which prompts the user to enter some text.

@@ -17,9 +17,9 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 )
 
 const (

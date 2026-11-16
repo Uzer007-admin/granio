@@ -3,14 +3,14 @@ package widget
 import (
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	col "github.com/Uzer007-admin/granio/v2/internal/color"
-	"github.com/Uzer007-admin/granio/v2/internal/svg"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	col "github.com/Uzer007-admin/granio/v3/internal/color"
+	"github.com/Uzer007-admin/granio/v3/internal/svg"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // ButtonAlign represents the horizontal alignment of a button.
@@ -28,6 +28,14 @@ type ButtonImportance = Importance
 
 // ButtonStyle determines the behaviour and rendering of a button.
 type ButtonStyle int
+
+const (
+	// ButtonStyleDefault uses the theme's standard button presentation.
+	ButtonStyleDefault ButtonStyle = iota
+	// ButtonStyleToolbar uses compact, flat chrome and transitions between
+	// pointer states. It suits title bars, toolbars and navigation items.
+	ButtonStyleToolbar
+)
 
 const (
 	// ButtonAlignCenter aligns the icon and the text centrally.
@@ -61,6 +69,9 @@ type Button struct {
 	Importance    Importance
 	Alignment     ButtonAlign
 	IconPlacement ButtonIconPlacement
+	Style         ButtonStyle
+	// Selected highlights a toolbar button that represents a current view.
+	Selected bool
 
 	OnTapped       func() `json:"-"`
 	AccessibleName string
@@ -127,10 +138,9 @@ func (b *Button) CreateRenderer() granio.WidgetRenderer {
 	th := b.Theme()
 	v := granio.CurrentApp().Settings().ThemeVariant()
 
-	seg := &TextSegment{Text: b.Text, Style: RichTextStyleStrong}
-	seg.Style.Alignment = granio.TextAlignCenter
+	seg := &TextSegment{Text: b.Text, Style: b.buttonTextStyle()}
 	text := NewRichText(seg)
-	text.inset = granio.NewSquareSize(th.Size(theme.SizeNameInnerPadding))
+	text.inset = b.buttonTextInset(th)
 
 	background := canvas.NewRectangle(th.Color(theme.ColorNameButton, v))
 	background.CornerRadius = th.Size(theme.SizeNameButtonRadius)
@@ -156,20 +166,23 @@ func (b *Button) CreateRenderer() granio.WidgetRenderer {
 }
 
 // Cursor returns the cursor type of this widget
-func (*Button) Cursor() desktop.Cursor {
+func (b *Button) Cursor() desktop.Cursor {
+	if b.Style == ButtonStyleToolbar && !b.Disabled() {
+		return desktop.PointerCursor
+	}
 	return desktop.DefaultCursor
 }
 
 // FocusGained is a hook called by the focus handling logic after this object gained the focus.
 func (b *Button) FocusGained() {
 	b.focused = true
-	b.Refresh()
+	b.refreshInteraction()
 }
 
 // FocusLost is a hook called by the focus handling logic after this object lost the focus.
 func (b *Button) FocusLost() {
 	b.focused = false
-	b.Refresh()
+	b.refreshInteraction()
 }
 
 // MinSize returns the size that this widget should not shrink below
@@ -181,7 +194,7 @@ func (b *Button) MinSize() granio.Size {
 // MouseIn is called when a desktop pointer enters the widget
 func (b *Button) MouseIn(*desktop.MouseEvent) {
 	b.hovered = true
-	b.Refresh()
+	b.refreshInteraction()
 }
 
 // MouseMoved is called when a desktop pointer hovers over the widget
@@ -192,19 +205,19 @@ func (*Button) MouseMoved(*desktop.MouseEvent) {
 func (b *Button) MouseOut() {
 	b.hovered = false
 	b.pressed = false
-	b.Refresh()
+	b.refreshInteraction()
 }
 
 func (b *Button) MouseDown(event *desktop.MouseEvent) {
 	if event.Button == desktop.MouseButtonPrimary && !b.Disabled() {
 		b.pressed = true
-		b.Refresh()
+		b.refreshInteraction()
 	}
 }
 func (b *Button) MouseUp(event *desktop.MouseEvent) {
 	if event.Button == desktop.MouseButtonPrimary {
 		b.pressed = false
-		b.Refresh()
+		b.refreshInteraction()
 	}
 }
 
@@ -222,6 +235,15 @@ func (b *Button) SetText(text string) {
 	b.Refresh()
 }
 
+// SetSelected changes the persistent highlight of a toolbar button.
+func (b *Button) SetSelected(selected bool) {
+	if b.Selected == selected {
+		return
+	}
+	b.Selected = selected
+	b.refreshInteraction()
+}
+
 // Tapped is called when a pointer tapped event is captured and triggers any tap handler
 func (b *Button) Tapped(*granio.PointEvent) {
 	impl := b.super()
@@ -233,7 +255,9 @@ func (b *Button) Tapped(*granio.PointEvent) {
 		return
 	}
 
-	b.tapAnimation()
+	if b.Style != ButtonStyleToolbar {
+		b.tapAnimation()
+	}
 
 	if onTapped := b.OnTapped; onTapped != nil {
 		onTapped()
@@ -246,7 +270,7 @@ func (*Button) TypedRune(rune) {
 
 // TypedKey is a hook called by the input handling logic on key events if this object is focused.
 func (b *Button) TypedKey(ev *granio.KeyEvent) {
-	if ev.Name == granio.KeySpace {
+	if ev.Name == granio.KeySpace || b.Style == ButtonStyleToolbar && (ev.Name == granio.KeyReturn || ev.Name == granio.KeyEnter) {
 		b.Tapped(nil)
 	}
 }
@@ -258,7 +282,12 @@ func (b *Button) tapAnimation() {
 	b.tapAnim.Stop()
 	b.isAnimating = false
 
-	if granio.CurrentApp().Settings().ShowAnimations() {
+	th := b.Theme()
+	if animationsAllowed(th, granio.MotionPressed) {
+		spec := theme.Motion(th, granio.MotionPressed)
+		if theme.HasMotion(th) {
+			b.tapAnim.Duration, b.tapAnim.Curve = spec.Duration, spec.Curve
+		}
 		b.isAnimating = true
 		b.tapAnim.Start()
 	}
@@ -270,6 +299,7 @@ type buttonRenderer struct {
 	icon       *canvas.Image
 	label      *RichText
 	background *canvas.Rectangle
+	filter     *canvas.Material
 	tapBG      *canvas.Rectangle
 	button     *Button
 	layout     granio.Layout
@@ -278,6 +308,9 @@ type buttonRenderer struct {
 // Layout the components of the button widget
 func (r *buttonRenderer) Layout(size granio.Size) {
 	r.background.Resize(size)
+	if r.filter != nil {
+		r.filter.Resize(size)
+	}
 	if !r.button.isAnimating {
 		// if we are animating let the animation control the tapBG size
 		r.tapBG.Resize(size)
@@ -342,15 +375,20 @@ func (r *buttonRenderer) MinSize() (size granio.Size) {
 	}
 	size.Height = max(labelSize.Height, iconSize.Height)
 	size = size.Add(r.padding(th))
-	size = minimumComponentHeight(size, th, granio.ComponentButton)
+	if r.button.Style == ButtonStyleToolbar {
+		size.Height = max(size.Height, 24)
+	} else {
+		size = minimumComponentHeight(size, th, granio.ComponentButton)
+	}
 	return size
 }
 
 func (r *buttonRenderer) Refresh() {
 	th := r.button.Theme()
-	r.label.inset = granio.NewSquareSize(th.Size(theme.SizeNameInnerPadding))
+	r.label.inset = r.button.buttonTextInset(th)
 
-	r.label.Segments[0].(*TextSegment).Text = r.button.Text
+	segment := r.label.Segments[0].(*TextSegment)
+	segment.Text, segment.Style = r.button.Text, r.button.buttonTextStyle()
 	r.updateIconAndText()
 	r.applyTheme()
 
@@ -365,7 +403,9 @@ func (r *buttonRenderer) applyTheme() {
 	th := r.button.Theme()
 	fgColorName, bgColorName, bgBlendName := r.buttonColorNames()
 	_, systemColors := activeSystemColors(th)
-	if bg := r.background; bg != nil {
+	if r.button.Style == ButtonStyleToolbar {
+		r.applyToolbarBackground()
+	} else if bg := r.background; bg != nil {
 		v := granio.CurrentApp().Settings().ThemeVariant()
 		bgColor := color.Color(color.Transparent)
 		if bgColorName != "" {
@@ -374,6 +414,9 @@ func (r *buttonRenderer) applyTheme() {
 		if bgBlendName != "" {
 			bgColor = blendColor(bgColor, th.Color(bgBlendName, v))
 		}
+		bg.CornerRadius = th.Size(theme.SizeNameButtonRadius)
+		corners := theme.Corners(th, granio.ComponentButton, v)
+		bgColor = r.styleBackground(th, v, bgColor, corners)
 		r.updateStateBackground(bgColor, th)
 		if colors, ok := activeSystemColors(th); ok {
 			bg.StrokeColor, bg.StrokeWidth = colors.WindowText, 1
@@ -402,7 +445,8 @@ func (r *buttonRenderer) applyTheme() {
 				bg.StrokeColor, bg.StrokeWidth = style.Focus, style.FocusWidth
 			}
 		}
-		bg.CornerRadius = th.Size(theme.SizeNameButtonRadius)
+		bg.SetCornerRadii(corners)
+		r.tapBG.SetCornerRadii(corners)
 		bg.Refresh()
 	}
 
@@ -480,7 +524,7 @@ func (r *buttonRenderer) updateIconAndText() {
 		if r.icon == nil {
 			r.icon = canvas.NewImageFromResource(icon)
 			r.icon.FillMode = canvas.ImageFillContain
-			r.SetObjects([]granio.CanvasObject{r.background, r.tapBG, r.label, r.icon})
+			r.SetObjects(append(r.Objects(), r.icon))
 		}
 		// TODO support disabling bitmap resource not just SVG
 		if r.button.Disabled() && svg.IsResourceSVG(icon) {
@@ -498,6 +542,20 @@ func (r *buttonRenderer) updateIconAndText() {
 		r.label.Show()
 	}
 	r.label.Refresh()
+}
+
+func (r *buttonRenderer) styleBackground(th granio.Theme, v granio.ThemeVariant, fill color.Color, corners *granio.CornerRadii) color.Color {
+	if r.button.Importance == HighImportance {
+		if r.filter != nil && r.filter.Visible() {
+			r.filter.Hide()
+		}
+		return fill
+	}
+	tint, created := controlOptics(th, granio.ComponentButton, v, fill, r.background, corners, &r.filter)
+	if created {
+		r.SetObjects(append([]granio.CanvasObject{r.filter}, r.Objects()...))
+	}
+	return tint
 }
 
 func alignedPosition(align ButtonAlign, padding, objectSize, layoutSize granio.Size) (pos granio.Position) {
@@ -532,7 +590,7 @@ func blendColor(under, over color.Color) color.Color {
 func newButtonTapAnimation(bg *canvas.Rectangle, w granio.Widget, th granio.Theme) *granio.Animation {
 	v := granio.CurrentApp().Settings().ThemeVariant()
 	duration := canvas.DurationStandard
-	if _, modern := th.(granio.MotionTheme); modern {
+	if theme.HasMotion(th) {
 		duration = theme.Motion(th, granio.MotionPressed).Duration
 	}
 	animation := granio.NewAnimation(duration, func(done float32) {
@@ -555,7 +613,7 @@ func newButtonTapAnimation(bg *canvas.Rectangle, w granio.Widget, th granio.Them
 			}
 		}
 	})
-	if _, modern := th.(granio.MotionTheme); modern {
+	if theme.HasMotion(th) {
 		animation.Object = w
 	}
 	return animation

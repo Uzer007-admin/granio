@@ -3,9 +3,14 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/gl"
 )
+
+func init() {
+	theApp.glctx, theApp.worker = gl.NewContext()
+}
 
 func screenOrientation(width, height int) size.Orientation {
 	if width > height {

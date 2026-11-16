@@ -8,13 +8,13 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
-	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/software"
-	col "github.com/Uzer007-admin/granio/v2/internal/color"
-	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	fynecanvas "github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/software"
+	col "github.com/Uzer007-admin/granio/v3/internal/color"
+	intdriver "github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 type markupRenderer struct {

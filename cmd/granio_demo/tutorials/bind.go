@@ -3,10 +3,10 @@ package tutorials
 import (
 	"fmt"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/data/binding"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/data/binding"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 func bindingScreen(_ granio.Window) granio.CanvasObject {

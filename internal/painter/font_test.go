@@ -8,11 +8,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	intTest "github.com/Uzer007-admin/granio/v2/internal/test"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	intTest "github.com/Uzer007-admin/granio/v3/internal/test"
+	"github.com/Uzer007-admin/granio/v3/test"
 )
 
 func TestCachedFontFace(t *testing.T) {

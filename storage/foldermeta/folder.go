@@ -2,8 +2,8 @@
 package foldermeta
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	metadata "github.com/Uzer007-admin/granio/v2/internal/foldermeta"
+	"github.com/Uzer007-admin/granio/v3"
+	metadata "github.com/Uzer007-admin/granio/v3/internal/foldermeta"
 )
 
 // FancyFolder содержит проверенные метаданные представления папки.

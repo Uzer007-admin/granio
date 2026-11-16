@@ -4,8 +4,8 @@ package glfw
 
 import (
 	glfw "github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
 )
 
 // One visible-tree walk per active frame, shared by all scoped animations.
@@ -18,26 +18,32 @@ func (d *gLDriver) prepareAnimationVisibility() {
 	}
 	clear(owners)
 	d.animation.VisitObjects(func(obj granio.CanvasObject) { owners[obj] = false })
-	if len(owners) == 0 {
+	remaining := len(owners)
+	if remaining == 0 {
 		return
 	}
+	if d.animation.Visible == nil {
+		d.animation.Visible = func(obj granio.CanvasObject) bool { return d.animationOwners[obj] }
+	}
 	mark := func(obj granio.CanvasObject, _ granio.Position, _ granio.Position, _ granio.Size) bool {
-		if _, requested := owners[obj]; requested {
+		if found, requested := owners[obj]; requested && !found {
 			owners[obj] = true
+			remaining--
 		}
-		return false
+		return remaining == 0
 	}
 	for _, win := range d.windows {
 		w, ok := win.(*window)
 		if !ok || !w.visible || w.isClosing() || w.viewport == nil || w.viewport.GetAttrib(glfw.Iconified) != 0 {
 			continue
 		}
-		driver.WalkVisibleObjectTree(w.canvas.Content(), mark, nil)
-		for _, overlay := range w.canvas.Overlays().List() {
-			driver.WalkVisibleObjectTree(overlay, mark, nil)
+		if driver.WalkVisibleObjectTree(w.canvas.Content(), mark, nil) {
+			return
 		}
-	}
-	if d.animation.Visible == nil {
-		d.animation.Visible = func(obj granio.CanvasObject) bool { return d.animationOwners[obj] }
+		for _, overlay := range w.canvas.Overlays().List() {
+			if driver.WalkVisibleObjectTree(overlay, mark, nil) {
+				return
+			}
+		}
 	}
 }

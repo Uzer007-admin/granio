@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
 )
 
 // FocusManager represents a standard manager of input focus for a canvas

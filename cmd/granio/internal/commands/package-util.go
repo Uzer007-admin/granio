@@ -3,7 +3,7 @@ package commands
 import (
 	"os"
 
-	realUtil "github.com/Uzer007-admin/granio/v2/cmd/granio/internal/util"
+	realUtil "github.com/Uzer007-admin/granio/v3/cmd/granio/internal/util"
 )
 
 type packagerUtil interface {

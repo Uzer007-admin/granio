@@ -1,7 +1,7 @@
 package tutorials
 
 import (
-	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v3/canvas"
 )
 
 // cubeShaderSource renders a spinning 3D cube by ray marching a box signed

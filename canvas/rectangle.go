@@ -3,7 +3,7 @@ package canvas
 import (
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // Declare conformity with CanvasObject interface
@@ -55,6 +55,47 @@ type Rectangle struct {
 	//
 	// Since: 2.8
 	Shadow Shadow
+
+	corners    granio.CornerRadii
+	hasCorners bool
+}
+
+// SetCornerRadii overrides all four corner radii. A nil value restores the
+// legacy CornerRadius and per-corner fields. The input is copied.
+func (r *Rectangle) SetCornerRadii(corners *granio.CornerRadii) {
+	if r.setCornerRadii(corners) {
+		repaint(r)
+	}
+}
+
+func (r *Rectangle) setCornerRadii(corners *granio.CornerRadii) bool {
+	if corners == nil {
+		changed := r.hasCorners
+		r.hasCorners, r.corners = false, granio.CornerRadii{}
+		return changed
+	}
+	if r.hasCorners && r.corners == *corners {
+		return false
+	}
+	r.corners, r.hasCorners = *corners, true
+	return true
+}
+
+// EffectiveCornerRadii resolves the new and legacy corner settings.
+func (r *Rectangle) EffectiveCornerRadii(size granio.Size) granio.CornerRadii {
+	if r.hasCorners {
+		return r.corners.Normalized(size)
+	}
+	radius := func(value float32) float32 {
+		if value == 0 {
+			return r.CornerRadius
+		}
+		return value
+	}
+	return granio.CornerRadii{
+		TopLeft: radius(r.TopLeftCornerRadius), TopRight: radius(r.TopRightCornerRadius),
+		BottomRight: radius(r.BottomRightCornerRadius), BottomLeft: radius(r.BottomLeftCornerRadius),
+	}
 }
 
 // Hide will set this rectangle to not be visible

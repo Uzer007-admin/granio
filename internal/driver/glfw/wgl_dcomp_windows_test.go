@@ -11,8 +11,8 @@ import (
 	"unsafe"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 	"github.com/stretchr/testify/require"
 )
 
@@ -144,6 +144,7 @@ func TestWGLDCompRecoverAfterPresentFailure(t *testing.T) {
 
 func TestWGLDCompAlphaFirstFrameResizeAndRecovery(t *testing.T) {
 	requireVisualTest(t)
+	t.Setenv("FYNE_SCALE", "1")
 	w := newVisualTestWindow("Проверка alpha DirectComposition")
 	defer runOnMain(w.Close)
 	_, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropTransparent})
@@ -201,6 +202,29 @@ func TestWGLDCompAlphaFirstFrameResizeAndRecovery(t *testing.T) {
 		runOnMain(func() { w.RunWithContext(func() { d.repaintWindow(w) }) })
 		checkPixels()
 	}
+	var widthAtOne, scaledWidth int
+	runOnMain(func() {
+		err = w.SetScalePolicy(desktop.ScaleExact)
+		w.RunWithContext(func() { d.repaintWindow(w) })
+		widthAtOne = p.width
+	})
+	require.NoError(t, err)
+	t.Setenv("FYNE_SCALE", "1.25")
+	runOnMain(func() {
+		w.canvas.reloadScale()
+		w.Resize(granio.NewSize(360, 290))
+		w.RunWithContext(func() { d.repaintWindow(w) })
+		scaledWidth = p.width
+	})
+	require.InDelta(t, float64(widthAtOne)*1.25, scaledWidth, 2)
+	checkPixels()
+	t.Setenv("FYNE_SCALE", "1")
+	runOnMain(func() {
+		w.canvas.reloadScale()
+		w.Resize(granio.NewSize(360, 290))
+		w.RunWithContext(func() { d.repaintWindow(w) })
+	})
+	checkPixels()
 	var zeroErr, limitErr error
 	var before, after uint64
 	runOnMain(func() {

@@ -12,13 +12,13 @@ import (
 	"github.com/go-text/typesetting/shaping"
 	"golang.org/x/image/math/fixed"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	paint "github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 const (
@@ -164,11 +164,22 @@ func (t *RichText) Refresh() {
 // Resize sets a new size for the rich text.
 // This should only be called if it is not in a container with a layout manager.
 func (t *RichText) Resize(size granio.Size) {
-	if size == t.Size() {
+	previous := t.Size()
+	if size == previous {
 		return
 	}
 
 	t.size = size
+
+	// A plain wrapped paragraph fits to the width only. Growing its viewport
+	// (for example an Entry during an animation) leaves the glyphs in place.
+	if previous.Width == size.Width && t.rowBounds != nil && t.Scroll == widget.ScrollNone &&
+		t.Truncation == granio.TextTruncateOff && t.selection == nil && len(t.Segments) == 1 &&
+		(t.Wrapping == granio.TextWrapWord || t.Wrapping == granio.TextWrapBreak) {
+		if _, plain := t.Segments[0].(*TextSegment); plain {
+			return
+		}
+	}
 
 	skipResize := !t.minCache.IsZero() && size.Width >= t.minCache.Width && size.Height >= t.minCache.Height && t.Wrapping == granio.TextWrapOff && t.Truncation == granio.TextTruncateOff
 

@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // NewAllStrings creates a validator that requires all of the passed string validators to pass.

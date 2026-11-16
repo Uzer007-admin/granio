@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
 
 	"github.com/stretchr/testify/assert"
 )

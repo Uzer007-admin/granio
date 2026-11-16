@@ -7,12 +7,12 @@ import (
 	"image/draw"
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	paint "github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	paint "github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 const floatEqualityThreshold = 1e-9
@@ -110,8 +110,7 @@ func (p *painter) getTexture(object granio.CanvasObject, creator func(canvasObje
 }
 
 func (p *painter) imgToTexture(img image.Image, textureFilter canvas.ImageScale) Texture {
-	switch i := img.(type) {
-	case *image.Uniform:
+	if i, ok := img.(*image.Uniform); ok {
 		texture := p.newTexture(textureFilter)
 		r, g, b, a := i.RGBA()
 		r8, g8, b8, a8 := uint8((r>>8)&0xff), uint8((g>>8)&0xff), uint8((b>>8)&0xff), uint8((a>>8)&0xff)
@@ -127,32 +126,37 @@ func (p *painter) imgToTexture(img image.Image, textureFilter canvas.ImageScale)
 		)
 		p.logError()
 		return texture
-	case *image.RGBA:
-		if len(i.Pix) == 0 { // image is empty
-			return noTexture
-		}
-		pixels := packedRGBAPixels(i)
-		if len(pixels) == 0 {
-			return noTexture
-		}
-
-		texture := p.newTexture(textureFilter)
-		p.ctx.TexImage2D(
-			texture2D,
-			0,
-			i.Rect.Size().X,
-			i.Rect.Size().Y,
-			colorFormatRGBA,
-			unsignedByte,
-			pixels,
-		)
-		p.logError()
-		return texture
-	default:
-		rgba := image.NewRGBA(image.Rect(0, 0, img.Bounds().Dx(), img.Bounds().Dy()))
-		draw.Draw(rgba, rgba.Rect, img, img.Bounds().Min, draw.Over)
-		return p.imgToTexture(rgba, textureFilter)
 	}
+
+	rgba := textureRGBA(img)
+	if len(rgba.Pix) == 0 {
+		return noTexture
+	}
+	pixels := packedRGBAPixels(&rgba)
+	if len(pixels) == 0 {
+		return noTexture
+	}
+
+	texture := p.newTexture(textureFilter)
+	p.ctx.TexImage2D(texture2D, 0, rgba.Rect.Dx(), rgba.Rect.Dy(), colorFormatRGBA, unsignedByte, pixels)
+	p.logError()
+	return texture
+}
+
+func textureRGBA(img image.Image) image.RGBA {
+	switch i := img.(type) {
+	case *image.RGBA:
+		return *i
+	case *image.NRGBA:
+		// At full alpha, straight and premultiplied pixel bytes coincide.
+		if i.Opaque() {
+			return image.RGBA{Pix: i.Pix, Stride: i.Stride, Rect: i.Rect}
+		}
+	}
+	bounds := img.Bounds()
+	rgba := image.NewRGBA(image.Rect(0, 0, bounds.Dx(), bounds.Dy()))
+	draw.Draw(rgba, rgba.Rect, img, bounds.Min, draw.Src)
+	return *rgba
 }
 
 // packedRGBAPixels avoids copying ordinary images and single-row subimages.

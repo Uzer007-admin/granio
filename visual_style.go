@@ -2,6 +2,7 @@ package granio
 
 import (
 	"image/color"
+	"math"
 	"time"
 )
 
@@ -82,6 +83,37 @@ type ComponentStyle struct {
 type ComponentTheme interface {
 	Theme
 	ComponentStyle(ComponentKind, VisualState, ThemeVariant) ComponentStyle
+}
+
+// CornerRadii specifies four independent radii in logical units.
+// Zero makes that corner square.
+type CornerRadii struct {
+	TopLeft, TopRight, BottomRight, BottomLeft float32
+}
+
+// Normalized fits the radii to the drawable rectangle.
+func (r CornerRadii) Normalized(size Size) CornerRadii {
+	limit := max(0, min(size.Width, size.Height)*0.5)
+	clamp := func(radius float32) float32 {
+		if radius < 0 || math.IsNaN(float64(radius)) || math.IsInf(float64(radius), 0) {
+			return 0
+		}
+		return min(radius, limit)
+	}
+	return CornerRadii{clamp(r.TopLeft), clamp(r.TopRight), clamp(r.BottomRight), clamp(r.BottomLeft)}
+}
+
+// CornerTheme optionally overrides the shape of individual widget groups.
+type CornerTheme interface {
+	Theme
+	CornerRadii(ComponentKind, ThemeVariant) (CornerRadii, bool)
+}
+
+// ControlOpticsTheme can supply independent tint transparency [0,1] and blur
+// radius [0,50] for the backgrounds of buttons and entries.
+type ControlOpticsTheme interface {
+	Theme
+	ControlOptics(ComponentKind, ThemeVariant) (transparency, blurRadius float32, explicit bool)
 }
 
 type SurfaceRole uint8

@@ -3,7 +3,7 @@ package validation_test
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/data/validation"
+	"github.com/Uzer007-admin/granio/v3/data/validation"
 
 	"github.com/stretchr/testify/assert"
 )

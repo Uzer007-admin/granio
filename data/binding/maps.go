@@ -4,7 +4,7 @@ import (
 	"errors"
 	"reflect"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // DataMap is the base interface for all bindable data maps.

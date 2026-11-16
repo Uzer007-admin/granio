@@ -3,9 +3,9 @@ package storage_test
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3/storage"
 
-	_ "github.com/Uzer007-admin/granio/v2/test"
+	_ "github.com/Uzer007-admin/granio/v3/test"
 
 	"github.com/stretchr/testify/assert"
 )

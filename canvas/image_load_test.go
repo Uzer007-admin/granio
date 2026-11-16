@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/storage"
 	"github.com/stretchr/testify/require"
 )
 

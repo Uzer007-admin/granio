@@ -2,7 +2,7 @@
 
 package glfw
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 func (w *window) platformResize(canvasSize granio.Size) {
 	w.canvas.Resize(canvasSize)

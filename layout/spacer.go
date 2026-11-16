@@ -1,6 +1,6 @@
 package layout
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // SpacerObject is any object that can be used to space out child objects
 type SpacerObject interface {

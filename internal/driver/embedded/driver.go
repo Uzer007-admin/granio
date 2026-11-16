@@ -5,12 +5,12 @@ import (
 	"math"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/embedded"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/embedded"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	intdriver "github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
 )
 
 type noosDriver struct {

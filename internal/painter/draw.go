@@ -5,9 +5,9 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/geom"
 
 	"github.com/srwiley/rasterx"
 	"golang.org/x/image/math/fixed"
@@ -293,11 +293,8 @@ func DrawPolygon(polygon *canvas.RegularPolygon, vectorPad float32, scale func(f
 // The bounds of the output image will be increased by vectorPad to allow for stroke overflow at the edges.
 // The scale function is used to understand how many pixels are required per unit of size.
 func DrawRectangle(rect *canvas.Rectangle, rWidth, rHeight, vectorPad float32, scale func(float32) float32) *image.RGBA {
-	topRightRadius := GetCornerRadius(rect.TopRightCornerRadius, rect.CornerRadius)
-	topLeftRadius := GetCornerRadius(rect.TopLeftCornerRadius, rect.CornerRadius)
-	bottomRightRadius := GetCornerRadius(rect.BottomRightCornerRadius, rect.CornerRadius)
-	bottomLeftRadius := GetCornerRadius(rect.BottomLeftCornerRadius, rect.CornerRadius)
-	return drawOblong(rect.FillColor, rect.StrokeColor, rect.StrokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, rWidth, rHeight, vectorPad, scale)
+	r := rect.EffectiveCornerRadii(granio.NewSize(rWidth, rHeight))
+	return drawOblong(rect.FillColor, rect.StrokeColor, rect.StrokeWidth, r.TopRight, r.TopLeft, r.BottomRight, r.BottomLeft, rWidth, rHeight, vectorPad, scale)
 }
 
 // GetCornerRadius returns the effective corner radius for a rectangle or square corner.

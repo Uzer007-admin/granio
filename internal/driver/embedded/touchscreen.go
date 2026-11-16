@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/mobile"
-	"github.com/Uzer007-admin/granio/v2/driver/software"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3/driver/software"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
 )
 
 const (

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/app"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio_settings/settings"
-	"github.com/Uzer007-admin/granio/v2/container"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/app"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio_settings/settings"
+	"github.com/Uzer007-admin/granio/v3/container"
 )
 
 func main() {

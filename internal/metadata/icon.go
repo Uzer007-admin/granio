@@ -7,7 +7,7 @@ import (
 
 	"github.com/nfnt/resize"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func ScaleIcon(data granio.Resource, size int) granio.Resource {

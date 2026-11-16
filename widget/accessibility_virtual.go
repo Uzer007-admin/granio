@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
 )
 
 // A data callback can populate a composite row. Read its semantic labels, not

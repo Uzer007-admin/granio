@@ -4,18 +4,19 @@ import (
 	"image/color"
 	"reflect"
 	"sync/atomic"
+	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
-	"github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v3/internal/theme"
 )
 
 // SizeableCanvas defines a canvas with size related functions.
@@ -38,7 +39,8 @@ type Canvas struct {
 
 	shortcut granio.ShortcutHandler
 
-	painter gl.Painter
+	painter          gl.Painter
+	nextTextureSweep time.Time
 
 	// Any object that requests to enter to the refresh queue should
 	// not be omitted as it is always a rendering task's decision
@@ -231,19 +233,21 @@ func (c *Canvas) FreeDirtyTextures() uint64 {
 		return 0
 	}
 
-	objectsToFree := c.refreshQueue.Len()
-	for object := c.refreshQueue.Out(); object != nil; object = c.refreshQueue.Out() {
-		c.freeObject(object)
-	}
+	objectsToFree := c.refreshQueue.drain(c.freeObject)
 
-	cache.RangeExpiredTexturesFor(c.impl, c.painter.Free)
+	// Expiration walks the shared texture maps and requires the canvas context.
+	// Dirty objects are still invalidated on every frame.
+	now := time.Now()
+	if !now.Before(c.nextTextureSweep) {
+		cache.RangeExpiredTexturesFor(c.impl, c.painter.Free)
+		c.nextTextureSweep = now.Add(min(time.Second, cache.ValidDuration/2))
+	}
 	return objectsToFree
 }
 
 // Initialize initializes the canvas.
 func (c *Canvas) Initialize(impl SizeableCanvas, onOverlayChanged func()) {
 	c.impl = impl
-	c.refreshQueue.queue = async.NewCanvasObjectQueue()
 	c.overlays.OverlayStack = internal.OverlayStack{
 		OnChange: onOverlayChanged,
 		Canvas:   impl,
@@ -349,6 +353,7 @@ func (c *Canvas) SetMobileWindowHeadTree(head granio.CanvasObject) {
 // SetPainter sets the canvas painter.
 func (c *Canvas) SetPainter(p gl.Painter) {
 	c.painter = p
+	c.nextTextureSweep = time.Time{}
 }
 
 // TypedShortcut handle the registered shortcut.
@@ -397,10 +402,11 @@ func (c *Canvas) focusManager() *app.FocusManager {
 }
 
 func (c *Canvas) freeObject(object granio.CanvasObject) {
-	// Image.Refresh will trigger a refresh specific to the object,
-	// while recursing on parent widget would just lead to a double texture upload.
-	if img, ok := object.(*canvas.Image); ok {
-		c.painter.Free(img)
+	switch object.(type) {
+	case granio.Widget, *granio.Container:
+		// Composite objects have renderer children that may own textures.
+	default:
+		c.painter.Free(object)
 		return
 	}
 

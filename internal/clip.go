@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/Uzer007-admin/granio/v2"
+import (
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+)
 
 // ClipStack keeps track of the areas that should be clipped when drawing a canvas.
 // If no clips are present then adding one will be added as-is.
@@ -59,31 +62,8 @@ func (i *ClipItem) Rect() (granio.Position, granio.Size) {
 
 // Intersect returns a new clip item that is the intersection of the requested parameters and this clip.
 func (i *ClipItem) Intersect(p granio.Position, s granio.Size) *ClipItem {
-	ret := &ClipItem{p, s}
-	if i == nil {
-		return ret
+	if i != nil {
+		p, s = driver.IntersectClip(i.pos, i.size, p, s)
 	}
-
-	if ret.pos.X < i.pos.X {
-		ret.pos.X = i.pos.X
-		ret.size.Width -= i.pos.X - p.X
-	}
-	if ret.pos.Y < i.pos.Y {
-		ret.pos.Y = i.pos.Y
-		ret.size.Height -= i.pos.Y - p.Y
-	}
-
-	if p.X+s.Width > i.pos.X+i.size.Width {
-		ret.size.Width = (i.pos.X + i.size.Width) - ret.pos.X
-	}
-	if p.Y+s.Height > i.pos.Y+i.size.Height {
-		ret.size.Height = (i.pos.Y + i.size.Height) - ret.pos.Y
-	}
-
-	if ret.size.Width < 0 || ret.size.Height < 0 {
-		ret.size = granio.NewSize(0, 0)
-		return ret
-	}
-
-	return ret
+	return &ClipItem{p, s}
 }

@@ -6,9 +6,9 @@ import (
 	"image/draw"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	internalTest "github.com/Uzer007-admin/granio/v2/internal/test"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	internalTest "github.com/Uzer007-admin/granio/v3/internal/test"
+	"github.com/Uzer007-admin/granio/v3/test"
 
 	"github.com/stretchr/testify/assert"
 )

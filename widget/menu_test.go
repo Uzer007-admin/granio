@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	internalWidget "github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

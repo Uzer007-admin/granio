@@ -2,7 +2,7 @@
 
 package app
 
-import "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
+import "github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/size"
 
 // TODO: do this for all build targets, not just linux (x11 and Android)? If
 // so, should package gl instead of this package call RegisterFilter??
@@ -11,7 +11,7 @@ import "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
 // KitKat). If only x11 needs this, should we move this to x11.go??
 func (a *app) registerGLViewportFilter() {
 	a.RegisterFilter(func(e any) any {
-		if e, ok := e.(size.Event); ok {
+		if e, ok := e.(size.Event); ok && a.glctx != nil {
 			a.glctx.Viewport(0, 0, e.WidthPx, e.HeightPx)
 		}
 		return e

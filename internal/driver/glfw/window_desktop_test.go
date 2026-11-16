@@ -5,8 +5,8 @@ package glfw
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 	"github.com/stretchr/testify/assert"

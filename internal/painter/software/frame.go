@@ -3,21 +3,24 @@ package software
 import (
 	"image"
 	"image/color"
-	"image/draw"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // FramePainter рисует сохранённое дерево объектов в переиспользуемый CPU-кадр.
 // Его методы вызываются в потоке окна, как и методы GL-painter.
 type FramePainter struct {
-	canvas *frameCanvas
-	frame  *image.NRGBA
-	clip   image.Rectangle
+	canvas     *frameCanvas
+	frame      *image.NRGBA
+	clip       image.Rectangle
+	text       textBitmapCache
+	material   softwareMaterial
+	background uint32
 }
 
 type frameCanvas struct {
@@ -60,14 +63,25 @@ func (p *FramePainter) Clear() {
 	}
 	background := color.NRGBAModel.Convert(theme.Color(theme.ColorNameBackground)).(color.NRGBA)
 	background.A = 255
-	draw.Draw(p.frame, p.frame.Bounds(), image.NewUniform(background), image.Point{}, draw.Src)
+	p.background = uint32(background.R)<<16 | uint32(background.G)<<8 | uint32(background.B)
+	fillRectFastPath(p.frame, p.frame.Bounds(), background)
 	p.clip = p.frame.Bounds()
+	p.material.budget.ResetFrame()
 }
 
 func (p *FramePainter) Paint(obj granio.CanvasObject, pos granio.Position, _ granio.Size, _ *internal.ClipItem) {
-	if p.frame != nil {
-		paintObject(p.canvas, obj, pos, p.frame, p.clip)
+	if p.frame == nil || p.clip.Empty() {
+		return
 	}
+	if label, ok := obj.(*canvas.Text); ok {
+		drawText(p.canvas, label, pos, p.frame, p.clip, &p.text)
+		return
+	}
+	if material, ok := obj.(*canvas.Material); ok {
+		p.paintMaterial(material, pos)
+		return
+	}
+	paintObject(p.canvas, obj, pos, p.frame, p.clip)
 }
 
 func (p *FramePainter) StartClipping(pos granio.Position, size granio.Size) {
@@ -86,6 +100,16 @@ func (p *FramePainter) StopClipping() {
 
 // Frame возвращает буфер до следующего рисования; Capture создаёт копию.
 func (p *FramePainter) Frame() *image.NRGBA { return p.frame }
+
+// MaterialStatistics reports the live scratch buffers and sampled regions.
+func (p *FramePainter) MaterialStatistics() map[string]uint64 {
+	m := &p.material
+	return map[string]uint64{
+		"captures":     m.captures,
+		"pool_bytes":   uint64(cap(m.pixels)*3 + cap(m.work)*3 + cap(m.mask) + cap(m.x)*12),
+		"budget_bytes": 2 << 20,
+	}
+}
 
 func (p *FramePainter) Capture(granio.Canvas) image.Image {
 	if p.frame == nil {

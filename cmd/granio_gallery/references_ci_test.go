@@ -5,8 +5,8 @@ package main
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/app"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/app"
 )
 
 // Real app settings defer cache invalidation to the event loop. The exporter

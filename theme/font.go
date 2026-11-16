@@ -3,7 +3,7 @@ package theme
 import (
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // DefaultEmojiFont returns the font resource for the built-in emoji font.

@@ -1,7 +1,7 @@
 package app
 
 import "C"
-import "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
+import "github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/key"
 
 // KeyboardType represents the type of a keyboard
 type KeyboardType int32

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func BenchmarkRunnerAllocs(b *testing.B) {
@@ -24,4 +24,22 @@ func BenchmarkRunnerAllocs(b *testing.B) {
 
 	b.ReportAllocs()
 	fl = fl + 1 // dummy use of variable
+}
+
+func BenchmarkRunnerStopInactive(b *testing.B) {
+	r := Runner{}
+	for range 16 {
+		r.Start(granio.NewAnimation(time.Hour, func(float32) {}))
+	}
+	r.TickAnimations()
+	for range 8 {
+		r.Start(granio.NewAnimation(time.Hour, func(float32) {}))
+	}
+	inactive := granio.NewAnimation(time.Hour, func(float32) {})
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for range b.N {
+		r.Stop(inactive)
+	}
 }

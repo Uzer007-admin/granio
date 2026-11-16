@@ -9,9 +9,9 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	intRepo "github.com/Uzer007-admin/granio/v3/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 func (a *fyneApp) ScheduleNotification(n *granio.Notification, when time.Time) (*granio.ScheduledNotification, error) {

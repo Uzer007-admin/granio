@@ -3,8 +3,8 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/storage"
 	"github.com/yuin/goldmark/ast"
 )
 

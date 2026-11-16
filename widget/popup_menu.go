@@ -1,8 +1,13 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
+	"image/color"
+
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 var (
@@ -16,6 +21,7 @@ type PopUpMenu struct {
 	canvas        granio.Canvas
 	overlay       *widget.OverlayContainer
 	previousFocus granio.Focusable
+	motion        *granio.Animation
 }
 
 // NewPopUpMenu creates a new, reusable popup menu. You can show it using ShowAtPosition.
@@ -70,6 +76,10 @@ func (*PopUpMenu) FocusLost() {}
 
 // Hide hides the pop-up menu.
 func (p *PopUpMenu) Hide() {
+	if p.motion != nil {
+		p.motion.Stop()
+		p.motion = nil
+	}
 	p.overlay.Hide()
 	p.Menu.Hide()
 	restorePopupFocus(p.canvas, p.previousFocus)
@@ -98,7 +108,10 @@ func (p *PopUpMenu) SetCanvas(c granio.Canvas) {
 
 // Show makes the pop-up menu visible.
 func (p *PopUpMenu) Show() {
-	if _, modern := p.Theme().(granio.ComponentTheme); modern && p.canvas.Overlays().Top() != p.overlay {
+	entering := p.canvas.Overlays().Top() != p.overlay
+	th := p.Theme()
+	_, customComponents := th.(granio.ComponentTheme)
+	if entering && (customComponents || theme.HasMotion(th)) {
 		p.previousFocus = p.canvas.Focused()
 		if p.previousFocus != nil {
 			p.previousFocus.FocusLost()
@@ -107,9 +120,41 @@ func (p *PopUpMenu) Show() {
 	p.Refresh()
 	p.overlay.Show()
 	p.Menu.Show()
+	if entering {
+		p.animateMenu()
+	}
 	if !granio.CurrentDevice().IsMobile() {
 		p.canvas.Focus(p)
 	}
+}
+
+func (p *PopUpMenu) animateMenu() {
+	th := p.Theme()
+	if !theme.HasMotion(th) || !animationsAllowed(th, granio.MotionSurface) {
+		return
+	}
+	renderer, ok := cache.Renderer(p).(*menuRenderer)
+	if !ok {
+		return
+	}
+	target := renderer.b.FillColor
+	from := color.Color(color.Transparent)
+	if p.Material != nil {
+		from = th.Color(theme.ColorNameHover, granio.CurrentApp().Settings().ThemeVariant())
+	}
+	spec := theme.Motion(th, granio.MotionSurface)
+	a := granio.NewAnimation(spec.Duration, func(value float32) {
+		renderer.b.FillColor = tweenColor(from, target, value)
+		canvas.Refresh(renderer.b)
+	})
+	a.Object, a.Curve = p, spec.Curve
+	a.OnFinished = func() {
+		if p.motion == a {
+			p.motion = nil
+		}
+	}
+	p.motion = a
+	a.Start()
 }
 
 func (p *PopUpMenu) HandleEscape() bool { p.Dismiss(); return true }

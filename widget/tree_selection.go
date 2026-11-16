@@ -1,8 +1,8 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
 )
 
 // Selected returns a copy of the selected node IDs.

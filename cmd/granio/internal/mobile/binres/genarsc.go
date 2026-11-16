@@ -17,7 +17,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile/binres"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/mobile/binres"
 )
 
 const tmpl = `// Copyright 2016 The Go Authors.  All rights reserved.

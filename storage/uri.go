@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 // EqualURI returns true if the two URIs are equal.

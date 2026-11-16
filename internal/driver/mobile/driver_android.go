@@ -2,7 +2,7 @@
 
 package mobile
 
-import driverDefs "github.com/Uzer007-admin/granio/v2/driver"
+import driverDefs "github.com/Uzer007-admin/granio/v3/driver"
 
 /*
 #include <stdbool.h>

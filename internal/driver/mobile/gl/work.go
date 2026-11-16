@@ -175,6 +175,8 @@ func (ctx *context) DoWork() {
 		ret := C.process(&ctx.cargs[0], ctx.parg[0], ctx.parg[1], ctx.parg[2], C.int(len(queue)))
 
 		// Cleanup and signal.
+		clear(ctx.parg[:len(queue)])
+		clear(queue)
 		queue = queue[:0]
 		if blocking {
 			ctx.retvalue <- ret

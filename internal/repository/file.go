@@ -9,10 +9,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/storage"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/storage"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 // Constants for file permissions to be combined using `|`.

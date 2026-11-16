@@ -2,9 +2,9 @@
 package main
 
 import (
-	"github.com/Uzer007-admin/granio/v2/app"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3/app"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 func main() {

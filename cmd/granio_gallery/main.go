@@ -9,12 +9,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/app"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/app"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 func main() {
@@ -30,6 +30,8 @@ func main() {
 	systemPalette := flag.Bool("system-palette", false, "использовать полную системную палитру при её доступности")
 	sample := flag.String("sample", "", "открыть пример: widgets, data-grid, collections, typography, system, materials")
 	references := flag.String("references-dir", "", "экспортировать воспроизводимые непрозрачные эталоны v1 и завершить работу")
+	workspace := flag.Bool("workspace", false, "открыть демонстрационную рабочую область")
+	renderer := flag.String("renderer", "", "режим отрисовки: auto, opengl, software")
 	flag.Parse()
 	if *sample != "" {
 		found := false
@@ -49,7 +51,22 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	a := app.NewWithID("io.granio.visual-gallery")
+	id := "io.granio.visual-gallery"
+	if *workspace && *smoke {
+		id = ""
+	}
+	a := app.NewWithID(id)
+	if err := configureGalleryRenderer(a, *renderer, *workspace && !*smoke); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	if *workspace {
+		if err := runWorkspace(a, *fps, *smoke, *capturePath); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	if *references != "" {
 		if err := exportGalleryReferences(a, *references); err != nil {
 			fmt.Fprintln(os.Stderr, err)

@@ -9,15 +9,15 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/lang"
-	"github.com/Uzer007-admin/granio/v2/storage"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/lang"
+	"github.com/Uzer007-admin/granio/v3/storage"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 // ViewLayout can be passed to SetView() to set the view of

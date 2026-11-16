@@ -10,11 +10,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
-	"github.com/Uzer007-admin/granio/v2/internal/svg"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
+	"github.com/Uzer007-admin/granio/v3/internal/svg"
+	"github.com/Uzer007-admin/granio/v3/storage"
 )
 
 // ImageFill defines the different type of ways an image can stretch to fill its space.

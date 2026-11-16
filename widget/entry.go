@@ -7,16 +7,16 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/data/binding"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/driver/mobile"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/lang"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/data/binding"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/lang"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 const (
@@ -50,11 +50,16 @@ type Entry struct {
 	OnChanged   func(string) `json:"-"`
 
 	// OnSubmitted will be called when the user presses Enter/Return (for a single line entry).
-	// MultiLine entries will be submitted when Shift+Enter (or Return) are pressed.
+	// MultiLine entries submit on Shift+Enter, unless SubmitOnEnter is set.
 	//
 	// Since: 2.0
 	OnSubmitted func(string) `json:"-"`
-	Password    bool
+	// SubmitOnEnter makes a multiline entry submit on Enter and insert a
+	// line break on Shift+Enter when OnSubmitted is set.
+	SubmitOnEnter bool
+	// Borderless hides the entry outline when the surrounding surface supplies it.
+	Borderless bool
+	Password   bool
 	// ReadOnly retains focus, navigation and copying, but rejects user/native
 	// edits. SetText and bindings remain programmatic updates.
 	ReadOnly  bool
@@ -200,15 +205,19 @@ func (e *Entry) CreateRenderer() granio.WidgetRenderer {
 
 	box := canvas.NewRectangle(th.Color(theme.ColorNameInputBackground, v))
 	box.CornerRadius = th.Size(theme.SizeNameInputRadius)
+	corners := theme.Corners(th, granio.ComponentInput, v)
+	box.SetCornerRadii(corners)
 	border := canvas.NewRectangle(color.Transparent)
 	border.StrokeWidth = th.Size(theme.SizeNameInputBorder)
 	border.StrokeColor = th.Color(theme.ColorNameInputBorder, v)
 	border.CornerRadius = th.Size(theme.SizeNameInputRadius)
+	border.SetCornerRadii(corners)
+	border.Hidden = e.Borderless
 	cursor := canvas.NewRectangle(color.Transparent)
 	cursor.Hide()
 
 	e.cursorAnim = newEntryCursorAnimation(cursor)
-	if _, modern := th.(granio.MotionTheme); modern {
+	if theme.HasMotion(th) {
 		e.cursorAnim.object = e
 	}
 	e.content = &entryContent{entry: e}
@@ -535,6 +544,15 @@ func (e *Entry) SetMinRowsVisible(count int) {
 	e.Refresh()
 }
 
+// TextContentHeight returns the height of all text rows, including vertical
+// padding, at the entry's current width. It includes rows outside the viewport.
+func (e *Entry) TextContentHeight() float32 {
+	t := e.textProvider()
+	last := t.rows() - 1
+	y, height := t.rowGeometry(last)
+	return y + height + 2*e.Theme().Size(theme.SizeNameInnerPadding)
+}
+
 // SetPlaceHolder sets the text that will be displayed if the entry is otherwise empty
 func (e *Entry) SetPlaceHolder(text string) {
 	e.Theme() // setup theme cache before locking
@@ -695,11 +713,19 @@ func (*Entry) TouchCancel(*mobile.TouchEvent) {
 
 // TypedKey receives key input events when the Entry widget is focused.
 func (e *Entry) TypedKey(key *granio.KeyEvent) {
+	submitKey := e.MultiLine && e.SubmitOnEnter && (key.Name == granio.KeyEnter || key.Name == granio.KeyReturn)
+	if submitKey && e.CompositionActive() {
+		return // The input method owns Enter while it shows a candidate.
+	}
 	e.CancelComposition()
 	if e.Disabled() {
 		return
 	}
 	if e.ReadOnly && (key.Name == granio.KeyBackspace || key.Name == granio.KeyDelete || key.Name == granio.KeyReturn || key.Name == granio.KeyEnter || key.Name == granio.KeyTab) {
+		return
+	}
+	if submitKey && !e.selectKeyDown && e.OnSubmitted != nil {
+		e.OnSubmitted(e.Text)
 		return
 	}
 	if e.cursorAnim != nil {
@@ -1590,7 +1616,7 @@ func (e *Entry) typedKeyReturn(provider *RichText, multiLine bool) {
 			onSubmitted(text)
 		}
 		return
-	} else if selectDown && onSubmitted != nil {
+	} else if selectDown && onSubmitted != nil && !e.SubmitOnEnter {
 		// Multiline supports newline, unless shift is held and OnSubmitted is set.
 		onSubmitted(text)
 		return
@@ -1623,6 +1649,7 @@ type entryRenderer struct {
 	lastModern  bool
 	box, border *canvas.Rectangle
 	focusBorder *canvas.Rectangle
+	filter      *canvas.Material
 	scroll      *widget.Scroll
 	icon        *canvas.Image
 
@@ -1687,6 +1714,10 @@ func (r *entryRenderer) Layout(size granio.Size) {
 	}
 	r.box.Resize(size.Subtract(granio.NewSquareSize(borderSize * 2)))
 	r.box.Move(granio.NewSquareOffsetPos(borderSize))
+	if r.filter != nil {
+		r.filter.Move(r.box.Position())
+		r.filter.Resize(r.box.Size())
+	}
 
 	pad := theme.InputBorderSize()
 	actionIconSize := granio.NewSize(0, size.Height-pad*2)
@@ -1818,8 +1849,6 @@ func (r *entryRenderer) Refresh() {
 	wrapping := r.entry.Wrapping
 
 	r.entry.syncSegments()
-	r.entry.textWidget.updateRowBounds()
-	r.entry.placeholderWidget.updateRowBounds()
 	r.entry.textWidget.Refresh()
 	r.entry.placeholderWidget.Refresh()
 
@@ -1860,6 +1889,9 @@ func (r *entryRenderer) Refresh() {
 	r.box.FillColor = th.Color(theme.ColorNameInputBackground, v)
 	r.box.CornerRadius = th.Size(theme.SizeNameInputRadius)
 	r.border.CornerRadius = r.box.CornerRadius
+	corners := theme.Corners(th, granio.ComponentInput, v)
+	r.box.SetCornerRadii(corners)
+	r.border.SetCornerRadii(corners)
 	if focusedAppearance {
 		r.border.StrokeColor = th.Color(theme.ColorNamePrimary, v)
 	} else {
@@ -1904,7 +1936,8 @@ func (r *entryRenderer) Refresh() {
 		}
 		r.focusBorder.StrokeColor, r.focusBorder.StrokeWidth = style.Focus, style.FocusWidth
 		r.focusBorder.CornerRadius = style.Radius
-		if style.FocusWidth > 0 {
+		r.focusBorder.SetCornerRadii(corners)
+		if style.FocusWidth > 0 && !r.entry.Borderless {
 			r.focusBorder.Show()
 		} else {
 			r.focusBorder.Hide()
@@ -1912,6 +1945,18 @@ func (r *entryRenderer) Refresh() {
 		r.Layout(r.entry.Size())
 	} else if r.focusBorder != nil {
 		r.focusBorder.Hide()
+	}
+	tint, created := controlOptics(th, granio.ComponentInput, v, r.box.FillColor, r.box, corners, &r.filter)
+	r.box.FillColor = tint
+	if created {
+		r.objects = append([]granio.CanvasObject{r.filter}, r.objects...)
+	}
+	if r.border.Hidden != r.entry.Borderless {
+		if r.entry.Borderless {
+			r.border.Hide()
+		} else {
+			r.border.Show()
+		}
 	}
 
 	if r.entry.Icon != nil {
@@ -1946,6 +1991,15 @@ type entryContent struct {
 
 	entry  *Entry
 	scroll *widget.Scroll
+}
+
+func (e *entryContent) MinSizeForWidth(width float32) granio.Size {
+	r := cache.Renderer(e).(*entryContentRenderer)
+	if r.provider.Size().Width != width {
+		r.provider.Resize(granio.NewSize(width, r.provider.Size().Height))
+		r.placeholder.Resize(granio.NewSize(width, r.placeholder.Size().Height))
+	}
+	return r.MinSize()
 }
 
 func (e *entryContent) CreateRenderer() granio.WidgetRenderer {

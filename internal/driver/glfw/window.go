@@ -10,17 +10,17 @@ import (
 	"slices"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 )
 
 const (
@@ -103,10 +103,22 @@ func (w *window) Resize(size granio.Size) {
 
 		w.requestedWidth, w.requestedHeight = width, height
 		if runtime.GOOS != goos.JavaScript {
-			w.view().SetSize(width, height)
+			w.setViewportSize(width, height)
 			w.processResized(width, height)
 		}
 	})
+}
+
+func (w *window) setViewportSize(width, height int) {
+	if !w.changeTitleBarBounds(width, height, false) {
+		w.viewport.SetSize(width, height)
+	}
+}
+
+func (w *window) setViewportPosition(x, y int) {
+	if !w.changeTitleBarBounds(x, y, true) {
+		w.viewport.SetPos(x, y)
+	}
 }
 
 func (w *window) FixedSize() bool {
@@ -1103,7 +1115,7 @@ func (w *window) doShowAgain() {
 
 	view := w.view()
 	if !build.IsWayland {
-		view.SetPos(w.xpos, w.ypos)
+		w.setViewportPosition(w.xpos, w.ypos)
 	}
 	if !w.prepareVisualFirstFrame() || w.closing {
 		return

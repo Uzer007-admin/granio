@@ -6,12 +6,12 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
+	"github.com/Uzer007-admin/granio/v3/theme"
 
 	"github.com/anthonynsimon/bild/blur"
 
@@ -32,6 +32,9 @@ func drawBlur(c granio.Canvas, blurObj *canvas.Blur, pos granio.Position, base *
 	scaledHeight := scale.ToScreenCoordinate(c, blurObj.Size().Height)
 	scaledX, scaledY := scale.ToScreenCoordinate(c, pos.X), scale.ToScreenCoordinate(c, pos.Y)
 	bounds := clip.Intersect(image.Rect(scaledX, scaledY, scaledX+scaledWidth, scaledY+scaledHeight))
+	if bounds.Empty() {
+		return
+	}
 
 	crop := base.SubImage(bounds)
 	blurred := blur.Gaussian(crop, float64(blurObj.Radius*c.Scale()))
@@ -42,7 +45,7 @@ func drawBlur(c granio.Canvas, blurObj *canvas.Blur, pos granio.Position, base *
 		applyRoundedCorners(blurred, cornerRadius*c.Scale())
 	}
 
-	draw.Draw(base, base.Bounds(), blurred, image.Point{}, draw.Over)
+	draw.Draw(base, bounds, blurred, blurred.Bounds().Min, draw.Over)
 }
 
 func drawArc(c granio.Canvas, arc *canvas.Arc, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -56,15 +59,7 @@ func drawArc(c granio.Canvas, arc *canvas.Arc, pos granio.Position, base *image.
 		return float32(math.Round(float64(in) * float64(c.Scale())))
 	})
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawCircle(c granio.Canvas, circle *canvas.Circle, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -82,23 +77,19 @@ func drawCircle(c granio.Canvas, circle *canvas.Circle, pos granio.Position, bas
 		drawShadow(c, circle, circle.Size(), circle.Shadow, pad, base, clip, pos)
 	}
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawGradient(c granio.Canvas, g gradient, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	bounds := g.Size()
 	width := scale.ToScreenCoordinate(c, bounds.Width)
 	height := scale.ToScreenCoordinate(c, bounds.Height)
+	x, y := scale.ToScreenCoordinate(c, pos.X), scale.ToScreenCoordinate(c, pos.Y)
+	if width <= 0 || height <= 0 || !image.Rect(x, y, x+width, y+height).Overlaps(clip) {
+		return
+	}
 	tex := g.Generate(width, height)
-	drawTex(scale.ToScreenCoordinate(c, pos.X), scale.ToScreenCoordinate(c, pos.Y), width, height, base, tex, clip, 1.0)
+	drawTex(x, y, width, height, base, tex, clip, 1.0)
 }
 
 func drawImage(c granio.Canvas, img *canvas.Image, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -109,9 +100,15 @@ func drawImage(c granio.Canvas, img *canvas.Image, pos granio.Position, base *im
 	width := scale.ToScreenCoordinate(c, bounds.Width)
 	height := scale.ToScreenCoordinate(c, bounds.Height)
 	scaledX, scaledY := scale.ToScreenCoordinate(c, pos.X), scale.ToScreenCoordinate(c, pos.Y)
+	if width <= 0 || height <= 0 || !image.Rect(scaledX, scaledY, scaledX+width, scaledY+height).Overlaps(clip) {
+		return
+	}
 
 	var rawImg image.Image
 	if img.FillMode == canvas.ImageFillCover {
+		if img.Image == nil {
+			return
+		}
 		inner := img.Image.Bounds()
 		imgAspect := img.Aspect()
 		objAspect := float32(width) / float32(height)
@@ -130,9 +127,15 @@ func drawImage(c granio.Canvas, img *canvas.Image, pos granio.Position, base *im
 			inner = image.Rect(inner.Min.X+pixPad, inner.Min.Y, inner.Max.X-pixPad, inner.Max.Y)
 		}
 
-		subImg := image.NewRGBA(inner.Bounds())
-		draw.Copy(subImg, inner.Min, img.Image, inner, draw.Over, nil)
-		rawImg = subImg
+		if source, ok := img.Image.(*image.RGBA); ok {
+			// The crop shares the original premultiplied pixels. The paint path
+			// reads them using the crop's bounds and stride.
+			rawImg = source.SubImage(inner)
+		} else {
+			subImg := image.NewRGBA(inner)
+			draw.Copy(subImg, inner.Min, img.Image, inner, draw.Over, nil)
+			rawImg = subImg
+		}
 	} else {
 		rawImg = painter.PaintImage(img, c, width, height)
 		if img.FillMode == canvas.ImageFillContain {
@@ -156,6 +159,9 @@ func drawImage(c granio.Canvas, img *canvas.Image, pos granio.Position, base *im
 }
 
 func drawPixels(x, y, width, height int, mode canvas.ImageScale, base *image.NRGBA, origImg image.Image, clip image.Rectangle, alpha float64, radius float32) {
+	if width <= 0 || height <= 0 || !image.Rect(x, y, x+width, y+height).Overlaps(clip) {
+		return
+	}
 	if origImg.Bounds().Dx() == width && origImg.Bounds().Dy() == height && radius < 0.5 {
 		// do not scale or duplicate image since not needed, draw directly
 		drawTex(x, y, width, height, base, origImg, clip, alpha)
@@ -173,7 +179,7 @@ func drawPixels(x, y, width, height int, mode canvas.ImageScale, base *image.NRG
 		if mode != canvas.ImageScaleSmooth {
 			granio.LogError(fmt.Sprintf("Invalid canvas.ImageScale value (%d), using canvas.ImageScaleSmooth as default value", mode), nil)
 		}
-		draw.CatmullRom.Scale(scaledImg, scaledBounds, origImg, origImg.Bounds(), draw.Over, nil)
+		painter.ScaleImageSmooth(scaledImg, origImg)
 	}
 
 	if radius > 0.5 {
@@ -194,15 +200,7 @@ func drawBezierCurve(c granio.Canvas, bezierCurve *canvas.BezierCurve, pos grani
 		return float32(math.Round(float64(in) * float64(c.Scale())))
 	})
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawLine(c granio.Canvas, line *canvas.Line, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -216,21 +214,18 @@ func drawLine(c granio.Canvas, line *canvas.Line, pos granio.Position, base *ima
 		return float32(math.Round(float64(in) * float64(c.Scale())))
 	})
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
+}
+
+func drawClippedVector(base *image.NRGBA, bounds image.Rectangle, raw image.Image, origin image.Point) {
+	src := raw.Bounds().Min.Add(bounds.Min.Sub(origin))
+	draw.Draw(base, bounds, raw, src, draw.Over)
 }
 
 func drawTex(x, y, width, height int, base *image.NRGBA, tex image.Image, clip image.Rectangle, alpha float64) {
 	outBounds := image.Rect(x, y, x+width, y+height)
 	clippedBounds := clip.Intersect(outBounds)
-	srcPt := image.Point{X: clippedBounds.Min.X - outBounds.Min.X, Y: clippedBounds.Min.Y - outBounds.Min.Y}
+	srcPt := tex.Bounds().Min.Add(clippedBounds.Min.Sub(outBounds.Min))
 	if alpha == 1.0 {
 		draw.Draw(base, clippedBounds, tex, srcPt, draw.Over)
 	} else {
@@ -239,19 +234,15 @@ func drawTex(x, y, width, height int, base *image.NRGBA, tex image.Image, clip i
 	}
 }
 
-func drawText(c granio.Canvas, text *canvas.Text, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
+func drawText(c granio.Canvas, text *canvas.Text, pos granio.Position, base *image.NRGBA, clip image.Rectangle, bitmaps *textBitmapCache) {
 	bounds := text.MinSize()
 	width := scale.ToScreenCoordinate(c, bounds.Width+painter.VectorPad(text)) // potentially italic overspill
 	height := scale.ToScreenCoordinate(c, bounds.Height+painter.TextVectorPad) // space below for descenders / underline
-	txtImg := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	textColor := text.Color
 	if textColor == nil {
 		textColor = theme.Color(theme.ColorNameForeground)
 	}
-
-	face := painter.CachedFontFace(text.TextStyle, text.FontSource, text)
-	painter.DrawString(txtImg, text.Text, textColor, face.Fonts, text.TextSize, c.Scale(), text.TextStyle)
 
 	size := text.Size()
 	offsetX := float32(0)
@@ -269,8 +260,11 @@ func drawText(c granio.Canvas, text *canvas.Text, pos granio.Position, base *ima
 	scaledY := scale.ToScreenCoordinate(c, pos.Y+offsetY)
 	imgBounds := image.Rect(scaledX, scaledY, scaledX+width, scaledY+height)
 	clippedBounds := clip.Intersect(imgBounds)
-	srcPt := image.Point{X: clippedBounds.Min.X - imgBounds.Min.X, Y: clippedBounds.Min.Y - imgBounds.Min.Y}
-	draw.Draw(base, clippedBounds, txtImg, srcPt, draw.Over)
+	if !clippedBounds.Empty() && width > 0 && height > 0 {
+		txtImg := rasterizeText(c, text, textColor, width, height, bitmaps)
+		srcPt := clippedBounds.Min.Sub(imgBounds.Min)
+		draw.Draw(base, clippedBounds, txtImg, srcPt, draw.Over)
+	}
 
 	if text.TextStyle.Underline || text.TextStyle.Strikethrough {
 		_, baseline := cache.GetFontMetrics(text.Text, text.TextSize, text.TextStyle, text.FontSource)
@@ -287,6 +281,27 @@ func drawText(c granio.Canvas, text *canvas.Text, pos granio.Position, base *ima
 	}
 }
 
+func rasterizeText(c granio.Canvas, text *canvas.Text, textColor color.Color, width, height int, bitmaps *textBitmapCache) *image.RGBA {
+	face := painter.CachedFontFace(text.TextStyle, text.FontSource, text)
+	pixelScale := c.Scale()
+	var key textBitmapKey
+	if bitmaps != nil {
+		r, g, b, a := textColor.RGBA()
+		key = textBitmapKey{text: text.Text, size: text.TextSize, style: text.TextStyle,
+			font: face, width: width, height: height, scale: pixelScale,
+			color: color.RGBA64{R: uint16(r), G: uint16(g), B: uint16(b), A: uint16(a)}}
+		if cached := bitmaps.get(key); cached != nil {
+			return cached
+		}
+	}
+	bitmap := image.NewRGBA(image.Rect(0, 0, width, height))
+	painter.DrawString(bitmap, text.Text, textColor, face.Fonts, text.TextSize, pixelScale, text.TextStyle)
+	if bitmaps != nil {
+		bitmaps.add(key, bitmap)
+	}
+	return bitmap
+}
+
 func drawRaster(c granio.Canvas, rast *canvas.Raster, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
 	bounds := rast.Size()
 	if bounds.IsZero() {
@@ -295,9 +310,15 @@ func drawRaster(c granio.Canvas, rast *canvas.Raster, pos granio.Position, base 
 	width := scale.ToScreenCoordinate(c, bounds.Width)
 	height := scale.ToScreenCoordinate(c, bounds.Height)
 	scaledX, scaledY := scale.ToScreenCoordinate(c, pos.X), scale.ToScreenCoordinate(c, pos.Y)
+	if width <= 0 || height <= 0 || !image.Rect(scaledX, scaledY, scaledX+width, scaledY+height).Overlaps(clip) {
+		return
+	}
 
 	pix := rast.Generator(width, height)
-	if pix.Bounds().Bounds().Dx() != width || pix.Bounds().Dy() != height {
+	if pix == nil {
+		return
+	}
+	if pix.Bounds().Size() != image.Pt(width, height) {
 		drawPixels(scaledX, scaledY, width, height, rast.ScaleMode, base, pix, clip, 1.0, 0.0)
 	} else {
 		drawTex(scaledX, scaledY, width, height, base, pix, clip, 1.0)
@@ -311,23 +332,16 @@ func drawOblongStroke(c granio.Canvas, obj granio.CanvasObject, width, height fl
 	scaledX, scaledY := scale.ToScreenCoordinate(c, pos.X-pad), scale.ToScreenCoordinate(c, pos.Y-pad)
 	bounds := clip.Intersect(image.Rect(scaledX, scaledY, scaledX+scaledWidth, scaledY+scaledHeight))
 
-	raw := painter.DrawRectangle(obj.(*canvas.Rectangle), width, height, pad, func(in float32) float32 {
-		return float32(math.Round(float64(in) * float64(c.Scale())))
-	})
-
 	if painter.IsShadowVisible(shadow) {
 		drawShadow(c, obj, granio.NewSize(width, height), shadow, pad, base, clip, pos)
 	}
-
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
+	if bounds.Empty() {
+		return
 	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	raw := painter.DrawRectangle(obj.(*canvas.Rectangle), width, height, pad, func(in float32) float32 {
+		return float32(math.Round(float64(in) * float64(c.Scale())))
+	})
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawPolygon(c granio.Canvas, polygon *canvas.RegularPolygon, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -341,15 +355,7 @@ func drawPolygon(c granio.Canvas, polygon *canvas.RegularPolygon, pos granio.Pos
 		return float32(math.Round(float64(in) * float64(c.Scale())))
 	})
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawArbitraryPolygon(c granio.Canvas, polygon *canvas.ArbitraryPolygon, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -363,23 +369,12 @@ func drawArbitraryPolygon(c granio.Canvas, polygon *canvas.ArbitraryPolygon, pos
 		return float32(math.Round(float64(in) * float64(c.Scale())))
 	})
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawRectangle(c granio.Canvas, rect *canvas.Rectangle, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
-	topRightRadius := painter.GetCornerRadius(rect.TopRightCornerRadius, rect.CornerRadius)
-	topLeftRadius := painter.GetCornerRadius(rect.TopLeftCornerRadius, rect.CornerRadius)
-	bottomRightRadius := painter.GetCornerRadius(rect.BottomRightCornerRadius, rect.CornerRadius)
-	bottomLeftRadius := painter.GetCornerRadius(rect.BottomLeftCornerRadius, rect.CornerRadius)
-	drawOblong(c, rect, rect.FillColor, rect.StrokeColor, rect.StrokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, rect.Aspect, rect.Shadow, pos, base, clip)
+	r := rect.EffectiveCornerRadii(rect.Size())
+	drawOblong(c, rect, rect.FillColor, rect.StrokeColor, rect.StrokeWidth, r.TopRight, r.TopLeft, r.BottomRight, r.BottomLeft, rect.Aspect, rect.Shadow, pos, base, clip)
 }
 
 func drawOblong(c granio.Canvas, obj granio.CanvasObject, fill, stroke color.Color, strokeWidth, topRightRadius, topLeftRadius, bottomRightRadius, bottomLeftRadius, aspect float32, shadow canvas.Shadow, pos granio.Position, base *image.NRGBA, clip image.Rectangle) {
@@ -419,7 +414,67 @@ func drawOblong(c granio.Canvas, obj granio.CanvasObject, fill, stroke color.Col
 		return
 	}
 
-	draw.Draw(base, bounds, image.NewUniform(fill), image.Point{}, draw.Over)
+	blendSolidRect(base, bounds, fill)
+}
+
+// blendSolidRect implements source-over for a uniform input. It keeps the same
+// 16-bit premultiplied arithmetic as image/draw, including on translucent targets.
+func blendSolidRect(base *image.NRGBA, bounds image.Rectangle, fill color.Color) {
+	bounds = bounds.Intersect(base.Bounds())
+	if fill == nil || bounds.Empty() {
+		return
+	}
+	const opaque = 0xffff
+	r, g, b, a := fill.RGBA()
+	remaining := opaque - a
+	opaqueScale := remaining * 257
+	// Amortize conversion over large overlays. Small shapes use the same
+	// arithmetic directly, so drawing a small patch needs no table setup.
+	var lookup [3][256]uint8
+	useTable := bounds.Dx()*bounds.Dy() >= 4096
+	if useTable {
+		for i := range lookup[0] {
+			dst := uint32(i) * opaqueScale / opaque
+			lookup[0][i] = uint8((dst + r) >> 8)
+			lookup[1][i] = uint8((dst + g) >> 8)
+			lookup[2][i] = uint8((dst + b) >> 8)
+		}
+	}
+	offset := base.PixOffset(bounds.Min.X, bounds.Min.Y)
+	rowBytes := bounds.Dx() * 4
+	for y := 0; y < bounds.Dy(); y++ {
+		row := base.Pix[offset : offset+rowBytes]
+		for len(row) != 0 {
+			pixel := row[:4:4]
+			row = row[4:]
+			if pixel[3] == 255 {
+				if useTable {
+					pixel[0], pixel[1], pixel[2] = lookup[0][pixel[0]], lookup[1][pixel[1]], lookup[2][pixel[2]]
+					continue
+				}
+				pixel[0] = uint8((uint32(pixel[0])*opaqueScale/opaque + r) >> 8)
+				pixel[1] = uint8((uint32(pixel[1])*opaqueScale/opaque + g) >> 8)
+				pixel[2] = uint8((uint32(pixel[2])*opaqueScale/opaque + b) >> 8)
+				continue
+			}
+			dstAlpha := uint32(pixel[3])
+			outAlpha := (dstAlpha*257)*remaining/opaque + a
+			pixel[0] = blendSolidChannel(pixel[0], r, dstAlpha, remaining, outAlpha)
+			pixel[1] = blendSolidChannel(pixel[1], g, dstAlpha, remaining, outAlpha)
+			pixel[2] = blendSolidChannel(pixel[2], b, dstAlpha, remaining, outAlpha)
+			pixel[3] = uint8(outAlpha >> 8)
+		}
+		offset += base.Stride
+	}
+}
+
+func blendSolidChannel(dst uint8, src, dstAlpha, remaining, outAlpha uint32) uint8 {
+	premultiplied := uint32(dst) * 257 * dstAlpha / 255
+	value := uint32(uint16(premultiplied*remaining/0xffff + src))
+	if outAlpha != 0 {
+		value = value * 0xffff / outAlpha
+	}
+	return uint8(value >> 8)
 }
 
 // fillRectFastPath writes an opaque fill directly into base.Pix.
@@ -435,16 +490,17 @@ func fillRectFastPath(base *image.NRGBA, bounds image.Rectangle, fill color.Colo
 	}
 
 	nr, ng, nb := uint8(r>>8), uint8(g>>8), uint8(b>>8) //gosec:disable G115 -- RGBA() components are 16-bit, >>8 always fits uint8
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		off := base.PixOffset(bounds.Min.X, y)
-		end := base.PixOffset(bounds.Max.X, y)
-		row := base.Pix[off:end]
-		for p := 0; p < len(row); p += 4 {
-			row[p] = nr
-			row[p+1] = ng
-			row[p+2] = nb
-			row[p+3] = 0xff
-		}
+	stride := base.Stride
+	rowBytes := bounds.Dx() * 4
+	offset := base.PixOffset(bounds.Min.X, bounds.Min.Y)
+	row := base.Pix[offset : offset+rowBytes]
+	row[0], row[1], row[2], row[3] = nr, ng, nb, 0xff
+	for filled := 4; filled < len(row); {
+		filled += copy(row[filled:], row[:filled])
+	}
+	for y := bounds.Min.Y + 1; y < bounds.Max.Y; y++ {
+		offset += stride
+		copy(base.Pix[offset:offset+rowBytes], row)
 	}
 	return true
 }
@@ -479,15 +535,7 @@ func drawEllipse(c granio.Canvas, ellipse *canvas.Ellipse, pos granio.Position, 
 		return float32(math.Round(float64(in) * float64(c.Scale())))
 	})
 
-	// the clip intersect above cannot be negative, so we may need to compensate
-	offX, offY := 0, 0
-	if scaledX < 0 {
-		offX = -scaledX
-	}
-	if scaledY < 0 {
-		offY = -scaledY
-	}
-	draw.Draw(base, bounds, raw, image.Point{offX, offY}, draw.Over)
+	drawClippedVector(base, bounds, raw, image.Pt(scaledX, scaledY))
 }
 
 func drawShadow(c granio.Canvas, obj granio.CanvasObject, objSize granio.Size, shadow canvas.Shadow, pad float32, base *image.NRGBA, clip image.Rectangle, pos granio.Position) {

@@ -3,9 +3,9 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	internalapp "github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3"
+	internalapp "github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile"
 )
 
 // NewWithID returns a new app instance using the appropriate runtime driver.

@@ -1,7 +1,7 @@
 package async_test
 
 import (
-	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
 	"testing"
 	"time"
 )

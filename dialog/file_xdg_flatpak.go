@@ -5,11 +5,11 @@ package dialog
 import (
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/lang"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/lang"
+	"github.com/Uzer007-admin/granio/v3/storage"
 
 	"github.com/Uzer007-admin/dbus/v5/desktopportal"
 	"github.com/Uzer007-admin/dbus/v5/desktopportal/filechooser"

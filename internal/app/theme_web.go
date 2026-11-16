@@ -3,8 +3,8 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/theme"
 )
 
 // DefaultVariant returns the systems default granio.ThemeVariant.

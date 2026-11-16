@@ -18,31 +18,21 @@ func (n *nativeMaterialPipeline) ensureMask(p *painter) bool {
 	return true
 }
 
-// Match the material renderer's rounded mask and its bilinear upsampling. The
-// shader has no sampler: this pass neither copies nor reads the framebuffer.
-// Erase-by-coverage + add-premultiplied-result preserves the snapshot's alpha,
-// including partially covered corners over transparent lower canvas layers.
+// Apply the same full-resolution coverage when erasing and when adding the
+// filtered snapshot. Its premultiplied alpha is preserved at mixed corners.
 const materialCoverageShader = `
-uniform vec4 geometry; // logical extent xy, corner radius z, physical scale w
-uniform vec2 resolution;
+uniform vec2 extent;
+uniform vec4 radii; // TL, TR, BR, BL
 uniform sampler2D tex;
 uniform float pass;
 varying vec2 fragTexCoord;
-float coverage(vec2 p) {
-    p=clamp(p,0.5/resolution,1.0-0.5/resolution);
-    float r=min(geometry.z,min(geometry.x,geometry.y)*0.5);
-    vec2 q=abs((p-0.5)*geometry.xy)-geometry.xy*0.5+r;
-    float d=length(max(q,vec2(0.0)))+min(max(q.x,q.y),0.0)-r;
-    return clamp(0.5-d*geometry.w,0.0,1.0);
-}
 void main() {
-    if (pass>0.5) {gl_FragColor=texture2D(tex,fragTexCoord);return;}
-    vec2 pixel=fragTexCoord*resolution-0.5;
-    vec2 base=(floor(pixel)+0.5)/resolution;
-    vec2 step=1.0/resolution;
-    vec2 f=fract(pixel);
-    float a=mix(mix(coverage(base),coverage(base+vec2(step.x,0.0)),f.x),
-                mix(coverage(base+vec2(0.0,step.y)),coverage(base+step),f.x),f.y);
-    gl_FragColor=vec4(0.0,0.0,0.0,a);
+    vec2 p=vec2(fragTexCoord.x,1.0-fragTexCoord.y);
+    float r=p.y<0.5?(p.x<0.5?radii.x:radii.y):(p.x<0.5?radii.w:radii.z);
+    r=min(r,min(extent.x,extent.y)*0.5);
+    vec2 q=abs((p-0.5)*extent)-extent*0.5+r;
+    float d=length(max(q,vec2(0.0)))+min(max(q.x,q.y),0.0)-r;
+    float a=clamp(0.5-d,0.0,1.0);
+    gl_FragColor=pass>0.5?texture2D(tex,fragTexCoord)*a:vec4(0.0,0.0,0.0,a);
 }
 `

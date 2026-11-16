@@ -5,7 +5,7 @@ package embedded
 import (
 	"image"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // Driver is an embedded driver designed for handling custom hardware.

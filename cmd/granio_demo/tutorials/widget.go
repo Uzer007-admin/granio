@@ -6,16 +6,16 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio_demo/data"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/data/validation"
-	"github.com/Uzer007-admin/granio/v2/dialog"
-	"github.com/Uzer007-admin/granio/v2/driver/mobile"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio_demo/data"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/data/validation"
+	"github.com/Uzer007-admin/granio/v3/dialog"
+	"github.com/Uzer007-admin/granio/v3/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 const (

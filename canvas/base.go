@@ -5,10 +5,10 @@
 // non-interactive, by design. If additional functionality is required,
 // it's usually a sign that this type should be used as part of a custom
 // widget.
-package canvas // import "github.com/Uzer007-admin/granio/v2/canvas"
+package canvas // import "github.com/Uzer007-admin/granio/v3/canvas"
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 type baseObject struct {

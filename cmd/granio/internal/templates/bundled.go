@@ -3,7 +3,7 @@
 
 package templates
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 var resourceAndroidManifestXml = &granio.StaticResource{
 	StaticName: "AndroidManifest.xml",
@@ -53,7 +53,7 @@ var resourceEntitlementsIosPlist = &granio.StaticResource{
 var resourceFynemetadatainitGot = &granio.StaticResource{
 	StaticName: "fyne_metadata_init.got",
 	StaticContent: []byte(
-		"package main\n\nimport (\n\t\"github.com/Uzer007-admin/granio/v2\"\n\t\"github.com/Uzer007-admin/granio/v2/app\"\n)\n\nfunc init() {\n\tapp.SetMetadata(granio.AppMetadata{\n\t\tID: \"{{.AppID}}\",\n\t\tName: \"{{.Name}}\",\n\t\tVersion: \"{{.AppVersion}}\",\n\t\tBuild: {{.AppBuild}},\n\t\tIcon: {{.ResGoString}},\n\t\t{{if .VersionAtLeast2_3}}\n\t\tRelease: {{.Release}},\n\t\tCustom: map[string]string{\n\t\t\t{{range $key, $value := .CustomMetadata}}\n\t\t\t\"{{$key}}\": \"{{$value}}\",\n\t\t\t{{end}}\n\t\t},\n\t\t{{end}}\n\t})\n}\n\n"),
+		"package main\n\nimport (\n\t\"github.com/Uzer007-admin/granio/v3\"\n\t\"github.com/Uzer007-admin/granio/v3/app\"\n)\n\nfunc init() {\n\tapp.SetMetadata(granio.AppMetadata{\n\t\tID: \"{{.AppID}}\",\n\t\tName: \"{{.Name}}\",\n\t\tVersion: \"{{.AppVersion}}\",\n\t\tBuild: {{.AppBuild}},\n\t\tIcon: {{.ResGoString}},\n\t\t{{if .VersionAtLeast2_3}}\n\t\tRelease: {{.Release}},\n\t\tCustom: map[string]string{\n\t\t\t{{range $key, $value := .CustomMetadata}}\n\t\t\t\"{{$key}}\": \"{{$value}}\",\n\t\t\t{{end}}\n\t\t},\n\t\t{{end}}\n\t})\n}\n\n"),
 }
 var resourceFynepprofGot = &granio.StaticResource{
 	StaticName: "fyne_pprof.got",

@@ -41,10 +41,10 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/paint"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/touch"
 )
 
 var initThreadID uint64

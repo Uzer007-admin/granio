@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-text/typesetting/fontscan"
 
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
 )
 
 func loadSystemFonts(fm *fontscan.FontMap) error {

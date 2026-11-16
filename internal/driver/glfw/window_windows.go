@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"

@@ -4,8 +4,8 @@ package glfw
 
 import (
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/gl"
 )
 
 // Prepare full frames before Show and on mode changes. Wayland suppresses swaps
@@ -86,7 +86,7 @@ func (w *window) applyWindowVisuals() bool {
 		}
 	})
 	status.Selected = desktop.BackdropOpaque
-	status.Reason, status.NativeAccepted, status.NativeCode = w.applyNativeWindowBackdrop(options, &caps)
+	status.Reason, status.NativeAccepted, status.NativeCode = w.applyNativeWindowBackdrop(options, status.RequestID, &caps)
 	if status.Reason == desktop.VisualReasonNone && options.Backdrop != desktop.BackdropOpaque {
 		mode = gl.WindowSurfaceBackdrop
 		status.Selected = options.Backdrop
@@ -135,7 +135,14 @@ func (w *window) applyWindowVisuals() bool {
 	status.SurfaceReady = ready && preparedNow > 0 && w.presentationReady()
 	status.FirstFrameBeforeShow = status.FirstFrameBeforeShow || hidden && status.SurfaceReady
 	if status.Selected == desktop.BackdropOpaque && status.SurfaceReady && caps.Backend != desktop.VisualBackendWayland {
-		w.clearNativeWindowBackdrop()
+		if code, err := w.clearNativeWindowBackdrop(); err != nil {
+			status.NativeAccepted = false
+			status.NativeCode, status.Reason = code, desktop.VisualNativeFailure
+			status.Phase = desktop.VisualFallback
+			if options.Fallback == desktop.VisualFallbackFail || options.Backdrop == desktop.BackdropOpaque {
+				status.Phase = desktop.VisualFailed
+			}
+		}
 	}
 	if !status.SurfaceReady {
 		status.Phase = desktop.VisualFailed

@@ -1,16 +1,16 @@
 # Переход на Granio
 
 Granio — самостоятельное развитие Fyne с сохранением исходной истории и лицензий.
-Новый модуль ядра — `github.com/Uzer007-admin/granio/v2`, имя пакета — `granio`.
-Сохранён номер основной версии API, чтобы явно обозначить исходный контракт v2.
+Модуль ядра версии 3 — `github.com/Uzer007-admin/granio/v3`, имя пакета — `granio`.
+Для сборки нужен Go 1.27.4 или новее.
 
 ## Импорты и типы
 
 ```go
 import (
-    "github.com/Uzer007-admin/granio/v2"
-    "github.com/Uzer007-admin/granio/v2/app"
-    "github.com/Uzer007-admin/granio/v2/widget"
+    "github.com/Uzer007-admin/granio/v3"
+    "github.com/Uzer007-admin/granio/v3/app"
+    "github.com/Uzer007-admin/granio/v3/widget"
 )
 
 func main() {
@@ -26,8 +26,13 @@ func main() {
 типов `fyne.` на новые значения. При постепенном переносе допустим явный алиас:
 
 ```go
-import fyne "github.com/Uzer007-admin/granio/v2"
+import fyne "github.com/Uzer007-admin/granio/v3"
 ```
+
+При переходе с Granio v2 замените `github.com/Uzer007-admin/granio/v2` на
+`github.com/Uzer007-admin/granio/v3` в импортах приложения и его расширений.
+Затем выполните `go get github.com/Uzer007-admin/granio/v3@v3.0.0` и
+`go mod tidy`. Типы `granio` из двух версий принадлежат разным пакетам.
 
 Типы исходного Fyne и Granio принадлежат разным Go-пакетам. Зависимые расширения
 следует переводить вместе с приложением. Одного `replace` в модуле библиотеки
@@ -54,10 +59,11 @@ import fyne "github.com/Uzer007-admin/granio/v2"
 | Окна GLFW 3.5 | `github.com/Uzer007-admin/glfw/v3.5/glfw` |
 | Генератор | `github.com/Uzer007-admin/glow` |
 | D-Bus | `github.com/Uzer007-admin/dbus/v5` |
-| WebGL | `github.com/Uzer007-admin/granio-gl-js` |
-| Браузерные окна | `github.com/Uzer007-admin/granio-glfw-js` |
-| Системный трей | `github.com/Uzer007-admin/granio-systray` |
-| Кодеки изображений | `github.com/Uzer007-admin/granio-image` |
+| WebGL | `github.com/Uzer007-admin/granio/deps/gl-js` |
+| Браузерные окна | `github.com/Uzer007-admin/granio/deps/glfw-js` |
+| Системный трей | `github.com/Uzer007-admin/granio/deps/systray` |
+| Кодеки изображений | `github.com/Uzer007-admin/granio/deps/image` |
+| SVG | `github.com/Uzer007-admin/granio/deps/oksvg` |
 
 Ядро и его графические библиотеки опубликованы с согласованными версиями:
 [modules.json](../ecosystem/modules.json). Внешняя установка проверяется при

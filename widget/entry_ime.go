@@ -4,9 +4,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 var _ desktop.TextInput = (*Entry)(nil)

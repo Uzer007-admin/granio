@@ -12,9 +12,9 @@ import (
 	"path"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/svg"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/svg"
+	"github.com/Uzer007-admin/granio/v3/storage"
 )
 
 // ImageLoadOptions bounds an image load. Zero values use defaults of 64 MiB of

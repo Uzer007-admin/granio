@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
 
 	"golang.org/x/image/draw"
 )
@@ -51,3 +51,18 @@ func BenchmarkDrawRectangle_Opaque_1280x800(b *testing.B)  { benchmarkOpaque(b, 
 func BenchmarkDrawRectangle_Generic_1280x800(b *testing.B) { benchmarkGeneric(b, 1280, 800) }
 func BenchmarkDrawRectangle_Opaque_200x100(b *testing.B)   { benchmarkOpaque(b, 200, 100) }
 func BenchmarkDrawRectangle_Generic_200x100(b *testing.B)  { benchmarkGeneric(b, 200, 100) }
+
+func BenchmarkDrawImageCover(b *testing.B) {
+	source := image.NewRGBA(image.Rect(0, 0, 1280, 720))
+	draw.Draw(source, source.Bounds(), image.NewUniform(color.NRGBA{R: 32, G: 60, B: 90, A: 255}), image.Point{}, draw.Src)
+	img := canvas.NewImageFromImage(source)
+	img.FillMode = canvas.ImageFillCover
+	img.ScaleMode = canvas.ImageScalePixels
+	img.Resize(granio.NewSize(640, 720))
+	base := image.NewNRGBA(image.Rect(0, 0, 640, 720))
+	b.ReportAllocs()
+	b.ResetTimer()
+	for range b.N {
+		drawImage(benchCanvas{}, img, granio.Position{}, base, base.Bounds())
+	}
+}

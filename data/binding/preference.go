@@ -3,7 +3,7 @@ package binding
 import (
 	"sync/atomic"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // Work around Go not supporting generic methods on non-generic types:

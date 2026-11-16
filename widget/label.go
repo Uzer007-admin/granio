@@ -1,9 +1,9 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/data/binding"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/data/binding"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 var (

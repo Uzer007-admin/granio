@@ -1,6 +1,6 @@
 package commands
 
-import "github.com/Uzer007-admin/granio/v2/internal/metadata"
+import "github.com/Uzer007-admin/granio/v3/internal/metadata"
 
 type appData struct {
 	icon, Name        string

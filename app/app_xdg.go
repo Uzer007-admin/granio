@@ -14,9 +14,9 @@ import (
 	"github.com/Uzer007-admin/dbus/v5/desktopportal/openuri"
 	"github.com/Uzer007-admin/dbus/v5/desktopportal/settings/appearance"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 const systemTheme = granio.ThemeVariant(99)

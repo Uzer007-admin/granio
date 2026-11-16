@@ -1,6 +1,6 @@
 package canvas
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // Declare conformity with CanvasObject interface
 var _ granio.CanvasObject = (*Blur)(nil)

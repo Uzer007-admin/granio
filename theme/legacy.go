@@ -3,7 +3,7 @@ package theme
 import (
 	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // FromLegacy returns a 2.0 Theme created from the given LegacyTheme data.

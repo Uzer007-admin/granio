@@ -1,8 +1,8 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 func componentStyle(th granio.Theme, kind granio.ComponentKind, state granio.VisualState) (granio.ComponentStyle, bool) {

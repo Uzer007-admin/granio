@@ -2,7 +2,7 @@
 
 package mobile
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 const tapYOffset = 0 // no finger compensation on desktop (simulation)
 

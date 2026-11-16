@@ -2,8 +2,8 @@ package app
 
 import (
 	"context"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // At most one pending UI callback reads the latest value. A slow UI does not

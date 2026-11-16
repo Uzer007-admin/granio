@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
 	"github.com/stretchr/testify/assert"
 )
 

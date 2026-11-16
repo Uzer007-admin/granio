@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Uzer007-admin/granio/v2"
-	internalApp "github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v3"
+	internalApp "github.com/Uzer007-admin/granio/v3/internal/app"
 )
 
 func setupSystemTheme(fallback granio.Theme) granio.Theme {

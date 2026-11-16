@@ -1,14 +1,14 @@
 // Package theme defines how a Fyne app should look when rendered.
-package theme // import "github.com/Uzer007-admin/granio/v2/theme"
+package theme // import "github.com/Uzer007-admin/granio/v3/theme"
 
 import (
 	"image/color"
 	"os"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	internaltheme "github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	internaltheme "github.com/Uzer007-admin/granio/v3/internal/theme"
 )
 
 // Keep in mind to add new constants to the tests at test/theme.go.

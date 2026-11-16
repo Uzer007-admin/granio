@@ -1,13 +1,14 @@
 package glfw
 
 import (
+	"image/color"
 	"sync"
 	"sync/atomic"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/gl"
 )
 
 type surfacePainter interface {
@@ -24,6 +25,7 @@ type windowVisualState struct {
 	options                                                            desktop.VisualOptions
 	status                                                             desktop.VisualStatus
 	capabilities                                                       desktop.VisualCapabilities
+	tint                                                               color.NRGBA
 	enabled, started, alphaReserved, closed, applyQueued, notifyQueued bool
 	observers                                                          map[*visualObserver]struct{}
 	waitForDrawable                                                    bool               // UI thread only
@@ -49,6 +51,23 @@ func (o *visualObserver) deliver(status desktop.VisualStatus) {
 }
 
 var _ desktop.WindowVisuals = (*window)(nil)
+var _ desktop.WindowBackdropStyler = (*window)(nil)
+
+func (w *window) SetWindowBackdropTint(tint color.NRGBA) error {
+	v := &w.visuals
+	v.mu.Lock()
+	if v.closed {
+		v.mu.Unlock()
+		return desktop.ErrVisualWindowClosed
+	}
+	changed := v.tint != tint
+	v.tint = tint
+	v.mu.Unlock()
+	if changed {
+		w.canvas.SetDirty()
+	}
+	return nil
+}
 
 func (w *window) ConfigureVisuals(options desktop.VisualOptions) (uint64, error) {
 	if err := desktop.ValidateVisualOptions(options); err != nil {

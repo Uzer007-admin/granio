@@ -11,8 +11,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/Uzer007-admin/dbus/v5"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 )
 
 const atspiRoot = dbus.ObjectPath("/org/a11y/atspi/accessible/root")

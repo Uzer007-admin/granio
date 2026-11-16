@@ -3,10 +3,10 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/embedded"
-	intNoos "github.com/Uzer007-admin/granio/v2/internal/driver/embedded"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/embedded"
+	intNoos "github.com/Uzer007-admin/granio/v3/internal/driver/embedded"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 func NewWithID(id string) granio.App {

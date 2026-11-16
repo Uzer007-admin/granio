@@ -13,8 +13,8 @@ import (
 	"github.com/josephspurrier/goversioninfo"
 	"golang.org/x/sys/execabs"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
 )
 
 type windowsData struct {

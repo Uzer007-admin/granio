@@ -1,9 +1,9 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/theme"
 	"image/color"
 )
 
@@ -29,7 +29,7 @@ func tweenColor(a, b color.Color, progress float32) color.Color {
 }
 func (r *buttonRenderer) updateStateBackground(target color.Color, th granio.Theme) {
 	b := r.button
-	if _, modern := th.(granio.MotionTheme); !modern || !animationsAllowed(th, granio.MotionHover) || b.Disabled() {
+	if !theme.HasMotion(th) || !animationsAllowed(th, granio.MotionHover) || b.Disabled() {
 		if b.stateAnimation != nil {
 			b.stateAnimation.Stop()
 			b.stateAnimation = nil
@@ -38,7 +38,8 @@ func (r *buttonRenderer) updateStateBackground(target color.Color, th granio.The
 		return
 	}
 	if b.stateBackground == nil {
-		b.stateBackground = target
+		b.stateBackground, b.stateTarget, r.background.FillColor = target, target, target
+		return
 	}
 	if colorsEqual(b.stateTarget, target) {
 		r.background.FillColor = b.stateBackground

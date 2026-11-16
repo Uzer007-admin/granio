@@ -1,6 +1,6 @@
 package internal
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // MaxSizes returns the element-wise maximum of the two sizes. It is what
 // granio.Size.Max does, minus boxing the argument into the Vector2 parameter,

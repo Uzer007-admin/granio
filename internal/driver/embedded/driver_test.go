@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/embedded"
-	intNoos "github.com/Uzer007-admin/granio/v2/internal/driver/embedded"
-	_ "github.com/Uzer007-admin/granio/v2/test" // for test app initialization
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/embedded"
+	intNoos "github.com/Uzer007-admin/granio/v3/internal/driver/embedded"
+	_ "github.com/Uzer007-admin/granio/v3/test" // for test app initialization
 )
 
 func TestNoOSDriver(t *testing.T) {

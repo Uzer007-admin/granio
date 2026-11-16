@@ -3,7 +3,7 @@
 package gl
 
 func (p *painter) updateBuffer(vbo Buffer, points []float32) {
-	p.ctx.BindBuffer(arrayBuffer, vbo)
+	p.bindArrayBuffer(vbo)
 	p.logError()
 	// BufferSubData seems significantly less performant on desktop
 	// so use BufferData instead. points is usually a draw call's stack

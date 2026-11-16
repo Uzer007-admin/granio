@@ -5,8 +5,8 @@ import (
 	"math"
 	"slices"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
 )
 
 func (s *Slider) AccessibilityNumericValue() (float64, float64, float64, float64) {

@@ -1,12 +1,12 @@
 // Package widget defines the UI widgets within the Fyne toolkit.
-package widget // import "github.com/Uzer007-admin/granio/v2/widget"
+package widget // import "github.com/Uzer007-admin/granio/v3/widget"
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	internalWidget "github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // BaseWidget provides a helper that handles basic widget behaviours.

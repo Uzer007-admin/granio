@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
 )
 
 func (a *fyneApp) OpenURL(url *url.URL) error {

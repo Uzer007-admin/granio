@@ -41,7 +41,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
 )
 
 type frameTracker struct {

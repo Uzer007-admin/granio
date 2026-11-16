@@ -16,10 +16,10 @@ import (
 	es "github.com/Uzer007-admin/gl/v2.0/gles2"
 	core "github.com/Uzer007-admin/gl/v2.1/material"
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	paintergl "github.com/Uzer007-admin/granio/v2/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	paintergl "github.com/Uzer007-admin/granio/v3/internal/painter/gl"
 	"github.com/stretchr/testify/require"
 )
 

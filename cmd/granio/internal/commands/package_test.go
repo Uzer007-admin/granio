@@ -12,7 +12,7 @@ import (
 	"github.com/josephspurrier/goversioninfo"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2/internal/metadata"
+	"github.com/Uzer007-admin/granio/v3/internal/metadata"
 )
 
 func Test_calculateExeName(t *testing.T) {
@@ -168,7 +168,7 @@ func Test_buildPackageWasm(t *testing.T) {
 		{
 			expectedValue: expectedValue{args: []string{"mod", "edit", "-json"}},
 			mockReturn: mockReturn{
-				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v2\"} }"),
+				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v3\"} }"),
 			},
 		},
 		{
@@ -207,7 +207,7 @@ func Test_PackageWasm(t *testing.T) {
 		{
 			expectedValue: expectedValue{args: []string{"mod", "edit", "-json"}},
 			mockReturn: mockReturn{
-				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v2\"} }"),
+				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v3\"} }"),
 			},
 		},
 		{

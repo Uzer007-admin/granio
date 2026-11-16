@@ -4,13 +4,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	fynedriver "github.com/Uzer007-admin/granio/v2/driver"
-	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
-	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	fynedriver "github.com/Uzer007-admin/granio/v3/driver"
+	intdriver "github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/software"
+	intRepo "github.com/Uzer007-admin/granio/v3/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 // SoftwarePainter describes a simple type that can render canvases

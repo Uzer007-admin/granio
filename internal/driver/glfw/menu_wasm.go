@@ -2,7 +2,7 @@
 
 package glfw
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 func addMissingQuitForMainMenu(menus *granio.MainMenu, w *window) *granio.MainMenu {
 	// no-op for a web browser

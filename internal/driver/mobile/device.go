@@ -1,11 +1,11 @@
 package mobile
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/mobile"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
-	"github.com/Uzer007-admin/granio/v2/lang"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v3/lang"
 )
 
 type device struct {
@@ -56,7 +56,11 @@ func (d *device) ShowVirtualKeyboard() {
 }
 
 func (d *device) ShowVirtualKeyboardType(keyboard mobile.KeyboardType) {
-	if drv, ok := granio.CurrentApp().Driver().(*driver); ok {
+	current := granio.CurrentApp()
+	if current == nil {
+		return
+	}
+	if drv, ok := current.Driver().(*driver); ok {
 		if drv.app == nil { // not yet running
 			granio.LogError("Cannot show keyboard before app is running", nil)
 			return
@@ -68,7 +72,11 @@ func (d *device) ShowVirtualKeyboardType(keyboard mobile.KeyboardType) {
 }
 
 func (d *device) HideVirtualKeyboard() {
-	if drv, ok := granio.CurrentApp().Driver().(*driver); ok {
+	current := granio.CurrentApp()
+	if current == nil {
+		return
+	}
+	if drv, ok := current.Driver().(*driver); ok {
 		if drv.app == nil { // not yet running
 			return
 		}

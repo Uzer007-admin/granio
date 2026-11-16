@@ -9,7 +9,7 @@ import "C"
 
 import (
 	"fmt"
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 type nativeAppearanceProbe struct{ native *C.FyneAppearance }

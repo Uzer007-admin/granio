@@ -3,8 +3,8 @@ package dialog
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/test"
 )
 
 func Test_colorChannel_Layout(t *testing.T) {

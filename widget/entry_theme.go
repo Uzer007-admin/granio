@@ -1,7 +1,7 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
 )
 
 // BeginThemeChange protects the viewport before Fyne refreshes child renderers.

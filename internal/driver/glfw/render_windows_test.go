@@ -9,11 +9,31 @@ import (
 	"unsafe"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 	"github.com/stretchr/testify/require"
 )
+
+func TestWindowsRenderModeSelection(t *testing.T) {
+	t.Setenv("GRANIO_RENDERER", "software")
+	driverInstance := &gLDriver{}
+	w := &window{driver: driverInstance}
+	w.selectRenderer()
+	require.True(t, w.softwareRendering())
+
+	require.NoError(t, driverInstance.SetRenderMode(driver.RenderOpenGL))
+	w.selectRenderer()
+	require.False(t, w.softwareRendering())
+	require.NoError(t, driverInstance.SetRenderMode(driver.RenderSoftware))
+	w.selectRenderer()
+	require.True(t, w.softwareRendering())
+	require.ErrorIs(t, driverInstance.SetRenderMode(255), driver.ErrRenderModeUnavailable)
+
+	driverInstance.renderingStarted = true
+	require.ErrorIs(t, driverInstance.SetRenderMode(driver.RenderAuto), driver.ErrRenderModeLocked)
+}
 
 func TestSoftwareFrameGDIColorOrder(t *testing.T) {
 	// Проверяем DIB в памяти, без чтения рабочего стола или окон приложений.
@@ -39,7 +59,7 @@ func TestSoftwareFrameGDIColorOrder(t *testing.T) {
 }
 
 func TestSoftwareNativeWindowCaptureResizeAndVisualFallback(t *testing.T) {
-	if !softwareRendererRequested() {
+	if d.RenderMode() != driver.RenderSoftware {
 		t.Skip("run with GRANIO_RENDERER=software")
 	}
 	var raw *window

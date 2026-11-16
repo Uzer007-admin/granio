@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 	"github.com/stretchr/testify/require"
 )
 
@@ -54,7 +54,7 @@ func TestRunnerCompletionAndDisabledFinalStateAreSingle(t *testing.T) {
 	animation := granio.NewAnimation(time.Second, func(float32) {})
 	animation.OnFinished = func() { finished++ }
 	r.Start(animation)
-	r.animations[0].start = time.Now().Add(-2 * time.Second)
+	r.pendingAnimations[0].start = time.Now().Add(-2 * time.Second)
 	r.TickAnimations()
 	r.TickAnimations()
 	require.Equal(t, 1, finished)
@@ -95,7 +95,6 @@ func TestRunnerCanClearInsideTick(t *testing.T) {
 	r := &Runner{}
 	r.Start(granio.NewAnimation(time.Second, func(float32) {}))
 	r.Start(granio.NewAnimation(time.Second, func(float32) { r.Clear() }))
-	r.TickAnimations() // picks up the second (pending) handle
 	r.TickAnimations()
 	require.Empty(t, r.animations)
 	require.False(t, r.HasAnimations())
@@ -112,4 +111,33 @@ func TestRunnerStopInsideFinalTickDoesNotComplete(t *testing.T) {
 	r.TickAnimations()
 	require.Zero(t, finished)
 	require.Empty(t, r.animations)
+}
+
+func TestRunnerTicksPendingAnimationsOnTheSameFrame(t *testing.T) {
+	test.NewApp()
+	r := &Runner{}
+	var progress [2]float32
+	var calls [2]int
+	deferred := 0
+	for i := range 2 {
+		a := granio.NewAnimation(time.Hour, func(value float32) {
+			progress[i] = value
+			calls[i]++
+			if i == 0 && calls[i] == 1 {
+				r.Start(granio.NewAnimation(time.Hour, func(float32) { deferred++ }))
+			}
+		})
+		a.Curve = granio.AnimationLinear
+		r.Start(a)
+	}
+	start := time.Now().Add(-time.Minute)
+	for _, a := range r.pendingAnimations {
+		a.resetCycle(start)
+	}
+	r.TickAnimations()
+	require.Equal(t, [2]int{1, 1}, calls)
+	require.Equal(t, progress[0], progress[1])
+	require.Zero(t, deferred)
+	r.TickAnimations()
+	require.Equal(t, 1, deferred)
 }

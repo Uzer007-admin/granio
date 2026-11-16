@@ -3,7 +3,7 @@
 
 package settings
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 var resourceAppearanceSvg = &granio.StaticResource{
 	StaticName: "appearance.svg",

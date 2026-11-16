@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 const maxClipboardBytes = 64 << 20

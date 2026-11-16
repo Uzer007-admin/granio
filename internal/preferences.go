@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // InMemoryPreferences provides an implementation of the granio.Preferences API that is stored in memory.

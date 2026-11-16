@@ -25,8 +25,8 @@ import (
 	"io"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 type secureReadCloser struct {

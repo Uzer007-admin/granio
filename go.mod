@@ -1,17 +1,17 @@
-module github.com/Uzer007-admin/granio/v2
+module github.com/Uzer007-admin/granio/v3
 
-go 1.27.1
+go 1.27.4
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/Uzer007-admin/dbus/v5 v5.3.0
-	github.com/Uzer007-admin/gl v0.0.0-20261030092416-83550b6a7fd2
-	github.com/Uzer007-admin/glfw/v3.5/glfw v0.0.0-20261102154715-7079e7e4a9a7
-	github.com/Uzer007-admin/granio/deps/gl-js v0.0.0-20261018062049-d56bde3dff7f
-	github.com/Uzer007-admin/granio/deps/glfw-js v0.0.0-20261018062049-d56bde3dff7f
-	github.com/Uzer007-admin/granio/deps/image v0.0.0-20261018062049-d56bde3dff7f
-	github.com/Uzer007-admin/granio/deps/oksvg v0.0.0-20261018062049-d56bde3dff7f
-	github.com/Uzer007-admin/granio/deps/systray v0.0.0-20261018062049-d56bde3dff7f
+	github.com/Uzer007-admin/dbus/v5 v5.3.1-0.20261116045717-089d7aee01c5
+	github.com/Uzer007-admin/gl v0.0.0-20261116045714-c77df2312098
+	github.com/Uzer007-admin/glfw/v3.5/glfw v0.0.0-20261116045715-1d65ce853a6c
+	github.com/Uzer007-admin/granio/deps/gl-js v0.0.0-20261116050756-4d3e432e2887
+	github.com/Uzer007-admin/granio/deps/glfw-js v0.0.0-20261116050756-4d3e432e2887
+	github.com/Uzer007-admin/granio/deps/image v0.0.0-20261116050756-4d3e432e2887
+	github.com/Uzer007-admin/granio/deps/oksvg v0.0.0-20261116050756-4d3e432e2887
+	github.com/Uzer007-admin/granio/deps/systray v0.0.0-20261116050756-4d3e432e2887
 	github.com/anthonynsimon/bild v0.17.1
 	github.com/fogleman/gg v1.3.0
 	github.com/fsnotify/fsnotify v1.10.1
@@ -27,15 +27,15 @@ require (
 	github.com/mcuadros/go-version v0.0.0-20190830083331-035f6764e8d2
 	github.com/natefinch/atomic v1.0.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
-	github.com/nicksnyder/go-i18n/v2 v2.6.1
+	github.com/nicksnyder/go-i18n/v2 v2.7.0
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef
 	github.com/stretchr/testify v1.12.1
 	github.com/urfave/cli/v2 v2.27.7
-	github.com/yuin/goldmark v1.8.6
-	golang.org/x/image v0.47.0
-	golang.org/x/mod v0.42.0
-	golang.org/x/sys v0.49.0
-	golang.org/x/text v0.43.0
+	github.com/yuin/goldmark v1.8.7
+	golang.org/x/image v0.48.0
+	golang.org/x/mod v0.43.0
+	golang.org/x/sys v0.50.0
+	golang.org/x/text v0.44.0
 	golang.org/x/tools v0.52.0
 	golang.org/x/tools/go/vcs v0.1.0-deprecated
 )
@@ -52,8 +52,8 @@ require (
 	github.com/jsummers/gobmp v0.0.0-20230614200233-a9de23ed2e25 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c // indirect
-	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
-	go.yaml.in/yaml/v3 v3.0.5 // indirect
-	golang.org/x/net v0.61.0 // indirect
-	golang.org/x/sync v0.24.0 // indirect
+	github.com/xrash/smetrics v0.0.0-20261013231157-39c47d93efba // indirect
+	go.yaml.in/yaml/v3 v3.0.6 // indirect
+	golang.org/x/net v0.62.0 // indirect
+	golang.org/x/sync v0.25.0 // indirect
 )

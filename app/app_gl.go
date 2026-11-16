@@ -3,8 +3,8 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/glfw"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/glfw"
 )
 
 // NewWithID returns a new app instance using the appropriate runtime driver.

@@ -1,22 +1,22 @@
 {
   "github.com/Uzer007-admin/gl": {
-    "version": "v0.0.0-20261030092416-83550b6a7fd2",
-    "commit": "83550b6a7fd23126692f1b1c817a507e679a6615",
+    "version": "v0.0.0-20261116045714-c77df2312098",
+    "commit": "c77df231209885b3d3f108aca1139ba00398c816",
     "directory": "deps/gl"
   },
   "github.com/Uzer007-admin/dbus/v5": {
-    "version": "v5.3.0",
-    "commit": "2eb3d0dba943ea7c2df845285aea69db9fb4712a",
+    "version": "v5.3.1-0.20261116045717-089d7aee01c5",
+    "commit": "089d7aee01c57a3ae5097ca2c210411c8a03158b",
     "directory": "deps/dbus"
   },
   "github.com/Uzer007-admin/glow": {
-    "version": "v0.0.0-20261017234250-3169226de4e2",
-    "commit": "3169226de4e23d221876255a099c0603000dfc39",
+    "version": "v0.0.0-20261116045716-910876022a46",
+    "commit": "910876022a46aad218149dd643f65627615465af",
     "directory": "deps/glow"
   },
   "github.com/Uzer007-admin/glfw/v3.3/glfw": {
-    "version": "v0.0.0-20261017234256-57a5925f8166",
-    "commit": "57a5925f8166dd29ea32f83ef5155f10066db8ff",
+    "version": "v0.0.0-20261116045715-1d65ce853a6c",
+    "commit": "1d65ce853a6cb77d84bea98db738f40658950fb9",
     "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/glfw/v3.4/glfw": {
@@ -25,8 +25,8 @@
     "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/glfw/v3.5/glfw": {
-    "version": "v0.0.0-20261030082442-5c267d637d9d",
-    "commit": "5c267d637d9d35b669068c9082e7b4e61c7f5338",
+    "version": "v0.0.0-20261116045715-1d65ce853a6c",
+    "commit": "1d65ce853a6cb77d84bea98db738f40658950fb9",
     "directory": "deps/glfw"
   },
   "github.com/Uzer007-admin/granio/v2": {
@@ -60,28 +60,28 @@
     "directory": "ecosystem/work/granio-xgb"
   },
   "github.com/Uzer007-admin/granio/deps/gl-js": {
-    "version": "v0.0.0-20261018062049-d56bde3dff7f",
-    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "version": "v0.0.0-20261116050756-4d3e432e2887",
+    "commit": "4d3e432e28876b068836dc1fcb33c79717f2990a",
     "directory": "deps/gl-js"
   },
   "github.com/Uzer007-admin/granio/deps/glfw-js": {
-    "version": "v0.0.0-20261018062049-d56bde3dff7f",
-    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "version": "v0.0.0-20261116050756-4d3e432e2887",
+    "commit": "4d3e432e28876b068836dc1fcb33c79717f2990a",
     "directory": "deps/glfw-js"
   },
   "github.com/Uzer007-admin/granio/deps/systray": {
-    "version": "v0.0.0-20261018062049-d56bde3dff7f",
-    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "version": "v0.0.0-20261116050756-4d3e432e2887",
+    "commit": "4d3e432e28876b068836dc1fcb33c79717f2990a",
     "directory": "deps/systray"
   },
   "github.com/Uzer007-admin/granio/deps/image": {
-    "version": "v0.0.0-20261018062049-d56bde3dff7f",
-    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "version": "v0.0.0-20261116050756-4d3e432e2887",
+    "commit": "4d3e432e28876b068836dc1fcb33c79717f2990a",
     "directory": "deps/image"
   },
   "github.com/Uzer007-admin/granio/deps/oksvg": {
-    "version": "v0.0.0-20261018062049-d56bde3dff7f",
-    "commit": "d56bde3dff7f02d87464f2c22987cf5edc484ee0",
+    "version": "v0.0.0-20261116050756-4d3e432e2887",
+    "commit": "4d3e432e28876b068836dc1fcb33c79717f2990a",
     "directory": "deps/oksvg"
   },
   "github.com/Uzer007-admin/granio-tools/cross": {
@@ -93,5 +93,15 @@
     "version": "v0.0.0-20261018065601-9286299481ee",
     "commit": "9286299481eeb6500361436638266dc5a612258b",
     "directory": "ecosystem/work/granio-tools/mobile-bridge"
+  },
+  "github.com/Uzer007-admin/granio/v3": {
+    "version": "v3.0.0",
+    "commit": "refs/tags/v3.0.0",
+    "directory": "."
+  },
+  "github.com/Uzer007-admin/glfw": {
+    "version": "v0.0.0-20261116045715-1d65ce853a6c",
+    "commit": "1d65ce853a6cb77d84bea98db738f40658950fb9",
+    "directory": "deps/glfw"
   }
 }

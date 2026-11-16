@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/repository"
 )
 
 var once sync.Once

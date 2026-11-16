@@ -3,8 +3,8 @@ package storage
 import (
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/repository/mime"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/repository/mime"
 )
 
 // FileFilter is an interface that can be implemented to provide a filter to a file dialog.

@@ -5,6 +5,7 @@ package glfw
 import (
 	"bytes"
 	"context"
+	"errors"
 	"image"
 	_ "image/png" // for the icon
 	"os"
@@ -13,18 +14,19 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
-	"github.com/Uzer007-admin/granio/v2/internal/svg"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
+	"github.com/Uzer007-admin/granio/v3/internal/svg"
+	"github.com/Uzer007-admin/granio/v3/storage"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
 )
@@ -68,18 +70,23 @@ func initCursors() {
 
 // Declare conformity to Window interface
 var _ granio.Window = (*window)(nil)
+var _ driver.RenderingWindow = (*window)(nil)
 
 type window struct {
-	visuals      windowVisualState
-	viewport     *glfw.Window
-	frame        presentGate
-	created      bool
-	decorate     bool
-	closing      bool
-	fixedSize    bool
-	software     bool
-	presentation windowPresentation
-	scalePolicy  desktop.ScalePolicy
+	visuals              windowVisualState
+	viewport             *glfw.Window
+	frame                presentGate
+	created              bool
+	decorate             bool
+	closing              bool
+	fixedSize            bool
+	software             bool
+	renderMode           driver.RenderMode
+	framebuffer          image.Point
+	presentation         windowPresentation
+	scalePolicy          desktop.ScalePolicy
+	clientTitleBar       desktop.ClientTitleBarOptions
+	clientTitleBarActive bool
 
 	cursor       desktop.Cursor
 	customCursor *glfw.Cursor
@@ -166,7 +173,7 @@ func (w *window) RequestPosition(x, y int) {
 	w.ypos = y
 
 	if w.view() != nil {
-		w.view().SetPos(x, y)
+		w.setViewportPosition(x, y)
 	}
 }
 
@@ -224,7 +231,7 @@ func (w *window) doCenterOnScreen() {
 	newY := (monMode.Height-viewHeight)/2 + monY
 
 	// set new window coordinates
-	w.viewport.SetPos(newX, newY)
+	w.setViewportPosition(newX, newY)
 }
 
 func (w *window) RequestFocus() {
@@ -285,7 +292,6 @@ func (w *window) fitContent() {
 	}
 
 	minWidth, minHeight := w.minSizeOnScreen()
-	view := w.viewport
 	w.shouldWidth, w.shouldHeight = w.width, w.height
 	if w.width < minWidth || w.height < minHeight {
 		if w.width < minWidth {
@@ -303,13 +309,19 @@ func (w *window) fitContent() {
 		if w.shouldHeight > w.requestedHeight {
 			w.requestedHeight = w.shouldHeight
 		}
-		view.SetSizeLimits(w.requestedWidth, w.requestedHeight, w.requestedWidth, w.requestedHeight)
+		w.setViewportSizeLimits(w.requestedWidth, w.requestedHeight, w.requestedWidth, w.requestedHeight)
 	} else {
 		maximum := glfw.DontCare
 		if limit := w.presentationMaxTextureSize(); limit > 0 {
 			maximum = maxWindowSize(limit, w.canvas.texScale)
 		}
-		view.SetSizeLimits(minWidth, minHeight, maximum, maximum)
+		w.setViewportSizeLimits(minWidth, minHeight, maximum, maximum)
+	}
+}
+
+func (w *window) setViewportSizeLimits(minWidth, minHeight, maxWidth, maxHeight int) {
+	if !w.setTitleBarLimits(minWidth, minHeight, maxWidth, maxHeight) {
+		w.viewport.SetSizeLimits(minWidth, minHeight, maxWidth, maxHeight)
 	}
 }
 
@@ -430,6 +442,10 @@ func (w *window) scaled(_ *glfw.Window, x, _ float32) {
 }
 
 func (w *window) frameSized(_ *glfw.Window, width, height int) {
+	w.framebuffer = image.Pt(width, height)
+	if w.software {
+		w.canvas.SetDirty()
+	}
 	w.processFrameSized(width, height)
 	if width > 0 && height > 0 {
 		w.resumeDeferredVisuals()
@@ -827,7 +843,7 @@ func (w *window) RescaleContext() {
 
 	size := internal.MaxSizes(w.canvas.size, w.canvas.MinSize())
 	newWidth, newHeight := w.screenSize(size)
-	w.viewport.SetSize(newWidth, newHeight)
+	w.setViewportSize(newWidth, newHeight)
 
 	// Ensure textures re-rasterize at the new scale
 	w.RunWithContext(func() {
@@ -835,6 +851,32 @@ func (w *window) RescaleContext() {
 	})
 	w.canvas.content.Refresh()
 }
+
+func (w *window) SetRenderMode(mode driver.RenderMode) error {
+	if w.created || w.viewport != nil || w.windowClosed() {
+		return driver.ErrRenderModeLocked
+	}
+	if mode > driver.RenderSoftware || mode == driver.RenderSoftware && !softwareRendererAvailable {
+		return driver.ErrRenderModeUnavailable
+	}
+	w.renderMode = mode
+	return nil
+}
+
+func (w *window) RenderMode() driver.RenderMode {
+	if w.viewport != nil {
+		if w.software {
+			return driver.RenderSoftware
+		}
+		return driver.RenderOpenGL
+	}
+	if w.renderMode != driver.RenderAuto {
+		return w.renderMode
+	}
+	return w.driver.RenderMode()
+}
+
+func (w *window) selectRenderer() { w.software = w.RenderMode() == driver.RenderSoftware }
 
 func (w *window) create() {
 	const fallbackScreenSize = 10
@@ -858,17 +900,8 @@ func (w *window) create() {
 	}
 	glfw.WindowHint(glfw.AutoIconify, glfw.False)
 	desktopGL := initWindowHints()
-	w.software = softwareRendererRequested()
-	w.preparePresentation()
-	if w.software {
-		glfw.WindowHint(glfw.ClientAPI, glfw.NoAPI)
-	}
+	w.selectRenderer()
 	alphaSurface := w.beginVisualCreation()
-	if alphaSurface && !w.software {
-		glfw.WindowHint(glfw.TransparentFramebuffer, glfw.True)
-	} else {
-		glfw.WindowHint(glfw.TransparentFramebuffer, glfw.False)
-	}
 	if build.IsWayland {
 		glfw.WindowHintString(glfw.WaylandAppID, granio.CurrentApp().UniqueID())
 	}
@@ -885,14 +918,31 @@ func (w *window) create() {
 
 	var win *glfw.Window
 	for {
+		w.preparePresentation()
+		if w.software {
+			glfw.WindowHint(glfw.ClientAPI, glfw.NoAPI)
+		}
+		transparent := glfw.False
+		if alphaSurface {
+			transparent = glfw.True
+		}
+		glfw.WindowHint(glfw.TransparentFramebuffer, transparent)
 		w.preparePresentationWindow(alphaSurface, desktopGL)
 		var err error
 		win, err = glfw.CreateWindow(pixWidth, pixHeight, w.title, nil, nil)
 		// Не оставляем глобальные hints для другого окна даже при отказе.
 		w.resetPresentationWindowHint()
 		glfw.WindowHint(glfw.TransparentFramebuffer, glfw.False)
-		if err != nil {
+		if win == nil {
+			if err == nil {
+				err = errors.New("GLFW did not create a window")
+			}
 			if w.retryPresentationWindow(true) {
+				alphaSurface = false
+				continue
+			}
+			if w.fallbackToSoftware(err) {
+				alphaSurface = w.beginVisualCreation()
 				continue
 			}
 			w.failVisualCreation()
@@ -903,12 +953,31 @@ func (w *window) create() {
 		w.RunWithContext(func() {
 			w.canvas.SetPainter(newWindowPainter(w))
 			w.canvas.Painter().Init()
+			if !w.software && w.canvas.Painter().MaxTextureSize() <= 0 {
+				err = errOpenGLRendererInit
+				return
+			}
 			w.initPresentation()
 			if build.IsWayland && !w.software {
 				glfw.SwapInterval(0)
 			}
 		})
+		if err != nil {
+			win.Destroy()
+			w.viewport = nil
+			w.canvas.SetPainter(nil)
+			if w.fallbackToSoftware(err) {
+				alphaSurface = w.beginVisualCreation()
+				continue
+			}
+			w.failVisualCreation()
+			w.driver.initFailed("renderer initialization error", err)
+			return
+		}
 		if !w.retryPresentationWindow(false) {
+			if w.renderMode == driver.RenderAuto || !w.software {
+				w.driver.renderFallback = false
+			}
 			break
 		}
 		// NOREDIRECTIONBITMAP неизменяем после CreateWindowEx. При отказе
@@ -916,6 +985,7 @@ func (w *window) create() {
 		w.releasePresentation()
 		win.Destroy()
 		w.viewport = nil
+		alphaSurface = false
 	}
 
 	// macOS 26 places new windows on a different screen than existing app windows;
@@ -955,6 +1025,10 @@ func (w *window) create() {
 	w.canvas.detectedScale = w.detectScale()
 	w.canvas.scale = w.calculatedScale()
 	w.canvas.texScale = w.detectTextureScale()
+	w.updateClientTitleBar()
+	if w.software {
+		w.framebuffer.X, w.framebuffer.Y = win.GetFramebufferSize()
+	}
 	// update window size now we have scaled detected
 	w.fitContent()
 
@@ -968,11 +1042,31 @@ func (w *window) create() {
 
 	w.requestedWidth, w.requestedHeight = w.width, w.height
 	// order of operation matters so we do these last items in order
-	w.viewport.SetSize(w.shouldWidth, w.shouldHeight) // ensure we requested latest size
+	w.setViewportSize(w.shouldWidth, w.shouldHeight)
 
 	// Initialize accessibility support
 	w.initAccessibilityForWindow()
 	w.applyWindowVisuals()
+}
+
+var errOpenGLRendererInit = errors.New("OpenGL renderer initialization failed")
+
+func (w *window) fallbackToSoftware(err error) bool {
+	if w.renderMode != driver.RenderAuto || !w.driver.renderFallback || w.software {
+		return false
+	}
+	var native *glfw.Error
+	if !errors.Is(err, errOpenGLRendererInit) &&
+		(!errors.As(err, &native) || native.Code != glfw.APIUnavailable &&
+			native.Code != glfw.VersionUnavailable && native.Code != glfw.FormatUnavailable) {
+		return false
+	}
+
+	w.driver.renderFallback = false
+	w.driver.activeRenderMode.Store(uint32(driver.RenderSoftware))
+	w.selectRenderer()
+	granio.LogError("OpenGL unavailable, using software rendering", err)
+	return true
 }
 
 func (w *window) view() *glfw.Window {

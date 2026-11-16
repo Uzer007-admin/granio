@@ -1,12 +1,12 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/widget"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/widget"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 var (
@@ -17,9 +17,11 @@ var (
 // Menu is a widget for displaying a granio.Menu.
 type Menu struct {
 	BaseWidget
-	alignment     granio.TextAlign
-	Items         []granio.CanvasObject
-	OnDismiss     func() `json:"-"`
+	alignment granio.TextAlign
+	Items     []granio.CanvasObject
+	// Material optionally replaces the menu background with a canvas material.
+	Material      *canvas.Material `json:"-"`
+	OnDismiss     func()           `json:"-"`
 	activeItem    *menuItem
 	customSized   bool
 	containsCheck bool
@@ -117,13 +119,9 @@ func (m *Menu) CreateRenderer() granio.WidgetRenderer {
 		}
 	}
 
-	return &menuRenderer{
-		widget.NewBaseRenderer(objects),
-		box,
-		m,
-		scroll,
-		background,
-	}
+	r := &menuRenderer{BaseRenderer: widget.NewBaseRenderer(objects), box: box, m: m, scroll: scroll, b: background}
+	r.syncMaterial()
+	return r
 }
 
 // DeactivateChild deactivates the active menu item and hides its submenu if any.
@@ -228,10 +226,11 @@ func (m *Menu) setMenu(menu *granio.Menu) {
 
 type menuRenderer struct {
 	widget.BaseRenderer
-	box    *menuBox
-	m      *Menu
-	scroll *widget.Scroll
-	b      *canvas.Rectangle
+	box      *menuBox
+	m        *Menu
+	scroll   *widget.Scroll
+	b        *canvas.Rectangle
+	material *canvas.Material
 }
 
 func (r *menuRenderer) Layout(s granio.Size) {
@@ -262,6 +261,9 @@ func (r *menuRenderer) Layout(s granio.Size) {
 	}
 
 	r.b.Resize(scrollSize)
+	if r.material != nil {
+		r.material.Resize(scrollSize)
+	}
 	r.scroll.Resize(scrollSize)
 	r.box.Resize(boxSize)
 	r.layoutActiveChild()
@@ -278,6 +280,8 @@ func (r *menuRenderer) Refresh() {
 	r.b.FillColor = th.Color(theme.ColorNameMenuBackground, v)
 	r.b.Shadow.Color = th.Color(theme.ColorNameShadow, v)
 	r.b.CornerRadius = th.Size(theme.SizeNameMenuRadius)
+	r.b.SetCornerRadii(theme.Corners(th, granio.ComponentPopup, v))
+	r.syncMaterial()
 
 	for _, i := range r.m.Items {
 		if txt, ok := i.(*menuItem); ok {
@@ -287,6 +291,26 @@ func (r *menuRenderer) Refresh() {
 	}
 
 	canvas.Refresh(r.m)
+}
+
+func (r *menuRenderer) syncMaterial() {
+	if r.material != r.m.Material {
+		items := r.Objects()
+		if r.material != nil {
+			items = append(items[:1], items[2:]...)
+		}
+		r.material = r.m.Material
+		if r.material != nil {
+			items = append(items, nil)
+			copy(items[2:], items[1:])
+			items[1] = r.material
+			r.material.Resize(r.b.Size())
+		}
+		r.SetObjects(items)
+	}
+	if r.material != nil {
+		r.b.FillColor = nil
+	}
 }
 
 func (r *menuRenderer) layoutActiveChild() {

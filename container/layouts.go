@@ -1,9 +1,9 @@
-package container // import "github.com/Uzer007-admin/granio/v2/container"
+package container // import "github.com/Uzer007-admin/granio/v3/container"
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/layout"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/layout"
 )
 
 // NewAdaptiveGrid creates a new container with the specified objects and using the grid layout.

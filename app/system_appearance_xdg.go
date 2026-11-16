@@ -10,8 +10,8 @@ import (
 
 	"github.com/Uzer007-admin/dbus/v5"
 	"github.com/Uzer007-admin/dbus/v5/portal"
-	"github.com/Uzer007-admin/granio/v2"
-	internalapp "github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v3"
+	internalapp "github.com/Uzer007-admin/granio/v3/internal/app"
 )
 
 func portalAppearance(snapshot portal.AppearanceSnapshot) granio.SystemAppearance {

@@ -1,6 +1,6 @@
 package widget
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // One spacing decision is shared by layout, minimum height, caret and selection.
 // Explicit semantic runs opt into interline spacing; legacy runs keep their

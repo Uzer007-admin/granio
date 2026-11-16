@@ -1,6 +1,6 @@
 package desktop
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // Canvas defines the desktop specific extensions to a granio.Canvas.
 type Canvas interface {

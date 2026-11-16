@@ -12,18 +12,10 @@ import (
 	"unsafe"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 	"golang.org/x/sys/windows"
 )
-
-func softwareRendererRequested() bool {
-	return strings.EqualFold(strings.TrimSpace(os.Getenv("GRANIO_RENDERER")), "software")
-}
-
-func (w *window) softwareRendering() bool { return w.software }
 
 type windowPresentation struct {
 	requested         bool
@@ -35,6 +27,8 @@ type windowPresentation struct {
 	retryAfter        time.Time
 	noRedirection     bool
 	alphaUnavailable  bool
+	acrylicAccent     bool
+	acrylicRefresh    acrylicBackdropRefresh
 }
 
 func (w *window) preparePresentation() {
@@ -72,7 +66,7 @@ func (w *window) presentationReady() bool {
 		return false
 	}
 	p := w.presentation.dxgi
-	return p == nil || p.shared != nil && (p.composition == nil || p.composition.attached)
+	return p == nil || p.frameSubmitted
 }
 
 func (w *window) presentationFailure() (uint32, bool) {
@@ -141,28 +135,6 @@ func (w *window) preparePresentationFirstFrame() {
 			}
 		}
 	})
-}
-
-func (w *window) softwareCaptureUnavailable() bool {
-	if !w.software {
-		return false
-	}
-	width, height := w.viewport.GetFramebufferSize()
-	return width <= 0 || height <= 0 || w.viewport.GetAttrib(glfw.Iconified) != glfw.False
-}
-
-type softwareWindowPainter struct{ *software.FramePainter }
-
-func (*softwareWindowPainter) SetWindowSurface(mode gl.WindowSurfaceMode) bool {
-	return mode == gl.WindowSurfaceLegacy || mode == gl.WindowSurfaceOpaque
-}
-func (*softwareWindowPainter) WindowSurfaceAlphaBits() int { return 0 }
-
-func newWindowPainter(w *window) gl.Painter {
-	if w.software {
-		return &softwareWindowPainter{software.NewFramePainter(w.canvas)}
-	}
-	return gl.NewPainter(w.canvas, w)
 }
 
 var (

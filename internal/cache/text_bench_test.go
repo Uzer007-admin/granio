@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // BenchmarkGetFontMetrics is the per-frame lookup every canvas.Text does from

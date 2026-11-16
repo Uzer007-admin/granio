@@ -7,11 +7,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	col "github.com/Uzer007-admin/granio/v2/internal/color"
-	_ "github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	col "github.com/Uzer007-admin/granio/v3/internal/color"
+	_ "github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 func TestEntryCursorAnim(t *testing.T) {

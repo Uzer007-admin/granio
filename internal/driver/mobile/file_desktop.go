@@ -5,9 +5,9 @@ package mobile
 import (
 	"io"
 
-	"github.com/Uzer007-admin/granio/v2"
-	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	intRepo "github.com/Uzer007-admin/granio/v3/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 func deleteURI(_ granio.URI) error {

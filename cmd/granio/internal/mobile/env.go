@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/util"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/util"
 
 	"golang.org/x/mod/semver"
 	"golang.org/x/sys/execabs"
@@ -144,14 +144,17 @@ func envInit() (err error) {
 		for arch, toolchain := range ndk {
 			clang := toolchain.Path(ndkRoot, "clang")
 			clangpp := toolchain.Path(ndkRoot, "clang++")
+			tools := []string{clang, clangpp}
+			if runtime.GOOS == "windows" && clang != "" {
+				// The NDK batch wrappers run through cmd.exe, whose command-line
+				// limit is too small for Go's external link on long paths.
+				target := strings.TrimSuffix(strings.TrimSuffix(filepath.Base(clang), ".exe"), "-clang")
+				bin := filepath.Dir(clang)
+				tools = []string{filepath.Join(bin, "clang.exe"), filepath.Join(bin, "clang++.exe")}
+				clang = `"` + filepath.ToSlash(tools[0]) + `" --target=` + target
+				clangpp = `"` + filepath.ToSlash(tools[1]) + `" --target=` + target
+			}
 			if !buildN {
-				tools := []string{clang, clangpp}
-				if runtime.GOOS == "windows" {
-					// Because of https://github.com/android-ndk/ndk/issues/920,
-					// we require r19c, not just r19b. Fortunately, the clang++.cmd
-					// script only exists in r19c.
-					tools = append(tools, clangpp+".cmd")
-				}
 				for _, tool := range tools {
 					_, err = os.Stat(tool)
 					if err != nil {

@@ -20,7 +20,7 @@ func Test_BuildWasmVersion(t *testing.T) {
 		{
 			expectedValue: expectedValue{args: []string{"mod", "edit", "-json"}},
 			mockReturn: mockReturn{
-				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v2\"} }"),
+				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v3\"} }"),
 			},
 		},
 		{
@@ -51,7 +51,7 @@ func Test_BuildWasmReleaseVersion(t *testing.T) {
 		{
 			expectedValue: expectedValue{args: []string{"mod", "edit", "-json"}},
 			mockReturn: mockReturn{
-				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v2\"} }"),
+				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v3\"} }"),
 			},
 		},
 		{
@@ -86,7 +86,7 @@ func Test_BuildLinuxReleaseVersion(t *testing.T) {
 		{
 			expectedValue: expectedValue{args: []string{"mod", "edit", "-json"}},
 			mockReturn: mockReturn{
-				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v2\"} }"),
+				ret: []byte("{ \"Module\": { \"Path\": \"github.com/Uzer007-admin/granio/v3\"} }"),
 			},
 		},
 		{
@@ -116,9 +116,9 @@ type jsonTest struct {
 
 func Test_FyneGoMod(t *testing.T) {
 	jsonTests := []jsonTest{
-		{false, []byte(`{"Module": {"Path": "github.com/Uzer007-admin/granio-calculator"},"Go": "1.14",	"Require": [ { "Path": "github.com/Uzer007-admin/granio/v2","Version": "v2.1.4"} ] }`)},
-		{true, []byte(`{ "Module": {"Path": "github.com/Uzer007-admin/granio/v2"},"Require": [{ "Path": "test","Version": "v2.1.4"} ] }`)},
-		{true, []byte(`{"Module": {"Path": "github.com/Uzer007-admin/granio-calculator"},"Go": "1.14",	"Require": [ { "Path": "github.com/Uzer007-admin/granio/v2","Version": "v2.2.0"} ] }`)},
+		{false, []byte(`{"Module": {"Path": "github.com/Uzer007-admin/granio-calculator"},"Go": "1.14",	"Require": [ { "Path": "github.com/Uzer007-admin/granio/v3","Version": "v2.1.4"} ] }`)},
+		{true, []byte(`{ "Module": {"Path": "github.com/Uzer007-admin/granio/v3"},"Require": [{ "Path": "test","Version": "v2.1.4"} ] }`)},
+		{true, []byte(`{"Module": {"Path": "github.com/Uzer007-admin/granio-calculator"},"Go": "1.14",	"Require": [ { "Path": "github.com/Uzer007-admin/granio/v3","Version": "v2.2.0"} ] }`)},
 	}
 
 	for _, j := range jsonTests {

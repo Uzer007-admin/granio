@@ -6,7 +6,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/Uzer007-admin/dbus/v5"
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 type atspiTextObject struct{ *atspiObject }

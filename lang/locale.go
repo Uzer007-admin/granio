@@ -4,7 +4,7 @@ import (
 	"github.com/jeandeaual/go-locale"
 	"golang.org/x/text/language"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // SystemLocale returns the primary locale on the current system.

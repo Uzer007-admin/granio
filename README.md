@@ -29,9 +29,16 @@
 
 ## Сборка
 
-Требуются **Go 1.27.1 или новее**, компилятор C и системные библиотеки OpenGL.
+Требуются **Go 1.27.4 или новее**, компилятор C и системные библиотеки OpenGL.
 На Linux стандартная сборка включает X11 и Wayland; нужны также их заголовки,
 `libxkbcommon` и `wayland-protocols`.
+
+```sh
+go get github.com/Uzer007-admin/granio/v3@v3.0.0
+go install github.com/Uzer007-admin/granio/v3/cmd/granio@v3.0.0
+```
+
+Галерею и подмодули можно собрать из репозитория.
 
 ```sh
 git clone --recurse-submodules https://github.com/Uzer007-admin/granio.git
@@ -41,9 +48,63 @@ go run -tags migrated_fynedo ./cmd/granio_gallery -sample data-grid
 go run -tags migrated_fynedo ./cmd/granio_gallery -sample system -system-palette
 ```
 
-Модуль ядра: `github.com/Uzer007-admin/granio/v2`, имя Go-пакета — `granio`.
+Модуль ядра: `github.com/Uzer007-admin/granio/v3`, имя Go-пакета — `granio`.
 Инструменты: `cmd/granio`, `cmd/granio_settings`, `cmd/granio_gallery`.
-Переход с исходных импортов описан в [MIGRATION_GRANIO.md](docs/MIGRATION_GRANIO.md).
+Переход с Fyne и Granio v2 описан в [руководстве по миграции](docs/MIGRATION_GRANIO.md).
+
+## Выбор рендера
+
+Выберите режим через `driver.RenderingDriver` до создания первого окна.
+Программная отрисовка `driver.RenderSoftware` доступна на Windows, Linux (X11 и
+Wayland) и Android. В Linux приложение передаёт готовые пиксели оконной системе
+без контекста OpenGL или OpenGL ES.
+`driver.RenderOpenGL` использует системный OpenGL или OpenGL ES. Аппаратное
+ускорение в этом режиме зависит от установленного драйвера. `driver.RenderAuto`
+учитывает `GRANIO_RENDERER=software`. Для выбора OpenGL из окружения задайте
+`GRANIO_RENDERER=opengl`. Явный вызов `SetRenderMode` имеет приоритет.
+
+На Windows и Linux режим `RenderAuto` повторяет создание первого окна в CPU-режиме,
+если OpenGL недоступен или не инициализируется. Явный выбор OpenGL через
+`SetRenderMode(driver.RenderOpenGL)` или `GRANIO_RENDERER=opengl` сохраняет
+ошибку запуска. `RenderMode()` показывает выбранный режим, включая переход на CPU.
+
+На Windows и Linux можно выбрать режим для конкретного окна через
+`w.(driver.RenderingWindow).SetRenderMode(...)` до первого показа окна.
+`RenderAuto` использует настройки приложения. Так в одном
+приложении могут работать окна с CPU-отрисовкой и окна с OpenGL.
+
+```go
+a := app.NewWithID("org.example.myapp")
+if rendering, ok := a.Driver().(driver.RenderingDriver); ok {
+    if err := rendering.SetRenderMode(driver.RenderSoftware); err != nil {
+        return err
+    }
+}
+```
+
+На Linux с Mesa `LIBGL_ALWAYS_SOFTWARE=true` выбирает программную реализацию
+самого OpenGL для процесса. Для диагностики Android установите
+`GRANIO_RENDERER_DEBUG=1` перед запуском цикла приложения. Имя рендера
+появится в журнале процесса.
+
+## Рабочая область в галерее
+
+```powershell
+go run ./cmd/granio_gallery -workspace
+```
+
+Рабочая область открывается с пустой лентой и пустым полем ввода. Новые
+диалоги нумеруются, а сообщения и черновики доступны до закрытия окна.
+
+В меню «Вид → Оформление» можно отдельно настроить прозрачность, размытие
+и четыре угла редактора, панелей, карточек, меню, кнопок и полей. Раздел
+«Фон за окном» регулирует прозрачность клиентской подложки. Радиус
+системного размытия задаёт композитор. Приложение сохраняет параметры
+оформления в локальных настройках.
+
+Для программной отрисовки запустите тот же пример с
+`GRANIO_RENDERER=software`. Параметры `-smoke -capture-path workspace.png`
+сохраняют кадр пустой сессии со стандартным оформлением и закрывают приложение.
 
 ## Экосистема и состояние
 

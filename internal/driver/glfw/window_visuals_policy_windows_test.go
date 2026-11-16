@@ -4,11 +4,44 @@ package glfw
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/glfw/v3.5/glfw"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 	"github.com/stretchr/testify/require"
 )
+
+func TestWindowsBackdropMaterialByBuild(t *testing.T) {
+	for _, build := range []uint32{22000, 22621, 22631, 26100, 26200, 26300, 28000} {
+		t.Run(fmt.Sprint(build), func(t *testing.T) {
+			policy := windowVisualPolicy{build: build, accentPowerAllowed: true}
+			for _, mode := range []struct {
+				backdrop desktop.WindowBackdrop
+				dwm      glfw.SystemBackdrop
+			}{
+				{desktop.BackdropOpaque, glfw.BackdropNone},
+				{desktop.BackdropTransparent, glfw.BackdropNone},
+				{desktop.BackdropMica, glfw.BackdropMainWindow},
+				{desktop.BackdropMicaAlt, glfw.BackdropTabbedWindow},
+				{desktop.BackdropDesktopAcrylic, glfw.BackdropTransientWindow},
+				{desktop.BackdropSystemBlur, glfw.BackdropTransientWindow},
+			} {
+				native, accent := windowsBackdropMaterial(mode.backdrop, policy, true)
+				require.Equal(t, mode.dwm, native, mode.backdrop)
+				require.Equal(t, build == 26300 && mode.backdrop == desktop.BackdropDesktopAcrylic, accent, mode.backdrop)
+				native, accent = windowsBackdropMaterial(mode.backdrop, policy, false)
+				require.Equal(t, mode.dwm, native, mode.backdrop)
+				require.False(t, accent, mode.backdrop)
+				savingPower := policy
+				savingPower.accentPowerAllowed = false
+				native, accent = windowsBackdropMaterial(mode.backdrop, savingPower, true)
+				require.Equal(t, mode.dwm, native, mode.backdrop)
+				require.False(t, accent, mode.backdrop)
+			}
+		})
+	}
+}
 
 func TestWindowVisualsPolicyPreflight(t *testing.T) {
 	o := desktop.VisualOptions{Backdrop: desktop.BackdropMica}

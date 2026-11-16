@@ -3,8 +3,8 @@ package driver
 import (
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
 )
 
 // AbsolutePositionForObject returns the absolute position of an object in a set of object trees.
@@ -168,8 +168,7 @@ func walkObjectTree(
 	}
 
 	if isClipWithRenderer(obj, renderer) {
-		clipPos = pos
-		clipSize = obj.Size()
+		clipPos, clipSize = IntersectClip(clipPos, clipSize, pos, obj.Size())
 	}
 
 	if beforeChildren != nil {
@@ -204,6 +203,17 @@ func walkObjectTree(
 		afterChildren(obj, pos, parent)
 	}
 	return cancelled
+}
+
+// IntersectClip returns the portion of a rectangle within its parent clip.
+func IntersectClip(parentPos granio.Position, parentSize granio.Size, pos granio.Position, size granio.Size) (granio.Position, granio.Size) {
+	left, top := max(parentPos.X, pos.X), max(parentPos.Y, pos.Y)
+	right := min(parentPos.X+parentSize.Width, pos.X+size.Width)
+	bottom := min(parentPos.Y+parentSize.Height, pos.Y+size.Height)
+	if right < left || bottom < top {
+		return granio.NewPos(left, top), granio.Size{}
+	}
+	return granio.NewPos(left, top), granio.NewSize(right-left, bottom-top)
 }
 
 func IsClip(o granio.CanvasObject) bool {

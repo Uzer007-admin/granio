@@ -1,6 +1,6 @@
 package mobile
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // TouchEvent contains data relating to mobile touch events
 type TouchEvent struct {

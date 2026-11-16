@@ -4,8 +4,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // rowBoundsBuilder walks a tree of segments to work out the rows that they lay out on.

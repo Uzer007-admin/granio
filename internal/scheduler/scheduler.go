@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // scheduleFile is the cache entry name used to persist pending schedules.

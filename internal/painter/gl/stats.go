@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // glDebug turns on periodic draw statistics: what a frame costs, what it is

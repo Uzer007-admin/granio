@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const fyneModule = "github.com/Uzer007-admin/granio/v2"
+const fyneModule = "github.com/Uzer007-admin/granio/v3"
 
 // Env returns the env command
 func Env() *cli.Command {

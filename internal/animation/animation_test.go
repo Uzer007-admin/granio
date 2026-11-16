@@ -3,13 +3,12 @@
 package animation
 
 import (
-	"sync"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func tick(run *Runner) {
@@ -38,7 +37,8 @@ func TestGLDriver_StartAnimation(t *testing.T) {
 }
 
 func TestGLDriver_StopAnimation(t *testing.T) {
-	done := make(chan float32)
+	done := make(chan float32, 1)
+	frameDone := make(chan struct{})
 	run := &Runner{}
 	a := &granio.Animation{
 		Duration: time.Second * 10,
@@ -48,7 +48,10 @@ func TestGLDriver_StopAnimation(t *testing.T) {
 	}
 
 	run.Start(a)
-	go tick(run) // simulate a graphics draw loop
+	go func() {
+		tick(run)
+		close(frameDone)
+	}()
 	select {
 	case d := <-done:
 		assert.Greater(t, d, float32(0))
@@ -56,6 +59,7 @@ func TestGLDriver_StopAnimation(t *testing.T) {
 		t.Error("animation was not ticked")
 	}
 	run.Stop(a)
+	<-frameDone
 	run.animationMutex.RLock()
 	assert.Zero(t, len(run.animations))
 	run.animationMutex.RUnlock()
@@ -183,55 +187,31 @@ func TestRunner_DurationShortenedBelowElapsed(t *testing.T) {
 }
 
 func TestGLDriver_StopAnimationImmediatelyAndInsideTick(t *testing.T) {
-	var wg sync.WaitGroup
 	run := &Runner{}
 
-	// stopping an animation immediately after start, should be effectively removed
-	// from the internal animation list (first one is added directly to animation list)
 	a := &granio.Animation{
 		Duration: time.Second,
 		Tick:     func(float32) {},
 	}
 	run.Start(a)
-	go tick(run) // simulate a graphics draw loop
 	run.Stop(a)
+	assert.False(t, run.HasAnimations())
+	assert.Empty(t, run.pendingAnimations)
 
-	run = &Runner{}
-	wg = sync.WaitGroup{}
-
-	// stopping animation inside tick function
+	ticks := 0
 	for i := 0; i < 10; i++ {
-		wg.Add(1)
 		var b *granio.Animation
 		b = &granio.Animation{
 			Duration: time.Second,
 			Tick: func(float32) {
+				ticks++
 				run.Stop(b)
-				wg.Done()
 			},
 		}
 		run.Start(b)
 	}
-
-	run = &Runner{}
-	wg = sync.WaitGroup{}
-
-	// Similar to first part, but in this time this animation should be added and then removed
-	// from pendingAnimation slice.
-	c := &granio.Animation{
-		Duration: time.Second,
-		Tick:     func(float32) {},
-	}
-	run.Start(c)
-	tick(run) // simulate a graphics draw loop
-
-	run.Stop(c)
-	tick(run) // simulate a graphics draw loop
-
-	wg.Wait()
-	// animations stopped inside tick are really stopped in the next runner cycle
-	time.Sleep(time.Second/60 + 100*time.Millisecond)
-	run.animationMutex.RLock()
-	assert.Zero(t, len(run.animations))
-	run.animationMutex.RUnlock()
+	run.TickAnimations()
+	assert.Equal(t, 10, ticks)
+	assert.False(t, run.HasAnimations())
+	assert.Empty(t, run.animations)
 }

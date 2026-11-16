@@ -8,7 +8,7 @@ import (
 
 	gl "github.com/Uzer007-admin/gl/v2.0/gles2"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 const (
@@ -72,6 +72,7 @@ var textureFilterToGL = [...]int32{gl.LINEAR, gl.NEAREST, gl.LINEAR}
 const glyphAtlasSupported = true
 
 func (p *painter) Init() {
+	p.bindings.reset()
 	p.ctx = nil
 	p.capture = nil
 	procs, err := gl.Load()

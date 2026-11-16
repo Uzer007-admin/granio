@@ -10,7 +10,7 @@ import (
 
 	"github.com/Uzer007-admin/dbus/v5"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 var inhibitCookie uint32

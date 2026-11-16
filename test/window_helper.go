@@ -5,7 +5,7 @@ package test
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // NewTempWindow creates and registers a new window for test purposes.

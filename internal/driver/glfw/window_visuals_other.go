@@ -2,10 +2,14 @@
 
 package glfw
 
-import "github.com/Uzer007-admin/granio/v2/driver/desktop"
+import (
+	"time"
+
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+)
 
 func windowVisualAlphaFormat() bool { return false }
-func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *desktop.VisualCapabilities) (desktop.VisualFallbackReason, bool, uint32) {
+func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, _ uint64, caps *desktop.VisualCapabilities) (desktop.VisualFallbackReason, bool, uint32) {
 	caps.OSKnown = true
 	caps.OSBackdrops = 1 << desktop.BackdropOpaque
 	if o.Backdrop == desktop.BackdropOpaque {
@@ -13,5 +17,5 @@ func (w *window) applyNativeWindowBackdrop(o desktop.VisualOptions, caps *deskto
 	}
 	return desktop.VisualUnsupportedOS, false, 0
 }
-func (*window) clearNativeWindowBackdrop() {}
-func (*window) refreshVisualPolicy()       {}
+func (*window) clearNativeWindowBackdrop() (uint32, error) { return 0, nil }
+func (*window) refreshVisualPolicy() time.Time             { return time.Time{} }

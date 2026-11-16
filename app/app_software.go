@@ -3,9 +3,9 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/software"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v3/test"
 )
 
 // NewWithID returns a new app instance using the test (headless) driver.

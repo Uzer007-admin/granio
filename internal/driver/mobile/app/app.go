@@ -7,12 +7,12 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/gl"
 
 	// Initialize necessary mobile functionality, such as logging.
-	_ "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit"
+	_ "github.com/Uzer007-admin/granio/v3/internal/driver/mobile/mobileinit"
 )
 
 // App is how a GUI mobile application interacts with the OS.
@@ -70,10 +70,6 @@ var theApp = &app{
 	lifecycleStage: lifecycle.StageDead,
 	publish:        make(chan struct{}),
 	publishResult:  make(chan PublishResult),
-}
-
-func init() {
-	theApp.glctx, theApp.worker = gl.NewContext()
 }
 
 type app struct {

@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/mobile"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
 
 	"golang.org/x/sys/execabs"
 )

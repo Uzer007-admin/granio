@@ -3,9 +3,9 @@ package internal
 import (
 	"testing"
 
-	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
-	"github.com/Uzer007-admin/granio/v2/storage"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	intRepo "github.com/Uzer007-admin/granio/v3/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/storage"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 
 	"github.com/stretchr/testify/assert"
 )

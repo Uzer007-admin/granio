@@ -4,11 +4,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	intdriver "github.com/Uzer007-admin/granio/v3/internal/driver"
 )
 
 // DoubleTap simulates a double left mouse click on the specified object.
@@ -99,7 +99,7 @@ func MoveMouse(c granio.Canvas, pos granio.Position) {
 	}
 }
 
-// RenderObjectToMarkup renders the given [github.com/Uzer007-admin/granio/v2.CanvasObject] to a markup string.
+// RenderObjectToMarkup renders the given [github.com/Uzer007-admin/granio/v3.CanvasObject] to a markup string.
 //
 // Since: 2.6
 func RenderObjectToMarkup(o granio.CanvasObject) string {
@@ -112,7 +112,7 @@ func RenderObjectToMarkup(o granio.CanvasObject) string {
 	return snapshot(c)
 }
 
-// RenderToMarkup renders the given [github.com/Uzer007-admin/granio/v2.Canvas] to a markup string.
+// RenderToMarkup renders the given [github.com/Uzer007-admin/granio/v3.Canvas] to a markup string.
 //
 // Since: 2.6
 func RenderToMarkup(c granio.Canvas) string {

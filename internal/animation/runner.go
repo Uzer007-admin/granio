@@ -1,11 +1,12 @@
 package animation
 
 import (
+	"slices"
 	"sync"
 	"sync/atomic"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 const initialAnimationsCapacity = 16
@@ -15,9 +16,10 @@ type Runner struct {
 	// Visible is supplied by a driver on its UI thread, and can include hidden
 	// ancestors, inactive tabs, and minimized windows. Nil checks Object.Visible.
 	Visible func(granio.CanvasObject) bool
-	// animationMutex synchronizes access to `animations` and `pendingAnimations`
-	// between the runner goroutine and calls to Start and Stop
+	// The mutex protects the animation lists and frameRunning. The frame reads
+	// the active list outside the lock, so only its stopped flags can change then.
 	animationMutex sync.RWMutex
+	frameRunning   bool
 
 	// animations is the list of animations that are being ticked in the current frame
 	animations []*anim
@@ -28,7 +30,7 @@ type Runner struct {
 
 	// nextFrameAnimations is the list of animations that will be ticked in the next frame.
 	// It is accessed only by the runner goroutine and accumulates the continuing animations
-	// during a tick that are not completed, plus the pendingAnimations picked up at the end of the frame.
+	// during a tick that are not completed.
 	// At the end of a full frame of animations, the nextFrameAnimations slice is swapped with
 	// the current `animations` slice which is then cleared out, while holding the mutex.
 	nextFrameAnimations []*anim
@@ -44,7 +46,6 @@ func (r *Runner) Start(a *granio.Animation) {
 	}
 	r.animationMutex.Lock()
 	defer r.animationMutex.Unlock()
-	r.runnable.Store(true)
 	// Starting the same handle restarts it; pending copies must never accumulate.
 	for _, previous := range r.animations {
 		if previous.a == a {
@@ -53,33 +54,15 @@ func (r *Runner) Start(a *granio.Animation) {
 	}
 	// Only the runner reads active slices outside the lock. Pending slices can
 	// be compacted here, so repeated retargets before a paint use bounded space.
-	pending := r.pendingAnimations[:0]
-	for _, previous := range r.pendingAnimations {
-		if previous.a == a || previous.isStopped() {
-			previous.setStopped()
-		} else {
-			pending = append(pending, previous)
-		}
+	r.pendingAnimations = slices.DeleteFunc(r.pendingAnimations, func(previous *anim) bool {
+		return previous.a == a || previous.isStopped()
+	})
+	if r.pendingAnimations == nil {
+		r.pendingAnimations = make([]*anim, 0, initialAnimationsCapacity)
 	}
-	clear(r.pendingAnimations[len(pending):])
-	r.pendingAnimations = pending
-
-	if !r.runnerStarted.Load() {
-		r.runnerStarted.Store(true)
-		if r.animations == nil {
-			// initialize with excess capacity to avoid re-allocations
-			// on subsequent Starts
-			r.animations = make([]*anim, 0, initialAnimationsCapacity)
-		}
-		r.animations = append(r.animations, newAnim(a))
-	} else {
-		if r.pendingAnimations == nil {
-			// initialize with excess capacity to avoid re-allocations
-			// on subsequent Starts
-			r.pendingAnimations = make([]*anim, 0, initialAnimationsCapacity)
-		}
-		r.pendingAnimations = append(r.pendingAnimations, newAnim(a))
-	}
+	r.pendingAnimations = append(r.pendingAnimations, newAnim(a))
+	r.runnable.Store(true)
+	r.runnerStarted.Store(true)
 }
 
 // Stop causes an animation to stop ticking (if it was still running) and removes it from the runner.
@@ -87,42 +70,26 @@ func (r *Runner) Stop(a *granio.Animation) {
 	r.animationMutex.Lock()
 	defer r.animationMutex.Unlock()
 
-	newList := make([]*anim, 0, len(r.animations))
 	for _, item := range r.animations {
-		if item.a != a {
-			newList = append(newList, item)
-		} else {
+		if item.a == a {
 			item.setStopped()
 		}
 	}
-	r.animations = newList
-
-	newList = make([]*anim, 0, len(r.pendingAnimations))
-	for _, item := range r.pendingAnimations {
-		if item.a != a {
-			newList = append(newList, item)
-		} else {
-			item.setStopped()
-		}
+	if !r.frameRunning {
+		r.animations = slices.DeleteFunc(r.animations, (*anim).isStopped)
 	}
-	r.pendingAnimations = newList
+	r.pendingAnimations = slices.DeleteFunc(r.pendingAnimations, func(item *anim) bool { return item.a == a })
+	if len(r.animations) == 0 && len(r.pendingAnimations) == 0 {
+		r.runnerStarted.Store(false)
+		r.runnable.Store(false)
+	}
 }
 
 // TickAnimations progresses all running animations by one tick.
 // This will be called from the driver to update objects immediately before next paint.
 func (r *Runner) TickAnimations() {
-	if !r.runnerStarted.Load() {
-		return
-	}
-
-	done := r.runOneFrame()
-
-	if done {
-		r.animationMutex.Lock()
-		if len(r.animations) == 0 && len(r.pendingAnimations) == 0 {
-			r.runnerStarted.Store(false)
-		}
-		r.animationMutex.Unlock()
+	if r.runnerStarted.Load() {
+		r.runOneFrame()
 	}
 }
 
@@ -142,13 +109,33 @@ func (r *Runner) VisitObjects(visit func(granio.CanvasObject)) {
 	}
 }
 
-func (r *Runner) runOneFrame() (done bool) {
+func (r *Runner) runOneFrame() {
 	r.animationMutex.Lock()
+	if r.frameRunning {
+		r.animationMutex.Unlock()
+		return
+	}
+	r.frameRunning = true
+	// Include all animations started before this frame. A Tick callback can
+	// start more animations, which remain pending for the next frame.
+	r.animations = append(r.animations, r.pendingAnimations...)
+	clear(r.pendingAnimations)
+	r.pendingAnimations = r.pendingAnimations[:0]
 	oldList := r.animations
-	r.animationMutex.Unlock()
 	r.runnable.Store(false)
+	r.animationMutex.Unlock()
+	now := time.Now()
+	disabled := false
+	if app := granio.CurrentApp(); app != nil {
+		if settings := app.Settings(); settings != nil {
+			disabled = !settings.ShowAnimations()
+			if policy, ok := settings.Theme().(granio.MotionTheme); ok {
+				disabled = disabled || policy.Motion(granio.MotionHover).Disabled
+			}
+		}
+	}
 	for _, a := range oldList {
-		if !a.isStopped() && r.tickAnimation(a) && !a.isStopped() {
+		if !a.isStopped() && r.tickAnimation(a, now, disabled) && !a.isStopped() {
 			r.nextFrameAnimations = append(r.nextFrameAnimations, a)
 		}
 	}
@@ -156,40 +143,22 @@ func (r *Runner) runOneFrame() (done bool) {
 	r.animationMutex.Lock()
 	// Stop/Clear may have run from a later Tick callback after an earlier item
 	// was scheduled for the next frame. Release those references immediately.
-	next := r.nextFrameAnimations[:0]
-	for _, item := range r.nextFrameAnimations {
-		if !item.isStopped() {
-			next = append(next, item)
-		}
-	}
-	clear(r.nextFrameAnimations[len(next):])
-	r.nextFrameAnimations = next
-	// nil out old r.animations for re-use as next r.nextFrameAnimations
 	tmp := r.animations
 	clear(tmp)
-	r.animations = append(r.nextFrameAnimations, r.pendingAnimations...)
+	r.animations = slices.DeleteFunc(r.nextFrameAnimations, (*anim).isStopped)
+	r.nextFrameAnimations = tmp[:0]
+	r.frameRunning = false
 	if len(r.pendingAnimations) > 0 {
 		r.runnable.Store(true)
 	}
-	r.nextFrameAnimations = tmp[:0]
-	clear(r.pendingAnimations)
-	r.pendingAnimations = r.pendingAnimations[:0]
-	done = len(r.animations) == 0
+	r.runnerStarted.Store(len(r.animations) != 0 || len(r.pendingAnimations) != 0)
 	r.animationMutex.Unlock()
-	return done
 }
 
 // tickAnimation will process a frame of animation and return true if this should continue animating
-func (r *Runner) tickAnimation(a *anim) bool {
+func (r *Runner) tickAnimation(a *anim, now time.Time, disabled bool) bool {
 	duration := a.a.Duration
-	now := time.Now()
-	disabled := a.a.Disabled
-	if app := granio.CurrentApp(); app != nil && app.Settings() != nil {
-		disabled = disabled || !app.Settings().ShowAnimations()
-		if policy, ok := app.Settings().Theme().(granio.MotionTheme); ok {
-			disabled = disabled || policy.Motion(granio.MotionHover).Disabled
-		}
-	}
+	disabled = disabled || a.a.Disabled
 	if obj, ok := a.a.Object.(interface{ Theme() granio.Theme }); ok {
 		if policy, ok := obj.Theme().(granio.MotionTheme); ok {
 			disabled = disabled || policy.Motion(granio.MotionHover).Disabled
@@ -254,7 +223,7 @@ func (r *Runner) tickAnimation(a *anim) bool {
 			}
 		}
 
-		a.resetCycle(time.Now())
+		a.resetCycle(now)
 		return true
 	}
 

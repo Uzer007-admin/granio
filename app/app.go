@@ -1,22 +1,22 @@
 // Package app provides app implementations for working with Fyne graphical interfaces.
 // The fastest way to get started is to call app.New() which will normally load a new desktop application.
 // If the "ci" tag is passed to go (go run -tags ci myapp.go) it will run an in-memory application.
-package app // import "github.com/Uzer007-admin/granio/v2/app"
+package app // import "github.com/Uzer007-admin/granio/v3/app"
 
 import (
 	"strconv"
 	"sync"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
-	"github.com/Uzer007-admin/granio/v2/internal/scheduler"
-	"github.com/Uzer007-admin/granio/v2/storage"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	intRepo "github.com/Uzer007-admin/granio/v3/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/internal/scheduler"
+	"github.com/Uzer007-admin/granio/v3/storage"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 // Declare conformity with App interface

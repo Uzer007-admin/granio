@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
 )
 
 func TestUnboundedChann(t *testing.T) {

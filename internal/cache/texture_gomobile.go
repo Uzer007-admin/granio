@@ -2,7 +2,7 @@
 
 package cache
 
-import "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
+import "github.com/Uzer007-admin/granio/v3/internal/driver/mobile/gl"
 
 // TextureType represents an uploaded GL texture
 type TextureType = gl.Texture

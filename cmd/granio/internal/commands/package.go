@@ -18,9 +18,9 @@ import (
 	"golang.org/x/mod/modfile"
 	"golang.org/x/mod/module"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 
-	"github.com/Uzer007-admin/granio/v2/internal/metadata"
+	"github.com/Uzer007-admin/granio/v3/internal/metadata"
 )
 
 const (

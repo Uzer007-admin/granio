@@ -2,7 +2,7 @@
   "schema_version": 3,
   "project": "Granio",
   "owner": "Uzer007-admin",
-  "core_module": "github.com/Uzer007-admin/granio/v2",
+  "core_module": "github.com/Uzer007-admin/granio/v3",
   "minimum_go": "1.27.1",
   "repositories": [
     {

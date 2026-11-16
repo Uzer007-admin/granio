@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/url"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/storage"
 )
 
 var errNoAppID = errors.New("storage API requires a unique ID, use app.NewWithID()")

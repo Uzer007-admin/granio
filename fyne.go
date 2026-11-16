@@ -7,9 +7,9 @@
 //
 //	package main
 //
-//	import "github.com/Uzer007-admin/granio/v2/app"
-//	import "github.com/Uzer007-admin/granio/v2/container"
-//	import "github.com/Uzer007-admin/granio/v2/widget"
+//	import "github.com/Uzer007-admin/granio/v3/app"
+//	import "github.com/Uzer007-admin/granio/v3/container"
+//	import "github.com/Uzer007-admin/granio/v3/widget"
 //
 //	func main() {
 //		a := app.New()
@@ -25,4 +25,4 @@
 //
 //		w.ShowAndRun()
 //	}
-package granio // import "github.com/Uzer007-admin/granio/v2"
+package granio // import "github.com/Uzer007-admin/granio/v3"

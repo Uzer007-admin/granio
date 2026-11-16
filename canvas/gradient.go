@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/geom"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/geom"
 )
 
 // LinearGradient defines a Gradient travelling straight at a given angle.
@@ -23,12 +23,15 @@ type LinearGradient struct {
 func (g *LinearGradient) Generate(iw, ih int) image.Image {
 	w, h := float64(iw), float64(ih)
 	var generator func(x, y float64) float64
+	repeatRows := false
 	switch g.Angle {
 	case geom.AngleQuarter, -geom.AngleThreeQuarter: // horizontal flipped
+		repeatRows = true
 		generator = func(x, _ float64) float64 {
 			return (w - x) / w
 		}
 	case geom.AngleThreeQuarter, -geom.AngleQuarter: // horizontal
+		repeatRows = true
 		generator = func(x, _ float64) float64 {
 			return x / w
 		}
@@ -57,7 +60,7 @@ func (g *LinearGradient) Generate(iw, ih int) image.Image {
 			return y / h
 		}
 	}
-	return computeGradient(generator, iw, ih, g.StartColor, g.EndColor)
+	return computeGradient(generator, iw, ih, g.StartColor, g.EndColor, repeatRows)
 }
 
 // Hide will set this gradient to not be visible
@@ -135,7 +138,7 @@ func (g *RadialGradient) Generate(iw, ih int) image.Image {
 		}
 		return da / a
 	}
-	return computeGradient(generator, iw, ih, g.StartColor, g.EndColor)
+	return computeGradient(generator, iw, ih, g.StartColor, g.EndColor, false)
 }
 
 // Hide will set this gradient to not be visible
@@ -168,29 +171,7 @@ func (g *RadialGradient) Refresh() {
 	Refresh(g)
 }
 
-func calculatePixel(d float64, startColor, endColor color.Color) color.Color {
-	// fetch RGBA values
-	aR, aG, aB, aA := startColor.RGBA()
-	bR, bG, bB, bA := endColor.RGBA()
-
-	// Get difference
-	dR := float64(bR) - float64(aR)
-	dG := float64(bG) - float64(aG)
-	dB := float64(bB) - float64(aB)
-	dA := float64(bA) - float64(aA)
-
-	// Apply gradations
-	pixel := &color.RGBA64{
-		R: uint16(float64(aR) + d*dR),
-		B: uint16(float64(aB) + d*dB),
-		G: uint16(float64(aG) + d*dG),
-		A: uint16(float64(aA) + d*dA),
-	}
-
-	return pixel
-}
-
-func computeGradient(generator func(x, y float64) float64, w, h int, startColor, endColor color.Color) image.Image {
+func computeGradient(generator func(x, y float64) float64, w, h int, startColor, endColor color.Color, repeatRows bool) image.Image {
 	img := image.NewNRGBA(image.Rect(0, 0, w, h))
 
 	if startColor == nil && endColor == nil {
@@ -201,10 +182,30 @@ func computeGradient(generator func(x, y float64) float64, w, h int, startColor,
 		endColor = color.Transparent
 	}
 
-	for x := 0; x < w; x++ {
-		for y := 0; y < h; y++ {
+	r0, g0, b0, a0 := startColor.RGBA()
+	r1, g1, b1, a1 := endColor.RGBA()
+	dr := float64(r1) - float64(r0)
+	dg := float64(g1) - float64(g0)
+	db := float64(b1) - float64(b0)
+	da := float64(a1) - float64(a0)
+	for y := 0; y < h; y++ {
+		if repeatRows && y != 0 {
+			offset := y * img.Stride
+			copy(img.Pix[offset:offset+img.Stride], img.Pix[:img.Stride])
+			continue
+		}
+		for x := 0; x < w; x++ {
 			distance := generator(float64(x)+0.5, float64(y)+0.5)
-			img.Set(x, y, calculatePixel(distance, startColor, endColor))
+			a := uint16(float64(a0) + distance*da)
+			if a == 0 {
+				continue
+			}
+			img.SetRGBA64(x, y, color.RGBA64{
+				R: uint16(float64(r0) + distance*dr),
+				G: uint16(float64(g0) + distance*dg),
+				B: uint16(float64(b0) + distance*db),
+				A: a,
+			})
 		}
 	}
 	return img

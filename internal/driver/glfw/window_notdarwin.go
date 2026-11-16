@@ -5,7 +5,7 @@ package glfw
 import (
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2/internal"
+	"github.com/Uzer007-admin/granio/v3/internal"
 )
 
 const desktopDefaultDoubleTapDelay = 300 * time.Millisecond

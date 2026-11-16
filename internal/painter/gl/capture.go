@@ -7,7 +7,7 @@ import (
 	"github.com/Uzer007-admin/gl/capabilities"
 	"github.com/Uzer007-admin/gl/readback"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 type captureImage struct {

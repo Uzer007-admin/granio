@@ -2,8 +2,9 @@ package desktop
 
 import (
 	"errors"
+	"image/color"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // WindowBackdrop describes the OS-composited window background. In-canvas
@@ -171,6 +172,22 @@ type WindowVisuals interface {
 	VisualCapabilities() VisualCapabilities
 	VisualStatus() VisualStatus
 	ObserveVisualStatus(func(VisualStatus)) (cancel func())
+}
+
+// WindowBackdropStyler adjusts the color and opacity of the canvas clear
+// behind its contents while a transparent backdrop is active. It neither
+// changes the opacity of widgets nor requests another native surface.
+type WindowBackdropStyler interface {
+	SetWindowBackdropTint(color.NRGBA) error
+}
+
+// SetWindowBackdropTint applies a straight-alpha tint to the window background.
+// A zero alpha exposes the full native backdrop through unpainted canvas pixels.
+func SetWindowBackdropTint(window granio.Window, tint color.NRGBA) error {
+	if styler, ok := window.(WindowBackdropStyler); ok {
+		return styler.SetWindowBackdropTint(tint)
+	}
+	return ErrVisualUnsupported
 }
 
 func ConfigureWindowVisuals(window granio.Window, options VisualOptions) (uint64, error) {

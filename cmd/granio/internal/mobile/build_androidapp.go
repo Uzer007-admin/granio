@@ -22,9 +22,9 @@ import (
 	"golang.org/x/sys/execabs"
 	"golang.org/x/tools/go/packages"
 
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/mobile/binres"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/util"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/mobile/binres"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/util"
 )
 
 type manifestTmplData struct {
@@ -295,11 +295,11 @@ func buildAPK(out io.Writer, nmpkgs map[string]map[string]bool, libFiles []strin
 
 	for _, arch := range androidArchs {
 		toolchain := ndk.Toolchain(arch)
-		if nmpkgs[arch]["github.com/Uzer007-admin/granio/v2/internal/driver/mobile/exp/audio/al"] {
+		if nmpkgs[arch]["github.com/Uzer007-admin/granio/v3/internal/driver/mobile/exp/audio/al"] {
 			dst := "lib/" + toolchain.abi + "/libopenal.so"
 			src := filepath.Join(gomobilepath, dst)
 			if _, err := os.Stat(src); err != nil {
-				return nil, errors.New("the Android requires the github.com/Uzer007-admin/granio/v2/internal/driver/mobile/exp/audio/al, but the OpenAL libraries was not found. Please run gomobile init with the -openal Flag pointing to an OpenAL source directory")
+				return nil, errors.New("the Android requires the github.com/Uzer007-admin/granio/v3/internal/driver/mobile/exp/audio/al, but the OpenAL libraries was not found. Please run gomobile init with the -openal Flag pointing to an OpenAL source directory")
 			}
 			if err := apkwWriteFile(dst, src, apkw); err != nil {
 				return nil, err

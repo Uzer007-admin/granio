@@ -4,10 +4,10 @@ import (
 	"image/color"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	col "github.com/Uzer007-admin/granio/v2/internal/color"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	col "github.com/Uzer007-admin/granio/v3/internal/color"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 var timeNow = time.Now // used in tests

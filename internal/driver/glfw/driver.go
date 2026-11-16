@@ -14,16 +14,17 @@ import (
 
 	"github.com/Uzer007-admin/granio/deps/image/ico"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/animation"
-	intapp "github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	intRepo "github.com/Uzer007-admin/granio/v2/internal/repository"
-	"github.com/Uzer007-admin/granio/v2/storage/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	publicdriver "github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/animation"
+	intapp "github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	intRepo "github.com/Uzer007-admin/granio/v3/internal/repository"
+	"github.com/Uzer007-admin/granio/v3/storage/repository"
 )
 
 var curWindow *window
@@ -45,6 +46,10 @@ type gLDriver struct {
 	requestedFrameRate    atomic.Int32
 	detectedFrameRate     atomic.Int32
 	monitorFrameRateDirty atomic.Bool
+	renderMode            publicdriver.RenderMode
+	activeRenderMode      atomic.Uint32
+	renderingStarted      bool
+	renderFallback        bool
 
 	animation       animation.Runner
 	animationOwners map[granio.CanvasObject]bool
@@ -57,6 +62,38 @@ type gLDriver struct {
 
 // Declare conformity with Driver
 var _ granio.Driver = (*gLDriver)(nil)
+var _ publicdriver.RenderingDriver = (*gLDriver)(nil)
+
+func (d *gLDriver) SetRenderMode(mode publicdriver.RenderMode) error {
+	if d.renderingStarted {
+		return publicdriver.ErrRenderModeLocked
+	}
+	if mode > publicdriver.RenderSoftware || mode == publicdriver.RenderSoftware && !softwareRendererAvailable {
+		return publicdriver.ErrRenderModeUnavailable
+	}
+	d.renderMode = mode
+	return nil
+}
+
+func (d *gLDriver) RenderMode() publicdriver.RenderMode {
+	if active := publicdriver.RenderMode(d.activeRenderMode.Load()); active != publicdriver.RenderAuto {
+		return active
+	}
+	return driver.ResolveRenderMode(d.renderMode, softwareRendererAvailable)
+}
+
+func (d *gLDriver) lockRenderMode() {
+	if d.renderingStarted {
+		return
+	}
+	mode := driver.RenderPreference(d.renderMode, softwareRendererAvailable)
+	d.renderFallback = mode == publicdriver.RenderAuto && softwareRendererAvailable
+	if mode == publicdriver.RenderAuto {
+		mode = publicdriver.RenderOpenGL
+	}
+	d.activeRenderMode.Store(uint32(mode))
+	d.renderingStarted = true
+}
 
 func (d *gLDriver) AbsolutePositionForObject(co granio.CanvasObject) granio.Position {
 	c := d.CanvasForObject(co)
@@ -123,6 +160,7 @@ func (d *gLDriver) Run() {
 	if !async.IsMainGoroutine() {
 		panic("Run() or ShowAndRun() must be called from main goroutine")
 	}
+	d.lockRenderMode()
 
 	go d.catchTerm()
 	d.runGL()
@@ -138,6 +176,7 @@ func (*gLDriver) SetDisableScreenBlanking(disable bool) {
 }
 
 func (d *gLDriver) newWindow(title string, decorate bool) granio.Window {
+	d.lockRenderMode()
 	var ret *window
 	if title == "" {
 		title = defaultTitle

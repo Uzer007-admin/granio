@@ -3,8 +3,8 @@
 package app
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/theme"
 )
 
 // The software/CI build has no AppKit adapter. Use the same explicit fallback

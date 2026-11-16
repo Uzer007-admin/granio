@@ -3,7 +3,7 @@
 
 package data
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 var resourceAuthors = &granio.StaticResource{
 	StaticName: "AUTHORS",

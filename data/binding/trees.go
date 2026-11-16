@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"slices"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/storage"
 )
 
 // DataTreeRootID const is the value used as ID for the root of any tree binding.

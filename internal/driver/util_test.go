@@ -4,13 +4,13 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	internal_widget "github.com/Uzer007-admin/granio/v2/internal/widget"
-	_ "github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	internal_widget "github.com/Uzer007-admin/granio/v3/internal/widget"
+	_ "github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/widget"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -360,6 +360,24 @@ func TestWalkVisibleObjectTree(t *testing.T) {
 	}, nil)
 
 	assert.Equal(t, []granio.CanvasObject{base, child1, child3}, walked)
+}
+
+func TestFindObjectAtPositionInsideBothClips(t *testing.T) {
+	button := widget.NewButton("Action", nil)
+	inner := container.NewClip(button)
+	inner.Move(granio.NewPos(15, 4))
+	inner.Resize(granio.NewSize(32, 26))
+	outer := container.NewClip(container.NewWithoutLayout(inner))
+	outer.Move(granio.NewPos(5, 10))
+	outer.Resize(granio.NewSize(25, 12))
+
+	match := func(o granio.CanvasObject) bool { return o == button }
+	found, _, _ := driver.FindObjectAtPositionMatching(granio.NewPos(23, 17), match, nil, outer)
+	assert.Same(t, button, found)
+	for _, outside := range []granio.Position{granio.NewPos(34, 17), granio.NewPos(23, 24)} {
+		found, _, _ = driver.FindObjectAtPositionMatching(outside, match, nil, outer)
+		assert.Nil(t, found)
+	}
 }
 
 func TestWalkVisibleObjectTree_Clip(t *testing.T) {

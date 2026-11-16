@@ -3,8 +3,8 @@
 package glfw
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -54,7 +54,7 @@ func (d *gLDriver) runLoop() {
 		// Keep native input responsive even under a long queue of UI callbacks.
 		d.pollEvents()
 		drainMainQueue(nextFrame)
-		d.processWindowEvents()
+		nextVisualUpdate := d.processWindowEvents()
 		now := time.Now()
 		d.updateMonitorFrameRate(sampleMonitorFrameRate)
 		interval := time.Second / time.Duration(d.FrameRate())
@@ -92,6 +92,9 @@ func (d *gLDriver) runLoop() {
 		wait := idleEventWait
 		if d.hasFrameWork() {
 			wait = time.Until(nextFrame)
+		}
+		if !nextVisualUpdate.IsZero() {
+			wait = min(wait, time.Until(nextVisualUpdate))
 		}
 		if wait > 0 {
 			glfw.WaitEventsTimeout(wait.Seconds())

@@ -1,7 +1,7 @@
 package tutorials
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // OnChangeFuncs is a slice of functions that can be registered

@@ -3,7 +3,7 @@ package app
 import (
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // scheduleViaScheduler queues the notification through the in-process scheduler,

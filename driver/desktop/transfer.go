@@ -3,7 +3,7 @@ package desktop
 import (
 	"errors"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // ErrDataDropUnsupported means the current backend cannot receive MIME drops.

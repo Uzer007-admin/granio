@@ -4,10 +4,10 @@ package glfw
 
 import (
 	"fmt"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	internalWidget "github.com/Uzer007-admin/granio/v2/internal/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	internalWidget "github.com/Uzer007-admin/granio/v3/internal/widget"
 )
 
 type accessibleNode struct {

@@ -1,7 +1,7 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
 	"github.com/stretchr/testify/require"
 	"testing"
 )

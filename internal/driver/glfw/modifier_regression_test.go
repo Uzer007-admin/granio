@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func TestModifierRepeatRemainsPressed(t *testing.T) {

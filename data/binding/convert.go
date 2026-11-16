@@ -3,8 +3,8 @@ package binding
 import (
 	"fmt"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/storage"
 )
 
 // BoolToString creates a binding that connects a Bool data item to a String.

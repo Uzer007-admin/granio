@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"image/draw"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // CaptureOpaque captures the rendered Fyne canvas and composites its alpha over

@@ -1,8 +1,8 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/data/binding"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/data/binding"
 )
 
 // NewTableWithData displays a list of rows, each containing up to columns values.

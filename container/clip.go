@@ -1,9 +1,9 @@
 package container
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/widget"
 )
 
 // Declare conformity with Widget interface
@@ -21,7 +21,9 @@ type Clip struct {
 //
 // Since: 2.7
 func NewClip(content granio.CanvasObject) *Clip {
-	return &Clip{Content: content}
+	c := &Clip{Content: content}
+	c.ExtendBaseWidget(c)
+	return c
 }
 
 // CreateRenderer implements the [granio.Widget] interface.

@@ -5,7 +5,7 @@ package glfw
 import "C"
 
 import (
-	"github.com/Uzer007-admin/granio/v2/driver"
+	"github.com/Uzer007-admin/granio/v3/driver"
 )
 
 // assert we are implementing driver.NativeWindow

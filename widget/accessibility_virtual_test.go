@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/test"
 	"github.com/stretchr/testify/require"
 )
 

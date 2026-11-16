@@ -23,6 +23,7 @@ type wglDXGIPresenter struct {
 	width, height                         int
 	maxDimension                          int
 	frames                                uint64
+	frameSubmitted                        bool // current swap-chain buffers have accepted a complete frame
 	presentMethod                         uintptr
 	d3d                                   windows.Handle
 	api                                   wglDXGIApi
@@ -232,6 +233,7 @@ func (p *wglDXGIPresenter) freeBuffers() {
 	releaseGraphicsCOM(&p.shared)
 	releaseGraphicsCOM(&p.back)
 	p.width, p.height = 0, 0
+	p.frameSubmitted = false
 }
 
 func (p *wglDXGIPresenter) resize(width, height int) (err error) {
@@ -337,6 +339,7 @@ func (p *wglDXGIPresenter) present(width, height int) error {
 		}
 	}
 	p.frames++
+	p.frameSubmitted = true
 	return nil
 }
 

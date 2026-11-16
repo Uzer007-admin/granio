@@ -6,9 +6,9 @@ import (
 	"io"
 	"strings"
 
-	"github.com/Uzer007-admin/granio/v2"
-	fynecolor "github.com/Uzer007-admin/granio/v2/internal/color"
-	"github.com/Uzer007-admin/granio/v2/storage"
+	"github.com/Uzer007-admin/granio/v3"
+	fynecolor "github.com/Uzer007-admin/granio/v3/internal/color"
+	"github.com/Uzer007-admin/granio/v3/storage"
 )
 
 // FromJSON returns a Theme created from the given JSON metadata.

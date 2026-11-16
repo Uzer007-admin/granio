@@ -2,7 +2,7 @@
 
 package async
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 const defaultQueueCapacity = 64
 

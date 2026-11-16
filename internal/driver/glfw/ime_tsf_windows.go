@@ -12,9 +12,9 @@ import (
 	"unicode/utf16"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 )
 
 func windowsRealJapaneseStep() int { return int(C.FyneRealJapaneseStep()) }

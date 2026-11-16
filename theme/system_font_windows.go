@@ -3,7 +3,7 @@
 package theme
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 	"golang.org/x/image/font/sfnt"
 	"golang.org/x/sys/windows"
 	"os"

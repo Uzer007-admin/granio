@@ -3,7 +3,7 @@ package driver
 import (
 	"image"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // Painter describes a simple type that can render canvases

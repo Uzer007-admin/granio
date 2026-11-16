@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/key"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/mouse"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/touch"
 )
 
 func TestX11KeySymToFyneKeyCode(t *testing.T) {

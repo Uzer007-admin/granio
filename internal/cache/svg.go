@@ -6,7 +6,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 var svgs = svgCache{entries: make(map[string]*svgInfo)}

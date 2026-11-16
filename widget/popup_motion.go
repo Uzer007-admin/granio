@@ -1,10 +1,10 @@
 package widget
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 func restorePopupFocus(c granio.Canvas, focus granio.Focusable) {
@@ -20,7 +20,7 @@ func restorePopupFocus(c granio.Canvas, focus granio.Focusable) {
 
 func (p *PopUp) animateAppearance() {
 	th := p.Theme()
-	if _, modern := th.(granio.MotionTheme); !modern || !animationsAllowed(th, granio.MotionSurface) || p.Material != nil {
+	if !theme.HasMotion(th) || !animationsAllowed(th, granio.MotionSurface) || p.Material != nil {
 		return
 	}
 	r, ok := cache.Renderer(p).(*popUpRenderer)

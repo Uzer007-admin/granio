@@ -5,7 +5,7 @@
 // Package paint defines an event for the app being ready to paint.
 //
 // See the golang.org/x/mobile/app package for details on the event model.
-package paint // import "github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint"
+package paint // import "github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/paint"
 
 // Event indicates that the app is ready to paint the next frame of the GUI.
 //
@@ -25,3 +25,6 @@ type Event struct {
 	// Window specifies a native handle for the window being painted into.
 	Window uintptr
 }
+
+// VSync signals that the native display clock is ready for an animation frame.
+type VSync struct{}

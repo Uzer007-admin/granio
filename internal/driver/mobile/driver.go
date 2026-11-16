@@ -1,36 +1,39 @@
 package mobile
 
 import (
+	"image"
 	"math"
 	"runtime"
 	"strconv"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	fynecanvas "github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/driver/mobile"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/animation"
-	intapp "github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/build"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	intdriver "github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/common"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/mouse"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/gl"
-	"github.com/Uzer007-admin/granio/v2/internal/goos"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	pgl "github.com/Uzer007-admin/granio/v2/internal/painter/gl"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	fynecanvas "github.com/Uzer007-admin/granio/v3/canvas"
+	publicdriver "github.com/Uzer007-admin/granio/v3/driver"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/driver/mobile"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/animation"
+	intapp "github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/build"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	intdriver "github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/common"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/app"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/key"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/mouse"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/paint"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/touch"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/gl"
+	"github.com/Uzer007-admin/granio/v3/internal/goos"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	pgl "github.com/Uzer007-admin/granio/v3/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/software"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 const (
@@ -60,21 +63,40 @@ type driver struct {
 	animation   animation.Runner
 	currentSize size.Event
 
-	theme           granio.ThemeVariant
-	onConfigChanged func(*Configuration)
-	painting        bool
-	running         bool
-	queuedFuncs     *async.UnboundedChan[func()]
+	theme            granio.ThemeVariant
+	onConfigChanged  func(*Configuration)
+	painting         bool
+	running          bool
+	drawable         bool
+	renderMode       publicdriver.RenderMode
+	renderingStarted bool
+	queuedFuncs      *async.UnboundedChan[func()]
 }
 
 // Declare conformity with Driver
 var (
-	_ granio.Driver    = (*driver)(nil)
-	_ ConfiguredDriver = (*driver)(nil)
+	_ granio.Driver                = (*driver)(nil)
+	_ ConfiguredDriver             = (*driver)(nil)
+	_ publicdriver.RenderingDriver = (*driver)(nil)
 )
 
 func init() {
 	runtime.LockOSThread()
+}
+
+func (d *driver) SetRenderMode(mode publicdriver.RenderMode) error {
+	if d.renderingStarted {
+		return publicdriver.ErrRenderModeLocked
+	}
+	if mode > publicdriver.RenderSoftware || mode == publicdriver.RenderSoftware && !softwareRendererAvailable {
+		return publicdriver.ErrRenderModeUnavailable
+	}
+	d.renderMode = mode
+	return nil
+}
+
+func (d *driver) RenderMode() publicdriver.RenderMode {
+	return intdriver.ResolveRenderMode(d.renderMode, softwareRendererAvailable)
 }
 
 func (d *driver) DoFromGoroutine(fn func(), wait bool) {
@@ -109,10 +131,16 @@ func (d *driver) DoFromGoroutine(fn func(), wait bool) {
 }
 
 func (d *driver) CreateWindow(title string) granio.Window {
+	d.renderMode = d.RenderMode()
+	d.renderingStarted = true
 	c, _ := newCanvas(granio.CurrentDevice()).(*canvas)
 	ret := &window{title: title, canvas: c, isChild: len(d.windows) > 0}
 	c.applyContent(&fynecanvas.Rectangle{FillColor: theme.Color(theme.ColorNameBackground)})
-	c.SetPainter(pgl.NewPainter(c, ret))
+	if d.renderMode == publicdriver.RenderSoftware {
+		c.SetPainter(software.NewFramePainter(c))
+	} else {
+		c.SetPainter(pgl.NewPainter(c, ret))
+	}
 	d.windows = append(d.windows, ret)
 	return ret
 }
@@ -180,8 +208,10 @@ func (d *driver) Run() {
 		return // Run was called twice.
 	}
 	d.running = true
+	d.renderMode = d.RenderMode()
+	d.renderingStarted = true
 
-	app.Main(func(a app.App) {
+	runMobileApp(func(a app.App) {
 		async.SetMainGoroutine()
 		d.app = a
 		d.queuedFuncs = async.NewUnboundedChan[func()]()
@@ -198,7 +228,26 @@ func (d *driver) Run() {
 			})
 		})
 
-		draw := time.NewTicker(time.Second / 60)
+		const frameInterval = time.Second / 60
+		draw := time.NewTicker(frameInterval)
+		draw.Stop()
+		var frames <-chan time.Time
+		frameClock, _ := a.(interface{ RequestAnimationFrame() bool })
+		var frameRequestedAt time.Time
+		requestAnimationFrame := func() bool {
+			if frameClock == nil || !d.drawable || !d.animation.HasAnimations() ||
+				d.currentSize.WidthPx <= 0 || d.currentSize.HeightPx <= 0 {
+				return false
+			}
+			if frameRequestedAt.IsZero() {
+				if !frameClock.RequestAnimationFrame() {
+					return false
+				}
+				frameRequestedAt = time.Now()
+			}
+			return true
+		}
+		defer draw.Stop()
 		defer func() {
 			l, _ := granio.CurrentApp().Lifecycle().(*intapp.Lifecycle)
 
@@ -216,13 +265,23 @@ func (d *driver) Run() {
 
 		for {
 			select {
-			case <-draw.C:
-				d.sendPaintEvent()
+			case <-frames:
+				// Also service ordinary refreshes and keep drawing if native pulses stop.
+				if !requestAnimationFrame() || time.Since(frameRequestedAt) >= 2*frameInterval {
+					d.sendPaintEvent()
+				}
 			case fn := <-d.queuedFuncs.Out():
 				fn()
 			case e, ok := <-a.Events():
 				if !ok {
 					return // events channel closed, app done
+				}
+				if _, ok := e.(paint.VSync); ok {
+					frameRequestedAt = time.Time{}
+					if d.painting || !d.drawable || !d.animation.HasAnimations() {
+						continue
+					}
+					e = paint.Event{}
 				}
 				current := d.currentWindow()
 				if current == nil {
@@ -232,7 +291,15 @@ func (d *driver) Run() {
 
 				switch e := a.Filter(e).(type) {
 				case lifecycle.Event:
+					wasDrawable := d.drawable
 					d.handleLifecycle(e, current)
+					if d.drawable && !wasDrawable {
+						draw.Reset(frameInterval)
+						frames = draw.C
+					} else if wasDrawable && !d.drawable {
+						draw.Stop()
+						frames = nil
+					}
 				case size.Event:
 					if e.WidthPx <= 0 {
 						continue
@@ -259,6 +326,9 @@ func (d *driver) Run() {
 					c.Content().Refresh()
 				case paint.Event:
 					d.handlePaint(e, current)
+					if !e.External {
+						requestAnimationFrame()
+					}
 				case touch.Event:
 					switch e.Type {
 					case touch.TypeBegin:
@@ -267,6 +337,9 @@ func (d *driver) Run() {
 						d.tapMoveCanvas(current, e.X, e.Y, e.Sequence)
 					case touch.TypeEnd:
 						d.tapUpCanvas(current, e.X, e.Y, e.Sequence)
+						if d.drawable && !requestAnimationFrame() && c.HasDirty() {
+							d.sendPaintEvent()
+						}
 					}
 				case mouse.ScrollEvent:
 					d.scrollCanvas(current, e)
@@ -284,7 +357,7 @@ func (d *driver) Run() {
 				}
 			}
 		}
-	})
+	}, d.renderMode == publicdriver.RenderSoftware)
 }
 
 func (*driver) SetDisableScreenBlanking(disable bool) {
@@ -302,11 +375,13 @@ func (d *driver) handleLifecycle(e lifecycle.Event, w *window) {
 	switch e.Crosses(lifecycle.StageVisible) {
 	case lifecycle.CrossOn:
 		d.glctx, _ = e.DrawContext.(gl.Context)
+		d.drawable = d.glctx != nil || d.renderMode == publicdriver.RenderSoftware
 		// this is a fix for some android phone to prevent the app from being drawn as a blank screen after being pushed in the background
 		c.Content().Refresh()
 
 		d.sendPaintEvent()
 	case lifecycle.CrossOff:
+		d.drawable = false
 		d.glctx = nil
 	}
 	switch e.Crosses(lifecycle.StageFocused) {
@@ -337,14 +412,22 @@ func (d *driver) handlePaint(e paint.Event, w *window) {
 		w.handle = e.Window
 	}
 	d.painting = false
-	if d.glctx == nil || e.External {
+	if e.External {
+		if d.renderMode == publicdriver.RenderSoftware {
+			c.SetDirty()
+			d.sendPaintEvent()
+		}
+		return
+	}
+	if !d.drawable || d.currentSize.WidthPx <= 0 || d.currentSize.HeightPx <= 0 {
 		return
 	}
 
 	d.animation.TickAnimations()
 	needsInit := !c.initialized
-	canvasNeedRefresh := c.FreeDirtyTextures() > 0 || c.CheckDirtyAndClear()
-	if !needsInit && !canvasNeedRefresh {
+	freed := c.FreeDirtyTextures() > 0
+	dirty := c.CheckDirtyAndClear()
+	if !needsInit && !freed && !dirty {
 		cache.Clean(false)
 		return
 	}
@@ -365,7 +448,11 @@ func (d *driver) handlePaint(e paint.Event, w *window) {
 	}
 
 	d.paintWindow(w, newSize)
-	d.app.Publish()
+	if p, ok := c.Painter().(*software.FramePainter); ok {
+		d.app.(interface{ PublishSoftware(uintptr, *image.NRGBA) }).PublishSoftware(w.handle, p.Frame())
+	} else {
+		d.app.Publish()
+	}
 	w.updateAccessibility()
 	cache.Clean(true)
 }
@@ -389,10 +476,14 @@ func (d *driver) paintWindow(window granio.Window, s granio.Size) {
 
 	c.Painter().SetOutputSize(d.currentSize.WidthPx, d.currentSize.HeightPx)
 
-	r, g, b, a := theme.Color(theme.ColorNameBackground).RGBA()
-	max16bit := float32(255 * 255)
-	d.glctx.ClearColor(float32(r)/max16bit, float32(g)/max16bit, float32(b)/max16bit, float32(a)/max16bit)
-	d.glctx.Clear(gl.ColorBufferBit)
+	if d.renderMode == publicdriver.RenderSoftware {
+		c.Painter().Clear()
+	} else {
+		r, g, b, a := theme.Color(theme.ColorNameBackground).RGBA()
+		max16bit := float32(255 * 255)
+		d.glctx.ClearColor(float32(r)/max16bit, float32(g)/max16bit, float32(b)/max16bit, float32(a)/max16bit)
+		d.glctx.Clear(gl.ColorBufferBit)
+	}
 
 	draw := func(node *common.RenderCacheNode, pos granio.Position) {
 		obj := node.Obj()

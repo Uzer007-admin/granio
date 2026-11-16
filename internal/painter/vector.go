@@ -1,8 +1,8 @@
 package painter
 
 import (
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
 )
 
 // TextVectorPad is the number of points added to the bottom of a text texture so that

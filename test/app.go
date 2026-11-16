@@ -1,20 +1,20 @@
 // Package test provides utility drivers for running UI tests without rendering to a screen.
-package test // import "github.com/Uzer007-admin/granio/v2/test"
+package test // import "github.com/Uzer007-admin/granio/v3/test"
 
 import (
 	"net/url"
 	"sync"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	intapp "github.com/Uzer007-admin/granio/v2/internal/app"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/internal/painter"
-	"github.com/Uzer007-admin/granio/v2/internal/scheduler"
-	"github.com/Uzer007-admin/granio/v2/internal/test"
-	"github.com/Uzer007-admin/granio/v2/lang"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	intapp "github.com/Uzer007-admin/granio/v3/internal/app"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/internal/painter"
+	"github.com/Uzer007-admin/granio/v3/internal/scheduler"
+	"github.com/Uzer007-admin/granio/v3/internal/test"
+	"github.com/Uzer007-admin/granio/v3/lang"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 // ensure we have a dummy app loaded and ready to test

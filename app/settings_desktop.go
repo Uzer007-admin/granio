@@ -8,8 +8,8 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/repository"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/repository"
 )
 
 func watchFileAddTarget(watcher *fsnotify.Watcher, path string) {

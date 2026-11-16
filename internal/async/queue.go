@@ -5,7 +5,7 @@ package async
 import (
 	"sync/atomic"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 // CanvasObjectQueue implements lock-free FIFO freelist based queue.

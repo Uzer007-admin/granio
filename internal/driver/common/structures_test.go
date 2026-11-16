@@ -3,38 +3,36 @@ package common
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/layout"
-	"github.com/Uzer007-admin/granio/v2/test"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/layout"
+	"github.com/Uzer007-admin/granio/v3/test"
+	"github.com/Uzer007-admin/granio/v3/widget"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeduplicatedObjectQueue(t *testing.T) {
-	queue := deduplicatedObjectQueue{queue: async.NewCanvasObjectQueue()}
-	assert.Zero(t, queue.Len())
-	assert.Nil(t, queue.Out())
+	var queue deduplicatedObjectQueue
+	var drained []granio.CanvasObject
+	consume := func(object granio.CanvasObject) { drained = append(drained, object) }
+	assert.Zero(t, queue.drain(consume))
 
 	obj1 := &granio.Container{Layout: layout.NewCenterLayout()}
 	queue.In(obj1)
-	assert.Equal(t, uint64(1), queue.Len())
 	queue.In(obj1)
-	assert.Equal(t, uint64(1), queue.Len())
 
 	obj2 := &granio.Container{Layout: layout.NewFormLayout()}
 	queue.In(obj2)
-	assert.Equal(t, uint64(2), queue.Len())
-
-	assert.Equal(t, obj1, queue.Out())
-	assert.Equal(t, obj2, queue.Out())
-	assert.Equal(t, nil, queue.Out())
-	assert.Zero(t, queue.Len())
+	assert.Equal(t, uint64(2), queue.drain(consume))
+	assert.Equal(t, []granio.CanvasObject{obj1, obj2}, drained)
+	assert.Zero(t, queue.drain(consume))
 
 	queue.In(obj1)
-	assert.Equal(t, uint64(1), queue.Len())
-	queue.In(obj1)
-	assert.Equal(t, uint64(1), queue.Len())
+	assert.Equal(t, uint64(1), queue.drain(func(object granio.CanvasObject) {
+		queue.In(object)
+	}))
+	drained = drained[:0]
+	assert.Equal(t, uint64(1), queue.drain(consume))
+	assert.Equal(t, []granio.CanvasObject{obj1}, drained)
 }
 
 func TestOverlayStack(t *testing.T) {

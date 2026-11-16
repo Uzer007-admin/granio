@@ -11,9 +11,9 @@ import (
 	"github.com/mcuadros/go-version"
 	"github.com/urfave/cli/v2"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/cmd/granio/internal/templates"
-	"github.com/Uzer007-admin/granio/v2/internal/metadata"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/cmd/granio/internal/templates"
+	"github.com/Uzer007-admin/granio/v3/internal/metadata"
 )
 
 // Builder generate the executables.
@@ -151,12 +151,12 @@ func getFyneGoModVersion(runner runner) (string, error) {
 		return "", err
 	}
 
-	if parsed.Module.Path == "github.com/Uzer007-admin/granio/v2" {
+	if parsed.Module.Path == "github.com/Uzer007-admin/granio/v3" {
 		return "master", nil
 	}
 
 	for _, dep := range parsed.Require {
-		if dep.Path == "github.com/Uzer007-admin/granio/v2" {
+		if dep.Path == "github.com/Uzer007-admin/granio/v3" {
 			return dep.Version, nil
 		}
 	}

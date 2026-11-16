@@ -3,12 +3,12 @@ package widget
 import (
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal"
-	"github.com/Uzer007-admin/granio/v2/internal/cache"
-	"github.com/Uzer007-admin/granio/v2/theme"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal"
+	"github.com/Uzer007-admin/granio/v3/internal/cache"
+	"github.com/Uzer007-admin/granio/v3/theme"
 )
 
 const scrollEndDelay = 500 * time.Millisecond
@@ -416,7 +416,7 @@ func (r *scrollContainerRenderer) layoutBars(size granio.Size) {
 
 func (r *scrollContainerRenderer) Layout(size granio.Size) {
 	c := r.scroll.Content
-	c.Resize(internal.MaxSizes(c.MinSize(), size))
+	c.Resize(internal.MaxSizes(r.scroll.contentMinSize(), size))
 
 	r.layoutBars(size)
 }
@@ -438,7 +438,7 @@ func (r *scrollContainerRenderer) Refresh() {
 		r.Objects()[0] = r.scroll.Content
 	}
 	size := r.scroll.Size()
-	newMin := r.scroll.Content.MinSize()
+	newMin := r.scroll.contentMinSize()
 	if r.oldMinSize == newMin && r.oldMinSize == r.scroll.Content.Size() &&
 		(size.Width <= r.oldMinSize.Width && size.Height <= r.oldMinSize.Height) {
 		r.layoutBars(size)
@@ -514,8 +514,10 @@ type Scroll struct {
 	Base
 	minSize   granio.Size
 	Direction ScrollDirection
-	Content   granio.CanvasObject
-	Offset    granio.Position
+	// Content can implement MinSizeForWidth(float32) granio.Size to lay
+	// out wrapping content against the viewport width in a vertical scroll.
+	Content granio.CanvasObject
+	Offset  granio.Position
 	// OnScrolled can be set to be notified when the Scroll has changed position.
 	// You should not update the Scroll.Offset from this method.
 	//
@@ -547,7 +549,7 @@ func (s *Scroll) CreateRenderer() granio.WidgetRenderer {
 
 // ScrollToBottom will scroll content to container bottom - to show latest info which end user just added
 func (s *Scroll) ScrollToBottom() {
-	s.scrollBy(0, -1*(s.Content.MinSize().Height-s.Size().Height-s.Offset.Y))
+	s.scrollBy(0, s.Size().Height+s.Offset.Y-s.contentMinSize().Height)
 	s.refreshBars()
 }
 
@@ -584,6 +586,16 @@ func (s *Scroll) Refresh() {
 	if s.Content != nil {
 		s.Content.Refresh()
 	}
+}
+
+// RefreshContentSize updates the viewport after a size change within Content.
+// Use it when the content has already repainted its changed children.
+func (s *Scroll) RefreshContentSize() {
+	if s.Content == nil {
+		return
+	}
+	s.updateOffset(0, 0)
+	cache.Renderer(s).Layout(s.Size())
 }
 
 // Resize is called when this scroller should change size. We refresh to ensure the scroll bars are updated.
@@ -639,7 +651,7 @@ func (s *Scroll) refreshBars() {
 }
 
 func (s *Scroll) scrollBy(dx, dy float32) {
-	minSize := s.Content.MinSize()
+	minSize := s.contentMinSize()
 	size := s.Size()
 	if size.Width < minSize.Width && size.Height >= minSize.Height && dx == 0 {
 		dx, dy = dy, dx
@@ -662,7 +674,7 @@ func (s *Scroll) updateOffset(deltaX, deltaY float32) bool {
 	}
 	oldX := s.Offset.X
 	oldY := s.Offset.Y
-	minSize := s.Content.MinSize()
+	minSize := s.contentMinSize()
 	s.Offset.X = computeOffset(s.Offset.X, -deltaX, size.Width, minSize.Width)
 	s.Offset.Y = computeOffset(s.Offset.Y, -deltaY, size.Height, minSize.Height)
 
@@ -671,6 +683,15 @@ func (s *Scroll) updateOffset(deltaX, deltaY float32) bool {
 		f(s.Offset)
 	}
 	return moved
+}
+
+func (s *Scroll) contentMinSize() granio.Size {
+	if s.Direction == ScrollVerticalOnly && s.Size().Width > 0 {
+		if content, ok := s.Content.(interface{ MinSizeForWidth(float32) granio.Size }); ok {
+			return content.MinSizeForWidth(s.Size().Width)
+		}
+	}
+	return s.Content.MinSize()
 }
 
 func computeOffset(start, delta, outerWidth, innerWidth float32) float32 {

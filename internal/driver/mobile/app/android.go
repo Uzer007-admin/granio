@@ -24,6 +24,7 @@ package app
 /*
 #cgo LDFLAGS: -landroid -llog -lEGL -lGLESv2
 
+#include <android/choreographer.h>
 #include <android/configuration.h>
 #include <android/input.h>
 #include <android/keycodes.h>
@@ -31,6 +32,7 @@ package app
 #include <android/native_activity.h>
 #include <android/native_window.h>
 #include <EGL/egl.h>
+#include <GLES2/gl2.h>
 #include <jni.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -41,6 +43,9 @@ extern EGLSurface surface;
 
 char* createEGLSurface(ANativeWindow* window);
 char* destroyEGLSurface();
+AChoreographer* granioChoreographer(void);
+void granioPostFrame(AChoreographer* choreographer);
+int granioPresentSoftware(ANativeWindow* window, const void* pixels, int width, int height, int stride);
 int32_t getKeyRune(JNIEnv* env, AInputEvent* e);
 
 void showKeyboard(JNIEnv* env, int keyboardType);
@@ -55,21 +60,23 @@ import "C"
 
 import (
 	"fmt"
+	"image"
 	"log"
 	"mime"
 	"os"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 	"unsafe"
 
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/app/callfn"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/key"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/lifecycle"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/paint"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/size"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/event/touch"
-	"github.com/Uzer007-admin/granio/v2/internal/driver/mobile/mobileinit"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/app/callfn"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/key"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/lifecycle"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/paint"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/size"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/event/touch"
+	"github.com/Uzer007-admin/granio/v3/internal/driver/mobile/mobileinit"
 )
 
 // mimeMap contains standard mime entries that are missing on Android
@@ -94,17 +101,23 @@ func GoBack() {
 // It calls f on the App, in a separate goroutine, as some OS-specific
 // libraries require being on 'the main thread'.
 func Main(f func(App)) {
+	MainWithSoftware(f, false)
+}
+
+// MainWithSoftware selects CPU drawing before the native window is connected.
+func MainWithSoftware(f func(App), software bool) {
 	mainUserFn = f
 	// TODO: merge the runInputQueue and mainUI functions?
 	go func() {
-		if err := mobileinit.RunOnJVM(runInputQueue); err != nil {
+		// Full software frames can take longer than one display refresh.
+		if err := mobileinit.RunOnJVM(func(_, env, _ uintptr) error { return runInputQueue(env, !software) }); err != nil {
 			log.Fatalf("app: %v", err) //revive:disable-line:deep-exit
 		}
 	}()
 	// Preserve this OS thread for:
 	//	1. the attached JNI thread
 	//	2. the GL context
-	if err := mobileinit.RunOnJVM(mainUI); err != nil {
+	if err := mobileinit.RunOnJVM(func(_, _, _ uintptr) error { return mainUI(software) }); err != nil {
 		log.Fatalf("app: %v", err) //revive:disable-line:deep-exit
 	}
 }
@@ -442,8 +455,27 @@ var DisplayMetrics struct {
 	HeightPx int
 }
 
-func mainUI(vm, jniEnv, ctx uintptr) error {
+type softwareFrame struct {
+	window uintptr
+	image  *image.NRGBA
+}
+
+var softwareFrames = make(chan softwareFrame)
+
+func (a *app) PublishSoftware(window uintptr, frame *image.NRGBA) {
+	softwareFrames <- softwareFrame{window: window, image: frame}
+	<-a.publishResult
+}
+
+func mainUI(software bool) error {
 	workAvailable := theApp.worker.WorkAvailable()
+	var rasterFrames <-chan softwareFrame
+	if software {
+		theApp.glctx = nil
+		workAvailable = nil
+		rasterFrames = softwareFrames
+	}
+	logRenderer := os.Getenv("GRANIO_RENDERER_DEBUG") == "1"
 
 	donec := make(chan struct{})
 	go func() {
@@ -454,25 +486,58 @@ func mainUI(vm, jniEnv, ctx uintptr) error {
 	var pixelsPerPt float32
 
 	var currentWindow *C.ANativeWindow
-	ensureSurface := func(w *C.ANativeWindow) error {
-		if C.surface != nil {
-			if currentWindow == w {
-				return nil
+	if software {
+		defer func() {
+			if currentWindow != nil {
+				C.ANativeWindow_release(currentWindow)
 			}
-			if errStr := C.destroyEGLSurface(); errStr != nil {
+		}()
+	}
+	ensureSurface := func(w *C.ANativeWindow) error {
+		if currentWindow == w {
+			return nil
+		}
+		if software {
+			C.ANativeWindow_acquire(w)
+			if err := C.ANativeWindow_setBuffersGeometry(w, 0, 0, C.WINDOW_FORMAT_RGBA_8888); err != 0 {
+				C.ANativeWindow_release(w)
+				return fmt.Errorf("configure software window: %d", err)
+			}
+			if currentWindow != nil {
+				C.ANativeWindow_release(currentWindow)
+			}
+		} else {
+			if C.surface != nil {
+				if errStr := C.destroyEGLSurface(); errStr != nil {
+					return fmt.Errorf("%s (%s)", C.GoString(errStr), eglGetError())
+				}
+				C.surface = nil
+				currentWindow = nil
+			}
+			if errStr := C.createEGLSurface(w); errStr != nil {
 				return fmt.Errorf("%s (%s)", C.GoString(errStr), eglGetError())
 			}
-			C.surface = nil
-			currentWindow = nil
 		}
-
-		if errStr := C.createEGLSurface(w); errStr != nil {
-			return fmt.Errorf("%s (%s)", C.GoString(errStr), eglGetError())
+		if logRenderer {
+			if software {
+				log.Print("Granio renderer: CPU/ANativeWindow")
+			} else {
+				renderer := C.GoString((*C.char)(unsafe.Pointer(C.glGetString(C.GL_RENDERER))))
+				version := C.GoString((*C.char)(unsafe.Pointer(C.glGetString(C.GL_VERSION))))
+				log.Printf("Granio renderer: %s (%s)", renderer, version)
+			}
 		}
 		currentWindow = w
 		DisplayMetrics.WidthPx = int(C.ANativeWindow_getWidth(w))
 		DisplayMetrics.HeightPx = int(C.ANativeWindow_getHeight(w))
 		return nil
+	}
+	finishPublish := func() {
+		select {
+		case windowRedrawDone <- struct{}{}:
+		default:
+		}
+		theApp.publishResult <- PublishResult{}
 	}
 
 	for {
@@ -507,8 +572,13 @@ func mainUI(vm, jniEnv, ctx uintptr) error {
 			}
 			theApp.events.In() <- currentSize
 			theApp.events.In() <- paint.Event{External: true, Window: uintptr(unsafe.Pointer(w))}
-		case <-windowDestroyed:
-			if C.surface != nil {
+		case w := <-windowDestroyed:
+			if w != currentWindow {
+				continue
+			}
+			if software {
+				C.ANativeWindow_release(currentWindow)
+			} else if C.surface != nil {
 				if errStr := C.destroyEGLSurface(); errStr != nil {
 					return fmt.Errorf("%s (%s)", C.GoString(errStr), eglGetError())
 				}
@@ -520,6 +590,14 @@ func mainUI(vm, jniEnv, ctx uintptr) error {
 			theApp.sendLifecycle(lifecycle.StageDead)
 		case <-workAvailable:
 			theApp.worker.DoWork()
+		case frame := <-rasterFrames:
+			if src := frame.image; src != nil && currentWindow != nil && frame.window == uintptr(unsafe.Pointer(currentWindow)) {
+				code := C.granioPresentSoftware(currentWindow, unsafe.Pointer(unsafe.SliceData(src.Pix)), C.int(src.Rect.Dx()), C.int(src.Rect.Dy()), C.int(src.Stride))
+				if logRenderer && code != 0 {
+					log.Printf("Granio renderer: could not present CPU frame (%d)", code)
+				}
+			}
+			finishPublish()
 		case <-theApp.publish:
 			// TODO: compare a generation number to redrawGen for stale paints?
 			if C.surface != nil {
@@ -528,21 +606,48 @@ func mainUI(vm, jniEnv, ctx uintptr) error {
 					log.Printf("app: failed to swap buffers (%s)", eglGetError())
 				}
 			}
-			select {
-			case windowRedrawDone <- struct{}{}:
-			default:
-			}
-			theApp.publishResult <- PublishResult{}
+			finishPublish()
 		}
 	}
 }
 
-func runInputQueue(vm, jniEnv, ctx uintptr) error {
+type androidFrameClock struct {
+	looper    *C.ALooper
+	requested atomic.Bool
+}
+
+var animationClock atomic.Pointer[androidFrameClock]
+
+func (*app) RequestAnimationFrame() bool {
+	clock := animationClock.Load()
+	if clock == nil {
+		return false
+	}
+	if clock.requested.CompareAndSwap(false, true) {
+		C.ALooper_wake(clock.looper)
+	}
+	return true
+}
+
+//export onAnimationFrame
+func onAnimationFrame() {
+	theApp.Send(paint.VSync{})
+}
+
+func runInputQueue(jniEnv uintptr, useFrameClock bool) error {
 	env := (*C.JNIEnv)(unsafe.Pointer(jniEnv)) // not a Go heap pointer
 
 	// Android loopers select on OS file descriptors, not Go channels, so we
 	// translate the inputQueue channel to an ALooper_wake call.
 	l := C.ALooper_prepare(C.ALOOPER_PREPARE_ALLOW_NON_CALLBACKS)
+	var choreographer *C.AChoreographer
+	if useFrameClock {
+		choreographer = C.granioChoreographer()
+	}
+	clock := androidFrameClock{looper: l}
+	if choreographer != nil {
+		animationClock.Store(&clock)
+	}
 	pending := make(chan *C.AInputQueue, 1)
 	go func() {
 		for q := range inputQueue {
@@ -553,23 +658,26 @@ func runInputQueue(vm, jniEnv, ctx uintptr) error {
 
 	var q *C.AInputQueue
 	for {
-		if C.ALooper_pollOnce(-1, nil, nil, nil) == C.ALOOPER_POLL_WAKE {
-			select {
-			default:
-			case p := <-pending:
-				if q != nil {
-					processEvents(env, q)
-					C.AInputQueue_detachLooper(q)
-				}
-				q = p
-				if q != nil {
-					C.AInputQueue_attachLooper(q, l, 0, nil, nil)
-				}
-				inputQueueDone <- struct{}{}
+		C.ALooper_pollOnce(-1, nil, nil, nil)
+		// A wake can coincide with an input or Choreographer callback.
+		select {
+		default:
+		case p := <-pending:
+			if q != nil {
+				processEvents(env, q)
+				C.AInputQueue_detachLooper(q)
 			}
+			q = p
+			if q != nil {
+				C.AInputQueue_attachLooper(q, l, 0, nil, nil)
+			}
+			inputQueueDone <- struct{}{}
 		}
 		if q != nil {
 			processEvents(env, q)
+		}
+		if clock.requested.Swap(false) {
+			C.granioPostFrame(choreographer)
 		}
 	}
 }

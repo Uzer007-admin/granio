@@ -18,7 +18,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 )
 
 func (*fyneApp) OpenURL(u *url.URL) error {

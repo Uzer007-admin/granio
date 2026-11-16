@@ -4,7 +4,7 @@
 // not counted here. Applications should release images they no longer display.
 package cache
 
-import internal "github.com/Uzer007-admin/granio/v2/internal/cache"
+import internal "github.com/Uzer007-admin/granio/v3/internal/cache"
 
 // Limits bounds text metrics and rasterized SVGs by entry count and retained
 // bytes. A zero limit disables that cache. Byte accounting excludes Go allocator

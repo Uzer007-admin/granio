@@ -12,10 +12,10 @@ import (
 func Version() *cli.Command {
 	return &cli.Command{
 		Name:  "version",
-		Usage: "Shows version information for fyne.",
+		Usage: "Shows version information for Granio.",
 		Action: func(_ *cli.Context) error {
 			if info, ok := debug.ReadBuildInfo(); ok {
-				fmt.Println("fyne cli version:", info.Main.Version)
+				fmt.Println("Granio CLI", info.Main.Version)
 				return nil
 			}
 

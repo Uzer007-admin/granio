@@ -3,8 +3,8 @@ package desktop_test
 import (
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/test"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/test"
 	"github.com/stretchr/testify/require"
 )
 

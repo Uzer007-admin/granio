@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/sys/windows"
 )

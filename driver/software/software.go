@@ -6,8 +6,8 @@ package software
 import (
 	"image"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/internal/app"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/internal/app"
 )
 
 // RenderCanvas takes a canvas and renders it to a regular Go image using the provided Theme.

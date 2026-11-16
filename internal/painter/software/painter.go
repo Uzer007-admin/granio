@@ -3,10 +3,10 @@ package software
 import (
 	"image"
 
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/internal/driver"
-	"github.com/Uzer007-admin/granio/v2/internal/scale"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/internal/driver"
+	"github.com/Uzer007-admin/granio/v3/internal/scale"
 )
 
 // Painter is a simple software painter that can paint a canvas in memory.
@@ -55,7 +55,7 @@ func paintObject(c granio.Canvas, obj granio.CanvasObject, pos granio.Position, 
 	case *canvas.Image:
 		drawImage(c, o, pos, base, clip)
 	case *canvas.Text:
-		drawText(c, o, pos, base, clip)
+		drawText(c, o, pos, base, clip, nil)
 	case gradient:
 		drawGradient(c, o, pos, base, clip)
 	case *canvas.Circle:

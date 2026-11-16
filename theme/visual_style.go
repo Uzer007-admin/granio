@@ -5,7 +5,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/Uzer007-admin/granio/v2"
+	"github.com/Uzer007-admin/granio/v3"
+	intTheme "github.com/Uzer007-admin/granio/v3/internal/theme"
 )
 
 const ModernTokenVersion uint16 = 1
@@ -71,7 +72,7 @@ func Typography(th granio.Theme, role granio.TextRole, explicit granio.TextStyle
 
 func Motion(th granio.Theme, role granio.MotionRole) granio.MotionSpec {
 	result := granio.MotionSpec{Duration: 100 * time.Millisecond, Curve: granio.AnimationEaseOut}
-	if provider, ok := th.(granio.MotionTheme); ok {
+	if provider, ok := intTheme.Optional[granio.MotionTheme](th); ok {
 		result = provider.Motion(role)
 	}
 	if result.Duration <= 0 || result.Duration > time.Second {
@@ -81,6 +82,23 @@ func Motion(th granio.Theme, role granio.MotionRole) granio.MotionSpec {
 		result.Curve = granio.AnimationEaseOut
 	}
 	return result
+}
+
+// HasMotion reports whether a theme provides motion settings, including when
+// the theme is installed through a theme override.
+func HasMotion(th granio.Theme) bool {
+	_, ok := intTheme.Optional[granio.MotionTheme](th)
+	return ok
+}
+
+// Corners resolves the optional shape override for a component.
+func Corners(th granio.Theme, kind granio.ComponentKind, variant granio.ThemeVariant) *granio.CornerRadii {
+	if provider, ok := intTheme.Optional[granio.CornerTheme](th); ok {
+		if radii, explicit := provider.CornerRadii(kind, variant); explicit {
+			return &radii
+		}
+	}
+	return nil
 }
 
 func (t *modernTheme) TokenVersion() uint16 { return ModernTokenVersion }

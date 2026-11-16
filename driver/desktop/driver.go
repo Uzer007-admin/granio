@@ -1,7 +1,7 @@
 // Package desktop provides desktop specific driver functionality.
 package desktop
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 // Driver represents the extended capabilities of a desktop driver
 type Driver interface {

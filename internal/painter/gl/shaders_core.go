@@ -5,7 +5,7 @@ package gl
 import (
 	_ "embed"
 
-	"github.com/Uzer007-admin/granio/v2/canvas"
+	"github.com/Uzer007-admin/granio/v3/canvas"
 )
 
 var (

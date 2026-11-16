@@ -13,14 +13,14 @@ import (
 	"time"
 
 	"github.com/Uzer007-admin/glfw/v3.5/glfw"
-	"github.com/Uzer007-admin/granio/v2"
-	"github.com/Uzer007-admin/granio/v2/canvas"
-	"github.com/Uzer007-admin/granio/v2/container"
-	"github.com/Uzer007-admin/granio/v2/driver/desktop"
-	"github.com/Uzer007-admin/granio/v2/internal/async"
-	"github.com/Uzer007-admin/granio/v2/internal/painter/gl"
-	"github.com/Uzer007-admin/granio/v2/theme"
-	"github.com/Uzer007-admin/granio/v2/widget"
+	"github.com/Uzer007-admin/granio/v3"
+	"github.com/Uzer007-admin/granio/v3/canvas"
+	"github.com/Uzer007-admin/granio/v3/container"
+	"github.com/Uzer007-admin/granio/v3/driver/desktop"
+	"github.com/Uzer007-admin/granio/v3/internal/async"
+	"github.com/Uzer007-admin/granio/v3/internal/painter/gl"
+	"github.com/Uzer007-admin/granio/v3/theme"
+	"github.com/Uzer007-admin/granio/v3/widget"
 	"github.com/stretchr/testify/require"
 )
 
@@ -92,6 +92,65 @@ func visualFrame(w *window) image.Image {
 	var img image.Image
 	runOnMain(func() { img = w.canvas.Capture() })
 	return img
+}
+
+func TestNativeWindowBackdropTint(t *testing.T) {
+	requireVisualTest(t)
+	w := newVisualTestWindow("Проверка прозрачности подложки")
+	defer runOnMain(w.Close)
+	id, err := w.ConfigureVisuals(desktop.VisualOptions{Backdrop: desktop.BackdropTransparent})
+	require.NoError(t, err)
+	var hidden image.Image
+	var tintErr error
+	runOnMain(func() {
+		w.SetPadded(false)
+		foreground := canvas.NewRectangle(color.NRGBA{R: 40, G: 210, B: 70, A: 255})
+		foreground.Move(granio.NewPos(80, 30))
+		foreground.Resize(granio.NewSize(40, 35))
+		w.SetContent(container.NewWithoutLayout(foreground))
+		w.Resize(granio.NewSize(260, 180))
+		tintErr = desktop.SetWindowBackdropTint(w, color.NRGBA{R: 112, G: 32, B: 200, A: 128})
+		w.created = true
+		w.create()
+		w.RunWithContext(func() {
+			if painter, ok := w.canvas.Painter().(interface {
+				CaptureBack(granio.Canvas) image.Image
+			}); ok {
+				hidden = painter.CaptureBack(w.canvas)
+			}
+		})
+		w.Show()
+	})
+	require.NoError(t, tintErr)
+	status := w.VisualStatus()
+	require.True(t, status.FirstFrameBeforeShow && status.SurfaceReady)
+	generation := w.VisualCapabilities().Generation
+	assertTint := func(frame image.Image, alpha uint8) {
+		require.NotNil(t, frame)
+		r, g, b, a := frame.At(2, 2).RGBA()
+		require.InDelta(t, float64(alpha), float64(a)/257, 1)
+		for i, component := range []uint32{r, g, b} {
+			require.InDelta(t, float64(alpha)*[]float64{112, 32, 200}[i]/255, float64(component)/257, 1)
+		}
+		// A Wayland surface can receive an output scale after Show. Use the
+		// scale of the captured frame when checking the earlier hidden draw.
+		x, y := 95*frame.Bounds().Dx()/260, 43*frame.Bounds().Dy()/180
+		require.Equal(t, color.NRGBA{R: 40, G: 210, B: 70, A: 255}, color.NRGBAModel.Convert(frame.At(x, y)))
+	}
+	if status.Selected == desktop.BackdropOpaque {
+		_, _, _, alpha := visualFrame(w).At(2, 2).RGBA()
+		require.Equal(t, uint32(65535), alpha)
+		t.Logf("opaque fallback: %+v", status)
+		return
+	}
+	assertTint(hidden, 128)
+	for _, alpha := range []uint8{255, 128, 0} {
+		require.NoError(t, desktop.SetWindowBackdropTint(w, color.NRGBA{R: 112, G: 32, B: 200, A: alpha}))
+		assertTint(visualFrame(w), alpha)
+		require.Equal(t, id, w.VisualStatus().RequestID)
+		require.Equal(t, generation, w.VisualCapabilities().Generation)
+		require.Equal(t, status.PreparedFrames, w.VisualStatus().PreparedFrames)
+	}
 }
 
 func assertVisualAlpha(t *testing.T, img image.Image, transparent bool) {

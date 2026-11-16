@@ -4,7 +4,9 @@
 
 //go:build android
 
+#include <android/choreographer.h>
 #include <android/log.h>
+#include <android/native_window.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -17,6 +19,67 @@
 #define LOG_FATAL(...) __android_log_print(ANDROID_LOG_FATAL, "Fyne", __VA_ARGS__)
 
 static jclass current_class;
+
+static void (*postFrameCallback64)(AChoreographer*, AChoreographer_frameCallback64, void*);
+static void (*postFrameCallback)(AChoreographer*, AChoreographer_frameCallback, void*);
+
+AChoreographer* granioChoreographer(void) {
+	// Keep the Android 21 minimum while using display timing where available.
+	AChoreographer* (*getInstance)(void) = dlsym(RTLD_DEFAULT, "AChoreographer_getInstance");
+	if (getInstance == NULL) {
+		return NULL;
+	}
+	postFrameCallback64 = dlsym(RTLD_DEFAULT, "AChoreographer_postFrameCallback64");
+	postFrameCallback = dlsym(RTLD_DEFAULT, "AChoreographer_postFrameCallback");
+	return (postFrameCallback64 != NULL || postFrameCallback != NULL) ? getInstance() : NULL;
+}
+
+static void granioOnFrame64(int64_t frameTimeNanos, void* data) {
+	(void)frameTimeNanos;
+	(void)data;
+	onAnimationFrame();
+}
+
+static void granioOnFrame(long frameTimeNanos, void* data) {
+	granioOnFrame64(frameTimeNanos, data);
+}
+
+void granioPostFrame(AChoreographer* choreographer) {
+	if (postFrameCallback64 != NULL) {
+		postFrameCallback64(choreographer, granioOnFrame64, NULL);
+	} else {
+		postFrameCallback(choreographer, granioOnFrame, NULL);
+	}
+}
+
+int granioPresentSoftware(ANativeWindow* window, const void* pixels, int width, int height, int stride) {
+	if (pixels == NULL || width <= 0 || height <= 0 || stride < (int64_t)width * 4 ||
+		ANativeWindow_getWidth(window) != width || ANativeWindow_getHeight(window) != height) {
+		return -EINVAL;
+	}
+	ANativeWindow_Buffer buffer;
+	int result = ANativeWindow_lock(window, &buffer, NULL);
+	if (result != 0) {
+		return result;
+	}
+	bool valid = buffer.bits != NULL && buffer.width == width && buffer.height == height &&
+		buffer.stride >= width && buffer.format == WINDOW_FORMAT_RGBA_8888;
+	if (valid) {
+		const size_t row = (size_t)width * 4;
+		const size_t nativeStride = (size_t)buffer.stride * 4;
+		uint8_t* dest = buffer.bits;
+		const uint8_t* src = pixels;
+		if (nativeStride == row && (size_t)stride == row) {
+			memcpy(dest, src, row * height);
+		} else {
+			for (int y = 0; y < height; y++) {
+				memcpy(dest + y * nativeStride, src + (size_t)y * stride, row);
+			}
+		}
+	}
+	result = ANativeWindow_unlockAndPost(window);
+	return valid ? result : -EINVAL;
+}
 
 static jclass find_class(JNIEnv *env, const char *class_name) {
 	jclass clazz = (*env)->FindClass(env, class_name);

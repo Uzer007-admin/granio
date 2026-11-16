@@ -1,6 +1,6 @@
 package glfw
 
-import "github.com/Uzer007-admin/granio/v2"
+import "github.com/Uzer007-admin/granio/v3"
 
 func (d *gLDriver) StartAnimation(a *granio.Animation) {
 	d.animation.Start(a)
